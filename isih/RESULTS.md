@@ -139,3 +139,57 @@ downloads its own data. Roughly 1–2 hours.
    download, not new engineering.
 4. **ERA5 wind and temperature channels** — the physical drivers of ice motion
    are currently invisible to the model.
+
+---
+
+# Routing Result — Cape Town → Bharati
+
+Computed 2026-08-31 with PolarRoute 1.1.11 (British Antarctic Survey, MIT) on
+real satellite ice for **1 December 2019**, the start of the real resupply
+season. Figure: `isih/figures/route_map.png`.
+
+| | Value |
+|---|---|
+| Voyage time | **17.4 days** |
+| Waypoints | 59 |
+| Max ice on our route | **79%** |
+| Max ice on the straight line | **92%** |
+| Vessel ice limit (`max_ice_conc`) | 80% |
+
+## The claim, and how it was verified
+
+**"The direct path is blocked; our route stays passable."**
+
+Sampled ice concentration densely along both paths against the same satellite
+field: the straight line exceeds the ship's 80% limit over 3.7% of its length,
+peaking at 92%. Our computed route never exceeds 79%.
+
+## A claim we had to withdraw
+
+The first version of this figure said the route *"bends around the thickest
+ice."* Measuring showed that is **false**: the time-optimal route crosses
+*more* average ice than the straight line (19.6% vs 8.4%), because it trades
+moderate ice for a shorter path. Only the maximum matters, and there the route
+genuinely wins.
+
+The figure now computes its own numbers at render time, so the annotation
+cannot drift from the data if the route or date changes.
+
+**If asked "does your route avoid ice?"** — the honest answer is: it avoids
+*impassable* ice, and accepts moderate ice where that is faster. That is what
+optimising travel time under a hard ice constraint actually means, and it is a
+better answer than a vague claim about avoidance.
+
+## Caveats
+
+1. **No bathymetry.** GEBCO is not downloaded, so depth is not constraining the
+   route. The mesh reported "no elevation data" for every cell. Shallow water
+   and land are therefore *not* being avoided — this must be added before any
+   claim about navigational safety.
+2. **Optimised for travel time only.** Fuel and risk-weighted objectives are
+   not yet run, so this is one route, not a Pareto set.
+3. **Observed ice, not forecast ice.** This route uses what the satellite
+   measured that day. Wiring the trained forecast model into the router is the
+   next step and is what makes it a *decision-support* tool rather than a
+   hindsight map.
+4. **Fuel figure is uncalibrated** and deliberately not quoted (ADR-012).
