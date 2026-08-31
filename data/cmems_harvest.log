@@ -1,0 +1,13 @@
+2026-08-31T10:19:09+00:00 harvesting cycle 2026-08-31
+WARNING - 2026-08-31T10:19:10Z - '--force-download' has been deprecated.
+INFO - 2026-08-31T10:19:13Z - Selected dataset version: "202406"
+INFO - 2026-08-31T10:19:13Z - Selected dataset part: "default"
+WARNING - 2026-08-31T10:19:13Z - Some of your subset selection [2026-08-31 00:00:00+00:00, 2026-09-10 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-09-09 00:00:00+00:00]
+INFO - 2026-08-31T10:19:18Z - Total size of the download: 40.65 MB.
+{
+  "file_size": "40.65 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-08-31T10:19:18+00:00 saved cmems_siconc_2026-08-31.nc
