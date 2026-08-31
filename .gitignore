@@ -1,0 +1,19 @@
+# Training data — real, reproducible from the download scripts, never committed.
+# NSIDC alone is ~350 KB/day; three years is ~380 MB. Anyone can re-fetch it
+# with `python isih/download_nsidc.py`, so the repo stays clonable.
+isih/data/
+*.part
+
+# Trained weights: committed deliberately and selectively, not by accident.
+isih/checkpoints/
+!isih/checkpoints/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
