@@ -201,7 +201,7 @@ served in one austral summer. That distance is why routing is hard.
 >    `UNCERTAINTY` with caption *"How sure are we?"*
 > 4. **`HAZARD MAP`** — inside, three thin stacked layers labelled `Ice`,
 >    `Icebergs`, `Depth`
-> 5. **`ROUTE SEARCH`** — caption: *"Finds the safest fast route"*
+> 5. **`ROUTE SEARCH`** — caption: *"Safest fast route to Maitri and Bharati"*
 >
 > ### BAND 2 — middle, ~12% of height — the pinch
 >
@@ -226,8 +226,17 @@ served in one austral summer. That distance is why routing is hard.
 > 2. **`RE-PLAN`** — caption: *"New route in ~9 seconds, on a laptop"*
 > 3. **`LOCAL SERVER`**
 > 4. **`BRIDGE SCREEN`** — largest box in the band, drawn as a simplified map
->    panel: pale `#DCE9F2` ocean, a white ice band, and a `#0E7A4A` route curving
->    around it. Three short labels beside it, each with a thin leader line:
+>    panel: pale `#DCE9F2` ocean, a white ice band along the bottom edge, and a
+>    `#0E7A4A` route curving around the ice toward the coast.
+>
+>    On that coast, place small station markers — **subordinate detail, not the
+>    subject of this diagram.** Two solid `#0E7A4A` dots at 6 px labelled
+>    `MAITRI` and `BHARATI` in 9 px `#12303D`, and three or four unlabelled
+>    hollow `#5A7280` dots at 4 px nearby representing other nations' bases. No
+>    captions, no leader lines, no coordinates — they exist only to show the
+>    route has real destinations on a shared coast.
+>
+>    Three short labels beside the panel, each with a thin leader line:
 >    `Data age`, `Risk setting`, `Where sources disagree`
 >
 > ### Two annotations only
@@ -246,7 +255,7 @@ served in one austral summer. That distance is why routing is hard.
 > band, strictly top-to-bottom between bands. Number the three bands **1**, **2**,
 > **3** in small `#1B6478` circles at the far left of each band.
 >
-> **Total word count on the entire image must not exceed 110 words.**
+> **Total word count on the entire image must not exceed 125 words.**
 >
 > **Do not include:** photorealism, 3D, drop shadows, glows, gradients on boxes,
 > clip-art icons, stock imagery, decorative filler, or any text beyond what is
