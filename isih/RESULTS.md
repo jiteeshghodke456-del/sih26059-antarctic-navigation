@@ -4,19 +4,30 @@ Trained 2026-08-31 on Kaggle (T4 GPU). **These are the numbers to quote.**
 
 ## Headline
 
-**Forecasting Antarctic sea-ice concentration 3 days ahead, the model beats
-every baseline — including persistence, which is the one that matters.**
+**Forecasting Antarctic sea-ice concentration 1–7 days ahead, the model beats
+every baseline at every horizon — including persistence, the baseline that
+matters.**
 
-| Method | Test RMSE | Our model vs. it |
-|---|---|---|
-| **Our model** | **0.0765** | — |
-| Persistence (carry last observation forward) | 0.0958 | **+20.2%** |
-| Background + per-pixel bias map | 0.1461 | +47.6% |
-| Background + constant offset | 0.1572 | +51.3% |
-| Raw GLORYS12 forecast | 0.1630 | **+53.1%** |
+| Lead | Our model | Persistence | bg + pixel bias | Raw GLORYS12 | Gain vs persistence |
+|---|---|---|---|---|---|
+| 1 day | **0.0465** | 0.0570 | 0.1461 | 0.1630 | **+18.5%** |
+| 3 days | **0.0720** | 0.0958 | 0.1461 | 0.1630 | **+24.9%** |
+| 5 days | **0.0938** | 0.1204 | 0.1468 | 0.1637 | **+22.1%** |
+| 7 days | **0.0968** | 0.1395 | 0.1468 | 0.1637 | **+30.6%** |
 
-Model: 1,929,601 parameters, 12 input channels, single model (not yet an
-ensemble). Trained ~41 epochs, early-stopped.
+Model: 1,929,601 parameters, 12 input channels, single model per horizon (not
+yet an ensemble). Same seed at every lead so the horizons are comparable.
+
+## The claim this supports
+
+**Our error grows more slowly than the baseline's.** From day 1 to day 7 our
+RMSE rises 2.1x (0.0465 → 0.0968) while persistence rises 2.5x (0.0570 →
+0.1395). The advantage is *largest at 7 days* — which is the horizon a voyage
+is actually planned over.
+
+> "The further ahead the ship needs to plan, the more the model matters."
+
+That is an operational claim, not a benchmark score.
 
 ## Why these numbers are trustworthy
 
@@ -40,20 +51,55 @@ ensemble). Trained ~41 epochs, early-stopped.
 
 ## Known caveats — state these, do not hide them
 
-1. **Validation 0.0608 vs test 0.0765 (26% gap).** Expected in part: validation
-   was used for epoch selection so it is optimistically biased. The test period
-   is also the most recent time slice and may cover a harder season. **Quote
-   0.0765.**
-2. **Single model, no uncertainty yet.** The production design trains five and
-   uses their disagreement as a calibrated safety margin that changes the route.
-   The prototype does not do this yet.
-3. **12 channels, not 19.** Missing ERA5 wind/temperature and OISST sea-surface
-   temperature, both of which need slow authenticated downloads. Everything
-   here came from data already on disk.
-4. **Corrects a reanalysis, not a live forecast.** GLORYS12 is a historical
-   product. Production corrects the live CMEMS operational forecast, whose
-   error structure differs — a transfer this prototype does not prove.
-5. **~2 years of training data**, versus 1993–2024 for production.
+**1. The background is a reanalysis, not a forecast — and this is the sharpest
+question we will be asked.**
+
+Notice raw GLORYS12 scores 0.1630 at lead 1 and 0.1637 at lead 7 — essentially
+flat. A real forecast degrades with lead time; this does not, because GLORYS12
+is a *reanalysis*: it assimilates satellite observations, including near the
+date being predicted. So channel 0 may carry information about the target that
+a genuine forecast would not have.
+
+*The expected question:* "Your background already saw the observations you are
+predicting. Isn't that leakage?"
+
+*The honest answer:* Partly defended by the numbers — if GLORYS12 contained the
+answer, its own RMSE would be near zero rather than 0.163, which is worse than
+persistence at every horizon. So it is not handing over the target. But it may
+carry some future signal, and we do not claim otherwise. **The clean test is the
+ablation below**, and production corrects a real CMEMS forecast where this
+cannot arise.
+
+**2. Validation scores better than test at every lead** (e.g. lead 3: val 0.0611
+vs test 0.0720). Expected: validation selects the epoch, so it is optimistically
+biased, and the test slice is the most recent period, possibly a harder season.
+**Always quote the test numbers.**
+
+**3. Single model per horizon, no uncertainty layer yet.** Production trains
+five and turns their disagreement into a calibrated safety margin that changes
+the route. This prototype does not do that.
+
+**4. 12 channels, not 19.** No ERA5 wind/temperature, no OISST sea-surface
+temperature — the physical drivers of ice motion are currently invisible to the
+model. Everything here came from data already on disk.
+
+**5. ~2 years of training data** (2019–2020), versus 1993–2024 for production.
+
+**6. Corridor region only** (5°W–85°E, 48°S–80°S), not circumpolar.
+
+## The ablation that settles caveat 1
+
+Retrain with channel 0 (the background) zeroed, leaving only real past
+observations and derived channels:
+
+- **If the score barely moves** — the background contributes little, leakage is
+  a non-issue, and the model's skill comes from observation history. Strongest
+  possible answer to the question.
+- **If the score drops sharply** — the background is doing real work, and we
+  must state that the prototype's numbers may not transfer to a live-forecast
+  setting until production tests it.
+
+Either outcome is worth having before a viva. Not yet run.
 
 ## What the model actually is
 
@@ -83,13 +129,13 @@ downloads its own data. Roughly 1–2 hours.
 
 ## Next improvements, in order of expected value
 
-1. **Five-model ensemble + conformal calibration** — turns model disagreement
-   into a measured safety margin that changes the route. This is the production
+1. **The no-background ablation** (above) — costs ~20 minutes and either kills
+   the leakage objection outright or tells us something we are obliged to
+   disclose. Highest value per minute of anything on this list.
+2. **Five-model ensemble + conformal calibration** — turns model disagreement
+   into a measured safety margin that changes the route. The production
    differentiator, not a scaling exercise.
-2. **More training years** — NSIDC is free and needs no authentication; going
-   from 2 years to 10 is a download, not new engineering.
-3. **ERA5 wind and temperature channels** — the physical drivers of ice motion
+3. **More training years** — NSIDC needs no authentication; 2 years to 10 is a
+   download, not new engineering.
+4. **ERA5 wind and temperature channels** — the physical drivers of ice motion
    are currently invisible to the model.
-4. **Report per-lead skill (1, 3, 5, 7 days)** — persistence weakens with lead,
-   so skill almost certainly grows with it. A curve is far more convincing than
-   one number, and it is the same evaluation run several times.
