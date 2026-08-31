@@ -30,7 +30,7 @@ jobs:
         env:
           COPERNICUSMARINE_SERVICE_USERNAME: ${{ secrets.CMEMS_USERNAME }}
           COPERNICUSMARINE_SERVICE_PASSWORD: ${{ secrets.CMEMS_PASSWORD }}
-        run: copernicusmarine login --skip-if-user-logged-in --force-overwrite
+        run: copernicusmarine login --force-overwrite
 
       - name: Harvest today's forecast cycle
         run: bash scripts/harvest_cmems.sh
