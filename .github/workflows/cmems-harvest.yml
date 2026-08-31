@@ -1,0 +1,44 @@
+name: CMEMS daily harvest
+
+# Runs on GitHub's infrastructure, not a laptop or dev sandbox — this is
+# the fix for the Phase 0 blocker in docs/backlog.md: the Stage B forecast
+# archive (docs/ML_ARCHITECTURE.md §1.3) cannot be back-filled, so this
+# must run every day starting now regardless of whether anyone's machine
+# is on.
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # 06:00 UTC daily
+  workflow_dispatch: {}     # manual "Run workflow" button, for testing
+
+permissions:
+  contents: write
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install copernicusmarine
+
+      - name: Authenticate to Copernicus Marine
+        env:
+          COPERNICUSMARINE_SERVICE_USERNAME: ${{ secrets.CMEMS_USERNAME }}
+          COPERNICUSMARINE_SERVICE_PASSWORD: ${{ secrets.CMEMS_PASSWORD }}
+        run: copernicusmarine login --skip-if-user-logged-in --force-overwrite
+
+      - name: Harvest today's forecast cycle
+        run: bash scripts/harvest_cmems.sh
+
+      - name: Commit archive
+        run: |
+          git config user.name "cmems-harvest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/cmems_forecast_archive data/cmems_harvest.log
+          git diff --cached --quiet || git commit -m "CMEMS harvest $(date -u +%F)"
+          git push
