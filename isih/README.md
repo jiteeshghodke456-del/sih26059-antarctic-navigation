@@ -60,6 +60,23 @@ which feed the QC layer (`ML_ARCHITECTURE.md` §4.1) for free.
 - `download_nsidc.py` — fetch observed SIC (no auth needed)
 - further scripts land as each increment is verified
 
+## Troubleshooting: Kaggle CLI dependency conflicts
+
+The Kaggle CLI can fail to install with dependency-resolution errors. Pinning
+the versions below resolved it (verified on Windows, 2026-08-31):
+
+```
+py -m pip install --upgrade pip==25.3
+py -m pip install kaggle==2.2.4 kagglesdk==0.1.37 jupytext==1.19.5 \
+    markdown-it-py==4.2.0 mdit-py-plugins==0.6.1 python-dotenv==1.2.3 \
+    python-slugify==8.0.4 text-unidecode==1.3
+py -c "import kaggle, kagglesdk, jupytext, dotenv, slugify; print('ok')"
+py -m kaggle --version
+```
+
+Only needed for the CLI (uploading notebooks, pulling results). Running the
+notebook in the Kaggle web UI needs none of this.
+
 ## Running order
 
 1. `python isih/download_nsidc.py` — truth data
