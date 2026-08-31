@@ -1,187 +1,276 @@
-# Diagram Prompts for the ISIH Deck
+# Diagram Prompts for the ISIH Deck (v2 — light mode, editorial register)
 
 Two copy-paste prompts. Both depict the **full SIH product** (the December
-vision), because that is the ambition being pitched — pitched at a depth
-appropriate for the ISIH round.
+vision), pitched at ISIH depth.
 
-Shared design system, so the two diagrams read as one family:
+## Design register — read this before generating
 
-| Role | Colour | Why this colour |
+The target style is a **broadsheet editorial infographic** — the kind printed in
+*The Economist* or the *Financial Times*: clean, factual, confident, quietly
+beautiful. It is *not* a children's illustration and *not* a corporate slide.
+
+Concretely this means: thin precise lines, flat restrained colour, real map
+geometry, generous white space, technical annotation. **No glows, no rounded
+bubbly shapes, no cartoon icons, no gradients on text, no drop shadows, no 3D.**
+
+Simplicity comes from *ruthless removal of words*, not from childish visuals.
+
+### Shared palette (light mode)
+
+| Role | Hex | Use |
 |---|---|---|
-| Deep ocean / background | `#0A1F2E` | Near-black navy reads as "polar night", high contrast, projector-safe |
-| Ice / data | `#62C6DA` → `#DAEDEF` | Cyan-to-pale-ice gradient; the literal subject |
-| Safe route / success | `#117A3D` | Maritime green = "go"; the payoff colour |
-| Caution / hazard | `#E5A55F` | Amber, matching real nautical chart convention |
-| Danger / blocked | `#B03A2E` | Chart red = danger; used sparingly so it always means one thing |
-| Text on dark | `#F5FAFB` | Off-white, softer than pure white under projector glare |
+| Page | `#F7FAFB` | Background |
+| Ocean | `#DCE9F2` | Open water |
+| Sea ice | `#FFFFFF` → `#9FC7DB` | White = dense ice, pale blue = thin |
+| Land | `#E8EDF0` w/ `#C0CFD7` outline | Antarctic continent |
+| Route (safe) | `#0E7A4A` | The recommended path |
+| Blocked | `#C0392B` | Impassable, used sparingly |
+| Caution | `#C97B1E` | Uncertainty, hazard |
+| Structure | `#1B6478` | Arrows, rules, frames |
+| Text primary | `#12303D` | Headings, labels |
+| Text secondary | `#5A7280` | Captions |
 
-Typography: **Poppins SemiBold** or **Montserrat Bold** for headings (geometric,
-friendly, not corporate); **Inter** or **Source Sans Pro** for labels.
+### Typography
+
+Headings **Inter Tight SemiBold** (or Söhne / Suisse Int'l). Labels **Inter
+Medium**. Captions **Inter Regular**. Numerals tabular. Never a rounded
+geometric display face — those read juvenile at this size.
+
+### Verified facts (do not alter these)
+
+All coordinates verified against Wikipedia / NCPOR, 2026-08-31. Every station
+below lies in the 0°E–90°E sector the map covers.
+
+| Station | Country | Lat | Lon |
+|---|---|---|---|
+| Troll | Norway | 72.01°S | 2.54°E |
+| **Maitri** | **India** | **70.77°S** | **11.73°E** |
+| Novolazarevskaya | Russia | 70.78°S | 11.82°E |
+| **Dakshin Gangotri** | **India** (buried 1990) | **70.08°S** | **12.00°E** |
+| Princess Elisabeth | Belgium | 71.95°S | 23.35°E |
+| Syowa | Japan | 69.00°S | 39.58°E |
+| Mawson | Australia | 67.60°S | 62.87°E |
+| **Bharati** | **India** | **69.40°S** | **76.19°E** |
+| Zhongshan | China | 69.37°S | 76.37°E |
+| Progress | Russia | 69.38°S | 76.39°E |
+| Davis | Australia | 68.58°S | 77.97°E |
+
+**Cape Town** (departure port): 33.9°S, 18.4°E.
+
+**Two facts that carry the pitch:**
+
+1. **Maitri and Novolazarevskaya are ~4 km apart** in the Schirmacher Oasis.
+2. **Larsemann Hills is an international cluster** — Bharati, Zhongshan (China)
+   and Progress (Russia) sit within ~20 km of each other.
+
+India's bases are not isolated. The same sea ice closes the approach for every
+nation in these clusters, so a system that solves this serves the region, not
+only India. Say that in the pitch; the map should make it self-evident.
+
+**Maitri to Bharati is ~64° of longitude — roughly 2,450 km** — and both must be
+served in one austral summer. That distance is why routing is hard.
+
+## PROMPT 1 — The mission map (right half of a slide)
+
+> Create a high-resolution editorial infographic map, aspect ratio **8:9**
+> (portrait), rendered at **3000 × 3375 pixels**, to occupy the right half of a
+> 16:9 presentation slide. Light mode. Style reference: a data-driven map graphic
+> from The Economist — precise, restrained, elegant. Not an illustration.
+>
+> **Background:** `#F7FAFB`. Ocean `#DCE9F2`. Antarctic continent `#E8EDF0` with
+> a thin `#C0CFD7` coastline.
+>
+> **Projection and framing:** a polar-stereographic view centred on the Indian
+> Ocean sector of Antarctica, spanning roughly 0°E to 90°E and 30°S to 72°S.
+> Southern Africa appears at the top-left with Cape Town on its coast; the
+> Antarctic coastline curves across the bottom of the frame.
+>
+> **Sea ice:** a broad band hugging the Antarctic coast, drawn as a soft gradient
+> from white `#FFFFFF` (dense ice near the coast) to pale blue `#9FC7DB` (thin
+> ice at the outer edge), fading into open ocean. Give it a natural, irregular,
+> satellite-derived edge — never a smooth arc.
+>
+> **Mark every research station listed below.** Two visual tiers, so India's are
+> unmistakable while the international context is still visible:
+>
+> **TIER 1 — India's stations.** Large solid `#0E7A4A` dots, 22 px, each with a
+> thin leader to a label in Inter SemiBold `#12303D`, all-caps, plus a caption
+> in `#5A7280`:
+> - **MAITRI** (70.77°S, 11.73°E) — caption: *"India · 1989"*
+> - **BHARATI** (69.40°S, 76.19°E) — caption: *"India · 2012"*
+> - **DAKSHIN GANGOTRI** (70.08°S, 12.00°E) — drawn as a hollow `#5A7280` ring,
+>   not filled. Caption: *"India's first base · buried in ice 1990"*
+>
+> **TIER 2 — other nations' stations.** Small hollow `#5A7280` dots, 9 px, with
+> labels in Inter Regular 60% the size of Tier 1, in `#5A7280`. Name only, with
+> the country in parentheses. No captions:
+> - Troll (Norway) — 72.01°S, 2.54°E
+> - Novolazarevskaya (Russia) — 70.78°S, 11.82°E
+> - Princess Elisabeth (Belgium) — 71.95°S, 23.35°E
+> - Syowa (Japan) — 69.00°S, 39.58°E
+> - Mawson (Australia) — 67.60°S, 62.87°E
+> - Zhongshan (China) — 69.37°S, 76.37°E
+> - Progress (Russia) — 69.38°S, 76.39°E
+> - Davis (Australia) — 68.58°S, 77.97°E
+>
+> **Cape Town** (33.9°S, 18.4°E) — solid `#12303D` square marker, label
+> `CAPE TOWN`, caption *"Departure port"*.
+>
+> **Two station clusters must read as clusters, not as overlapping clutter.**
+> Where stations sit within a few kilometres of each other, draw the individual
+> dots at true position but run their leader lines to a single small grouped
+> label block set slightly away from the coast:
+>
+> - **Schirmacher Oasis** — Maitri, Novolazarevskaya and Dakshin Gangotri sit
+>   within a few km near 11.7–12.0°E. Group-label these three together.
+> - **Larsemann Hills** — Bharati, Zhongshan and Progress sit within ~20 km near
+>   76.2–76.4°E. Group-label these three together.
+>
+> Inside each grouped block, India's station name is `#12303D` SemiBold and the
+> others are `#5A7280` Regular, so the eye finds India first.
+>
+> **Two voyage paths**, both starting at Cape Town, drawn as solid `#0E7A4A`
+> lines 5 px wide, curving realistically around the densest ice rather than
+> cutting through it:
+> - a shorter path running almost due south to **Maitri**
+> - a much longer path sweeping south-east to **Bharati**
+>
+> **Reading order — this is critical.** The viewer's eye must start at Cape Town
+> and travel outward with no ambiguity. Achieve this with:
+> - a filled `#0E7A4A` circle numbered **1** placed directly on Cape Town
+> - a numbered **2** on Maitri, a numbered **3** on Bharati
+> - directional chevrons spaced along each route line, pointing away from Cape
+>   Town
+> - the two route lines being the highest-contrast elements on the page, so they
+>   are seen before any text
+>
+> **One measurement annotation**, a thin `#1B6478` double-headed arrow spanning
+> between the two Indian coastal clusters, labelled in small caps:
+> `2,450 km APART · BOTH SERVED IN ONE SUMMER`
+>
+> **One hazard annotation**, a short `#C97B1E` leader pointing into the densest
+> white ice near the coast: *"Sea ice closes the approach — and moves every day"*
+>
+> **Title block**, top-left, over the ocean, generous margin:
+> Heading in Inter Tight SemiBold `#12303D`, 2 lines: **"One ship. One summer.
+> Two stations 2,450 km apart."**
+> Subtitle in `#5A7280`: *"India's bases share this coast — and this ice — with
+> six other nations."*
+>
+> **Total word count on the entire image must not exceed 95 words**, station
+> names included. Every label earns its place or is removed.
+>
+> **Do not include:** a compass rose, a decorative border, latitude/longitude
+> gridlines, ships drawn as illustrations, national flags, icons, glows, or any
+> 3D effect. Flat, precise, cartographic.
 
 ---
 
-## PROMPT 1 — The story diagram (right half of a slide)
-
-> Create a high-resolution vertical infographic, aspect ratio **8:9** (portrait),
-> rendered at **3000 × 3375 pixels**, designed to occupy the right half of a
-> 16:9 presentation slide. Leave a 6% margin of empty space on all sides.
->
-> **Subject:** how an AI system guides a research ship safely through Antarctic
-> sea ice. The audience is a bright, curious 15-year-old — the diagram must be
-> instantly understandable with zero prior knowledge, and should feel like an
-> adventure, not a technical manual.
->
-> **Background:** deep polar-night navy `#0A1F2E`, with a very subtle darker
-> radial vignette so the centre content lifts forward.
->
-> **Layout:** a single vertical journey with **five numbered stages**, flowing
-> top to bottom, connected by a glowing cyan `#62C6DA` line that visibly
-> *thickens and brightens* as it descends — so the eye is pulled downward and
-> the sequence feels like momentum building toward an answer.
->
-> Each stage is a rounded card (16 px corner radius) in a slightly lighter navy
-> `#12293A`, with a soft cyan outer glow, containing a large simple flat-vector
-> icon on the left and two lines of text on the right.
->
-> **The five stages, in this exact order and wording:**
->
-> 1. **"Satellites watch the ice"** — icon: a satellite beaming a cone of light
->    down onto a white-and-cyan ice sheet. Subtext: *"Every single day, even
->    through darkness and cloud."*
-> 2. **"AI predicts where the ice will move"** — icon: a stylised neural network
->    of glowing cyan nodes morphing into an ice map. Subtext: *"Up to 7 days
->    ahead."*
-> 3. **"Physics predicts where icebergs drift"** — icon: a large iceberg with
->    ~90% shown submerged below a waterline, with curved arrows for wind and
->    ocean current. Subtext: *"Real equations, not guesswork."*
-> 4. **"The computer finds the safest route"** — icon: a small map with a green
->    `#117A3D` route curving around an amber `#E5A55F` hazard zone. Subtext:
->    *"Balancing safety, speed and fuel."*
-> 5. **"The ship gets it — with no internet"** — icon: a research vessel with a
->    small offline/no-signal symbol glowing green beside it. Subtext: *"Works
->    on a laptop on the bridge, in the middle of nowhere."*
->
-> **Stage numbers:** large circular badges (1–5), cyan outline with the numeral
-> in `#F5FAFB`, sitting on the connecting line at each card's left edge.
->
-> **Header** at the top, above stage 1, in Poppins SemiBold `#F5FAFB`:
-> **"From satellite to ship's bridge"** — with a smaller cyan subtitle beneath:
-> *"How we guide a ship through moving ice."*
->
-> **Emotional payoff:** stage 5's card is the visual climax — give it the
-> strongest green `#117A3D` glow, slightly larger scale than the others, so the
-> viewer's eye lands on the ship arriving safely and feels resolution.
->
-> **Style:** modern flat vector illustration with subtle glows. Clean, confident,
-> a little cinematic. No photorealism, no clip-art, no 3D bevels, no drop
-> shadows, no stock-photo people. Absolutely no lorem ipsum — use exactly the
-> text specified above and no other text.
-
----
-
-## PROMPT 2 — The system architecture diagram (full slide)
+## PROMPT 2 — System architecture (full slide)
 
 > Create a high-resolution technical system-architecture diagram, aspect ratio
-> **16:9**, rendered at **3840 × 2160 pixels**, designed to fill a presentation
-> slide. Leave a 4% margin on all sides.
+> **16:9**, rendered at **3840 × 2160 pixels**, filling a presentation slide.
+> Light mode. Style reference: an architecture figure from a well-designed
+> engineering whitepaper — crisp, factual, generously spaced. Not a corporate
+> slide, not an illustration.
 >
-> **Subject:** the architecture of an AI decision-support platform for Antarctic
-> ship navigation. The audience is a technically literate judge: it must look
-> rigorous and considered, while still being readable from across a room.
+> **Background:** `#F7FAFB`. All boxes are white `#FFFFFF` with a 1.5 px
+> `#C0CFD7` border and a 4 px corner radius — square-ish, not bubbly. All arrows
+> `#1B6478`, 2 px, with small solid triangular heads.
 >
-> **Background:** deep navy `#0A1F2E`. Section bands in slightly lighter navy
-> `#12293A` with 1 px cyan `#62C6DA` borders at 30% opacity.
+> **Structure: three horizontal bands.** The essential visual idea is that the
+> top band is wide, the middle band is a *narrow pinch*, and the bottom band is
+> wide again — an hourglass. A viewer must grasp that separation before reading
+> any label.
 >
-> **Overall structure: three horizontal bands, stacked top to bottom.** The
-> single most important visual idea is that the top band and the bottom band are
-> *separated by a narrow bottleneck* — this separation is the architecture's core
-> insight and must be immediately obvious.
+> ### BAND 1 — top, ~42% of height
 >
-> ### BAND 1 (top, ~45% of height) — labelled **"ASHORE — needs bandwidth and a GPU"**
+> Band label, small caps, left-aligned above the band, `#5A7280`:
+> `ASHORE — HEAVY COMPUTING, FULL BANDWIDTH`
 >
-> A left-to-right pipeline of five stages, connected by cyan arrows:
+> Five boxes, left to right, joined by arrows:
 >
-> 1. **Data sources** — a vertical stack of five small pill-shaped labels:
->    `NSIDC satellite ice`, `CMEMS ocean forecast`, `ERA5 / GFS weather`,
->    `GEBCO seafloor depth`, `USNIC iceberg positions`
-> 2. **Quality control & regridding** — box, subtitle *"artifact masking · one
->    common grid"*
-> 3. **AI ice forecast** — the visual hero of this band. Show **five small
->    stacked neural-network cards** (an ensemble) feeding into one output,
->    labelled **"5× U-Net ensemble"**, subtitle *"corrects the operational
->    forecast"*. Beside it, a small bell-curve/spread icon labelled
->    **"calibrated uncertainty"** in amber `#E5A55F`.
-> 4. **Hazard assembly** — box containing three stacked mini-layers labelled
->    `predicted ice + safety margin`, `iceberg drift zones (physics)`,
->    `source disagreement`
-> 5. **Route optimisation** — box labelled **"PolarRoute"**, subtitle
->    *"Dijkstra over an adaptive mesh · 12 runs → best trade-offs"*
+> 1. **`DATA`** — inside, a compact vertical list in `#5A7280`, one per line:
+>    `Satellite ice` / `Ocean forecast` / `Weather` / `Seafloor depth` /
+>    `Iceberg positions`
+> 2. **`QUALITY CONTROL`** — caption: *"Remove sensor errors"*
+> 3. **`AI ICE FORECAST`** — the visual anchor of this band, drawn slightly
+>    larger. Inside: five thin horizontal bars stacked in `#1B6478`, representing
+>    five models, converging into one bar. Caption: *"5 models · forecasts 7 days
+>    ahead"*. Immediately to its right, a small `#C97B1E` box labelled
+>    `UNCERTAINTY` with caption *"How sure are we?"*
+> 4. **`HAZARD MAP`** — inside, three thin stacked layers labelled `Ice`,
+>    `Icebergs`, `Depth`
+> 5. **`ROUTE SEARCH`** — caption: *"Finds the safest fast route"*
 >
-> ### BAND 2 (middle, ~10% of height) — the bottleneck
+> ### BAND 2 — middle, ~12% of height — the pinch
 >
-> A visually *narrow* horizontal channel, deliberately constrained, containing a
-> single glowing green `#117A3D` capsule labelled **"VOYAGE PACK"**, subtitle
-> *"signed · versioned · under 1 MB"*.
+> Draw this band visually narrow and centred, clearly constricted relative to the
+> bands above and below.
 >
-> Passing through it, a thin green arrow descending from Band 1 to Band 3,
-> annotated on the left in small amber text: **"Iridium satellite link — slow,
-> expensive, sometimes just text-message sized"** and on the right:
-> **"or a USB stick carried aboard in port"**.
+> One capsule, `#0E7A4A` fill, white text, centred: **`VOYAGE PACK`**, with
+> caption directly beneath in `#12303D`: *"Under 1 MB"*
 >
-> Make this band feel like a *pinch point* — narrow, tight, the visual waist of
-> an hourglass. This is the whole point: only a tiny compressed file crosses it.
+> A single `#0E7A4A` arrow passes downward through it. To its left, small
+> `#C97B1E` text: *"Satellite link at sea is slow and expensive"*. To its right,
+> small `#5A7280` text: *"or carried aboard on a USB stick"*.
 >
-> ### BAND 3 (bottom, ~45% of height) — labelled **"ABOARD — no internet required"**
+> ### BAND 3 — bottom, ~42% of height
 >
-> A left-to-right pipeline of four stages:
+> Band label, small caps, left-aligned, `#5A7280`:
+> `ABOARD — WORKS WITH NO INTERNET`
 >
-> 1. **Pack store** — box, subtitle *"current + previous versions, can roll back"*
-> 2. **Local re-planning** — box, subtitle *"full route recomputed in ~9 seconds,
->    ordinary laptop CPU"*
-> 3. **Local API** — small box labelled `FastAPI`
-> 4. **Bridge display** — the largest box in this band, drawn as a simplified
->    map screen showing a green route curving around amber ice, with three small
->    UI callouts beside it: `data age banner`, `risk tolerance slider`,
->    `sources-disagree overlay`
+> Four boxes, left to right, joined by arrows:
 >
-> ### Annotations
+> 1. **`STORED ON BOARD`** — caption: *"Keeps older versions"*
+> 2. **`RE-PLAN`** — caption: *"New route in ~9 seconds, on a laptop"*
+> 3. **`LOCAL SERVER`**
+> 4. **`BRIDGE SCREEN`** — largest box in the band, drawn as a simplified map
+>    panel: pale `#DCE9F2` ocean, a white ice band, and a `#0E7A4A` route curving
+>    around it. Three short labels beside it, each with a thin leader line:
+>    `Data age`, `Risk setting`, `Where sources disagree`
 >
-> - A callout arrow pointing at the **5× U-Net ensemble**, in amber:
->   *"Five models. When they disagree, the route becomes more cautious
->   automatically."*
-> - A callout arrow pointing at the **bottleneck**, in green:
->   *"Everything heavy stays ashore. Only a small file goes to sea."*
+> ### Two annotations only
+>
+> - Thin `#C97B1E` leader to the five-model box: *"When the models disagree, the
+>   route becomes more cautious"*
+> - Thin `#0E7A4A` leader to the pinch: *"Everything heavy stays ashore"*
 >
 > ### Title
 >
-> Top-left, Poppins SemiBold `#F5FAFB`, large: **"System Architecture"**, with a
-> cyan subtitle: *"Heavy computing ashore. Real decisions aboard, offline."*
+> Top-left, above Band 1, Inter Tight SemiBold `#12303D`:
+> **"How the system works"**
+> Subtitle `#5A7280`: *"Built for a ship that has almost no internet."*
 >
-> **Style:** clean modern technical diagram — think a well-designed engineering
-> whitepaper, not a corporate slide. Crisp 2 px lines, generous spacing,
-> consistent 12 px corner radii, strict left-to-right reading order within each
-> band. Every arrow must be labelled or clearly directional. No photorealism, no
-> 3D, no drop shadows, no clip-art icons, no decorative filler. Use only the text
-> specified above.
+> **Reading order must be unmistakable:** strictly left-to-right within each
+> band, strictly top-to-bottom between bands. Number the three bands **1**, **2**,
+> **3** in small `#1B6478` circles at the far left of each band.
+>
+> **Total word count on the entire image must not exceed 110 words.**
+>
+> **Do not include:** photorealism, 3D, drop shadows, glows, gradients on boxes,
+> clip-art icons, stock imagery, decorative filler, or any text beyond what is
+> specified.
 
 ---
 
-## Notes on why these are built this way
+## Why these choices
 
-**Prompt 1 uses a vertical journey**, not a flowchart, because a narrative
-sequence with numbered stages carries a non-expert far better than a network of
-boxes. The thickening line and the brighter final card give it a sense of
-arrival — the viewer feels the problem being solved, which is what makes a
-diagram memorable rather than merely informative.
+**Light mode with an editorial register** removes the "kiddy" problem at its
+root. Childishness came from glows, rounded bubbles and cartoon icons — not from
+simplicity. Simplicity is preserved here by capping the word count (60 and 110
+words) and forcing every label to justify itself.
 
-**Prompt 2's hourglass shape does the persuasive work.** A judge who sees a wide
-top, a pinched middle, and a wide bottom immediately understands the constraint
-the whole system was designed around — before reading a single label. That
-constraint (a ship with almost no internet) is the project's strongest
-differentiator, so the diagram is built to make it the first thing understood.
+**The first diagram is now a real map**, because the geography *is* the argument.
+Two Indian stations 2,450 km apart, one short season, ice closing the approach —
+a judge who sees that understands the problem before a word is spoken. Including
+Dakshin Gangotri as a hollow marker adds a quiet, true detail: India has been
+doing this since 1983, and lost its first base to the ice.
 
-**Colour discipline:** green appears only for "safe / working", amber only for
-"caution / uncertainty", red not at all in these two diagrams — it is reserved
-for the route figure where something is genuinely blocked. Consistent meaning
-across every slide means the audience learns the code once and reads the rest
-fluently.
+**Numbered entry points** (1 on Cape Town; 1-2-3 on the architecture bands) fix
+the "where do I start reading" problem directly, rather than hoping the layout
+implies it.
+
+**Colour carries fixed meaning across every slide**: green is the safe route,
+amber is uncertainty, red is genuinely blocked. Learn it once on slide one, read
+every later slide fluently.
