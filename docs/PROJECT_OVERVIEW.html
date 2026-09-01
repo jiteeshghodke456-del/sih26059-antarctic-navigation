@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SIH26059 — Project Overview</title>
+<style>
+  :root{
+    --ink:#16191d;
+    --deep:#0e3350;
+    --accent:#0f6f74;
+    --amber:#8f4c07;
+    --crimson:#8c2f2f;
+    --green:#1c6b33;
+    --ice:#eaf1f7;
+    --ice-line:#c3d5e4;
+    --muted:#5d666e;
+    --rule:#d7dbdf;
+    --paper:#ffffff;
+  }
+
+  @page{
+    size:A4;
+    margin:19mm 17mm 17mm 17mm;
+    @top-left{
+      content:"SIH26059 · Antarctic Sea-Ice, Iceberg Trajectory & Navigation Decision Support";
+      font-family:"DejaVu Sans",sans-serif; font-size:7pt; color:#8a939b;
+      letter-spacing:.03em;
+    }
+    @bottom-right{
+      content:counter(page);
+      font-family:"DejaVu Sans",sans-serif; font-size:8.5pt; color:#5d666e;
+    }
+    @bottom-left{
+      content:"Internal project document · rev 1 · 1 September 2026";
+      font-family:"DejaVu Sans",sans-serif; font-size:7pt; color:#8a939b;
+    }
+  }
+  @page cover{ margin:0; @top-left{content:none} @bottom-right{content:none} @bottom-left{content:none} }
+
+  *{box-sizing:border-box}
+  body{
+    font-family:"DejaVu Serif",serif;
+    font-size:9.4pt; line-height:1.52; color:var(--ink);
+    margin:0; background:var(--paper);
+    hyphens:auto;
+  }
+
+  /* ---------- cover ---------- */
+  .cover{page:cover; height:297mm; padding:0; position:relative; page-break-after:always}
+  .cover-band{background:var(--deep); color:#fff; padding:26mm 20mm 14mm 20mm; height:124mm}
+  .cover-eyebrow{
+    font-family:"DejaVu Sans",sans-serif; font-size:8.5pt; letter-spacing:.22em;
+    text-transform:uppercase; color:#8fb4d0; margin-bottom:9mm;
+  }
+  .cover h1{
+    font-family:"DejaVu Sans",sans-serif; font-size:27pt; line-height:1.16;
+    font-weight:bold; margin:0 0 7mm 0; color:#fff; letter-spacing:-.01em;
+  }
+  .cover .ps{
+    font-size:11pt; line-height:1.55; color:#cfe0ec; margin:0; max-width:150mm;
+    border-left:2.5pt solid #3d7ba8; padding-left:6mm;
+  }
+  .cover-lower{padding:11mm 20mm 0 20mm}
+  .cover-purpose{
+    font-size:10pt; line-height:1.55; color:var(--ink); max-width:155mm; margin:0 0 9mm 0;
+  }
+  .cover-meta{width:100%; border-collapse:collapse; font-family:"DejaVu Sans",sans-serif; font-size:8.2pt}
+  .cover-meta td{padding:2.1mm 0; border-bottom:.5pt solid var(--rule); vertical-align:top; line-height:1.4}
+  .cover-meta td:first-child{
+    width:40mm; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.08em; font-size:7.2pt; padding-top:2.5mm;
+  }
+  .cover-foot{
+    position:absolute; bottom:13mm; left:20mm; right:20mm;
+    font-family:"DejaVu Sans",sans-serif; font-size:7.2pt; color:var(--muted);
+    border-top:.5pt solid var(--rule); padding-top:2.5mm; line-height:1.45;
+  }
+
+  /* ---------- headings ---------- */
+  h2{
+    font-family:"DejaVu Sans",sans-serif; font-size:15pt; color:var(--deep);
+    margin:0 0 4mm 0; padding-bottom:2.4mm; border-bottom:1.6pt solid var(--deep);
+    line-height:1.24; page-break-after:avoid;
+  }
+  h2 .num{
+    display:inline-block; min-width:11mm; color:var(--accent); font-size:12.5pt;
+  }
+  h3{
+    font-family:"DejaVu Sans",sans-serif; font-size:11pt; color:var(--deep);
+    margin:7mm 0 2.5mm 0; line-height:1.3; page-break-after:avoid;
+  }
+  h4{
+    font-family:"DejaVu Sans",sans-serif; font-size:9.3pt; color:var(--ink);
+    margin:5mm 0 1.8mm 0; line-height:1.35; page-break-after:avoid;
+    letter-spacing:.01em;
+  }
+  .sec{page-break-before:always}
+  .sec-lead{
+    font-size:10pt; color:var(--muted); line-height:1.55; margin:0 0 6mm 0;
+    max-width:158mm; font-style:italic;
+  }
+
+  p{margin:0 0 3mm 0}
+  ul,ol{margin:0 0 3.5mm 0; padding-left:5.5mm}
+  li{margin-bottom:1.6mm; padding-left:1mm}
+  li::marker{color:var(--accent)}
+  ul ul,ol ol,ul ol,ol ul{margin:1.6mm 0 0 0}
+  strong{color:#000}
+  code{
+    font-family:"DejaVu Sans Mono",monospace; font-size:8.2pt;
+    background:#f2f5f7; padding:.4mm 1mm; border-radius:1pt; color:#123;
+  }
+  pre{
+    font-family:"DejaVu Sans Mono",monospace; font-size:7.8pt; line-height:1.42;
+    background:#f5f7f9; border-left:2pt solid var(--accent); padding:3mm 4mm;
+    margin:0 0 4mm 0; white-space:pre-wrap; overflow-wrap:break-word; color:#1b2733;
+  }
+  a{color:var(--accent); text-decoration:none}
+
+  /* ---------- tables ---------- */
+  table.d{
+    width:100%; border-collapse:collapse; font-family:"DejaVu Sans",sans-serif;
+    font-size:8pt; margin:0 0 5mm 0; line-height:1.4;
+  }
+  table.d th{
+    background:var(--deep); color:#fff; text-align:left; padding:2mm 2.2mm;
+    font-weight:bold; font-size:7.6pt; letter-spacing:.02em; vertical-align:bottom;
+  }
+  table.d td{
+    padding:1.9mm 2.2mm; border-bottom:.5pt solid var(--rule); vertical-align:top;
+  }
+  table.d tbody tr:nth-child(even){background:#f7f9fb}
+  table.d .n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+  table.d .win{color:#0a5c2e; font-weight:bold}
+  table.d caption{
+    caption-side:bottom; text-align:left; font-size:7.6pt; color:var(--muted);
+    padding-top:2mm; font-family:"DejaVu Serif",serif; font-style:italic;
+  }
+
+  /* ---------- callouts ---------- */
+  .box{
+    padding:3.5mm 4.5mm; margin:0 0 5mm 0; font-size:8.9pt; line-height:1.5;
+    border-radius:1.5pt; page-break-inside:avoid;
+  }
+  .box .bt{
+    font-family:"DejaVu Sans",sans-serif; font-size:7.4pt; font-weight:bold;
+    text-transform:uppercase; letter-spacing:.13em; display:block; margin-bottom:2mm;
+  }
+  .box p:last-child,.box ul:last-child,.box ol:last-child{margin-bottom:0}
+  .plain{background:var(--ice); border-left:2.5pt solid var(--deep)}
+  .plain .bt{color:var(--deep)}
+  .honest{background:#fdf6ec; border-left:2.5pt solid var(--amber)}
+  .honest .bt{color:var(--amber)}
+  .risk{background:#fbf0f0; border-left:2.5pt solid var(--crimson)}
+  .risk .bt{color:var(--crimson)}
+  .ok{background:#eef6f0; border-left:2.5pt solid #1c6b33}
+  .ok .bt{color:#1c6b33}
+
+  .kpi{width:100%; border-collapse:separate; border-spacing:2.5mm 0; margin:0 0 5mm 0}
+  .kpi td{
+    background:var(--ice); border-top:2pt solid var(--accent); padding:3mm 3mm;
+    text-align:center; width:25%; vertical-align:top;
+  }
+  .kpi .v{
+    font-family:"DejaVu Sans",sans-serif; font-size:17pt; font-weight:bold;
+    color:var(--deep); display:block; line-height:1.1;
+  }
+  .kpi .l{
+    font-family:"DejaVu Sans",sans-serif; font-size:7pt; color:var(--muted);
+    text-transform:uppercase; letter-spacing:.07em; display:block; margin-top:1.8mm;
+    line-height:1.3;
+  }
+
+  figure{margin:0 0 5mm 0; page-break-inside:avoid}
+  figure img{width:100%; border:.5pt solid var(--ice-line)}
+  figcaption{font-size:7.8pt; color:var(--muted); padding-top:2mm; line-height:1.45}
+
+  .toc{font-family:"DejaVu Sans",sans-serif; font-size:9pt; margin-top:2mm}
+  .toc div{
+    padding:2.1mm 0; border-bottom:.5pt dotted var(--rule); display:flex;
+  }
+  .toc .tn{color:var(--accent); font-weight:bold; min-width:12mm}
+  .toc .tt{flex:1}
+  .toc .td{color:var(--muted); font-size:7.8pt; font-family:"DejaVu Serif",serif; font-style:italic}
+
+  .pill{
+    display:inline-block; font-family:"DejaVu Sans",sans-serif; font-size:6.9pt;
+    font-weight:bold; padding:.5mm 1.6mm; border-radius:1.5pt; letter-spacing:.05em;
+    text-transform:uppercase; vertical-align:.4mm;
+  }
+  .p-done{background:#d9ecdf; color:#155e2c}
+  .p-wip{background:#fdeccd; color:#8f4c07}
+  .p-open{background:#f6dada; color:#8c2f2f}
+  .p-plan{background:#dde7f0; color:#0e3350}
+
+  .twocol{column-count:2; column-gap:7mm}
+  .twocol li{margin-bottom:1.4mm}
+  .avoid{page-break-inside:avoid}
+  .tight li{margin-bottom:1mm}
+  dl.g{margin:0}
+  dl.g dt{
+    font-family:"DejaVu Sans",sans-serif; font-size:8.4pt; font-weight:bold;
+    color:var(--deep); margin-top:2.6mm;
+  }
+  dl.g dd{margin:.6mm 0 0 0; font-size:8.8pt; line-height:1.45}
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER ==================== -->
+<section class="cover">
+  <div class="cover-band">
+    <div class="cover-eyebrow">Smart India Hackathon 2026 · Problem Statement SIH26059</div>
+    <h1>Antarctic Sea-Ice, Iceberg&nbsp;Trajectory and Navigation Decision Support</h1>
+    <p class="ps">“Develop an AI/ML-enabled decision support platform capable of forecasting
+    Antarctic sea-ice concentration, predicting iceberg trajectories, and identifying safe and
+    fuel-efficient navigation routes for research vessels using satellite, oceanographic and
+    meteorological datasets.”<br>
+    <span style="font-size:9pt;color:#8fb4d0">— Ministry of Earth Sciences / NCPOR, Software category</span></p>
+  </div>
+
+  <div class="cover-lower">
+    <p class="cover-purpose"><strong>What this document is.</strong> A complete onboarding and
+    reference brief for the project. It assumes no prior knowledge: it explains what the system
+    does, how it works, every technology and dataset involved, every model and what each one is
+    for, and exactly which parts are built, which are measured, and which are still open. Read
+    §1 and §2 to understand the project; read §3 onward as reference.</p>
+
+    <table class="cover-meta">
+      <tr><td>Ministry</td><td>Ministry of Earth Sciences (MoES) · National Centre for Polar and Ocean Research (NCPOR), Goa</td></tr>
+      <tr><td>Deliverable</td><td>Web application with a local backend, designed to run offline aboard a vessel</td></tr>
+      <tr><td>Two tracks</td><td>Internal hackathon prototype (8 Sept 2026) · SIH Grand Finale product (December 2026)</td></tr>
+      <tr><td>Status</td><td>Prototype trained and measured on real data · production architecture designed, 27 decisions logged, production code not yet started</td></tr>
+      <tr><td>Headline result</td><td>Sea-ice forecast beats every baseline at every horizon tested — up to <strong>+30.6 %</strong> over persistence at 7-day lead</td></tr>
+      <tr><td>Repository</td><td>Private · <code>SIH26059-antarctic-navigation</code></td></tr>
+    </table>
+  </div>
+
+  <div class="cover-foot">
+    Generated 1 September 2026 · Sources: <code>docs/ARCHITECTURE.md</code>,
+    <code>docs/ML_ARCHITECTURE.md</code>, <code>docs/DATASET.md</code>,
+    <code>docs/DECISIONS.md</code>, <code>docs/DIFFERENTIATION.md</code>,
+    <code>docs/NAVIGATION_RESEARCH.md</code>, <code>isih/RESULTS.md</code>.
+    Every number in this document is traceable to one of those files or to a measurement recorded there.
+  </div>
+</section>
+
+<!-- ==================== CONTENTS ==================== -->
+<section>
+  <h2><span class="num">—</span>Contents</h2>
+  <div class="toc">
+    <div><span class="tn">§1</span><span class="tt">Read this first — the project in plain English<br><span class="td">For a brand-new team member. What problem, for whom, and what we are building.</span></span></div>
+    <div><span class="tn">§2</span><span class="tt">How the project works, end to end<br><span class="td">The core idea, the pipeline, the two-tier architecture, and why it is shaped this way.</span></span></div>
+    <div><span class="tn">§3</span><span class="tt">Technologies involved<br><span class="td">Every language, library, service and tool — and the ones we deliberately rejected.</span></span></div>
+    <div><span class="tn">§4</span><span class="tt">Data sources<br><span class="td">Every dataset, its provider, access route, authentication, and where it is used.</span></span></div>
+    <div><span class="tn">§5</span><span class="tt">The models — how many, and what each one does<br><span class="td">Five modelling components. Two are trained. Full detail on each.</span></span></div>
+    <div><span class="tn">§6</span><span class="tt">Results measured so far<br><span class="td">The forecasting numbers, the routing run, and the caveats attached to both.</span></span></div>
+    <div><span class="tn">§7</span><span class="tt">What makes this different from the obvious build<br><span class="td">Seven differentiators, each tied to a component and a falsifiable test.</span></span></div>
+    <div><span class="tn">§8</span><span class="tt">Honesty commitments and known weaknesses<br><span class="td">What we deliberately refuse to claim, and why that is a strength.</span></span></div>
+    <div><span class="tn">§9</span><span class="tt">Key decisions on record<br><span class="td">The 27 architecture decision records, summarised.</span></span></div>
+    <div><span class="tn">§10</span><span class="tt">Current state, open gaps and what happens next<br><span class="td">Exactly what is done, what is not, and the phase plan to December.</span></span></div>
+    <div><span class="tn">§11</span><span class="tt">Repository map and how to get started<br><span class="td">Where everything lives and what to run first.</span></span></div>
+    <div><span class="tn">§12</span><span class="tt">Glossary<br><span class="td">Every acronym and domain term used in this document.</span></span></div>
+  </div>
+
+  <div class="box plain" style="margin-top:8mm">
+    <span class="bt">How to read this document</span>
+    <p>Sections are written so each can be read alone. Anything <strong>measured</strong> is stated
+    with its number and where it was measured. Anything <strong>estimated</strong> says so. Anything
+    <strong>not yet done</strong> is marked <span class="pill p-open">open</span>. If a claim here
+    has no number behind it, that is deliberate — we do not have one yet, and pretending otherwise
+    is the failure mode this project is built to avoid.</p>
+  </div>
+</section>
+
+<!-- ==================== 1. PLAIN ENGLISH ==================== -->
+<section class="sec">
+  <h2><span class="num">§1</span>Read this first — the project in plain English</h2>
+  <p class="sec-lead">Written for someone who has just joined the team and knows nothing about
+  sea ice, ships, or this problem statement. Nothing here requires prior knowledge.</p>
+
+  <h3>1.1 The situation</h3>
+  <ol>
+    <li>Antarctica is surrounded by <strong>sea ice</strong> — a floating layer of frozen seawater
+    that forms, drifts, cracks and melts. It is not fixed. It can move tens of kilometres in a day
+    during a storm.</li>
+    <li>India operates two permanent research stations in Antarctica: <strong>Maitri</strong>
+    (Schirmacher Oasis, 70.8°S 11.7°E) and <strong>Bharati</strong> (Larsemann Hills, 69.4°S
+    76.2°E). A third, Maitri-II, is planned.</li>
+    <li>Once a year, during the austral summer (roughly December to April), a ship must deliver
+    fuel, food, equipment and personnel to those stations. This is the
+    <strong>Indian Scientific Expedition to Antarctica (ISEA)</strong>, run by NCPOR under the
+    Ministry of Earth Sciences.</li>
+    <li>The ship currently used is the <strong>MV Vasiliy Golovnin</strong>, a chartered
+    ice-strengthened Russian diesel-electric vessel. Expeditions are flagged off from Goa, but
+    personnel fly to <strong>Cape Town</strong>, and the sea leg runs Cape Town → Bharati →
+    Maitri.</li>
+    <li>If the ship picks a bad path, it can become <strong>beset</strong> — stuck in ice. That
+    costs days or weeks, burns fuel, risks the hull, and can mean a station does not get resupplied
+    before the window closes.</li>
+  </ol>
+
+  <h3>1.2 The problem we are solving</h3>
+  <div class="box plain">
+    <span class="bt">The problem in one sentence</span>
+    <p>A ship's captain needs to know what the ice will look like <em>days from now</em>, where the
+    icebergs will have drifted to, and which route through all of that is both safe and
+    fuel-efficient — and they need to know it on a ship with almost no internet connection.</p>
+  </div>
+
+  <p>Each part of that sentence is a hard problem on its own:</p>
+  <ul>
+    <li><strong>Forecasting the ice.</strong> Physics supercomputers already forecast sea ice, but
+    their forecasts are systematically wrong in predictable places — especially at the ice edge,
+    which is exactly where ships sail.</li>
+    <li><strong>Predicting icebergs.</strong> Icebergs drift under wind, current and the Earth's
+    rotation. Their positions are only observed weekly, and their future positions carry large,
+    growing uncertainty.</li>
+    <li><strong>Finding a route.</strong> The best route is not the shortest. It trades distance
+    against ice, weather, water depth and fuel, and the constraints themselves are uncertain.</li>
+    <li><strong>Doing it offline.</strong> Geostationary satellite internet does not reliably cover
+    south of about 70°S. Polar ships use <strong>Iridium</strong>, where the practical budget for a
+    routine message is well under 50 kilobytes.</li>
+  </ul>
+
+  <h3>1.3 What we are building</h3>
+  <p>A <strong>decision-support platform</strong> — not an autopilot. It advises; the master
+  decides. It has two halves that are the same codebase running in two modes:</p>
+  <ol>
+    <li><strong>The shore tier</strong> runs at NCPOR on a normal workstation. It has bandwidth and
+    a GPU. It downloads satellite and forecast data, runs the AI models, and every night builds a
+    small compressed file called a <strong>voyage pack</strong>.</li>
+    <li><strong>The vessel tier</strong> runs on a laptop on the ship's bridge. It receives the
+    voyage pack over Iridium — or on a USB stick at port — and then works with <strong>no internet
+    at all</strong>. It can recompute routes on demand in about nine seconds.</li>
+  </ol>
+
+  <div class="box ok">
+    <span class="bt">The design rule that follows from this</span>
+    <p><strong>Ashore: everything that needs bandwidth or a GPU. Aboard: everything that needs to
+    answer a question. Sync: a compressed picture of the environment, never a finished answer.</strong>
+    We deliberately do <em>not</em> send the ship a finished route, because then the captain could
+    not ask "what if I go further east?" — and a system that cannot answer the operator's next
+    question is a picture, not a tool.</p>
+  </div>
+
+  <h3>1.4 The one idea at the heart of the AI</h3>
+  <p>This is the single most important thing to understand about the project.</p>
+  <ol>
+    <li>There is already a good physics forecast of sea ice, produced by the European
+    <strong>Copernicus Marine Service (CMEMS)</strong>. It runs on supercomputers and assimilates
+    live satellite data. We could never out-build it.</li>
+    <li>So <strong>we do not compete with it. We correct it.</strong> Our neural network does not
+    predict sea ice. It predicts <em>how wrong the physics forecast is going to be</em>, and we add
+    that correction on top.</li>
+  </ol>
+  <pre>corrected sea-ice concentration  =  clip( physics forecast  +  our predicted correction ,  0 , 1 )</pre>
+  <ul>
+    <li>Because the network outputs a <em>correction</em>, an untrained network outputs exactly
+    zero and reproduces the physics forecast unchanged. <strong>Our floor is the physics model's
+    skill, not zero.</strong> We can only be judged on what we add.</li>
+    <li>The network is told, per grid cell, <strong>how wrong the forecast is right now</strong> —
+    the difference between the forecast and the most recent real satellite observation. This is
+    called the <strong>innovation</strong> channel, and it is what makes the whole thing work.</li>
+  </ul>
+
+  <div class="box honest">
+    <span class="bt">Why this matters — a real lesson from our own history</span>
+    <p>The first version of our model saw <em>only</em> the physics forecast, with no satellite
+    observations. It scored RMSE 0.1051 and <strong>lost badly</strong> to the dumbest possible
+    baseline ("assume tomorrow's ice looks like today's"). Giving the model access to what the
+    satellite actually saw is what closed the gap. We found this by measuring it ourselves, before
+    a judge could.</p>
+  </div>
+
+  <h3>1.5 What we have achieved so far</h3>
+  <table class="kpi">
+    <tr>
+      <td><span class="v">+30.6&thinsp;%</span><span class="l">better than persistence at 7-day lead</span></td>
+      <td><span class="v">1,096</span><span class="l">real satellite files used, zero failures</span></td>
+      <td><span class="v">17.4</span><span class="l">days — real computed route, Cape Town → Bharati</span></td>
+      <td><span class="v">~9&thinsp;s</span><span class="l">full routing pipeline on a normal laptop</span></td>
+    </tr>
+  </table>
+
+  <h3>1.6 What we are <em>not</em> claiming</h3>
+  <ul class="tight">
+    <li>We are not replacing electronic navigational charts. This is decision support.</li>
+    <li>We do not predict growlers and bergy bits — the small ice that actually holes a hull. No
+    dataset tracks them.</li>
+    <li>We do not print confident absolute fuel numbers, because the fuel curve we have is
+    calibrated for a different ship.</li>
+    <li>We do not claim immunity to climate change. We claim the system degrades
+    <em>visibly</em> rather than silently.</li>
+  </ul>
+</section>
+
+<!-- ==================== 2. HOW IT WORKS ==================== -->
+<section class="sec">
+  <h2><span class="num">§2</span>How the project works, end to end</h2>
+  <p class="sec-lead">From raw satellite files to a route on a screen. This section is the
+  mechanical walk-through; §5 covers the models in depth.</p>
+
+  <h3>2.1 The nine stages</h3>
+  <table class="d">
+    <thead><tr><th style="width:7mm">#</th><th style="width:34mm">Stage</th><th>What happens</th><th style="width:26mm">Where it runs</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td><strong>Ingestion</strong></td><td>One adapter per data source. Downloads satellite sea-ice observations, the physics forecast, wind, waves, sea-surface temperature, bathymetry and iceberg positions. Records a provenance row (source, version, fetch time) for every file.</td><td>Shore</td></tr>
+      <tr><td class="n">2</td><td><strong>Quality control</strong></td><td>Before anything is combined: land-spillover masking, weather-filter false-ice detection, physical range checks, missing-swath detection, preliminary-data tagging, per-source staleness. Output is a <code>qc_flags</code> layer, not a silent cleanup.</td><td>Shore</td></tr>
+      <tr><td class="n">3</td><td><strong>Regridding</strong></td><td>All sources are placed on one grid — NSIDC south polar stereographic, 25&nbsp;km, 332×316 cells. Concentration fields use area-weighted (conservative) interpolation so ice area is preserved; forcing fields use bilinear; masks use nearest. <strong>The truth field is never resampled.</strong></td><td>Shore</td></tr>
+      <tr><td class="n">4</td><td><strong>Ice correction</strong></td><td>The residual U-Net ensemble reads the physics forecast plus the last 7 days of observations and emits a corrected ice field for each lead day 1–10, plus a spread.</td><td>Shore + vessel</td></tr>
+      <tr><td class="n">5</td><td><strong>Uncertainty calibration</strong></td><td>Conformal prediction converts the ensemble spread into an <em>empirically covered</em> upper bound on ice concentration, per lead time and per ice regime.</td><td>Shore</td></tr>
+      <tr><td class="n">6</td><td><strong>Iceberg drift</strong></td><td>Wagner closed-form physics projects each tracked iceberg forward, capped at 72 hours, buffered by its measured error radius.</td><td>Shore</td></tr>
+      <tr><td class="n">7</td><td><strong>Fusion</strong></td><td>Independent ice sources are compared on QC-clean cells only. Where they disagree, the uncertainty bound <em>widens</em> — so the router becomes more cautious exactly where the observational record is least trustworthy.</td><td>Shore</td></tr>
+      <tr><td class="n">8</td><td><strong>Mesh + routing</strong></td><td>meshiphi builds a non-uniform adaptive mesh (finer where conditions vary). PolarRoute runs Dijkstra over it, then physics-informed smoothing. A 12-run sweep produces a dominance-filtered candidate set.</td><td>Shore + vessel</td></tr>
+      <tr><td class="n">9</td><td><strong>Pack &amp; serve</strong></td><td>Everything is serialised, compressed, signed and versioned into a voyage pack under 1&nbsp;MB. The vessel receives it and serves a REST API to a map-based web UI.</td><td>Shore → vessel</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 The two-tier architecture</h3>
+  <pre>┌──────────────── SHORE TIER ("Ops Core") ─── needs bandwidth + GPU ────────────────┐
+│  [1] Ingestion   NSIDC CDR · AMSR2 · OSI SAF · OISST · GFS · ERA5 ·               │
+│                  CMEMS forecast + GLORYS12 · GEBCO (once) · USNIC + BYU bergs     │
+│        ↓ QC pass → qc_flags layer  ↓ regrid to NSIDC 25 km  ↓ cache raw           │
+│  [2] Training    residual U-Net × 5   ·   GBM drift residual (stretch)            │
+│        ↓ checkpoints — GPU ashore, never retrained aboard                          │
+│  [3] Nightly pack build                                                           │
+│        CMEMS forecast (base) + residual U-Net → SIC μ, σ, leads +1..+10           │
+│        conformal q̂(lead, regime) → SIC_upper                                     │
+│        Wagner drift → berg positions + radii, capped at 72 h                       │
+│        multi-source fusion → disagreement layer                                    │
+│        meshiphi → non-uniform corridor mesh                                        │
+│        PolarRoute × 12 sweep → dominance-filtered candidate set                    │
+│  [4] VOYAGE PACK  (signed, versioned, &lt; 1 MB gzip)                                │
+└──────────────────────────────────┬────────────────────────────────────────────────┘
+                    Iridium / port wifi / sneakernet USB
+                    delta sync · resumable · integrity-checked
+┌──────────────────────────────────▼──── VESSEL TIER ("Bridge") ────────────────────┐
+│  same codebase, MODE=vessel, no outbound network required                          │
+│  [5] Local store   latest pack + N previous (rollback)                             │
+│  [6] Local compute PolarRoute re-plan on demand (~9 s)                             │
+│                    U-Net re-correction when fresh observations arrive (~0.3–1 s)   │
+│  [7] REST API  →  [8] React + Leaflet UI                                           │
+│        staleness banner · confidence decay · candidate-route selector              │
+│        risk-tolerance slider (labelled by MEASURED coverage)                        │
+│        source-disagreement overlay · forecast-grade vs climatology-grade legs      │
+└───────────────────────────────────────────────────────────────────────────────────┘</pre>
+
+  <h3>2.3 Why the tier boundary sits exactly there</h3>
+  <p>Three boundaries were considered and measured, not guessed:</p>
+  <table class="d">
+    <thead><tr><th>Option</th><th class="n" style="width:24mm">Sync payload</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td><strong>(a)</strong> Vessel receives finished routes only</td><td class="n">~1 KB</td><td><strong>Rejected.</strong> The master cannot re-plan. Decision support that cannot answer the operator's next question is a picture, not a tool.</td></tr>
+      <tr><td><strong>(b)</strong> Vessel receives the environmental mesh and routes locally</td><td class="n">76 KB gzip<br>(measured)</td><td class="win">Chosen.</td></tr>
+      <tr><td><strong>(c)</strong> Vessel runs ingestion and training too</td><td class="n">GB-scale</td><td><strong>Rejected.</strong> Impossible over Iridium.</td></tr>
+    </tbody>
+    <caption>Option (b) is only defensible because it was measured: the full PolarRoute pipeline runs
+    in ~9 s on modest CPU, and a U-Net forward pass takes milliseconds.</caption>
+  </table>
+
+  <h3>2.4 The bandwidth budget — the constraint that shapes everything</h3>
+  <table class="d">
+    <thead><tr><th>Payload</th><th class="n" style="width:20mm">Raw</th><th class="n" style="width:20mm">Gzip</th><th style="width:52mm">Status</th></tr></thead>
+    <tbody>
+      <tr><td>Vessel-modelled mesh, 10°×20° box, 824 cells</td><td class="n">551 KB</td><td class="n"><strong>76 KB</strong></td><td><span class="pill p-done">measured</span> the representative unit</td></tr>
+      <tr><td>Full corridor mesh refresh</td><td class="n">—</td><td class="n">0.5–1 MB</td><td><span class="pill p-open">estimated</span> not measured; the mesh splits hardest in the ice edge, exactly where the corridor crosses</td></tr>
+      <tr><td>Daily incremental delta</td><td class="n">—</td><td class="n">—</td><td><span class="pill p-open">unmeasured</span> <strong>the load-bearing number</strong></td></tr>
+      <tr><td>Environmental mesh, pre-vessel-model</td><td class="n">336 KB</td><td class="n">72 KB</td><td><span class="pill p-done">measured</span></td></tr>
+      <tr><td>Route polyline + fuel/time summary</td><td class="n">1.6 KB</td><td class="n">796 B</td><td><span class="pill p-done">measured</span> the <em>smallest</em> payload — quoted last on purpose</td></tr>
+      <tr><td>Model weights, 5 × ~3 M params fp32</td><td class="n">—</td><td class="n">~60 MB</td><td><strong>never over Iridium</strong> — USB at port only</td></tr>
+    </tbody>
+  </table>
+  <div class="box honest">
+    <span class="bt">Honest headline, stated worst case first</span>
+    <p>A full corridor refresh is a minutes-to-tens-of-minutes Iridium transfer, and the daily delta
+    — the number the design actually depends on — <strong>has not yet been measured</strong>. What
+    <em>is</em> measured is that a representative vessel-modelled mesh block compresses to 76 KB,
+    which makes the 50 KB daily target plausible rather than proven. A CI test fails the build if a
+    pack exceeds budget. <strong>If the measurement disappoints, we coarsen the mesh or lengthen the
+    refresh cadence — we never renegotiate the budget.</strong></p>
+  </div>
+
+  <h3>2.5 What happens when things go wrong</h3>
+  <p>The system is designed around graceful degradation. It never goes silent.</p>
+  <table class="d">
+    <thead><tr><th style="width:52mm">Failure</th><th>Behaviour</th></tr></thead>
+    <tbody>
+      <tr><td>No connectivity for days</td><td>Normal operation on the cached pack; staleness escalates green → amber → red; past pack validity it enters <strong>climatology mode</strong> — a dashed planning corridor, not a route line, with a permanent banner. Never silence.</td></tr>
+      <tr><td>Forecast lead exceeds validated skill</td><td><strong>Tier down, do not refuse.</strong> Forecast-grade → CMEMS-direct → climatology-grade. The plan always covers the whole voyage; the <em>grade</em> of each leg is visible in the UI.</td></tr>
+      <tr><td>Path smoothing fails or hangs</td><td>Serve the unsmoothed Dijkstra path (0.7 s, verified) flagged <code>unsmoothed</code>. The fallback is inherent to the pipeline — no extra code.</td></tr>
+      <tr><td>Conformal coverage gate fails</td><td>The calibrated bound is withdrawn as the routed field, the risk slider is <strong>removed from the UI rather than left as theatre</strong>, and the corresponding differentiator is publicly demoted.</td></tr>
+      <tr><td>Ensemble members disagree strongly</td><td>The bound widens → automatically more cautious route + explicit low-confidence banner.</td></tr>
+      <tr><td>Sources disagree with each other</td><td>Disagreement widens uncertainty and renders as an overlay — on QC-clean cells only, so a sensor artifact cannot masquerade as genuine disagreement.</td></tr>
+      <tr><td>Iceberg exclusion zones cover &gt;5 % of the corridor</td><td>The berg layer auto-downgrades from hard exclusion to a weighted cost for that pack, and says so.</td></tr>
+      <tr><td>A data source is down at build time</td><td>Per-channel imputation policy; if the base forecast or the observations are missing, an <strong>obs-only pack</strong> ships instead — a declared pack type, not an error state.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== 3. TECHNOLOGIES ==================== -->
+<section class="sec">
+  <h2><span class="num">§3</span>Technologies involved</h2>
+  <p class="sec-lead">Everything in the stack, what it is for, and its status. Versions marked
+  “pinned as tested” were installed and run in this project, not read about.</p>
+
+  <h3>3.1 Core language and runtime</h3>
+  <table class="d">
+    <thead><tr><th style="width:38mm">Technology</th><th style="width:20mm">Version</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Python</strong></td><td>3.11.14</td><td>Everything server-side. Pinned to 3.11 because PolarRoute will not build on 3.12+ and IceNet's dependency tree requires <code>&lt;3.12</code>.</td></tr>
+      <tr><td><code>uv</code></td><td>—</td><td>Virtual-environment and dependency management. Chosen over pip/conda for install speed and reproducible resolution.</td></tr>
+      <tr><td><strong>Node.js</strong></td><td>—</td><td>Frontend toolchain only.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 Machine learning</h3>
+  <table class="d">
+    <thead><tr><th style="width:38mm">Technology</th><th>Role in this project</th></tr></thead>
+    <tbody>
+      <tr><td><strong>PyTorch</strong></td><td>The residual U-Net — architecture, training loop, inference. Chosen over TensorFlow because the model is custom (a residual head with zero-initialised output) and PyTorch's imperative style makes that trivial.</td></tr>
+      <tr><td><strong>NumPy</strong></td><td>All array work: channel assembly, regridding, baseline computation, metrics.</td></tr>
+      <tr><td><strong>xarray</strong> + <strong>netCDF4</strong></td><td>Reading NetCDF climate/ocean files. Every primary dataset in this domain ships as NetCDF.</td></tr>
+      <tr><td><strong>zarr</strong></td><td>Chunked on-disk storage for the ~19–38 GB production training set. <span class="pill p-open">not built</span></td></tr>
+      <tr><td><strong>scikit-learn</strong> / gradient boosting</td><td>The optional iceberg drift residual model. Deliberately <em>not</em> a neural network — see §5.3.</td></tr>
+      <tr><td><strong>Conformal prediction</strong><br>(implemented directly)</td><td>Split-conformal calibration, stratified by lead time × ice regime. Roughly 40 lines of NumPy; no library needed, and writing it ourselves means we can state exactly what it does.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 Geospatial and routing</h3>
+  <table class="d">
+    <thead><tr><th style="width:38mm">Technology</th><th style="width:18mm">Version</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td><strong>PolarRoute</strong><br><span style="color:var(--muted)">British Antarctic Survey, MIT licence</span></td><td>1.1.11</td><td>The routing engine. Dijkstra over a non-uniform mesh, plus physics-informed Newton smoothing of cell crossings. Written by the institution that actually operates Antarctic research vessels.</td></tr>
+      <tr><td><strong>meshiphi</strong><br><span style="color:var(--muted)">BAS, companion library</span></td><td>2.3.1</td><td>Builds the non-uniform adaptive mesh and hosts the data loaders. Its <code>ScalarCSVDataLoader</code> is ~15 lines — any DataFrame with <code>lat</code>, <code>long</code> and a named column becomes a mesh layer, so injecting our ML output needs essentially no adapter code.</td></tr>
+      <tr><td><strong>GEBCO</strong> grid + TID grid</td><td>2025/26</td><td>Bathymetry (water depth) and, critically, the Type Identifier grid that distinguishes <em>measured</em> soundings from <em>predicted</em> seabed.</td></tr>
+      <tr><td>pyproj / EPSG:3412</td><td>—</td><td>NSIDC south polar stereographic projection, Hughes 1980 ellipsoid. The single target grid for everything.</td></tr>
+      <tr><td>geopandas / shapely</td><td>—</td><td>Iceberg exclusion polygons and route geometry.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box ok">
+    <span class="bt">Verified, not assumed — PolarRoute integration cost</span>
+    <p>Rather than reason about integration risk from a README, PolarRoute was installed and run end
+    to end. Install: <strong>~90 s, all binary wheels, zero compilation</strong> — the usual
+    geospatial-stack nightmare (GDAL, PROJ, rasterio from source) simply does not occur. Complete
+    pipeline for a 10°×20° box: <strong>mesh build 2.1 s → 824 cells · vessel performance 0.1 s ·
+    Dijkstra 0.7 s · smoothing 6.1 s ≈ 9 s total.</strong> Interactive speed, demo-safe.</p>
+  </div>
+
+  <h3>3.4 Backend, frontend and infrastructure</h3>
+  <table class="d">
+    <thead><tr><th style="width:38mm">Technology</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td><strong>FastAPI</strong></td><td>The REST API. One service with a <code>MODE=shore|vessel</code> switch — two deployment modes of the <em>same</em> application, not two products. This roughly halves the build and is architecturally honest, because the routing and inference code genuinely is identical on both sides.</td></tr>
+      <tr><td><strong>React</strong> + <strong>Leaflet</strong></td><td>The map-centred operator UI. Every response is annotated with its age and confidence.</td></tr>
+      <tr><td><strong>GitHub Actions</strong></td><td>Two jobs: the <strong>daily CMEMS forecast harvest</strong> (06:00 UTC — running now, and the data it collects cannot be back-filled), and the <strong>sync-budget CI test</strong> that fails the build if a pack exceeds its size budget.</td></tr>
+      <tr><td><strong>Kaggle Notebooks</strong></td><td>Free T4 GPU for training — 30 GPU-hours/week, and the whole 5-member ensemble is costed at 8–12 GPU-hours. The prototype was trained here.</td></tr>
+      <tr><td>Local <strong>RTX 5060</strong></td><td>Development training and iteration.</td></tr>
+      <tr><td><code>tar.zst</code> + signing</td><td>Voyage pack format: compressed, signed, versioned, delta-syncable, rollback-capable.</td></tr>
+      <tr><td><code>copernicusmarine</code>, <code>cdsapi</code></td><td>Official Python clients for CMEMS and the Copernicus Climate Data Store.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.5 Technologies deliberately rejected</h3>
+  <p>Recorded because the reasoning is part of the deliverable.</p>
+  <table class="d">
+    <thead><tr><th style="width:44mm">Rejected</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><strong>LLM / RAG / agent framework</strong></td><td>There is no natural-language task in this problem statement. Every component is a numerical prediction or a graph search. Deterministic and classical methods are better suited here, cheaper, verifiable against held-out data, and able to run offline on a ship. A chatbot over real data is precisely the convergent shallow build we are differentiating from.</td></tr>
+      <tr><td><strong>The <code>icenet</code> library</strong></td><td><span class="pill p-done">verified</span> Its pins (<code>tensorflow&lt;2.16</code>, <code>netcdf4&lt;1.6.1</code>, plus the deprecated <code>motuclient</code>, 51 dependencies) <strong>directly conflict</strong> with meshiphi/PolarRoute, which resolve to <code>netcdf4==1.7.4</code>. The two cannot share a Python environment. Also: IceNet's published validation is Arctic, and no Southern-Hemisphere weights exist — it would need full retraining anyway.</td></tr>
+      <tr><td><strong>Reimplementing grid A*</strong></td><td>The measured integration cost of PolarRoute is low, so the usual justification evaporates. Reimplementing would forfeit non-uniform meshing, physics-informed smoothing and the vessel-performance framework — and invite the question "why did you ignore the field's own open-source tool?"</td></tr>
+      <tr><td><strong>CICE / LIM2 dynamical ice model</strong></td><td>Operational infrastructure run by national centres. Not standable-up by a hackathon team — and our design now <em>consumes</em> the output of exactly such a system instead of pretending to rebuild one.</td></tr>
+      <tr><td><strong>Quantum-annealing route optimisation</strong></td><td>Real in the current literature, but requires D-Wave access and buys optimisation speed we do not need at ~9 s per route. Complexity with no benefit at our scale.</td></tr>
+      <tr><td><strong>LSTM on the ice-extent time series</strong></td><td>Predicts a scalar. The router needs a spatial field.</td></tr>
+      <tr><td><strong>A neural network for iceberg drift residual</strong></td><td>The residual problem is small-data and tabular. Gradient boosting is the correct tool for that regime; feature importances also let us demonstrate the model recovering known physics, which is worth more to a judge than a marginally better score.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== 4. DATA ==================== -->
+<section class="sec">
+  <h2><span class="num">§4</span>Data sources</h2>
+  <p class="sec-lead">Every dataset was checked live from a sandbox shell on 31 August 2026, both by
+  HTTP fetch and by <code>curl</code>. No synthetic or placeholder data is used anywhere in the
+  product — that is a hard project rule.</p>
+
+  <div class="box ok">
+    <span class="bt">Project rule: no dummy data, ever</span>
+    <p>Every dataset used for training or demonstration, and every model inference, is real. Where
+    real data was not yet available, work stopped and a source was found rather than scaffolding
+    with synthesised placeholders. The only permitted exception is minimal synthetic fixtures inside
+    <em>unit tests</em> that check code plumbing, not model behaviour.</p>
+  </div>
+
+  <h3>4.1 Master table — every source</h3>
+  <table class="d">
+    <thead><tr>
+      <th style="width:31mm">Source</th><th style="width:18mm">Provider</th><th>What we take from it</th>
+      <th style="width:19mm">Auth</th><th style="width:20mm">Status</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>NOAA/NSIDC Sea Ice CDR</strong><br><code>G02202</code> v4/v6, <code>G10016</code> NRT</td>
+        <td>NSIDC / NOAA</td>
+        <td><strong>The truth field.</strong> Observed sea-ice concentration, 25 km south polar stereographic, 332×316. Passive microwave SSM/I–SSMIS, 1979–present including a near-real-time stream. Also carries <code>qa_flag</code> and <code>stdev</code>, which feed QC for free.</td>
+        <td><strong>None</strong></td>
+        <td><span class="pill p-done">1,096 files downloaded, 0 failures</span></td>
+      </tr>
+      <tr>
+        <td><strong>CMEMS GLORYS12</strong><br><code>GLOBAL_MULTIYEAR_PHY_001_030</code></td>
+        <td>Mercator Ocean / EU Copernicus</td>
+        <td><strong>The background field for training.</strong> Ocean reanalysis, 1/12° (~8 km), 50 depth levels, 1993–present, daily. Provides <code>siconc</code> (ice concentration) and <code>sithick</code> (thickness).</td>
+        <td>Free account</td>
+        <td><span class="pill p-done">used in prototype</span></td>
+      </tr>
+      <tr>
+        <td><strong>CMEMS operational forecast</strong><br><code>GLOBAL_ANALYSISFORECAST_PHY_001_024</code></td>
+        <td>Mercator Ocean / EU Copernicus</td>
+        <td><strong>The background field in production</strong> — the real 10-day operational forecast we bias-correct. Also currents (u/v), SST, salinity, sea-surface height, mixed-layer depth.</td>
+        <td>Free account</td>
+        <td><span class="pill p-wip">daily harvest cron running</span></td>
+      </tr>
+      <tr>
+        <td><strong>AMSR2</strong><br><code>NSIDC-0803</code> / <code>AU_SI12</code></td>
+        <td>JAXA / NSIDC</td>
+        <td>Independent second ice observation at 12.5 km — used for the <em>disagreement</em> layer and high-resolution ice-edge cross-check, deliberately <strong>not</strong> as a model input so its independence is preserved.</td>
+        <td>Earthdata login</td>
+        <td><span class="pill p-plan">planned</span></td>
+      </tr>
+      <tr>
+        <td><strong>EUMETSAT OSI SAF</strong><br>OSI-401-d, 408-a, 402-d, 403-d, 405-d</td>
+        <td>EUMETSAT</td>
+        <td>Third ice voice: concentration (10 km), ice edge, ice <em>type</em>, and low-resolution ice drift (62.5 km). Ice type matters for POLARIS (§10.4).</td>
+        <td>Free account</td>
+        <td><span class="pill p-plan">planned</span></td>
+      </tr>
+      <tr>
+        <td><strong>ESA CCI Sea Ice</strong></td><td>ESA / CEDA</td>
+        <td>Long-baseline concentration CDR at 25/12.5/50 km, 1991–2020+. Training and validation depth.</td>
+        <td>Some open, some CDS</td><td><span class="pill p-plan">planned</span></td>
+      </tr>
+      <tr>
+        <td><strong>ERA5</strong><br><code>reanalysis-era5-single-levels</code></td>
+        <td>ECMWF / Copernicus C3S</td>
+        <td>Historical forcing for <em>training</em>: 10 m u/v wind, 2 m temperature, mean sea-level pressure, and — from the same dataset — significant wave height, mean wave direction and period. 0.25°, hourly, 1940–present.</td>
+        <td>Free CDS account</td>
+        <td><span class="pill p-done">endpoint verified</span></td>
+      </tr>
+      <tr>
+        <td><strong>NOAA GFS</strong> (NOMADS)</td><td>NOAA NCEP</td>
+        <td>Operational wind forecast for <em>serving</em> — global 0.25°, 4 cycles/day, out to 384 h. Region-subsettable so an Antarctic wind-only request is small.</td>
+        <td><strong>None</strong></td>
+        <td><span class="pill p-done">live query executed</span></td>
+      </tr>
+      <tr>
+        <td><strong>NOAA OISST v2.1</strong></td><td>NOAA NCEI</td>
+        <td>Daily sea-surface temperature, 0.25° global, since 1981. Ships a <code>_preliminary</code> flag we propagate rather than ignore.</td>
+        <td><strong>None</strong></td>
+        <td><span class="pill p-done">current to 2 days ago</span></td>
+      </tr>
+      <tr>
+        <td><strong>USNIC Antarctic Icebergs</strong></td><td>US National Ice Center</td>
+        <td>Current iceberg positions and sizes, weekly, as CSV <em>and shapefile</em> — immediately GIS-usable. Tracks bergs ≥20 sq nm or ≥10 nm longest axis.</td>
+        <td><strong>None</strong></td>
+        <td><span class="pill p-done">verified live</span></td>
+      </tr>
+      <tr>
+        <td><strong>BYU/NIC Iceberg Database</strong></td><td>Brigham Young Univ. + USNIC</td>
+        <td>Historical iceberg training data: daily lat/lon, major/minor axis, 1978–2025. Plus a statistical database with rotation velocity and surrounding-environment mask.</td>
+        <td><strong>None</strong></td>
+        <td><span class="pill p-done">verified live</span></td>
+      </tr>
+      <tr>
+        <td><strong>GEBCO</strong> gridded bathymetry + TID grid</td><td>IHO + IOC (Seabed 2030)</td>
+        <td>Water depth at 15 arc-second (~450 m) resolution, and the provenance grid saying which cells are surveyed versus predicted.</td>
+        <td><strong>None</strong></td>
+        <td><span class="pill p-open">not yet downloaded</span></td>
+      </tr>
+      <tr>
+        <td><strong>Sentinel-1 SAR</strong> (CDSE)</td><td>ESA / Copernicus</td>
+        <td>C-band radar imagery — works through Antarctic winter darkness and cloud. Ice edge, lead detection, iceberg detection.</td>
+        <td>Free CDSE token</td>
+        <td><span class="pill p-plan">stretch goal only</span></td>
+      </tr>
+      <tr>
+        <td><strong>NCPOR NPDC</strong> + Synoptic-Bharati</td><td>NCPOR (India)</td>
+        <td>Automatic weather station and station observation data from Maitri and Bharati — <strong>local ground truth near India's own stations</strong>, and a strong point for an MoES audience.</td>
+        <td>Varies</td>
+        <td><span class="pill p-plan">stretch — validation only</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 The one genuine data gap</h3>
+  <div class="box honest">
+    <span class="bt">There is no “Antarctic shipping lane” dataset — and there never was</span>
+    <p>No downloadable recommended-ice-lane dataset exists from the IHO or anyone else. Official
+    Electronic Navigational Charts for Antarctic waters are licensed and paywalled through national
+    hydrographic offices, and Antarctic coverage is notoriously sparse because the region is barely
+    surveyed. The IMO Polar Code and METAREA products are safety-broadcast systems, not structured
+    route datasets.</p>
+    <p><strong>This is not a failure in our research — it is a confirmation that route computation
+    is the product's actual job, not an input it should be looking to ingest.</strong></p>
+  </div>
+
+  <h3>4.3 A related honesty note on bathymetry</h3>
+  <p>Much of the Antarctic corridor's GEBCO bathymetry is <em>predicted</em> from satellite
+  altimetry, not surveyed by echo sounder. A router that treats depth as truth is trusting a model
+  with metre-to-hundreds-of-metre error. We handle this rather than merely admitting it:</p>
+  <ul class="tight">
+    <li>We ingest GEBCO's <strong>Type Identifier (TID) grid</strong> and carry it as a mesh layer.</li>
+    <li>The depth margin is <strong>conditional on provenance</strong>: minimum under-keel clearance
+    of <strong>20 m in surveyed cells</strong> and <strong>max(50 m, 3 × draft) in predicted
+    cells</strong>.</li>
+    <li>A “predicted bathymetry” overlay shows the master which parts of a route cross unsurveyed
+    seabed, and the disclosure sits next to the depth legend in the product — not only in a document.</li>
+  </ul>
+</section>
+
+<!-- ==================== 5. MODELS ==================== -->
+<section class="sec">
+  <h2><span class="num">§5</span>The models — how many, and what each one does</h2>
+
+  <div class="box plain">
+    <span class="bt">Direct answer to the question</span>
+    <p>The system has <strong>five modelling components</strong>. <strong>Two of them are
+    trained</strong> — one deep-learning model (load-bearing) and one classical-ML model (optional).
+    The other three are physics or exact algorithms with no learned parameters. There are also two
+    supporting layers that are not models but shape every output: conformal calibration and
+    multi-source fusion.</p>
+  </div>
+
+  <table class="d">
+    <thead><tr><th style="width:8mm">#</th><th style="width:44mm">Component</th><th style="width:22mm">Trained?</th><th style="width:24mm">Type</th><th>Job in one line</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td><strong>SIC bias-correction residual U-Net × 5</strong></td><td class="win">Yes — deep learning</td><td>Convolutional neural network</td><td>Make the physics sea-ice forecast more accurate.</td></tr>
+      <tr><td class="n">2</td><td><strong>Wagner iceberg drift</strong></td><td>No — closed-form physics</td><td>Analytical equation</td><td>Predict where each iceberg will drift.</td></tr>
+      <tr><td class="n">3</td><td><strong>Iceberg drift residual (GBM)</strong> <span class="pill p-plan">stretch</span></td><td class="win">Yes — classical ML</td><td>Gradient-boosted trees</td><td>Correct the physics drift model's systematic error.</td></tr>
+      <tr><td class="n">4</td><td><strong>Vessel performance model</strong></td><td>No — published physics</td><td>Semi-empirical formulas</td><td>Convert ice, wind and waves into achievable speed and fuel burn.</td></tr>
+      <tr><td class="n">5</td><td><strong>Route optimiser</strong></td><td>No — exact algorithm</td><td>Dijkstra + Newton smoothing</td><td>Find the best path through the resulting cost field.</td></tr>
+      <tr style="background:#f0f4f7"><td>—</td><td><em>Conformal calibration layer</em></td><td>Fitted, not trained</td><td>Statistical</td><td>Turn model spread into an honest, measured uncertainty bound.</td></tr>
+      <tr style="background:#f0f4f7"><td>—</td><td><em>Multi-source fusion layer</em></td><td>No</td><td>Architectural</td><td>Compare independent ice sources; widen caution where they disagree.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- MODEL 1 -->
+  <h3>5.1 Model 1 — Sea-ice concentration bias-correction residual U-Net <span class="pill p-done">trained &amp; measured</span></h3>
+  <p>This is the load-bearing AI of the whole system. Everything else consumes its output.</p>
+
+  <h4>What it does</h4>
+  <p>It reads a physics sea-ice forecast plus the last week of real satellite observations, and
+  outputs a <strong>correction field</strong> — a per-grid-cell number that gets added to the
+  forecast.</p>
+  <pre>ΔSIC_k  =  g_θ( F_k ,  O_{t-6..t} ,  F_0 − O_t ,  forcing ,  k )
+SIC_k   =  clip( F_k + ΔSIC_k ,  0 ,  1 )
+
+  F_k        the physics forecast valid k days ahead
+  O_{t-6..t} the last 7 days of real satellite observations
+  F_0 − O_t  the INNOVATION — how wrong the forecast is right now, at this cell
+  k          the lead time, fed in as its own input channel</pre>
+
+  <h4>Why a residual, and not a direct forecast</h4>
+  <ol>
+    <li><strong>The floor is CMEMS's skill, not zero.</strong> <code>ΔSIC = 0</code> reproduces the
+    operational forecast exactly. The model cannot be much worse than the bar, and can only be
+    judged on what it adds.</li>
+    <li><strong>The innovation channel targets a documented, specific defect.</strong> Copernicus is
+    known to systematically underestimate ice concentration in the marginal ice zone. Anchoring the
+    correction to the current per-cell error is the mechanism by which the model can learn that
+    specific bias rather than a generic climatological offset.</li>
+    <li><strong>The model can be small.</strong> A residual on an already-skilful field needs far
+    less capacity than a forecaster — ~3 M parameters instead of 8–15 M, which is what makes the
+    whole ensemble fit inside free-tier GPU hours.</li>
+  </ol>
+
+  <div class="box honest">
+    <span class="bt">This was a corrected mistake, and the correction is instructive</span>
+    <p>Revision 1 of the design committed to a <em>from-scratch direct forecaster</em> competing with
+    CMEMS. An adversarial review killed it: our own competitive analysis had already called CMEMS
+    “the operational baseline any novel forecasting claim has to beat, and it's a hard bar,” and
+    then we set our bar at naive persistence instead. <strong>We had ducked our own bar.</strong>
+    The gap analysis had even named the right method — “DL bias-correction on top of a short-range
+    ice-ocean model” — but the example given was TOPAZ4, an <em>Arctic</em> system, so it was filed
+    as unusable. That was reading a <em>method</em> as a <em>product</em>. The method transfers to
+    Antarctica; the global CMEMS system was already sitting in our own data inventory, being used for
+    currents and ignored for ice.</p>
+  </div>
+
+  <h4>Architecture</h4>
+  <table class="d">
+    <thead><tr><th style="width:44mm">Property</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Shape</td><td>3-level U-Net — encoder / bottleneck / decoder with skip connections. Each block: Conv3×3 → BatchNorm → ReLU, twice.</td></tr>
+      <tr><td>Input (production)</td><td><strong>19 channels</strong> — see the table below</td></tr>
+      <tr><td>Input (prototype)</td><td><strong>12 channels</strong> — the subset obtainable from data already on disk</td></tr>
+      <tr><td>Output</td><td><strong>1 channel</strong> — ΔSIC, deliberately <em>unbounded</em>. Clipping to a valid concentration happens after adding the base forecast, because it is the <em>sum</em> that must land in [0,1], not the correction alone.</td></tr>
+      <tr><td>Parameters</td><td>Measured at depth 3, 19 channels: <code>base_filters=16</code> → 485,041 · <code>24</code> → 1,088,137 · <code>32</code> → 1,931,617 · <strong><code>40</code> → 3,015,481 (default)</strong>. The trained prototype has <strong>1,929,601</strong>.</td></tr>
+      <tr><td>Output head</td><td><strong>Zero-initialised</strong> (<code>nn.init.zeros_</code> on both weight and bias). An untrained model is therefore a strict no-op that reproduces the forecast exactly, rather than injecting random noise into an already-skilful field.</td></tr>
+      <tr><td>Grid handling</td><td>The 332×316 polar-stereographic grid is not divisible by 2³, so the input is replicate-padded up to a multiple and cropped back at the end, keeping skip connections aligned.</td></tr>
+      <tr><td>Ensemble</td><td><strong>5 members</strong>, varied by random seed <em>and input perturbation</em> — forcing channels jittered at the analysis-error scale, and a resampled observation window. Seed-only ensembles capture parameter uncertainty alone and systematically under-disperse.</td></tr>
+      <tr><td>Lead handling</td><td>Lead time is an <em>input channel</em>, not an output head. One network serves all leads 1–10, and the training set is 10× larger per forecast cycle.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>The 19 production input channels</h4>
+  <table class="d">
+    <thead><tr><th style="width:9mm">Ch</th><th style="width:52mm">Channel</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td>Base forecast SIC at lead k</td><td>CMEMS operational forecast (serve) / GLORYS12 (train)</td></tr>
+      <tr><td class="n">1</td><td>Base SIC at lead 0 (the analysis)</td><td>as above</td></tr>
+      <tr><td class="n">7</td><td>Observed SIC, previous 7 days</td><td>NOAA/NSIDC CDR, 25 km</td></tr>
+      <tr><td class="n">1</td><td><strong>Innovation</strong> <code>F₀ − Oₜ</code></td><td>derived — the key channel</td></tr>
+      <tr><td class="n">3</td><td>2 m temperature, 10 m u/v wind</td><td>ERA5 (train) / GFS (serve)</td></tr>
+      <tr><td class="n">1</td><td>Sea-surface temperature</td><td>NOAA OISST v2.1</td></tr>
+      <tr><td class="n">2</td><td>Day-of-year sine and cosine</td><td>derived — seasonality</td></tr>
+      <tr><td class="n">1</td><td>Lead time k, normalised</td><td>derived</td></tr>
+      <tr><td class="n">1</td><td>Land / ocean mask</td><td>derived from GEBCO</td></tr>
+      <tr><td class="n">1</td><td>QC-flag fraction</td><td>our own QC pass — so the network can learn to distrust what the ingest layer distrusted</td></tr>
+    </tbody>
+    <caption>The prototype's 12 channels are channels 1, the 7 observations, the innovation, the two
+    day-of-year terms and the mask — everything obtainable without ERA5 or OISST.</caption>
+  </table>
+
+  <h4>How it is trained</h4>
+  <p>Training is deliberately split in two stages, because bias-correcting a <em>forecast</em>
+  requires an archive of past <em>forecasts</em> — and CMEMS keeps only a rolling window, so a
+  multi-decade archive of its lead-k fields does not exist to be downloaded.</p>
+  <table class="d">
+    <thead><tr><th style="width:20mm">Stage</th><th style="width:38mm">Base field</th><th style="width:38mm">Period</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A</strong><br>bulk training</td><td>GLORYS12 reanalysis SIC as a model <em>background</em>, paired with NSIDC CDR observations as truth</td><td>1993–2018 train<br>2019–2021 validate<br>2022–2024 test<br><span style="color:var(--muted)">2023 reported separately</span></td><td>Learn the model-minus-observation error structure of the Mercator/NEMO-LIM ice model that the CMEMS forecast is built on — same model family, same biases, deep archive.</td></tr>
+      <tr><td><strong>B</strong><br>transfer + acceptance</td><td>The <strong>real</strong> CMEMS 10-day forecast, harvested one cycle per day</td><td>Sept 2026 onward, accumulating</td><td>Fine-tune on true forecast statistics, and <em>verify Stage A transfers</em>.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box risk">
+    <span class="bt">The time-critical dependency everyone on the team should know</span>
+    <p><strong>The Stage B archive cannot be back-filled.</strong> Every day the daily CMEMS harvest
+    does not run is a day permanently missing from the acceptance test — which is the strongest
+    claim in the entire pitch ("we beat the operational forecast on its own held-out output"). The
+    cron is running now. It must not be switched off.</p>
+  </div>
+
+  <h4>Compute budget</h4>
+  <table class="d">
+    <thead><tr><th style="width:60mm">Quantity</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Forward + backward cost</td><td>~8 GFLOP/sample</td></tr>
+      <tr><td>Samples per epoch</td><td>9,500 cycles × 10 leads, subsampled to 3 leads/cycle ≈ 28,500</td></tr>
+      <tr><td>Cost per epoch</td><td>~230 TFLOP</td></tr>
+      <tr><td><strong>On one NVIDIA T4</strong></td><td>~2–4 min/epoch → 40 epochs ≈ 1.5–2.5 h/member → <strong>8–12 GPU-hours for all five</strong></td></tr>
+      <tr><td>On CPU only</td><td>~85 h for the ensemble — <strong>rejected</strong>, leaves no room to iterate, and iteration is where calibration gets fixed</td></tr>
+      <tr><td><strong>Inference</strong></td><td>5 members × 10 leads over the corridor ≈ 15 GFLOP → <strong>0.3–1 s on a bridge laptop, no GPU.</strong> This is what makes the two-tier claim hold.</td></tr>
+      <tr><td>Training data volume</td><td>19 channels × 9,500 days ≈ <strong>38 GB</strong> at float16, or ~19 GB with SIC as scaled uint8. Chunked zarr on local SSD.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>How it is evaluated — and the gate that can kill it</h4>
+  <ul>
+    <li><strong>Strictly temporal split.</strong> Never random. Sea ice barely changes overnight, so
+    a random split puts adjacent days on both sides and produces a spectacular, meaningless score.
+    <em>This is the most common fatal flaw in ML-on-climate submissions</em> and is stated explicitly
+    for that reason.</li>
+    <li><strong>Baseline 1 — raw packed CMEMS. Mandatory and build-blocking.</strong> For each lead,
+    the corrected forecast must beat the raw forecast on <em>both</em> IIEE (integrated ice-edge
+    error) and CRPS, on held-out real forecast cycles. <strong>A lead that fails is not claimed</strong>
+    — the pack ships the raw field for that lead labelled <code>uncorrected</code>, and the declared
+    skill horizon shortens.</li>
+    <li><strong>Baseline 2 — damped anomaly persistence</strong> as the floor.</li>
+    <li><strong>Baseline 3 — the trivial uncertainty proxy.</strong> The calibrated bound must beat
+    free inter-source disagreement as an uncertainty estimator. If a three-way difference predicts
+    the error as well as the trained σ does, the trained σ is decorative and we say so.</li>
+    <li><strong>Metrics:</strong> RMSE, IIEE at the 15 % threshold (the navigationally meaningful
+    one), binary F1 at the vessel-relevant threshold, CRPS, interval score.</li>
+    <li><strong>Stress test: 2023</strong>, the Antarctic extreme-minimum year, evaluated and
+    reported separately, with no threshold — publication is the requirement, not passing.</li>
+  </ul>
+
+  <!-- MODEL 2 -->
+  <h3>5.2 Model 2 — Iceberg drift, Wagner (2017) closed form <span class="pill p-plan">designed</span></h3>
+  <p>Load-bearing, and deliberately <strong>not</strong> machine learning.</p>
+  <pre>v_i  =  v_w  +  γ( α · k̂ × v_a  +  β · v_a )
+
+  v_i  iceberg velocity        v_w  ocean current velocity
+  v_a  wind velocity           k̂    vertical unit vector (Coriolis term)
+  α, β, γ  functions of berg dimensions and latitude</pre>
+  <ul>
+    <li><strong>Inputs:</strong> ocean current (CMEMS), wind (ERA5 historical / GFS operational),
+    berg length and width (BYU/USNIC), latitude (Coriolis).</li>
+    <li><strong>No fitted parameters</strong> beyond standard literature drag coefficients.</li>
+    <li><strong>Why it is the baseline:</strong> zero training data required, closed-form (so no ODE
+    integration and therefore no numerical-stability failure mid-demo), implements in ~100 lines,
+    unit-testable against the published reference, and it is the physics core that IDRIFTNET — the
+    2025 state of the art — itself builds on. It is not a strawman baseline; it is the field's base
+    case.</li>
+    <li><strong>Evaluation:</strong> leave-one-<em>iceberg</em>-out. Segments from the same berg are
+    heavily correlated, so a random segment split leaks the same trajectory into both sides and is
+    meaningless. Metrics are Average and Final Displacement Error at 24 / 48 / 72 h.</li>
+  </ul>
+
+  <div class="box honest">
+    <span class="bt">The horizon cap, and why it exists</span>
+    <p>Physics-only displacement error is <strong>127–147 km</strong> at 7 days. An honest
+    uncertainty radius that size around every tracked berg turns the hazard layer into either an
+    ocean-wide blockade (honest but useless) or a quietly shrunk buffer (useful but dishonest).
+    Neither is acceptable. So: <strong>drift is projected 72 hours, never further.</strong> Beyond
+    that we draw nothing and show last-known positions labelled <em>“position as of &lt;date&gt;, not
+    projected”</em> — a stale fact, not a fabricated forecast. And if exclusion polygons ever cover
+    more than <strong>5 % of navigable corridor area</strong>, the layer auto-downgrades from hard
+    exclusion to a weighted cost, and the UI says so.</p>
+  </div>
+
+  <!-- MODEL 3 -->
+  <h3>5.3 Model 3 — Iceberg drift residual, gradient boosting <span class="pill p-plan">stretch goal</span></h3>
+  <ul>
+    <li><strong>What it does:</strong> predicts the Wagner model's 24-hour displacement residual
+    (Δx, Δy) from tabular features — berg major/minor axis, local wind speed and direction, current
+    speed and direction, local ice concentration, latitude, distance from coast.</li>
+    <li><strong>Why gradient boosting and not a neural network:</strong> the residual problem is
+    <em>small-data and tabular</em> — BYU/USNIC give weekly-to-daily positions for large tabular
+    bergs only. Gradient boosting is the correct tool for that regime. IDRIFTNET's own stated
+    motivation for going hybrid was that pure neural approaches converge poorly on the available
+    data; the same logic pushes further toward classical ML for the correction term.</li>
+    <li><strong>Interpretability is a judging asset here.</strong> Feature importances let us
+    demonstrate that the model recovers known physics — wind dominating for smaller bergs, currents
+    dominating for large tabular ones. <em>A model that rediscovers the physics is far more
+    convincing than one that merely scores well.</em></li>
+    <li><strong>It must beat both baselines to ship</strong> — velocity persistence <em>and</em>
+    pure Wagner. If it does not, the physics baseline ships alone, and that is a perfectly good
+    outcome.</li>
+  </ul>
+  <p>The fallback is specified as a rule, not an intention, and is unit-tested:</p>
+  <pre>fire_fallback(x, Δ)  =  ANY_OOD(x)  OR  |Δ| &gt; c_sanity
+
+ANY_OOD(x) : for any feature j,  x_j &lt; min_j − 0.10·range_j
+                              or x_j &gt; max_j + 0.10·range_j
+             (ranges taken from the TRAINING fold only, frozen at fit time
+              and serialised into the model artefact next to the weights)
+c_sanity   : p99 of |residual correction| over the training fold, in km</pre>
+  <p>Per-feature ranges beat Mahalanobis distance or an isolation forest here because they are
+  inspectable in the UI (“berg B-15 fell outside the trained wind-speed range”) and cannot
+  themselves be miscalibrated. Two unit tests assert the fallback actually fires — because an
+  untested fallback is an unfired fallback.</p>
+
+  <!-- MODEL 4 -->
+  <h3>5.4 Model 4 — Vessel performance model <span class="pill p-wip">reused, needs recalibration</span></h3>
+  <p>Not trained. Published semi-empirical naval-architecture formulas, taken from PolarRoute's own
+  vessel class and re-parameterised for our ship.</p>
+  <table class="d">
+    <thead><tr><th style="width:36mm">Sub-model</th><th>What it computes</th><th style="width:26mm">Status</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ice resistance</strong></td><td>Froude-number formula using ice concentration, thickness, density, hull beam and hull type. Slender-hull parameters <code>[4.4, −0.8267, 2.0]</code>; blunt <code>[16.1, −1.7937, 3]</code>.</td><td>Works</td></tr>
+      <tr><td><strong>Speed inversion</strong></td><td>If ice resistance exceeds the hull's force limit, solve for the safe speed that brings it back under.</td><td>Works</td></tr>
+      <tr><td><strong>Wind resistance</strong></td><td>Real 8-heading apparent-wind model on ERA5 <code>u10</code>/<code>v10</code>. Feeds resistance and therefore fuel.</td><td>Works</td></tr>
+      <tr><td><strong>Fuel</strong></td><td>Polynomial in speed and resistance, returning tonnes/day.</td><td><span class="pill p-wip">calibrated for the wrong ship</span></td></tr>
+      <tr><td><strong>Wave resistance</strong></td><td>Kreitner formula — <em>defined in three PolarRoute vessel classes and called by none of them.</em></td><td><span class="pill p-open">dead code — see §10.4</span></td></tr>
+    </tbody>
+  </table>
+  <div class="box honest">
+    <span class="bt">Why we will not print an absolute fuel number</span>
+    <p>PolarRoute's fuel polynomial is empirically fitted to the <strong>RRS Sir David
+    Attenborough</strong>, a British ship. We do not have the Vasiliy Golovnin's power/fuel curve.
+    Therefore fuel is reported as a <strong>relative comparison between candidate routes</strong> —
+    which is what actually informs the decision — and any absolute tonnes/day figure is labelled
+    <em>uncalibrated model output</em>. Competitors will display confident absolute fuel savings they
+    cannot possibly have calibrated. Declining to do so is a differentiator, not a shortfall.</p>
+  </div>
+  <p>Similarly, ice <strong>thickness and density</strong> come from meshiphi's lookup table, whose
+  own docstring reads <em>“Creates a simulated dataset … based on scientific literature.”</em> It is
+  a literature-derived climatological parameterisation of the kind used throughout the field — not
+  fabricated data, but it must be labelled, because the ice-resistance figure inherits its
+  uncertainty. Note also that <strong>without thickness and density present in the mesh, the
+  ice-resistance speed adjustment silently does nothing</strong> — verified in source, and a live
+  trap for anyone wiring this up.</p>
+
+  <!-- MODEL 5 -->
+  <h3>5.5 Model 5 — Route optimiser <span class="pill p-done">run on real data</span></h3>
+  <ul>
+    <li><strong>Algorithm:</strong> Dijkstra over the non-uniform adaptive mesh — exact on that
+    mesh, not a heuristic — followed by <strong>Newton-method crossing smoothing</strong>, which
+    relaxes cell-boundary crossing points the way light refracts, turning a kinked shortest path
+    into a physically sailable one.</li>
+    <li><strong>Objectives available:</strong> <code>traveltime</code>, <code>fuel</code>,
+    <code>battery</code>.</li>
+    <li><strong>Multi-objective handling.</strong> PolarRoute accepts only a single objective string,
+    so we sweep: <strong>2 objectives × 6 risk-tolerance settings = 12 runs, ~7 s each ≈ 84 s.</strong>
+    Every resulting route is then scored on <em>all three</em> quantities — passage time, modelled
+    fuel, and route-integrated ice risk — so the trade-off triple is <em>measured on the route</em>,
+    not inherited from the objective it was solved under. Dominated routes are discarded.</li>
+    <li><strong>Named honestly:</strong> we call it a <em>dominance-filtered candidate set (12-run
+    sweep)</em>, not a “Pareto frontier” — 12 samples of a continuous trade-off surface is a set, not
+    a frontier. If the filter leaves one route, we show one route and say the trade-off collapsed.</li>
+  </ul>
+
+  <h3>5.6 The two supporting layers</h3>
+  <h4>Conformal calibration</h4>
+  <pre>score  s_i  =  ( y_i − μ_i ) / ( σ_i + ε )              one-sided: we bound only from above
+q̂(stratum) =  ⌈(n+1)(1−α)⌉ / n  empirical quantile of { s_i } within the stratum
+SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
+  <ul class="tight">
+    <li><strong>Distribution-free</strong> — makes no Gaussian assumption about a variable bounded in
+    [0,1] whose error at the ice edge is strongly asymmetric.</li>
+    <li><strong>Stratified into 30 strata</strong>: 10 lead times × 3 regimes (open water &lt;15 %,
+    marginal ice zone 15–80 %, pack &gt;80 %). Miscalibration is worst in the MIZ at long leads —
+    exactly where the router consumes the bound.</li>
+    <li><strong>The operator control is target coverage</strong> (80/90/95 %), not a sigma multiple.
+    The demo line changes from “this is 1.28 sigma” to <strong>“this says 90 % and it measured
+    90.4 % on held-out data.”</strong></li>
+    <li>The ensemble supplies the <em>spatial shape</em> of the uncertainty; the conformal quantile
+    supplies its <em>magnitude</em>, from measured residuals.</li>
+  </ul>
+  <div class="box risk">
+    <span class="bt">Pre-committed pass/fail — written before the numbers exist</span>
+    <p>At nominal 90 % coverage, on held-out 2022–24 data: empirical coverage in MIZ cells at lead 5
+    must fall in <strong>[85 %, 96 %]</strong> — over-coverage fails too, because a bound that is
+    right 99 % of the time is too wide to steer by — and mean bound width at lead 5 must be
+    <strong>under 25 SIC-%</strong>. <strong>If any check fails</strong>, the bound stops being the
+    routed field, the slider is <em>removed from the UI rather than left as theatre</em>, and the
+    corresponding claim is publicly demoted. This branch is written down now so it cannot be quietly
+    renegotiated afterwards.</p>
+  </div>
+
+  <h4>Multi-source fusion and disagreement</h4>
+  <ul class="tight">
+    <li>Where two or more independent, QC-clean sources cover a cell, inter-source disagreement is
+    retained as <strong>its own mesh layer</strong>.</li>
+    <li>Disagreement <strong>widens the uncertainty bound</strong>, so the router is automatically
+    most cautious exactly where the observational record is least trustworthy. It changes the route
+    — it is not a second basemap.</li>
+    <li>QC runs <em>first</em>. Without it, a fusion layer cannot tell a sensor artifact from genuine
+    disagreement, and would widen the route around a phantom. Flagged cells are excluded from the
+    disagreement statistic and rendered distinctly — they are different facts.</li>
+  </ul>
+</section>
+
+<!-- ==================== 6. RESULTS ==================== -->
+<section class="sec">
+  <h2><span class="num">§6</span>Results measured so far</h2>
+  <p class="sec-lead">Everything below is from the ISIH prototype, trained 31 August 2026 on a
+  Kaggle T4 GPU. These are the numbers to quote.</p>
+
+  <h3>6.1 Sea-ice forecasting</h3>
+  <table class="d">
+    <thead><tr>
+      <th>Lead time</th><th class="n">Our model</th><th class="n">Persistence</th>
+      <th class="n">Background + pixel bias</th><th class="n">Raw GLORYS12</th><th class="n">Gain vs persistence</th>
+    </tr></thead>
+    <tbody>
+      <tr><td><strong>1 day</strong></td><td class="n win">0.0465</td><td class="n">0.0570</td><td class="n">0.1461</td><td class="n">0.1630</td><td class="n win">+18.5 %</td></tr>
+      <tr><td><strong>3 days</strong></td><td class="n win">0.0720</td><td class="n">0.0958</td><td class="n">0.1461</td><td class="n">0.1630</td><td class="n win">+24.9 %</td></tr>
+      <tr><td><strong>5 days</strong></td><td class="n win">0.0938</td><td class="n">0.1204</td><td class="n">0.1468</td><td class="n">0.1637</td><td class="n win">+22.1 %</td></tr>
+      <tr><td><strong>7 days</strong></td><td class="n win">0.0968</td><td class="n">0.1395</td><td class="n">0.1468</td><td class="n">0.1637</td><td class="n win">+30.6 %</td></tr>
+    </tbody>
+    <caption>RMSE in sea-ice-concentration fraction; lower is better. 1,929,601 parameters,
+    12 input channels, one model per horizon, same seed at every lead so the horizons are
+    comparable. Test set scored exactly once.</caption>
+  </table>
+
+  <div class="box ok">
+    <span class="bt">The operational claim this supports</span>
+    <p>Our error grows <em>more slowly</em> than the baseline's. From day 1 to day 7 our RMSE rises
+    <strong>2.1×</strong> while persistence rises <strong>2.5×</strong>. The advantage is
+    <em>largest at 7 days</em> — which is the horizon a voyage is actually planned over.</p>
+    <p style="margin-top:2.5mm"><strong>“The further ahead the ship needs to plan, the more the
+    model matters.”</strong> That is an operational claim, not a benchmark score.</p>
+  </div>
+
+  <h4>Why these numbers are trustworthy</h4>
+  <ul>
+    <li><strong>Three-way temporal split.</strong> Train 70 % → validation 15 % (used only to pick
+    the epoch) → test 15 %, <strong>scored exactly once</strong>. An earlier run reported +27 % by
+    selecting the best of 30 epochs on the same set it then reported — that number was inflated and
+    is not used.</li>
+    <li><strong>Split by time, never randomly.</strong> A random split would put adjacent days in
+    both train and test and produce a spectacular, meaningless score.</li>
+    <li><strong>Persistence is not a strawman.</strong> Measured on real 2020 NSIDC data it scores
+    0.0359 at same-day lead — better than <em>any</em> background correction. Had we evaluated at
+    same-day lead, persistence would have won and the honest conclusion would have been that the
+    model adds nothing.</li>
+    <li><strong>Baselines were computed before training</strong>, so the bar was fixed before the
+    result was known.</li>
+    <li><strong>Real data throughout.</strong> 1,096 NSIDC files, zero failures.</li>
+  </ul>
+
+  <h3>6.2 Routing</h3>
+  <figure>
+    <img src="file:///home/jiteesh/sih/SIH26059-antarctic-navigation/.claude/worktrees/foamy-seeking-allen/isih/figures/route_map.png" alt="Computed route from Cape Town to Bharati station over real satellite sea-ice concentration for 1 December 2019">
+    <figcaption><strong>Figure 1.</strong> Real computed route, Cape Town → Bharati, on real
+    satellite ice for 1 December 2019, using PolarRoute 1.1.11. The figure computes its own
+    annotation numbers at render time, so the claims cannot drift from the data if the route or date
+    changes.</figcaption>
+  </figure>
+
+  <table class="d">
+    <thead><tr><th style="width:60mm">Quantity</th><th class="n">Value</th></tr></thead>
+    <tbody>
+      <tr><td>Voyage time</td><td class="n"><strong>17.4 days</strong></td></tr>
+      <tr><td>Waypoints</td><td class="n">59</td></tr>
+      <tr><td>Maximum ice on our route</td><td class="n"><strong>79 %</strong></td></tr>
+      <tr><td>Maximum ice on the straight line</td><td class="n">92 %</td></tr>
+      <tr><td>Vessel ice limit as configured</td><td class="n">80 %</td></tr>
+      <tr><td>Fraction of the straight line that is impassable</td><td class="n">3.7 %</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box honest">
+    <span class="bt">A claim we had to withdraw — and this is the culture we want</span>
+    <p>The first version of this figure said the route <em>“bends around the thickest ice.”</em>
+    Measuring showed that is <strong>false</strong>: the time-optimal route crosses <em>more</em>
+    average ice than the straight line (19.6 % vs 8.4 %), because it trades moderate ice for a
+    shorter path. Only the <em>maximum</em> matters, and there the route genuinely wins.</p>
+    <p style="margin-top:2.5mm">So if asked <em>“does your route avoid ice?”</em> the honest answer
+    is: <strong>it avoids impassable ice, and accepts moderate ice where that is faster.</strong>
+    That is what optimising travel time under a hard ice constraint actually means, and it is a
+    better answer than a vague claim about avoidance.</p>
+  </div>
+
+  <h3>6.3 Caveats attached to these results — state them, do not hide them</h3>
+  <ol>
+    <li><strong>The background is a reanalysis, not a forecast — the sharpest question we will be
+    asked.</strong> Raw GLORYS12 scores 0.1630 at lead 1 and 0.1637 at lead 7 — essentially flat. A
+    real forecast degrades with lead time; this does not, because a reanalysis assimilates satellite
+    observations including near the date being predicted. <em>The honest answer:</em> if GLORYS12
+    contained the answer its own RMSE would be near zero rather than 0.163, which is worse than
+    persistence at every horizon — so it is not handing over the target. But it may carry some future
+    signal, and we do not claim otherwise. The clean test is the ablation below, and production
+    corrects a real forecast where this cannot arise.</li>
+    <li><strong>Validation scores better than test at every lead</strong> (lead 3: val 0.0611 vs test
+    0.0720). Expected — validation selects the epoch, so it is optimistically biased.
+    <strong>Always quote the test numbers.</strong></li>
+    <li><strong>Single model per horizon, no uncertainty layer yet.</strong> Production trains five
+    and turns their disagreement into a calibrated safety margin that changes the route.</li>
+    <li><strong>12 channels, not 19.</strong> No ERA5 wind/temperature, no OISST — the physical
+    drivers of ice motion are currently invisible to the model.</li>
+    <li><strong>~2 years of training data</strong> (2019–2020) versus 1993–2024 for production.</li>
+    <li><strong>Corridor region only</strong> (5°W–85°E, 48°S–80°S), not circumpolar.</li>
+    <li><strong>Routing has no bathymetry.</strong> GEBCO was not downloaded; the mesh reported “no
+    elevation data” for every cell. Shallow water and land are <em>not</em> being avoided. This must
+    be added before any claim about navigational safety.</li>
+    <li><strong>Routing used observed ice, not forecast ice.</strong> Wiring the trained model into
+    the router is what turns this from a hindsight map into a decision-support tool.</li>
+  </ol>
+
+  <div class="box plain">
+    <span class="bt">The ablation that settles caveat 1 <span class="pill p-open" style="margin-left:2mm">not yet run</span></span>
+    <p>Retrain with the background channel zeroed, leaving only real past observations and derived
+    channels. <strong>If the score barely moves</strong> — the background contributes little, leakage
+    is a non-issue, and the model's skill comes from observation history. Strongest possible answer.
+    <strong>If the score drops sharply</strong> — the background is doing real work, and we must
+    state that the prototype's numbers may not transfer to a live-forecast setting until production
+    tests it. Either outcome is worth having before a viva. Cost: about 20 minutes.</p>
+  </div>
+</section>
+
+<!-- ==================== 7. DIFFERENTIATION ==================== -->
+<section class="sec">
+  <h2><span class="num">§7</span>What makes this different from the obvious build</h2>
+  <p class="sec-lead">Given only a one-sentence problem statement, every competent team converges on
+  roughly the same architecture. Knowing what that is — and where it is shallow — is how we differ.</p>
+
+  <h3>7.1 What a strong competing team plausibly builds</h3>
+  <ol class="tight">
+    <li>Pull CMEMS ice concentration + NIC/BYU iceberg positions + ERA5 wind/current data.</li>
+    <li>Fine-tune or reimplement a U-Net for short-horizon ice forecasting.</li>
+    <li>Iceberg trajectory as <em>either</em> pure physics <em>or</em> an LSTM — rarely both.</li>
+    <li>Routing as A*/Dijkstra with ice as an edge-cost penalty — a static shortest path.</li>
+    <li>Wrap it in a Leaflet dashboard with a chat layer, demo three cherry-picked scenarios.</li>
+  </ol>
+  <p>We know this is the convergent pattern because it already happened: for a sibling MoES problem
+  statement in SIH 2025 (“FloatChat”), <strong>at least four teams independently built the same
+  chatbot-over-real-data wrapper</strong>, where the “AI” was retrieval and NL-to-SQL translation
+  rather than a trained predictive model.</p>
+
+  <h3>7.2 The seven differentiators</h3>
+  <dl class="g">
+    <dt>D1 — Uncertainty reaches the routing <em>decision</em>, not just the legend</dt>
+    <dd>We route on a probabilistic upper bound of ice concentration, not a point forecast.
+    <strong>Verified gap in the incumbent:</strong> meshiphi's own IceNet loader ingests forecasts and
+    <em>explicitly discards</em> the uncertainty — its <code>df.drop(columns=[...])</code> call
+    removes <code>sic_stddev</code> and <code>ensemble_members</code>. BAS's own production polar
+    router plans on the mean and throws the spread away. We reinstate it, and our vessel subclass
+    thresholds on the calibrated bound instead of the raw field. <em>Falsifiable:</em> moving the
+    risk slider must produce a <em>different route geometry</em>, not different shading.</dd>
+
+    <dt>D2 — Physics-first drift with a classical-ML residual, and a stated blind spot</dt>
+    <dd>Neither an opaque black box nor physics-only. <strong>Honesty commitment displayed in the
+    UI, not just the docs:</strong> BYU/USNIC track only large tabular bergs. Growlers and bergy bits
+    — the ice that actually holes a hull — are neither in the training data nor predicted.
+    Competitors will present iceberg avoidance as solved. It is not.</dd>
+
+    <dt>D3 — Multi-source disagreement surfaced and acted on, not resolved away</dt>
+    <dd>Grounded in a documented finding: Copernicus systematically underestimates ice concentration
+    relative to regional charts, especially in the marginal ice zone. A team using one source as
+    ground truth is building on a documented bias without saying so. Where our sources disagree, the
+    system becomes <em>more cautious automatically</em>.</dd>
+
+    <dt>D4 — Bandwidth-honest offline-first design, enforced in CI</dt>
+    <dd>The tier boundary is set at “sync environmental state, not answers,” so the master can change
+    waypoints and re-plan with zero connectivity. A CI test <strong>fails the build</strong> if a
+    pack exceeds budget. <em>Demo consequence:</em> disconnect the network mid-demo and continue
+    re-planning routes — unfakeable, and it is how the system is designed to work at sea.</dd>
+
+    <dt>D5 — Corridor- and season-specific, against the real vessel</dt>
+    <dd>Built for the actual Cape Town → Bharati/Maitri austral-summer run, not for “Antarctica” in
+    general. Models still train circumpolar because more data is free for a fully convolutional
+    network — only the operational <em>claim</em> is scoped. An MoES/NCPOR audience knows this
+    corridor and this ship; demonstrated fidelity on the real case is verifiable, circumpolar
+    generality is not.</dd>
+
+    <dt>D6 — Honest quantification, including where we decline to quantify</dt>
+    <dd>Fuel relative only. Ice thickness disclosed as a literature lookup table. Skill horizon is an
+    <em>output</em> of the evaluation, not an assumption. Bathymetry disclosed as largely predicted.
+    Iceberg drift capped at 72 h. <em>Why this is differentiation and not weakness:</em> competitors
+    will display confident absolute fuel savings and a single authoritative ice number, and every one
+    of those figures is undefendable under questioning. Being the team that already knows which of
+    its numbers are soft is the stronger position — and StormGeo, the actual commercial incumbent,
+    keeps human route analysts in the loop 24/7 precisely because full automation is not trusted at
+    the edges.</dd>
+
+    <dt>D7 — Real prior art reused and extended, with the extensions named</dt>
+    <dd>Reuse → adapt → extend → wrap → replace was applied in order, and the reuse candidate
+    survived. We use BAS's own tool and add three specific things it does not do: uncertainty-aware
+    ice thresholding, an iceberg hazard layer through the native <code>excluded_zones</code> hook
+    (no fork required — source-checked), and a dominance-filtered candidate route set. <em>A
+    domain-literate judge will know PolarRoute exists.</em> Arriving with “we used BAS's tool and
+    here are three things it does not do that we added” is far stronger than a from-scratch A* that
+    invites the question of why the field's own tool was ignored.</dd>
+  </dl>
+</section>
+
+<!-- ==================== 8. HONESTY ==================== -->
+<section class="sec">
+  <h2><span class="num">§8</span>Honesty commitments and known weaknesses</h2>
+  <p class="sec-lead">This section exists because the project's central discipline is attacking our
+  own solution before a judge does. Everything here is a deliberate, recorded position.</p>
+
+  <h3>8.1 Things we refuse to claim</h3>
+  <table class="d">
+    <thead><tr><th style="width:40mm">Topic</th><th>Our stated position</th></tr></thead>
+    <tbody>
+      <tr><td>Absolute fuel figures</td><td>Relative between candidate routes only. Absolutes labelled <em>uncalibrated model output</em>, because the fuel polynomial is fitted to a different ship.</td></tr>
+      <tr><td>Ice thickness and density</td><td>A literature-derived climatological lookup table — which is what BAS's own tool uses. Labelled parameterisation, never measurement.</td></tr>
+      <tr><td>Small ice</td><td>Growlers and bergy bits are not tracked by any dataset and are not predicted. Stated in the UI next to the iceberg layer.</td></tr>
+      <tr><td>Bathymetry</td><td>Largely predicted from altimetry, not surveyed. Provenance-conditional depth margin, and a “predicted bathymetry” overlay.</td></tr>
+      <tr><td>Navigation authority</td><td>This is decision support. It does not replace Electronic Navigational Charts, and it says so in the product.</td></tr>
+      <tr><td>Forecast horizon</td><td>The declared skill horizon is an <em>output</em> of the evaluation — the last lead that measurably beats the raw operational forecast — not an assumption.</td></tr>
+      <tr><td>“Pareto frontier”</td><td>We call it a dominance-filtered candidate set from a 12-run sweep, because 12 samples of a continuous surface is a set, not a frontier.</td></tr>
+      <tr><td>Iridium testing</td><td>Resumable delta sync will only ever be tested over throttled localhost. We say <em>“tested under emulated link constraints,”</em> never “tested over Iridium.”</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.2 The riskiest assumption in the whole design</h3>
+  <div class="box risk">
+    <span class="bt">Stated plainly</span>
+    <p><strong>That the calibrated bound is well enough covered for routing on it to be genuinely
+    safer, rather than merely more conservative-looking.</strong> The entire uncertainty-aware
+    differentiation and the safety argument for the routing layer rest on it.</p>
+    <p style="margin-top:2.5mm">Conformal calibration's coverage guarantee assumes
+    <strong>exchangeability</strong> between calibration residuals and operations — and the post-2016
+    Antarctic regime is precisely the distribution shift that can break exchangeability. Mitigated
+    by a pre-committed numerical pass/fail rule with a written demotion branch (§5.6), a
+    build-blocking baseline, acceptance on real forecast cycles rather than only the reanalysis
+    proxy, and separate reporting on 2023.</p>
+  </div>
+
+  <h3>8.3 Climate change is a live threat to this system, and here is the answer</h3>
+  <p>Antarctic sea-ice extent has mostly sat below the 1981–2010 average since <strong>2016</strong>,
+  with record-low summers in 2022 and 2023 and continuing lows through 2025. The winter maximum hit
+  a record low of <strong>16.96 million km² on 10 September 2023</strong>. The published framing is
+  a <em>new sea-ice state</em> which “exhibits different seasonal persistence characteristics,
+  suggesting that the underlying processes controlling Antarctic sea ice coverage may have altered.”</p>
+  <p>Two consequences that matter:</p>
+  <ol>
+    <li><strong>Persistence — our headline baseline — is itself regime-dependent.</strong> “Different
+    seasonal persistence characteristics” means the +18–31 % is measured against a moving target.
+    Gains must be reported <em>per regime</em>, never pooled across 2015 and 2023 as if they were the
+    same ocean.</li>
+    <li>It sharpens the exchangeability risk in §8.2 directly.</li>
+  </ol>
+  <p>Five defences, in order of how much they actually buy:</p>
+  <ol class="tight">
+    <li><strong>The architecture is already the main defence.</strong> We predict a correction to a
+    physics model, not the ice. That model ingests today's assimilated ocean state, so the trend and
+    the regime arrive <em>through the background field</em>, not from the network's memory. Our
+    network only has to learn the model's systematic error pattern — a property of its physics, which
+    drifts far more slowly than the climate.</li>
+    <li>Train on anomalies against a <strong>trailing climatology</strong>, not raw concentration, so
+    a shifting mean does not push inputs out of distribution.</li>
+    <li><strong>Deliberately hold out the broken years.</strong> Train excluding 2016 and 2023, then
+    test on them. Surviving the two years that broke the field is evidence, not hope.</li>
+    <li><strong>Drift monitoring in production.</strong> Watch the innovation channel and the
+    residual distribution; when they leave the calibration distribution, widen uncertainty and raise
+    a flag rather than staying confident.</li>
+    <li><strong>Conformal prediction is the honest failure mode.</strong> When exchangeability breaks
+    — which is what climate change does — coverage degrades <em>visibly and measurably</em>.</li>
+  </ol>
+  <div class="box ok">
+    <span class="bt">The position to state</span>
+    <p>“We do not claim immunity to climate change. We claim the system <strong>degrades loudly
+    rather than silently</strong>.” For a safety system that is a stronger and far more credible
+    position than claiming robustness.</p>
+  </div>
+</section>
+
+<!-- ==================== 9. ADRs ==================== -->
+<section class="sec">
+  <h2><span class="num">§9</span>Key decisions on record</h2>
+  <p class="sec-lead">Twenty-seven Architecture Decision Records are logged in
+  <code>docs/DECISIONS.md</code>. Each states the decision, the alternatives, and the reason. Later
+  ADRs openly supersede earlier ones — the reasoning is the deliverable, not just the conclusion.</p>
+
+  <table class="d">
+    <thead><tr><th style="width:16mm">ADR</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td><strong>001</strong></td><td>Scope to the Cape Town → Bharati/Maitri corridor, austral summer</td></tr>
+      <tr><td><strong>002</strong></td><td>Two-tier architecture, boundary at “sync environmental state, not answers”</td></tr>
+      <tr><td><strong>003</strong></td><td>One codebase, two run modes (<code>MODE=shore|vessel</code>)</td></tr>
+      <tr><td>004</td><td><em>Superseded by 018.</em> Original: 5-member direct multi-lead U-Net ensemble. Retained as the named contingency if the CMEMS data gate fails.</td></tr>
+      <tr><td><strong>005</strong></td><td>The ensemble's uncertainty is a product feature, not diagnostics</td></tr>
+      <tr><td>006</td><td><em>Superseded by 027.</em> Benchmark against damped anomaly persistence on a strictly temporal split</td></tr>
+      <tr><td><strong>007</strong></td><td>Iceberg drift: Wagner (2017) closed form as the load-bearing baseline</td></tr>
+      <tr><td><strong>008</strong></td><td>Iceberg residual: gradient boosting, and a stretch goal, not baseline</td></tr>
+      <tr><td><strong>009</strong></td><td>Routing: wrap and extend PolarRoute rather than reimplement A*</td></tr>
+      <tr><td><strong>010</strong></td><td>Inject iceberg hazard through PolarRoute's <code>excluded_zones</code> hook; do not fork</td></tr>
+      <tr><td>011</td><td><em>Superseded by 021.</em> Three-run “Pareto set” — not actually a Pareto set</td></tr>
+      <tr><td><strong>012</strong></td><td>Report fuel as a relative comparison; label absolutes as uncalibrated</td></tr>
+      <tr><td><strong>013</strong></td><td>Use meshiphi's literature lookup table for ice thickness/density, and disclose it</td></tr>
+      <tr><td><strong>014</strong></td><td>Surface multi-source disagreement as its own layer instead of picking a winner</td></tr>
+      <tr><td><strong>015</strong></td><td><strong>No LLM, RAG, or agent framework anywhere in this system</strong></td></tr>
+      <tr><td><strong>016</strong></td><td>Demo runs from committed scenario packs, never a live fetch</td></tr>
+      <tr><td><strong>017</strong></td><td>Enforce the sync budget in CI</td></tr>
+      <tr><td><strong>018</strong></td><td><strong>Re-aim the sea-ice model as a bias-correction head on the CMEMS operational forecast</strong> (the pivot)</td></tr>
+      <tr><td><strong>019</strong></td><td>Training product and window: NOAA/NSIDC 25 km CDR as the single observation product</td></tr>
+      <tr><td><strong>020</strong></td><td>Calibration by stratified split-conformal prediction with a pre-committed pass/fail rule</td></tr>
+      <tr><td><strong>021</strong></td><td>Multi-objective routing is a 12-run sweep with dominance filtering, named honestly</td></tr>
+      <tr><td><strong>022</strong></td><td>The router always plans the whole voyage; the <em>grade</em> of each leg degrades instead</td></tr>
+      <tr><td><strong>023</strong></td><td>GPU ashore for training, CPU aboard for inference, nothing trained at the nodal centre</td></tr>
+      <tr><td><strong>024</strong></td><td>QC before fusion, one target grid, per-channel imputation, and an obs-only pack type</td></tr>
+      <tr><td><strong>025</strong></td><td>Iceberg drift projection capped at 72 h, with an area-fraction auto-downgrade</td></tr>
+      <tr><td><strong>026</strong></td><td>Depth margin is conditional on bathymetric provenance (GEBCO TID grid)</td></tr>
+      <tr><td><strong>027</strong></td><td><strong>Raw packed CMEMS is a mandatory, build-blocking evaluation baseline</strong></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== 10. STATE ==================== -->
+<section class="sec">
+  <h2><span class="num">§10</span>Current state, open gaps and what happens next</h2>
+
+  <h3>10.1 Two tracks, kept deliberately separate</h3>
+  <table class="d">
+    <thead><tr><th style="width:34mm"></th><th>ISIH prototype — 8 Sept 2026</th><th>SIH final — December 2026</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Lives in</strong></td><td><code>isih/</code></td><td>repo root — <code>models/</code>, <code>api/</code>, <code>web/</code></td></tr>
+      <tr><td><strong>Model</strong></td><td>small, single member, short training window</td><td>5-member ensemble, 1993–2024</td></tr>
+      <tr><td><strong>Input channels</strong></td><td>12</td><td>19</td></tr>
+      <tr><td><strong>Base field</strong></td><td>GLORYS12 reanalysis</td><td>real CMEMS forecast archive</td></tr>
+      <tr><td><strong>Calibration</strong></td><td>none — reports raw output</td><td>stratified conformal</td></tr>
+      <tr><td><strong>Deliverable</strong></td><td>results, claims and proofs for a slide deck — <strong>no UI</strong></td><td>full web application, both tiers</td></tr>
+    </tbody>
+    <caption>The one thing shared is the U-Net architecture file, deliberately not duplicated — so
+    the prototype genuinely demonstrates the production architecture at smaller scale rather than
+    being a different thing wearing the same name.</caption>
+  </table>
+
+  <h3>10.2 What is done</h3>
+  <ul class="tight">
+    <li><span class="pill p-done">done</span> Real data pipeline — 1,096 NSIDC files, GLORYS12 paired, area-average regridder verified</li>
+    <li><span class="pill p-done">done</span> Model trained on Kaggle T4; beats every baseline at every horizon</li>
+    <li><span class="pill p-done">done</span> Routing computed with real PolarRoute on real satellite ice; figure renders with self-computing claims</li>
+    <li><span class="pill p-done">done</span> All architecture documentation — 27 ADRs, differentiation, weakness analysis, competitive analysis, dataset audit</li>
+    <li><span class="pill p-done">done</span> Daily CMEMS harvest cron running (data accumulating for the production training set)</li>
+    <li><span class="pill p-done">done</span> NCPOR overlap check — verified greenfield; NCPOR has no forecasting or route-planning tool</li>
+  </ul>
+
+  <h3>10.3 What is open</h3>
+  <table class="d">
+    <thead><tr><th style="width:22mm">Priority</th><th>Item</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill p-open">critical</span></td><td><strong>The route figure's baseline is a strawman.</strong> A great-circle straight line is not “existing technology” — no captain sails it. Real practice is a master routing on <em>yesterday's observed ice</em> plus ~100 nautical miles of helicopter reconnaissance. Replace with a ladder: same router, ice input = {observed persistence, raw forecast, our corrected forecast}.</td></tr>
+      <tr><td><span class="pill p-open">critical</span></td><td><strong>Route-regret hindcast is unbuilt</strong>, and it is the highest-value experiment in the project. Plan on day 0 under each ice input, then replay the voyage through the ice that <em>actually</em> occurred and score real transit time, fuel, and cells the ship could not enter. This is what converts “18–31 % lower error” into days and tonnes. It can come out against us.</td></tr>
+      <tr><td><span class="pill p-open">critical</span></td><td><strong>The no-background ablation</strong> — ~20 minutes, already written into the notebook. Either kills the leakage objection outright or tells us something we are obliged to disclose.</td></tr>
+      <tr><td><span class="pill p-open">major</span></td><td><strong>GEBCO not downloaded</strong> — the computed route has no depth constraint at all.</td></tr>
+      <tr><td><span class="pill p-open">major</span></td><td>Production code not started: zarr dataset loader, production training loop, ensemble, conformal calibration.</td></tr>
+      <tr><td><span class="pill p-open">major</span></td><td>Corridor mesh size and the <strong>daily incremental delta</strong> are unmeasured — the delta is the load-bearing bandwidth number.</td></tr>
+      <tr><td><span class="pill p-wip">minor</span></td><td>The route figure uses a red/green pair that deuteranopic viewers can struggle to separate. Meaning survives via dash pattern and markers, but a one-line swap removes the risk.</td></tr>
+      <tr><td><span class="pill p-wip">minor</span></td><td>MV Vasiliy Golovnin's published dimensions and ice class not yet sourced — needed for the vessel subclass and the depth margin.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>10.4 New findings from the navigation review (1 September 2026)</h3>
+  <p>A design review against the full problem-statement text surfaced three material gaps, all
+  verified from primary sources or installed source code. Full detail in
+  <code>docs/NAVIGATION_RESEARCH.md</code>.</p>
+
+  <h4>(a) The vessel ice limit should be IMO POLARIS, not a number we chose</h4>
+  <p>The prototype uses <code>max_ice_conc: 80</code> — invented. The IMO already mandates a
+  framework: <strong>MSC.1/Circ.1519, the Polar Operational Limit Assessment Risk Indexing System
+  (POLARIS)</strong>, referenced by the Polar Code.</p>
+  <pre>RIO  =  (C₁ × RIV₁) + (C₂ × RIV₂) + … + (Cₙ × RIVₙ)
+
+  Cᵢ   concentration of ice type i, in tenths
+  RIVᵢ Risk Index Value for that ice type at THIS SHIP'S ice class
+
+  RIO ≥ 0     normal operation
+  −10 ≤ RIO &lt; 0  elevated risk — speed capped (PC1 11 kt · PC2 8 kt · PC3–PC5 5 kt · below PC5 3 kt)
+  RIO &lt; −10   avoid in voyage planning</pre>
+  <ul class="tight">
+    <li>Turns an invented threshold into a number a judge can look up.</li>
+    <li>Makes the ship's ice class a real input that <em>changes the answer</em> — exactly what the
+    problem statement asks for.</li>
+    <li>Makes risk <strong>continuous rather than binary</strong>, so the router can prefer safer ice
+    instead of only avoiding a cliff edge.</li>
+    <li><strong>§1.7.3 requires a safe stand-off distance from glacial ice</strong> — the iceberg
+    safety buffer, as a regulatory requirement rather than an invented one.</li>
+    <li><strong>§1.6.4 allows adding +10 to the RIO along an icebreaker's broken track</strong> — the
+    formal mechanism by which a following vessel benefits from a leader, and the basis for any
+    convoy or fleet-ordering model.</li>
+  </ul>
+  <div class="box plain">
+    <span class="bt">And it forces a model upgrade — in a good way</span>
+    <p>RIO is indexed by ice <strong>type</strong>, not concentration, and WMO stage-of-development
+    maps to <em>thickness</em> (new &lt;10 cm · grey 10–15 · grey-white 15–30 · thin first-year 30–70 ·
+    medium 70–120 · thick &gt;120 cm). So <strong>POLARIS cannot be computed from a concentration
+    forecast alone — it requires a thickness forecast too.</strong> GLORYS12 carries
+    <code>sithick</code>, and the U-Net extends to a second output channel with no architectural
+    change. This is not scope creep; it is a model requirement falling out of the regulation.</p>
+  </div>
+
+  <h4>(b) PolarRoute's router has no time dimension — verified by source inspection</h4>
+  <p>Searching the installed package for time-dependent mesh handling returns nothing in the route
+  planner; <code>datetime</code> appears only as a running sum over output legs. Mesh time bounds
+  select and <em>aggregate</em> a slice; they do not produce per-timestep layers.</p>
+  <p><strong>The router therefore assumes the environment is frozen for the entire voyage</strong> —
+  17.4 days, in our own computed route. The problem statement explicitly requires dynamic
+  recalculation as ice layers move. This is the gap that makes a forecast <em>usable</em>: a static
+  router structurally cannot consume a lead-time forecast, because it has no notion of “the ice you
+  will meet when you actually arrive.” The extension is a <strong>time-expanded graph</strong> — a
+  mesh stack, one layer per forecast day, with edges (cell, t) → (neighbour, t + traveltime).</p>
+
+  <h4>(c) Wave-added resistance is dead code</h4>
+  <p><code>wave_resistance()</code> is <em>defined</em> in three PolarRoute vessel classes and
+  <em>called from none of them</em>. Resistance sums only wind and ice. Waves act solely as a binary
+  accessibility cutoff, so there is <strong>no sea-state fuel penalty anywhere</strong> — including
+  the Roaring Forties, where most of the fuel is actually burned. A latent bug compounds it: the dead
+  method reads <code>params["Beam"]</code> while the constructor sets <code>"beam"</code>. Note that
+  a planned vessel subclass “with wave resistance” will silently do nothing unless
+  <code>model_resistance</code> is also overridden.</p>
+
+  <h4>(d) One logistics fact that must not go on a slide wrong</h4>
+  <p>Indian expeditions are <em>flagged off</em> from Goa, but personnel fly to Cape Town and the
+  <em>sea leg</em> starts there. Do not present “Goa → Antarctica by sea” as current practice — an
+  MoES judge will know. The credible forward-looking framing is that <strong>GRSE signed an MoU with
+  Kongsberg in June 2025 to build India's first indigenous Polar Research Vessel</strong> at Kolkata
+  for NCPOR; when India has its own hull, the voyage genuinely starts from an Indian port.</p>
+
+  <h3>10.5 The phase plan to December</h3>
+  <table class="d">
+    <thead><tr><th style="width:20mm">Phase</th><th style="width:20mm">Duration</th><th>Contents and exit condition</th></tr></thead>
+    <tbody>
+      <tr><td><strong>0 — spine</strong></td><td>days</td><td>Repo, pinned environment, FastAPI skeleton, React shell. <em>Plus two things that cannot be deferred:</em> the daily CMEMS harvest cron, and the NCPOR overlap check. <strong>Both complete.</strong></td></tr>
+      <tr><td><strong>1 — real routing on real data, and the data gate</strong></td><td>~1 week</td><td>GEBCO + TID, NSIDC, GFS ingestion with QC; corridor mesh; vessel subclass; single-objective routing. <strong>No ML yet</strong> — deliberately gets a genuinely useful real-data product working before any model exists. Also owns four measurements and the CMEMS go/no-go gate.</td></tr>
+      <tr><td><strong>2 — the trained model</strong></td><td>1–2 weeks<br><em>the long pole</em></td><td>Historical ingestion; residual U-Net training (8–12 GPU-hours); 5-member ensemble; conformal calibration; the full evaluation protocol including the build-blocking baseline and the coverage gate.</td></tr>
+      <tr><td><strong>3 — uncertainty and hazards</strong></td><td>~1 week</td><td>Calibrated bound layer; overridden ice threshold; Wagner drift with the 72 h cap; berg exclusion zones; the 12-run sweep; fusion disagreement layer; horizon tiering and climatology mode. <em>Exit: the risk slider visibly moves the route, and its label matches measured coverage.</em></td></tr>
+      <tr><td><strong>4 — offline tier</strong></td><td>days</td><td>Pack build/sign/delta; vessel mode; staleness and confidence UI. <em>Exit: full re-plan with networking disabled.</em></td></tr>
+    </tbody>
+  </table>
+  <div class="box honest">
+    <span class="bt">Stated fallback if Phase 2 slips</span>
+    <p>Ship Phases 1 + 3 + 4 with <strong>raw packed CMEMS as the routed field</strong> and
+    inter-source disagreement as the uncertainty proxy. The pack, the mesh, the slider mechanics, the
+    berg layer and the offline demo are all unchanged; the pitch degrades from “our model improves
+    the operational forecast” to “our decision architecture makes the operational forecast
+    routable.” The one thing that must survive is a trained model — so if the deep correction slips,
+    the <strong>iceberg residual GBM is promoted from stretch to baseline</strong>, because it trains
+    in minutes on data already downloaded. This ordering is decided now so it is a plan, not a
+    scramble.</p>
+  </div>
+
+  <h3>10.6 What is prepared before travel versus built at the nodal centre</h3>
+  <table class="d">
+    <thead><tr><th>Frozen on USB before travel</th><th>Built or run at the 36-hour finale</th></tr></thead>
+    <tbody>
+      <tr><td>Trained weights + conformal calibration tables</td><td>Live re-planning demos, scenario walkthroughs</td></tr>
+      <tr><td>Evaluation results and all figures</td><td>UI polish, presentation assembly</td></tr>
+      <tr><td>Committed demo scenario packs</td><td>Judge-requested re-runs on committed packs (real computation, ~9 s + ~84 s sweep)</td></tr>
+      <tr><td>Environment pinned and pre-installed</td><td>Bug fixes, integration of anything left open</td></tr>
+    </tbody>
+    <caption>Nothing on the left is regenerated on site. Nothing on the right needs a GPU or a
+    network. “Re-run training at the nodal centre” is not a thing.</caption>
+  </table>
+</section>
+
+<!-- ==================== 11. REPO ==================== -->
+<section class="sec">
+  <h2><span class="num">§11</span>Repository map and how to get started</h2>
+
+  <h3>11.1 Where everything lives</h3>
+  <pre>SIH26059-antarctic-navigation/
+├── isih/                        ISIH PROTOTYPE (8 Sept) — kept separate on purpose
+│   ├── RESULTS.md               ← the numbers to quote, with caveats
+│   ├── download_nsidc.py        fetch observed sea-ice concentration (no auth needed)
+│   ├── grid.py                  NSIDC grid definition + GLORYS12→NSIDC area-average regridder
+│   ├── build_dataset.py         pair background with truth; nothing imputed, missing days dropped
+│   ├── features.py              the 12-channel builder + the baselines the model must beat
+│   ├── make_route_figure.py     compute the real route with PolarRoute
+│   ├── plot_route.py            render the figure; computes its own claim numbers at render time
+│   ├── kaggle/                  self-contained training notebook (sources embedded)
+│   └── figures/                 route_map.png, mesh.json, routes.json
+│
+├── models/
+│   └── sic_correction/unet.py   THE SHARED ARCHITECTURE — used by prototype and production
+│
+├── docs/                        the project's working memory
+│   ├── ARCHITECTURE.md          system design, rev 2
+│   ├── ML_ARCHITECTURE.md       every model, rev 2 — the densest document
+│   ├── DATASET.md               every data source, verified live
+│   ├── DECISIONS.md             27 ADRs
+│   ├── DIFFERENTIATION.md       D1–D7, no adjectives allowed
+│   ├── WEAKNESS_ANALYSIS.md     the adversarial review rev 2 answers
+│   ├── COMPETITIVE_ANALYSIS.md  what already exists, and where competitors will be shallow
+│   ├── GAP_ANALYSIS.md          method survey
+│   ├── NAVIGATION_RESEARCH.md   POLARIS tables, PolarRoute gaps, Indian logistics (new)
+│   ├── backlog.md               every open item as a one-liner — READ THIS FIRST
+│   ├── PRIMER.md                domain background
+│   ├── VIVA_PREP.md             expected questions and answers
+│   ├── TEAM_GUIDE.md            working agreements
+│   └── DEMO_PLAN.md             how the demo runs
+│
+└── .github/workflows/
+    └── cmems-harvest.yml        daily 06:00 UTC — DO NOT SWITCH OFF</pre>
+
+  <h3>11.2 If you are new, read in this order</h3>
+  <ol class="tight">
+    <li>This document, §1 and §2.</li>
+    <li><code>docs/backlog.md</code> — under two minutes, and tells you everything still open.</li>
+    <li><code>isih/RESULTS.md</code> — the real numbers and their caveats.</li>
+    <li><code>docs/ML_ARCHITECTURE.md</code> §1 — the model, in full depth.</li>
+    <li><code>docs/DIFFERENTIATION.md</code> — why this is not the obvious build.</li>
+  </ol>
+
+  <h3>11.3 Reproducing the results</h3>
+  <ul class="tight">
+    <li><strong>Training:</strong> open <code>isih/kaggle/isih_train.ipynb</code> on Kaggle with
+    Internet <em>On</em>, Accelerator <em>GPU T4 ×2</em>, and <code>CMEMS_USERNAME</code> /
+    <code>CMEMS_PASSWORD</code> in Kaggle Secrets. It downloads its own data. Roughly 1–2 hours.</li>
+    <li><strong>Routing:</strong> needs Python ≤3.11 — PolarRoute will not build on 3.12+. Create the
+    environment with <code>uv venv --python 3.11</code>, then run
+    <code>isih/make_route_figure.py</code> followed by <code>isih/plot_route.py</code>.</li>
+    <li><strong>After editing</strong> <code>grid.py</code>, <code>features.py</code> or
+    <code>unet.py</code>, regenerate the Kaggle notebook — it embeds those sources.</li>
+  </ul>
+
+  <h3>11.4 Working rules for the team</h3>
+  <ul class="tight">
+    <li><strong>No dummy data, ever, in the product.</strong> Unit-test fixtures are the only
+    exception.</li>
+    <li><strong>Deferred work never lives only in chat.</strong> If you find something and do not fix
+    it, it goes into <code>docs/backlog.md</code> as a one-liner with a pointer to the evidence.</li>
+    <li><strong>Never trust code because it looks right.</strong> Open the browser, run the query,
+    evaluate the model on real held-out data.</li>
+    <li><strong>Attack our own solution before a judge does.</strong> Every number in this project
+    that looked good was re-derived until it either survived or was withdrawn.</li>
+  </ul>
+</section>
+
+<!-- ==================== 12. GLOSSARY ==================== -->
+<section class="sec">
+  <h2><span class="num">§12</span>Glossary</h2>
+  <div class="twocol" style="font-size:8.8pt">
+    <p><strong>ADR</strong> — Architecture Decision Record. A short note stating a decision, its
+    alternatives, and why.</p>
+    <p><strong>AMSR2</strong> — Advanced Microwave Scanning Radiometer 2, a Japanese satellite sensor
+    giving ice concentration at 12.5 km.</p>
+    <p><strong>Beset</strong> — a ship stuck fast in ice, unable to move under its own power. The
+    failure mode this system exists to prevent.</p>
+    <p><strong>Bergy bit / growler</strong> — small pieces of floating ice, roughly car- to
+    house-sized. Not tracked by any dataset; the ice that actually holes a hull.</p>
+    <p><strong>CDR</strong> — Climate Data Record. A long, consistently processed satellite record
+    suitable for training.</p>
+    <p><strong>CMEMS</strong> — Copernicus Marine Environment Monitoring Service. The EU's operational
+    ocean forecasting service; our base field.</p>
+    <p><strong>Conformal prediction</strong> — a distribution-free method that turns model outputs
+    into prediction intervals with a measured coverage guarantee.</p>
+    <p><strong>CRPS</strong> — Continuous Ranked Probability Score. Scores a probabilistic forecast,
+    not just its mean.</p>
+    <p><strong>Dijkstra</strong> — a shortest-path algorithm that is exact on a graph, as opposed to
+    a heuristic search.</p>
+    <p><strong>Exchangeability</strong> — the statistical assumption that calibration data and
+    operational data come from the same distribution. Climate change breaks it.</p>
+    <p><strong>GEBCO</strong> — General Bathymetric Chart of the Oceans. The open global seabed-depth
+    grid.</p>
+    <p><strong>GLORYS12</strong> — CMEMS's global ocean reanalysis at 1/12°, 1993–present. Our
+    training background field.</p>
+    <p><strong>IIEE</strong> — Integrated Ice Edge Error. Measures how wrong the <em>position of the
+    ice edge</em> is, in km² — the navigationally meaningful metric.</p>
+    <p><strong>Innovation</strong> — in data assimilation, the difference between a model's forecast
+    and the observation. Our key input channel.</p>
+    <p><strong>Iridium</strong> — a low-Earth-orbit satellite constellation, the only communications
+    that genuinely covers the poles. Certus peaks around 704 kbps.</p>
+    <p><strong>ISEA</strong> — Indian Scientific Expedition to Antarctica, run annually by NCPOR.</p>
+    <p><strong>Lead (ice)</strong> — a navigable crack or channel of open water through pack ice.</p>
+    <p><strong>Lead (time)</strong> — how many days ahead a forecast is valid for. Both senses appear
+    in this project; context distinguishes them.</p>
+    <p><strong>MIZ</strong> — Marginal Ice Zone. The transitional band between open water and solid
+    pack ice, roughly 15–80 % concentration. Where ships sail and where forecasts are worst.</p>
+    <p><strong>MoES</strong> — Ministry of Earth Sciences, Government of India.</p>
+    <p><strong>NCPOR</strong> — National Centre for Polar and Ocean Research, Vasco da Gama, Goa. The
+    problem statement's owner.</p>
+    <p><strong>NSIDC</strong> — National Snow and Ice Data Center, USA. Source of our truth field.</p>
+    <p><strong>Persistence</strong> — the baseline forecast “tomorrow will look like today.” Deceptively
+    strong at short lead, and the baseline that matters.</p>
+    <p><strong>Polar Class (PC1–PC7)</strong> — IACS structural ice classes for ships, PC1 strongest.
+    Finnish-Swedish classes IA Super / IA / IB / IC are the lighter equivalents.</p>
+    <p><strong>POLARIS</strong> — the IMO's Polar Operational Limit Assessment Risk Indexing System.
+    Converts ice conditions plus ship ice class into a go / caution / avoid outcome.</p>
+    <p><strong>Polynya</strong> — a persistent area of open water surrounded by sea ice.</p>
+    <p><strong>Reanalysis</strong> — a retrospective reconstruction of past conditions using all
+    observations, including ones from after the moment being reconstructed. <em>Not</em> a forecast.</p>
+    <p><strong>Residual / bias correction</strong> — learning the <em>error</em> of an existing model
+    rather than the quantity itself.</p>
+    <p><strong>RIO / RIV</strong> — Risk Index Outcome and Risk Index Value, the two numbers POLARIS
+    is built from.</p>
+    <p><strong>RMSE</strong> — Root Mean Square Error. Lower is better.</p>
+    <p><strong>SAR</strong> — Synthetic Aperture Radar. Sees through cloud and polar darkness.</p>
+    <p><strong>SIC</strong> — Sea Ice Concentration, the fraction of a grid cell covered by ice, 0 to
+    1 (or 0–100 %). The central quantity in this project.</p>
+    <p><strong>SIT</strong> — Sea Ice Thickness. Much harder to measure than concentration, and
+    required for POLARIS.</p>
+    <p><strong>U-Net</strong> — a convolutional neural network shaped like a U: it compresses an
+    image, then expands it back, with skip connections preserving fine detail. Standard for
+    image-to-image prediction.</p>
+    <p><strong>Voyage pack</strong> — our compressed, signed, versioned bundle of everything the ship
+    needs. Under 1 MB.</p>
+    <p><strong>Wagner (2017)</strong> — the closed-form analytical iceberg drift model that is our
+    physics baseline.</p>
+  </div>
+
+  <div class="box plain" style="margin-top:8mm">
+    <span class="bt">Final note</span>
+    <p>If any statement in this document cannot be traced to a measurement, a primary source, or a
+    line of code, treat that as a defect and raise it. The project's entire credibility strategy
+    rests on the difference between what we have measured and what we merely believe — and on saying
+    which is which.</p>
+  </div>
+</section>
+
+</body>
+</html>
