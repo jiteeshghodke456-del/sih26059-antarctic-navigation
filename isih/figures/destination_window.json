@@ -1,0 +1,620 @@
+{
+  "vessel": "MV Vasiliy Golovnin",
+  "ice_limit_pct": 80,
+  "start": "2019-12-01",
+  "note": "sic_qa_off is what an unguarded reader sees; where it is 0.0 and sic_qa_on is not, the CDR land-spillover filter had suppressed that cell and written it as open water.",
+  "summary": {
+    "Bharati": {
+      "days_observed": 31,
+      "days_closed": 23,
+      "first_closed_day": 1,
+      "first_closed_date": "2019-12-02",
+      "pct_days_closed": 74.2
+    },
+    "Bharati approach (100 km N)": {
+      "days_observed": 31,
+      "days_closed": 0,
+      "first_closed_day": null,
+      "first_closed_date": null,
+      "pct_days_closed": 0.0
+    },
+    "Maitri (Leningradskaya coast)": {
+      "days_observed": 31,
+      "days_closed": 31,
+      "first_closed_day": 0,
+      "first_closed_date": "2019-12-01",
+      "pct_days_closed": 100.0
+    }
+  },
+  "daily": [
+    {
+      "date": "2019-12-01",
+      "day": 0,
+      "Bharati": {
+        "sic_qa_on": 30.7,
+        "sic_qa_off": 0.0,
+        "passable": true
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 39.3,
+        "sic_qa_off": 39.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-02",
+      "day": 1,
+      "Bharati": {
+        "sic_qa_on": 83.0,
+        "sic_qa_off": 83.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 44.0,
+        "sic_qa_off": 44.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-03",
+      "day": 2,
+      "Bharati": {
+        "sic_qa_on": 81.0,
+        "sic_qa_off": 81.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 43.0,
+        "sic_qa_off": 43.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-04",
+      "day": 3,
+      "Bharati": {
+        "sic_qa_on": 88.0,
+        "sic_qa_off": 88.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 42.0,
+        "sic_qa_off": 42.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-05",
+      "day": 4,
+      "Bharati": {
+        "sic_qa_on": 83.0,
+        "sic_qa_off": 83.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 44.3,
+        "sic_qa_off": 44.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-06",
+      "day": 5,
+      "Bharati": {
+        "sic_qa_on": 88.0,
+        "sic_qa_off": 88.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 42.3,
+        "sic_qa_off": 42.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-07",
+      "day": 6,
+      "Bharati": {
+        "sic_qa_on": 33.7,
+        "sic_qa_off": 0.0,
+        "passable": true
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 40.7,
+        "sic_qa_off": 40.7,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-08",
+      "day": 7,
+      "Bharati": {
+        "sic_qa_on": 35.2,
+        "sic_qa_off": 0.0,
+        "passable": true
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 43.3,
+        "sic_qa_off": 43.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-09",
+      "day": 8,
+      "Bharati": {
+        "sic_qa_on": 36.3,
+        "sic_qa_off": 0.0,
+        "passable": true
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 47.3,
+        "sic_qa_off": 47.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-10",
+      "day": 9,
+      "Bharati": {
+        "sic_qa_on": 96.0,
+        "sic_qa_off": 96.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 51.7,
+        "sic_qa_off": 51.7,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-11",
+      "day": 10,
+      "Bharati": {
+        "sic_qa_on": 99.0,
+        "sic_qa_off": 99.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 52.3,
+        "sic_qa_off": 52.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-12",
+      "day": 11,
+      "Bharati": {
+        "sic_qa_on": 98.0,
+        "sic_qa_off": 98.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 50.7,
+        "sic_qa_off": 50.7,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-13",
+      "day": 12,
+      "Bharati": {
+        "sic_qa_on": 94.0,
+        "sic_qa_off": 94.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 48.7,
+        "sic_qa_off": 48.7,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-14",
+      "day": 13,
+      "Bharati": {
+        "sic_qa_on": 94.0,
+        "sic_qa_off": 94.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 48.0,
+        "sic_qa_off": 48.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-15",
+      "day": 14,
+      "Bharati": {
+        "sic_qa_on": 89.0,
+        "sic_qa_off": 89.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 47.7,
+        "sic_qa_off": 47.7,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-16",
+      "day": 15,
+      "Bharati": {
+        "sic_qa_on": 91.0,
+        "sic_qa_off": 91.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 44.3,
+        "sic_qa_off": 44.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-17",
+      "day": 16,
+      "Bharati": {
+        "sic_qa_on": 90.0,
+        "sic_qa_off": 90.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 48.7,
+        "sic_qa_off": 48.7,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-18",
+      "day": 17,
+      "Bharati": {
+        "sic_qa_on": 87.0,
+        "sic_qa_off": 87.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 47.3,
+        "sic_qa_off": 47.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-19",
+      "day": 18,
+      "Bharati": {
+        "sic_qa_on": 90.0,
+        "sic_qa_off": 90.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 46.3,
+        "sic_qa_off": 46.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-20",
+      "day": 19,
+      "Bharati": {
+        "sic_qa_on": 87.0,
+        "sic_qa_off": 87.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 48.0,
+        "sic_qa_off": 48.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-21",
+      "day": 20,
+      "Bharati": {
+        "sic_qa_on": 80.0,
+        "sic_qa_off": 80.0,
+        "passable": true
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 48.0,
+        "sic_qa_off": 48.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-22",
+      "day": 21,
+      "Bharati": {
+        "sic_qa_on": 84.0,
+        "sic_qa_off": 84.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 51.0,
+        "sic_qa_off": 51.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-23",
+      "day": 22,
+      "Bharati": {
+        "sic_qa_on": 85.0,
+        "sic_qa_off": 85.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 54.3,
+        "sic_qa_off": 54.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-24",
+      "day": 23,
+      "Bharati": {
+        "sic_qa_on": 88.0,
+        "sic_qa_off": 88.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 56.7,
+        "sic_qa_off": 56.7,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-25",
+      "day": 24,
+      "Bharati": {
+        "sic_qa_on": 85.0,
+        "sic_qa_off": 85.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 54.3,
+        "sic_qa_off": 54.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-26",
+      "day": 25,
+      "Bharati": {
+        "sic_qa_on": 84.0,
+        "sic_qa_off": 84.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 55.0,
+        "sic_qa_off": 55.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-27",
+      "day": 26,
+      "Bharati": {
+        "sic_qa_on": 90.0,
+        "sic_qa_off": 90.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 58.0,
+        "sic_qa_off": 58.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-28",
+      "day": 27,
+      "Bharati": {
+        "sic_qa_on": 82.0,
+        "sic_qa_off": 82.0,
+        "passable": false
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 55.3,
+        "sic_qa_off": 55.3,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-29",
+      "day": 28,
+      "Bharati": {
+        "sic_qa_on": 77.0,
+        "sic_qa_off": 77.0,
+        "passable": true
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 54.7,
+        "sic_qa_off": 54.7,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-30",
+      "day": 29,
+      "Bharati": {
+        "sic_qa_on": 79.0,
+        "sic_qa_off": 79.0,
+        "passable": true
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 51.0,
+        "sic_qa_off": 51.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    },
+    {
+      "date": "2019-12-31",
+      "day": 30,
+      "Bharati": {
+        "sic_qa_on": 75.0,
+        "sic_qa_off": 75.0,
+        "passable": true
+      },
+      "Bharati approach (100 km N)": {
+        "sic_qa_on": 45.0,
+        "sic_qa_off": 45.0,
+        "passable": true
+      },
+      "Maitri (Leningradskaya coast)": {
+        "sic_qa_on": null,
+        "sic_qa_off": null,
+        "passable": false
+      }
+    }
+  ]
+}

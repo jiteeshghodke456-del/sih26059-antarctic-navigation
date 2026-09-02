@@ -1,0 +1,41 @@
+{
+  "archive": {
+    "files": 1096,
+    "first": "20180101",
+    "last": "20201231"
+  },
+  "land_spillover": {
+    "mean_cells_per_day": 118.2,
+    "max_cells_per_day": 488,
+    "days_affected": 1096
+  },
+  "no_input_data": {
+    "mean_cells_per_day": 89.2,
+    "max_cells_per_day": 59350
+  },
+  "hard_zero_next_to_heavy_ice": {
+    "mean_cells_per_day": 14.8,
+    "max_cells_per_day": 87,
+    "days_affected": 1096,
+    "pct_of_days": 100.0
+  },
+  "station_approaches": {
+    "Bharati": {
+      "days_with_suspect": 474,
+      "suspect_cell_days": 4966,
+      "worst_day": "20190323",
+      "worst_count": 38,
+      "box_cells": 289,
+      "pct_of_days_affected": 43.2
+    },
+    "Maitri": {
+      "days_with_suspect": 262,
+      "suspect_cell_days": 2728,
+      "worst_day": "20200828",
+      "worst_count": 83,
+      "box_cells": 289,
+      "pct_of_days_affected": 23.9
+    }
+  },
+  "note": "A cell flagged Land_spillover_filter_applied is written as 0.0 inside valid_range, so an unguarded reader treats it as open water."
+}
