@@ -1,0 +1,265 @@
+{
+  "catalogue": {
+    "icebergs": 33,
+    "observed": "2026-08-27",
+    "largest": "D15A",
+    "largest_area_km2": 3037.47,
+    "smallest_area_km2": 52.13,
+    "median_long_axis_km": 22.224,
+    "shortest_long_axis_km": 12.964,
+    "lat_range": [
+      -74.25,
+      -53.73
+    ],
+    "lon_range": [
+      -176.58,
+      170.13
+    ]
+  },
+  "method": {
+    "equation": "WDE17 eq. (14)  R = gamma sqrt(a^2+b^2) |v_a|/|v_w|",
+    "berg_dimensions": "REAL, from the USNIC feed",
+    "forcing": "DECLARED SENSITIVITY SWEEP, not observations -- we do not have wind/current at these positions and did not invent them",
+    "wind_speeds_ms": [
+      5.0,
+      10.0,
+      20.0,
+      30.0
+    ],
+    "current_speeds_ms": [
+      0.05,
+      0.1,
+      0.3
+    ]
+  },
+  "envelope": [
+    {
+      "wind_ms": 5.0,
+      "current_ms": 0.05,
+      "max_R": 0.1202,
+      "median_R": 0.0481,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 32
+    },
+    {
+      "wind_ms": 5.0,
+      "current_ms": 0.1,
+      "max_R": 0.0601,
+      "median_R": 0.0241,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 33
+    },
+    {
+      "wind_ms": 5.0,
+      "current_ms": 0.3,
+      "max_R": 0.02,
+      "median_R": 0.008,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 33
+    },
+    {
+      "wind_ms": 10.0,
+      "current_ms": 0.05,
+      "max_R": 0.4808,
+      "median_R": 0.1926,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 4
+    },
+    {
+      "wind_ms": 10.0,
+      "current_ms": 0.1,
+      "max_R": 0.2404,
+      "median_R": 0.0963,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 20
+    },
+    {
+      "wind_ms": 10.0,
+      "current_ms": 0.3,
+      "max_R": 0.0801,
+      "median_R": 0.0321,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 33
+    },
+    {
+      "wind_ms": 20.0,
+      "current_ms": 0.05,
+      "max_R": 1.9193,
+      "median_R": 0.7703,
+      "n_wind_dominated_R_gt_1": 9,
+      "n_current_dominated_R_lt_0p1": 0
+    },
+    {
+      "wind_ms": 20.0,
+      "current_ms": 0.1,
+      "max_R": 0.9597,
+      "median_R": 0.3851,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 0
+    },
+    {
+      "wind_ms": 20.0,
+      "current_ms": 0.3,
+      "max_R": 0.3199,
+      "median_R": 0.1284,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 10
+    },
+    {
+      "wind_ms": 30.0,
+      "current_ms": 0.05,
+      "max_R": 4.2821,
+      "median_R": 1.7328,
+      "n_wind_dominated_R_gt_1": 28,
+      "n_current_dominated_R_lt_0p1": 0
+    },
+    {
+      "wind_ms": 30.0,
+      "current_ms": 0.1,
+      "max_R": 2.1411,
+      "median_R": 0.8664,
+      "n_wind_dominated_R_gt_1": 13,
+      "n_current_dominated_R_lt_0p1": 0
+    },
+    {
+      "wind_ms": 30.0,
+      "current_ms": 0.3,
+      "max_R": 0.7137,
+      "median_R": 0.2888,
+      "n_wind_dominated_R_gt_1": 0,
+      "n_current_dominated_R_lt_0p1": 3
+    }
+  ],
+  "regime": {
+    "typical_forcing": {
+      "wind_ms": 10.0,
+      "current_ms": 0.1,
+      "n_current_dominated_R_lt_0p1": 20,
+      "n_total": 33,
+      "max_R": 0.2404
+    },
+    "storm_forcing": {
+      "wind_ms": 30.0,
+      "current_ms": 0.05,
+      "n_wind_dominated_R_gt_1": 28,
+      "max_R": 4.2821,
+      "max_lambda": 0.3848
+    },
+    "all_bergs_current_dominated_everywhere": false,
+    "finding": "Regime is set by the FORCING as much as by berg size. Under typical forcing the tracked bergs are current-dominated or close to it, but under storm winds with a weak current a majority become wind-dominated. 'Large Antarctic bergs move with the current' is therefore a statement about typical conditions, not a property of the bergs -- and the storms are exactly when the forecast matters most."
+  },
+  "corridor": {
+    "lon_range": [
+      -10.0,
+      100.0
+    ],
+    "n_bergs": 15,
+    "bergs": [
+      {
+        "name": "D15A",
+        "lat": -66.63,
+        "lon": 81.92,
+        "area_km2": 3037.47,
+        "R_at_10ms": 0.0264
+      },
+      {
+        "name": "D15B",
+        "lat": -67.02,
+        "lon": 81.58,
+        "area_km2": 610.52,
+        "R_at_10ms": 0.054
+      },
+      {
+        "name": "D37",
+        "lat": -69.21,
+        "lon": 36.36,
+        "area_km2": 477.77,
+        "R_at_10ms": 0.0703
+      },
+      {
+        "name": "C21B",
+        "lat": -64.98,
+        "lon": 95.83,
+        "area_km2": 258.97,
+        "R_at_10ms": 0.0857
+      },
+      {
+        "name": "D34",
+        "lat": -67.16,
+        "lon": 82.06,
+        "area_km2": 165.8,
+        "R_at_10ms": 0.0873
+      },
+      {
+        "name": "B09G",
+        "lat": -68.18,
+        "lon": 41.5,
+        "area_km2": 160.06,
+        "R_at_10ms": 0.0908
+      },
+      {
+        "name": "D15C",
+        "lat": -67.22,
+        "lon": 79.41,
+        "area_km2": 115.62,
+        "R_at_10ms": 0.0866
+      },
+      {
+        "name": "C18B",
+        "lat": -67.03,
+        "lon": 47.38,
+        "area_km2": 110.4,
+        "R_at_10ms": 0.1417
+      },
+      {
+        "name": "D23",
+        "lat": -69.44,
+        "lon": 74.71,
+        "area_km2": 105.6,
+        "R_at_10ms": 0.1232
+      },
+      {
+        "name": "C30",
+        "lat": -64.78,
+        "lon": 96.27,
+        "area_km2": 75.06,
+        "R_at_10ms": 0.1831
+      },
+      {
+        "name": "C31",
+        "lat": -64.68,
+        "lon": 96.49,
+        "area_km2": 73.07,
+        "R_at_10ms": 0.1833
+      },
+      {
+        "name": "C24",
+        "lat": -64.84,
+        "lon": 96.02,
+        "area_km2": 57.88,
+        "R_at_10ms": 0.1747
+      },
+      {
+        "name": "D15D",
+        "lat": -67.29,
+        "lon": 79.3,
+        "area_km2": 55.89,
+        "R_at_10ms": 0.1179
+      },
+      {
+        "name": "C18C",
+        "lat": -68.47,
+        "lon": 39.07,
+        "area_km2": 53.07,
+        "R_at_10ms": 0.2404
+      },
+      {
+        "name": "C39",
+        "lat": -65.9,
+        "lon": 56.66,
+        "area_km2": 52.13,
+        "R_at_10ms": 0.1872
+      }
+    ]
+  }
+}
