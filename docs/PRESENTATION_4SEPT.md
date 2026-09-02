@@ -211,15 +211,44 @@ Three design commitments follow, and they answer "what if a model is wrong":
 - Real routing computed with PolarRoute on real satellite ice
 - Ice-data QC layer, with the artifact measured across the full archive
 - Vessel specification verified and corrected
+- **Iceberg drift physics implemented and tested** — Wagner–Dell–Eisenman
+  closed form, 23 tests reproducing the paper's own published coefficient table
+  and its 765 m critical length, running on the live USNIC feed
 
 **Honest gaps, in priority order**
-1. **Iceberg trajectory — not started.** It is one of the three pillars in the
-   problem statement title. This is our largest gap and we are naming it.
+1. **Iceberg trajectories need an ocean-current field.** The drift physics is
+   done; stepping a berg forward over days requires CMEMS currents, and
+   validation requires the BYU observed-track archive. Both are free.
 2. Multi-date route-regret sweep — one sample proves nothing
 3. Retrain with QA masking — the model was fitted on the fake coastal zeros
 4. GEBCO bathymetry — no depth constraint on any route today
 5. Ensemble + conformal calibration — turns disagreement into a safety margin
 6. POLARIS RIO, which requires the thickness output channel
+
+### The iceberg pillar, and a result that contradicts the textbook
+
+**15 of the 33 icebergs USNIC currently tracks sit inside our routing
+corridor**, including D15A — 3,037 km², at 66.6°S 81.9°E, beside Bharati's
+approach.
+
+The standard simplification is that large Antarctic tabular bergs move with the
+ocean current and wind can be ignored. We measured that on the real catalogue
+instead of assuming it:
+
+| Forcing | Result |
+|---|---|
+| 10 m/s wind, 0.10 m/s current | 20 of 33 current-dominated |
+| **30 m/s wind, 0.05 m/s current** | **28 of 33 wind-dominated** |
+
+**The regime is set by the weather, not by the iceberg.** Antarctic katabatic
+winds reach 30 m/s — so the simplification fails precisely during the storms
+when a trajectory forecast matters most. We carry both terms.
+
+Two things we will not claim: our Southern-Hemisphere deflection sign is
+inferred from the Coriolis term rather than verified against observations (the
+published reference code is Arctic-only and deflects the wrong way in the
+south), and **this can never be a growler warning** — USNIC's tracking floor is
+~18.5 km, a growler is ~5 m, and nothing in orbit sees them.
 
 **The scope discipline:** the problem statement names three things. We are doing
 those three properly rather than five badly. No autopilot, no COLREGs, no claim
