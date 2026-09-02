@@ -17,3 +17,6 @@ venv/
 
 # OS
 .DS_Store
+
+# Local-only: diagram generation prompts, deliberately not pushed.
+docs/DIAGRAM_PROMPTS.md
