@@ -48,6 +48,8 @@ for v in "${VARIABLES[@]}"; do
   VAR_ARGS+=(--variable "$v")
 done
 
+# `--force-download` was removed: the CLI deprecated it and warns on every run.
+# Overwrite protection is already handled by the "already have" check above.
 copernicusmarine subset \
   --dataset-id "$DATASET_ID" \
   "${VAR_ARGS[@]}" \
@@ -57,7 +59,23 @@ copernicusmarine subset \
   --minimum-latitude "$MIN_LAT" --maximum-latitude "$MAX_LAT" \
   --output-directory "$ARCHIVE_DIR" \
   --output-filename "$OUT_FILE" \
-  --force-download \
   >> "$LOG_FILE" 2>&1
 
 echo "$(date -u -Iseconds) saved ${OUT_FILE}" >> "$LOG_FILE"
+
+# Compress before this ever reaches git. `copernicusmarine subset` writes
+# NetCDF with no compression at all (verified: zlib=False, complevel=0,
+# contiguous), which is 42.6 MB per day of raw float32 committed permanently
+# to history -- about 4.3 GB by December. Compression takes that to ~5 MB with
+# a quantisation error three orders of magnitude below the precision anything
+# downstream uses. See scripts/compress_netcdf.py for the measurements.
+#
+# This step must never fail the harvest: an uncompressed archive file is far
+# better than a missing one, because the cycle cannot be re-fetched later.
+if python3 "$ROOT_DIR/scripts/compress_netcdf.py" \
+     "$ARCHIVE_DIR/$OUT_FILE" >> "$LOG_FILE" 2>&1; then
+  echo "$(date -u -Iseconds) compressed ${OUT_FILE}" >> "$LOG_FILE"
+else
+  echo "$(date -u -Iseconds) WARNING compression failed for ${OUT_FILE}, " \
+       "keeping the uncompressed file" >> "$LOG_FILE"
+fi
