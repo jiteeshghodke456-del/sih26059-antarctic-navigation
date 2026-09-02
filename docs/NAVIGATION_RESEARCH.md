@@ -445,3 +445,237 @@ than a single number — which is our differentiator D1.
 - ❌ Do **not** say "IcySea is inaccurate." We have not tested IcySea. We have
   characterised the data layer beneath it, which is a different and defensible
   claim.
+
+---
+
+## 7. Physical ice hazards — what the 25 km field cannot see, and what closes on a ship
+
+Researched 2026-09-02. Route context: Cape Town → Maitri (Princess Astrid
+Coast) and Bharati (Larsemann Hills, Prydz Bay), December–April.
+
+### 7.1 The scoping blocker: there is no summer Antarctic drift product
+
+> **OSI SAF OSI-405-d sea-ice drift is produced for the Southern Hemisphere
+> ONLY between 1 April and 31 October.**
+
+Our entire resupply season — December to March — falls in the gap. Copernicus
+SAR-derived Antarctic drift is reprocessed-only. So any convergence, deformation
+or compression layer must come from:
+
+- **modelled** ice velocity: CMEMS `GLOBAL_ANALYSISFORECAST_PHY_001_024`,
+  `siu`/`siv`, 1/12° (~9 km), 10-day forecast, daily, coverage to 80°S; or
+- in-house Sentinel-1 feature tracking.
+
+This must be settled before any compression work starts. It is a *data
+availability* constraint, not a modelling choice.
+
+### 7.2 Ice compression — the "sandwiching" hazard, and a genuine white space
+
+**No operational Antarctic ice-pressure product exists anywhere in the world.**
+AARI forecasts gridded compression, but only for the Barents and adjacent Kara
+Sea. Canada's CAPS runs Arctic-only. Finland and Sweden publish no gridded
+Baltic pressure field — compression reaches Baltic mariners as icebreaker
+observations plus a narrative text forecast.
+
+**IMO POLARIS is provably blind to it.** Read end to end, MSC.1/Circ.1519 does
+not contain the words *pressure*, *compression*, *ridge*, or *drift*. RIO is
+concentration × ice-type only. The MANICE egg code likewise encodes
+concentration, stage and floe size, and no pressure.
+
+**Physical drivers** (AARI, Buzin/Klyachkin/Frolov 2022): compression arises
+from *gradients* in drift speed and direction; obstacles — coast, islands,
+grounded stamukhi, **landfast ice** — are decisive; onshore winds produce the
+strongest coastal compression. Their normative statement is directly
+operational:
+
+> *The most dangerous case for shipping is compression at the fast-ice edge when
+> the general drift sets into it at an angle.*
+
+★ **That is exactly the Bharati and Maitri offloading geometry** — a ship sitting
+at the fast-ice edge — and it is a computable geometric test: onshore wind
+component × concentration × distance to a blocking boundary.
+
+**Concentration threshold:** strong compression occurs predominantly at 10/10
+concentration; local compression at 7–9/10. This corroborates the classical
+compactness ≈ 0.8 free-drift limit and USNIC's own 80% pack/MIZ split — the same
+80% our vessel config uses.
+
+**Formulas that exist and are usable:**
+
+| Quantity | Expression | Constants |
+|---|---|---|
+| Ice strength (Hibler 1979) | `P = P* · h · exp[−C(1−A)]` | **P\* = 27 500 N m⁻², C = 20**, ellipse e = 2.0 |
+| Ice pressure in a model | `p = −(σ₁₁ + σ₂₂)/2` | |
+| Divergence | `ε̇_div = ∂u/∂x + ∂v/∂y` | |
+| Shear | `ε̇_shr = ½√[(∂u/∂y+∂v/∂x)² + (∂u/∂x−∂v/∂y)²]` | |
+| Drift-error law (Dierking 2020) | `σ_div ≈ √2·σ_tr /(ΔT·L)` | grid spacing and timestep decide whether signal survives |
+| Free drift | `U_i = α e^(−iθ)U_a + U_w` | α ≈ 2%, θ ≈ 20–40° **left of wind in the SH** |
+
+★ **The uncertainty consequence that matters to us.** Hibler strength is
+*exponential* in concentration with C = 20, so `dP/P = 20·dA`. **A 5-percentage-
+point SIC error changes modelled ice strength by 2.7×; a 10-point error by
+7.4×.** Any compression layer built on 25 km passive microwave inherits that
+amplification. This is the strongest possible argument for our uncertainty work
+— and equally a warning against shipping a compression number without one.
+
+**The best published computable proxy is ridged-ice production rate**, not
+pressure. Pärn, Haapala & Kõuts (2007) diagnosed two Gulf of Finland hull
+damages using 24 h growth of deformed-ice thickness: **0.1–0.3 m/day at the
+damage sites, peak 1.4 m/day nearby**, in ≥95% concentration. Their
+counter-intuitive result is worth quoting:
+
+> *"Low winds (≈4 m/s) with variable direction are able to cause strong ice
+> deformation, but stronger steady winds (≈9 m/s) may result in a lower
+> deformation rate."*
+
+**Wind-direction change matters more than wind speed.** Their own caveat:
+modelled stresses (~0.01–0.03 MPa) are two orders below actual ship–ice impact
+stresses.
+
+**AARI 0–3 compression scale:** 0 none/dispersing · 1 weak, patches of open
+water remain · 2 noticeable, open water closes, ridges break and re-form · 3
+strong continuous ridging. Grades 2–3 cut transit speed by **50–95%**.
+
+### 7.3 Besetting — including an Indian-programme incident
+
+- ★ **MV Magdalena Oldendorff — the directly relevant case.** Chartered as
+  support ship for the **20th Indian Antarctic Expedition**. Beset **11 June
+  2002** near Novolazarevskaya (Muskegbukta Bay) on her second voyage to Maitri.
+  SA Agulhas lifted out 79 Russian scientists and 11 crew by helicopter; **ARA
+  Almirante Irízar failed to free her**; she overwintered and self-released in
+  late November 2002 — roughly **5.5 months beset**. She is a ULA-class SA-15,
+  designed to break 1 m level ice continuously — *the same ice class as
+  Golovnin*. **Caveat: source dates conflict and no primary ATCM/COMNAP document
+  was located. Verify before presenting.**
+- **MV Akademik Shokalskiy, 25 Dec 2013 – 7 Jan 2014, Commonwealth Bay — in peak
+  austral summer.** Antecedent: iceberg **B09B grounded there in Dec 2010**,
+  producing year-round fast ice up to 3 m thick. **Xue Long stalled at 6 nmi and
+  became beset itself**; Aurora Australis abandoned the attempt at ~10 nmi
+  rather than risk besetting. **Release mechanism: a wind-direction change
+  loosening the pack — divergence, not icebreaking.**
+- Statistics: 1922–1990, 10 ships lost on the Northern Sea Route, **9 of them to
+  compression**. Hudson Strait vessels are beset on average **40% of total
+  voyage time**.
+- Dawson et al.: *"ice under pressure … is very difficult to detect, observe, or
+  predict, and ship captains are often unaware until their vessels become
+  beset."*
+- **No besetting incident could be documented for any Indian-flagged vessel**
+  (Sagar Kanya, Ivan Papanin, Vasiliy Golovnin). That is an evidence gap, not a
+  null result — NCPOR expedition reports would settle it.
+
+### 7.4 What the 25 km concentration field cannot see
+
+| Hazard | Visible at 25 km? | Note |
+|---|---|---|
+| Ice pressure / compression | **No** — no observable at any resolution | Sub-grid pressure exceeds grid mean by ~4×; a ship is 10⁻³ of a cell |
+| Pressure ridges, rafting, hummocks | **No** | The dominant resistance term |
+| Fast ice vs pack ice | **No** | AMSR2 at 6.25 km already misplaces the Prydz Bay fast-ice edge vs MODIS |
+| Leads, tide cracks | **No** | 25 km is ~250× a navigable lead |
+| Icebergs < ~6 km | **No** | USNIC tracks ≥ ~18.5 km; BYU ~6 km |
+| **Growlers, bergy bits** | **No** | See below — the critical honesty point |
+| Thin ice (nilas, grey) | Underestimated | Algorithms calibrated for thick FY/MY ice |
+| Anything within 25–50 km of coast | Contaminated | Many studies simply mask 50 km — that mask covers *both* Indian station approaches |
+| Summer melt state | Corrupted | Wet snow corrupts emissivity in exactly the Dec–Mar window |
+| Floe size distribution | **No** | No operational product; MIZ is a concentration band only |
+
+★ **The growler gap, stated precisely.** A growler is < 1 m above water, < 5 m
+long, ~87.6% submerged (≈7 m keel), glacier ice at ρ ≈ 900 kg/m³ that does not
+fail in bending like sea ice. Bowditch: growlers *"cannot usually be detected at
+ranges greater than four miles, and are lost in a sea greater than four feet."*
+Sentinel-1 EW detection rates in **best-case** conditions: **< 60 m bergs
+5–13%**; 60–120 m 41–70%; > 120 m 83–96% — the authors conclude accuracy *"is
+still too low for an unsupervised mapping of iceberg positions to be used for
+navigation."*
+
+> **The gap between the smallest operationally tracked object and the classic
+> hull-holing hazard is 3.5 orders of magnitude.** Our product must never imply
+> a growler warning. That is a radar-and-lookout problem.
+
+**Optical rescue is not available:** Southern Ocean mean cloud fraction is
+**0.82–0.86**, highest in summer.
+
+**There is no near-real-time Antarctic landfast-ice product.** The Fraser
+circum-Antarctic product (1 km, 15-day) ends March 2018.
+
+### 7.5 Summer blizzards and katabatic winds
+
+**Definition (Australian Antarctic Division):** gale force or stronger for at
+least one hour, temperature < 0 °C, **visibility ≤ 100 m**.
+
+**Mechanism:** radiative cooling over the ice sheet drains dense air downslope,
+deflected **20–50° left of the fall line** in the Southern Hemisphere. Coastal
+katabatics can exceed 100 km/h for days; a seven-day Mawson blizzard ran
+100–148 km/h sustained with one gust at **244 km/h**.
+
+★ **Crucially, Turner et al. (2009)** — the continent-wide 60-year study — find
+strong wind events are *"a feature of the extended winter season"*, and that
+around East Antarctica the significant majority arise from **katabatic flow
+enhanced by the synoptic circulation**. Pure katabatic is the background; the
+damaging events are katabatic × cyclone.
+
+**At Maitri (Indian data, *Mausam*, 1990–2005):**
+
+| | |
+|---|---|
+| Blizzards per year | ~21, affecting the station on **45 days/year** |
+| Peak month | August, ~7 blizzard days |
+| Mean wind during blizzards | **52 kt**, exceeding 100 kt on several occasions |
+| Mean duration | **25 h**; longest **168 h** (June 1997); 12 events over 72 h |
+| Direction | Katabatics highly directional from the **southeast** |
+
+The source states explicitly that blizzard frequency is **highest in winter and
+lowest in summer**. *Derived estimate, flagged as such: with 15–20 of the 21
+annual events in April–August, December–March plausibly sees **0–2 blizzards per
+season** at Maitri.* Rare is not absent — the Shokalskiy was beset on Christmas
+Day, and a single 25-hour event at 52 kt moves the ice field ~30 km.
+
+**Operational impact:** cargo and personnel transfer stops; visibility in blowing
+snow falls below the growler-lookout threshold precisely when radar is also
+degraded by sea state; the ice field reorganises within hours — at 30 m/s free
+drift is ~**52 km/day**.
+
+★ **The resupply window is the breakout window.** Prydz Bay fast ice at
+Zhongshan/Davis reaches **1.59 ± 0.17 m** maximum and **breaks up mid-December
+to late January, associated with passing cyclones.**
+
+**Katabatics as opportunity:** East Antarctic surveys identify **28 coastal
+latent-heat polynyas** opened by offshore katabatic flow. *Caveat: mean maximum
+extent is June–October* — principally a winter feature. In summer they merge
+with open water, so the routing opportunity in Dec–Mar is better framed as
+**offshore-wind-driven opening events** than as named polynyas.
+
+**Forecast sources and their limits:**
+
+- **AMPS** (polar WRF, real-time): domains at 24, 8, 2.67 and 0.89 km; 120 h
+  outer, 39 h nests; free. *Whether any sub-8 km nest covers Dronning Maud Land
+  or Prydz Bay is unconfirmed — the domain-map pages 404'd.*
+- **ERA5** correlates r = 0.91 with ASCAT for summer Antarctic coastal
+  easterlies, mean bias −0.51 m/s — **but −3.89 m/s above 20 m/s**, worst near
+  complex orography. Turner et al. reach the same conclusion.
+
+> ★ **ERA5 will under-forecast exactly the winds that beset ships.** Any
+> wind-driven hazard layer must bias-correct or say so.
+
+### 7.6 The closest precedent to what we are building
+
+**CHINARE FIPS** (Fast Ice Prediction System) runs a HIGHTSI-class model at
+**0.125°, 10-day forecast, for 68.375–69.75°S / 73.5–79°E** — which is
+**precisely the Bharati approach**. It is the nearest existing system to our
+station-approach problem and should be checked for obtainable outputs before we
+build anything similar.
+
+### 7.7 Explicit uncertainties in this section
+
+Carried forward verbatim from the research, because they bound what we may
+claim:
+
+- Growler collision-energy figures and drift-divergence noise floors were
+  **calculated, not cited**.
+- The Maitri summer blizzard count (0–2/season) is **derived** from the monthly
+  breakdown, not stated in the source.
+- Magdalena Oldendorff dates **conflict across sources**; no primary document
+  found.
+- AMPS nest coverage of Dronning Maud Land / Prydz Bay is **unconfirmed**.
+- The Southern-Hemisphere free-drift turning angle: direction (left of wind) is
+  certain; the **20–40° magnitude is inferred from Northern-Hemisphere Nansen
+  values with the sign mirrored**, not SH-verified.
