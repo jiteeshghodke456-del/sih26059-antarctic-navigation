@@ -262,3 +262,186 @@ which is where our model's advantage grows (+18.5 % at 1 day → +30.6 % at 7 da
 - [Kongsberg Maritime — MoU with India on indigenous Polar Research Vessel](https://www.kongsberg.com/maritime/news-and-events/news-archive/2025/kongsberg-maritime-signs-mou-with-india-to-explore-design-of-indigenous-polar-research-vessel/)
 - [VISIR-2: ship weather routing in Python — Geoscientific Model Development](https://gmd.copernicus.org/articles/17/4355/2024/)
 - [Autonomous Passage Planning for a Polar Vessel (PolarRoute)](https://arxiv.org/pdf/2209.02389)
+
+---
+
+## 6. Where sea-ice concentration products actually fail
+
+Researched 2026-09-02. This is the evidence base for "IcySea and its peers do
+not have accurate ice maps" — a claim that is true, but only precise when it is
+attached to numbers.
+
+Every operational ice service, IcySea included, is built on top of the same
+passive-microwave concentration retrievals. Their failure modes are therefore
+*our* failure modes too, and stating them first is stronger than being asked.
+
+### 6.1 Resolution is not grid spacing
+
+- SSMIS 19 GHz footprint is roughly **70 × 45 km**, gridded to 10–25 km. The
+  grid is finer than the measurement.
+- AMSR2 footprints: 6.9 GHz 62 km · 18.7 GHz 20 km · 36.5 GHz 10 km · 89 GHz
+  5 km, gridded to 25 / 12.5 / 6.25 km.
+- NSIDC states plainly that the ice edge derived from 25 km passive microwave
+  can be **off by 25–50 km** versus higher-resolution systems.
+
+**Consequence for us:** we cannot see a lead narrower than a cell, and the
+feature a master most wants to exploit is exactly that. We route to the *region*
+where leads are likely, never to a lead.
+
+### 6.2 Thin ice is systematically under-read
+
+- **All** algorithms underestimate concentration for ice thinner than ~25 cm,
+  and most retain a ~5% negative bias even above 30 cm (Ivanova et al. 2015).
+- Saturation thickness by algorithm: N90 20–25 cm · OSI-SAF 25–30 cm · NASA
+  Team 30–35 cm.
+- For the Antarctic marginal ice zone specifically, thin ice (dark nilas,
+  grease) and slush are reported as the single largest cold-season error source
+  (Stentella et al. 2026). *Caution: the journal page and the preprint summary
+  quote different magnitudes (up to 70% vs up to 30%) — verify against the
+  published figure before quoting a number.*
+
+**Consequence:** new and young ice — the ice a ship can actually break — is the
+ice the sensor is worst at. This cuts both ways and is worth saying out loud.
+
+### 6.3 Coastal contamination, in both directions
+
+- Land emissivity resembles ice emissivity, so brightness temperature is
+  contaminated **several tens of kilometres** from the coast, and uncorrected
+  retrievals **overestimate** coastal SIC (false ice).
+- The corrections then overshoot: Lavergne et al. 2019 notes corrections are
+  "not perfect, and some false sea ice remains", and that **true coastal ice can
+  also be removed**.
+- NSIDC's AMSR2 spillover correction analyses a **7 × 7 pixel (87.5 km)**
+  neighbourhood and assumes land pixels radiate like 90% SIC.
+
+**This is the mechanism behind our own measured finding** (§ `isih/ice_quality.py`,
+`RESULTS.md §2`): the CDR's land-spillover filter zeroes coastal cells and
+writes `0.0`, which reads as open water. The literature describes the
+overestimate; what bites us operationally is the **overcorrection**, at exactly
+the cells nearest a station.
+
+### 6.4 Weather filters delete real ice
+
+- The OSI-401 open-water filter threshold is 10%, plus a 7 °C air-temperature
+  mask.
+- Cost, quantified: the classic gradient-ratio filters wrongly zero out **27% of
+  pixels at a true SIC of 15%**, and 9% at 20% (Ivanova et al. 2015).
+- Lavergne 2019 confirms the filter "also has the effect of removing some amount
+  of true low-concentration ice, especially in the marginal ice zone."
+
+**Consequence:** the MIZ — where a ship makes its most consequential decisions —
+is where the products are most aggressively censored.
+
+### 6.5 The between-algorithm spread is the honest error bar
+
+From the 30-algorithm round robin (Ivanova et al. 2015), standard deviation at
+**low concentration (15% SIC)**:
+
+| Algorithm | NH SD | Algorithm | NH SD |
+|---|---|---|---|
+| 6H | 2.8% | Bristol | 6.6% |
+| CalVal | 3.8% | Bootstrap-P | 13.5% |
+| OSI-SAF hybrid | 4.7% | ASI | 28.5% |
+| NASA Team | 5.4% | N90 | 28.8% |
+
+**Roughly a 10× spread between algorithms at low concentration**, and the
+Southern Hemisphere is worse (N90 35.0%). At high concentration (75%) the spread
+collapses to 2.9–9.0%.
+
+> **The line for a judge:** "There is no such thing as *the* sea-ice
+> concentration. At the ice edge, published algorithms disagree with each other
+> by an order of magnitude more than they do in the pack. Any system that
+> presents a single number without an error bar is hiding that."
+
+### 6.6 The Antarctic is measurably harder than the Arctic
+
+- Ozsoy-Cicek et al. 2009, against ASPeCt ship observations: **R² = 0.41**;
+  AMSR-E may underestimate ice area inside the ice edge by **up to 14%
+  (~1.5 million km²)**, and placed the ice edge **38–102 km too far south**.
+- NSIDC AMSR2 vs VIIRS: bias 3.9% / RMSE 11.0% (Arctic) versus bias 4.45% /
+  RMSE 8.8% (Antarctic).
+- Mechanism: Antarctic summer surfaces are dominated by thick snow, **flooding
+  and snow-ice formation**, not the melt ponds that drive Arctic error.
+
+*Flag:* no published Antarctic melt-pond-fraction number was found. "Antarctic
+ponding is weaker" is physically well-supported (Andreas & Ackley 1982) but
+quantitatively **unverified** — do not put a number on it.
+
+### 6.7 Forecast skill: the bar is lower than people assume
+
+- **SIPN South** (Massonnet et al. 2023), 22 contributors, >3000 forecasts:
+  **only 51% (42 of 82) of predictions beat a plain climatological forecast**
+  in CRPS. Dynamical models did not beat statistical ones (mean CRPS 0.49 vs
+  0.57 million km²); for spatial information in Dec–Jan, statistical models
+  performed *better*.
+- **The exploitable gap:** the authors state they did **not** implement
+  persistence or anomaly-persistence benchmarks, calling it "not always
+  straightforward" for series with a marked seasonal cycle. Our prototype's
+  entire result is measured against persistence. That is a genuine
+  methodological edge, not a marketing line.
+- Ice-edge subseasonal skill vs climatology: ECMWF ~38 days, multi-model ~60
+  days, individual members 30–38 days.
+- Massonnet 2023 on the regime shift: the system "appears to be in a
+  non-stationary state where **climatology is, by definition, not meaningful**."
+  This is the cleanest available justification for why trend- and
+  climatology-based statistical models broke after 2016.
+
+### 6.8 Uncertainty is shipped — and is knowingly incomplete
+
+- OSI SAF ships per-pixel `algorithm_uncertainty`, `smearing_uncertainty` and
+  `total_uncertainty`. Typical σ_algo is 2–3% SIC; **σ_smear reaches 40% SIC at
+  the ice edge** and ~0% in homogeneous areas.
+- So **total uncertainty is dominated by smearing exactly where a ship needs
+  it** — at the edge.
+- **The admission worth quoting:** Lavergne et al. 2019 states explicitly that
+  melt-pond misinterpretation, the thin-ice effect, and the open-water-filter
+  effect are **not included** in the shipped uncertainty variables. What ships
+  is a *precision* estimate, not a total error budget.
+- The NOAA/NSIDC CDR we use ships `cdr_seaice_conc_stdev` per pixel. **We are
+  not currently using it.** It belongs in the input channels and in the
+  conformal calibration.
+
+### 6.9 The white space
+
+**No study was found that propagates sea-ice concentration or forecast
+uncertainty into a routing decision.** Nearest neighbours:
+
+- ice-chart uncertainty impact on operational planning, Kara Sea (OMAE2022-79051)
+- probabilistic ice drift for search-and-rescue (Rabatel et al. 2018, 10-day)
+- **directly relevant precedent:** an optimum-route study for the
+  **Bharati–Maitri** leg, *Polar Science* 2021 — **deterministic ice and wind
+  resistance only, no uncertainty**.
+
+*Confidence: medium.* The agent's web-search budget ran out mid-task and this
+rests on Crossref queries. Re-verify before claiming novelty in a deck.
+
+**That Indian precedent matters twice over:** it proves the problem is
+recognised in the Indian Antarctic programme, and it marks precisely where we
+add something — the same corridor, done probabilistically.
+
+### 6.10 Manual ice charting is not ground truth either
+
+Cheng et al. 2020, Canadian Ice Service analysts on RADARSAT-2:
+
+- analyst SIC matched automated segmentation **exactly only 39%** of the time
+  (84% within ±1/10)
+- inter-analyst agreement Krippendorff's α = **0.779**
+- analysts **systematically overestimate** SIC in the 1/10–3/10 range
+- named ambiguities: open water under low wind looks like first-year ice;
+  surface meltwater mimics open water
+
+**Consequence:** validating against ice charts has its own error floor. Two
+experts disagree materially. This is an argument for calibrated intervals rather
+than a single number — which is our differentiator D1.
+
+### 6.11 What this section licenses us to say
+
+- ✅ "The products every ice service depends on disagree by ~10× at the ice edge."
+- ✅ "Shipped uncertainty excludes three known error sources, by the producers'
+  own admission."
+- ✅ "Antarctic retrievals are measurably worse than Arctic ones, and most tools
+  are Arctic-first."
+- ✅ "Half of Antarctic seasonal forecasts fail to beat climatology."
+- ❌ Do **not** say "IcySea is inaccurate." We have not tested IcySea. We have
+  characterised the data layer beneath it, which is a different and defensible
+  claim.

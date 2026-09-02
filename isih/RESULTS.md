@@ -144,52 +144,210 @@ downloads its own data. Roughly 1–2 hours.
 
 # Routing Result — Cape Town → Bharati
 
-Computed 2026-08-31 with PolarRoute 1.1.11 (British Antarctic Survey, MIT) on
-real satellite ice for **1 December 2019**, the start of the real resupply
-season. Figure: `isih/figures/route_map.png`.
+Recomputed 2026-09-02 with PolarRoute 1.1.11 (British Antarctic Survey, MIT) on
+real NSIDC satellite ice, day by day. Scripts: `isih/route_regret.py`,
+`isih/destination_window.py`, `isih/ice_quality.py`.
 
-| | Value |
+> **Correction to the previous version of this section.** The earlier figure of
+> **17.4 days** was computed with a vessel configuration that was wrong in two
+> places: beam 18.6 m (real: **22.4 m**) and maximum speed 14.0 km/hr (real
+> service speed: **16.4 kn = 30.4 km/hr**, i.e. we had the ship at roughly half
+> its true speed). Both are now verified against four independent registries.
+> The old 17.4-day number should not be quoted. It is superseded by 8.6 days
+> below — and that number carries its own large caveat, stated up front.
+
+---
+
+## 1. Headline: the destination, not the ocean, is the problem
+
+The interesting result is not the line across the Southern Ocean. The open
+ocean is easy. The result is **when the destination is reachable at all.**
+
+For MV Vasiliy Golovnin at an 80% ice limit, through December 2019:
+
+| | Days open | Days closed | % closed |
+|---|---|---|---|
+| **Bharati station cell** | 8 / 31 | **23 / 31** | **74.2%** |
+| Approach point, 100 km north | 31 / 31 | 0 / 31 | 0% |
+
+**The ship can always reach the approach. It usually cannot reach the station.**
+The last 100 km is the entire problem.
+
+This is exactly how Indian Antarctic resupply actually works: the vessel holds
+at the fast-ice edge and moves cargo the remaining distance by helicopter and
+landing barge — which is why Golovnin carries both. So the decision-support
+question is not *"which line do we draw across the ocean"*. It is:
+
+> **When should we arrive, will the last 100 km be open when we get there, how
+> long will it stay open, and if it is shut — do we wait, or switch to air and
+> barge operations?**
+
+That is a forecasting question with a lead time of days, which is precisely the
+horizon our model addresses.
+
+---
+
+## 2. The finding that changes how we read the data
+
+Look at *which* December days appear open at Bharati:
+
+| Date | With QA masking | Raw product | Status |
+|---|---|---|---|
+| Dec 1 | 30.7% | **0.0%** | open |
+| Dec 2–6 | 81–88% | 81–88% | closed |
+| Dec 7, 8, 9 | 33.7 / 35.2 / 36.3% | **0.0%** | open |
+| Dec 10–20 | 87–99% | 87–99% | closed |
+| Dec 21 | 80.0% | 80.0% | open (exactly at the limit) |
+| Dec 29–31 | 75–79% | 75–79% | open |
+
+**Four of the eight "open" days are days on which the raw product reports
+exactly 0.0% ice.** Those are not open water. They are cells where the NOAA/NSIDC
+CDR's **land-spillover filter** fired — it suppresses coastal pixels whose 25 km
+microwave footprint overlaps land — and wrote the result as `0.0`, which sits
+inside `valid_range [0, 100]` and is therefore accepted by any unguarded reader
+as open water.
+
+The tell was physical, not statistical: a block of exact zeros with **zero
+gradient** flush against cells reading 0.59–0.64. Sea ice does not do that. The
+file's own `cdr_seaice_conc_qa_flag` confirms it — bit 4,
+`Land_spillover_filter_applied`, is set on exactly the bad days and clear on the
+good ones.
+
+### How widespread (measured over all 1096 days, 2018–2020)
+
+| Measure | Result |
 |---|---|
-| Voyage time | **17.4 days** |
-| Waypoints | 59 |
-| Max ice on our route | **79%** |
-| Max ice on the straight line | **92%** |
-| Vessel ice limit (`max_ice_conc`) | 80% |
+| Days on which the spillover filter fires | **1096 / 1096 (100%)** |
+| Cells suppressed per day | mean **118**, max 488 |
+| "Hard zero flush against heavy ice" | **100% of days**, mean 14.8 cells |
+| Worst single-day no-input outage | **59,350 cells** |
+| **Days with suspect cells in the 200 km box around Bharati** | **43.2%** |
+| Same, around Maitri's grid cell | 23.9% |
 
-## The claim, and how it was verified
+### What we did about it
 
-**"The direct path is blocked; our route stays passable."**
+`isih/ice_quality.py` reads the QA flag and sets `Land_spillover_filter_applied`
+and `No_input_data` cells to NaN. The mesh builder then drops them and meshiphi
+fills from the parent cell, so an unknown coastal cell **inherits its
+surroundings instead of asserting open water**.
 
-Sampled ice concentration densely along both paths against the same satellite
-field: the straight line exceeds the ship's 80% limit over 3.7% of its length,
-peaking at 92%. Our computed route never exceeds 79%.
+We checked the fix moves risk in the safe direction rather than assuming it:
 
-## A claim we had to withdraw
+| | Raw mean SIC in Bharati 200 km box | After QA masking |
+|---|---|---|
+| 1 Dec 2019 | 46.8% | **54.6%** |
+| 10 Dec 2019 | 62.5% | **65.4%** |
 
-The first version of this figure said the route *"bends around the thickest
-ice."* Measuring showed that is **false**: the time-optimal route crosses
-*more* average ice than the straight line (19.6% vs 8.4%), because it trades
-moderate ice for a shorter path. Only the maximum matters, and there the route
-genuinely wins.
+Masking makes the coast look **heavier**, so the router becomes more
+conservative. That is the correct direction for a safety system.
 
-The figure now computes its own numbers at render time, so the annotation
-cannot drift from the data if the route or date changes.
+**Residual caveat, stated plainly:** parent-cell fill still gives 30–36% on the
+artifact days, when the surrounding pixels suggest 80–95%. The fix removes a
+confident wrong answer; it does not yet give a confident right one. Treating
+these cells as *unknown and therefore high-risk* — rather than filling them — is
+the correct next step and is in `docs/backlog.md`.
 
-**If asked "does your route avoid ice?"** — the honest answer is: it avoids
-*impassable* ice, and accepts moderate ice where that is faster. That is what
-optimising travel time under a hard ice constraint actually means, and it is a
-better answer than a vague claim about avoidance.
+---
 
-## Caveats
+## 3. The baseline ladder — replacing the straight-line strawman
 
-1. **No bathymetry.** GEBCO is not downloaded, so depth is not constraining the
-   route. The mesh reported "no elevation data" for every cell. Shallow water
-   and land are therefore *not* being avoided — this must be added before any
-   claim about navigational safety.
-2. **Optimised for travel time only.** Fuel and risk-weighted objectives are
-   not yet run, so this is one route, not a Pareto set.
-3. **Observed ice, not forecast ice.** This route uses what the satellite
-   measured that day. Wiring the trained forecast model into the router is the
-   next step and is what makes it a *decision-support* tool rather than a
-   hindsight map.
-4. **Fuel figure is uncalibrated** and deliberately not quoted (ADR-012).
+The previous figure compared our route to a great-circle line. That is a
+strawman and has been retired: no master sails a straight line into pack ice.
+The honest baseline is **the same router given older ice**.
+
+Departure 1 Dec 2019, Cape Town → Bharati, identical vessel and engine:
+
+| Arm | What it represents | Planned | Actual | Blocked | Arrived |
+|---|---|---|---|---|---|
+| **STATIC** | plan once on departure ice, sail blind (today's practice) | 8.58 d | **8.61 d** | 0 h | yes |
+| **STATIC-noQA** | same, trusting spillover cells as open water | 8.58 d | 8.58 d | 0 h | yes |
+| **DAILY** | fresh observed chart every morning, no forecast | — | **9.00 d** | 9.6 h | yes (9 re-plans) |
+
+**Read this result honestly: on this departure date, the static plan was not
+punished.** Regret was 0.03 days. Daily re-planning was *slower*, not faster,
+because re-planning from the ship's live position takes locally-optimal turns
+that a single global optimisation avoids.
+
+We are reporting a null result on the arm we expected to win. That matters:
+
+- The open-ocean leg — about 5,800 km of the 5,813 km route — carries **mean
+  6% ice**. There is nothing to optimise there, so a stale chart costs nothing.
+- The whole decision is compressed into the final approach, where §1 shows the
+  station is shut 74% of the time.
+- **One departure date is one sample.** A single voyage cannot support a general
+  claim in either direction. The sweep across many departure dates is not yet
+  run and is the honest next step.
+
+> **What we can say:** planning on stale ice did not cost this voyage time.
+> **What we cannot yet say:** that it never does. The experiment that would
+> settle it is built and takes one command per departure date.
+
+---
+
+## 4. Transit time — and why 8.6 days is a lower bound
+
+`8.58 days` is **ideal steaming time only**. It is optimistic, for reasons we
+can name precisely:
+
+1. **No sea-state penalty anywhere.** PolarRoute defines `wave_resistance()` in
+   `SDA.py:223` and *never calls it* — verified by reading the installed source.
+   `model_resistance` sums wind and ice only. Waves act solely as a binary
+   `swh > max_wave` cutoff. So the Roaring Forties impose no speed or fuel cost
+   in this model at all.
+2. **No station time, cargo operations, or weather holds.**
+3. **Service speed assumed sustained.** The vessel's AIS-observed average across
+   all conditions is **8.6 kn**, roughly half the 16.4 kn service speed we feed
+   the router.
+4. **No bathymetry.** GEBCO is still not downloaded; the mesh reports "no
+   elevation data" for every cell, so depth and land are not constraining the
+   route.
+
+A real 43rd-ISEA-style voyage takes two to three weeks. Our 8.6 days is the
+steaming component of that, not the voyage. **Do not present it as a predicted
+voyage duration.**
+
+---
+
+## 5. Vessel configuration, and what is still uncalibrated
+
+MV Vasiliy Golovnin (IMO 8723426), Project 10620, built Kherson 1988.
+
+| Parameter | Value | Status |
+|---|---|---|
+| Beam | 22.4 m | verified, 4 registries |
+| Length overall | 163.9 m | verified |
+| Service speed | 16.4 kn (30.4 km/hr) | verified |
+| AIS average speed, all conditions | 8.6 kn | verified |
+| Ice class | RS old-system **KM(*) ULA** | **verified** (registry entry for this hull) |
+| ULA → modern Arc/PC equivalent | — | **not sourced.** One Russian source explicitly denies ULA = Arc5. We do not assert an equivalence. |
+| `force_limit` 96634.5 | — | **uncalibrated**: carried over from BAS's RRS Sir David Attenborough |
+| `max_ice_conc` 80% | — | **a working stand-in**, not derived from the ice class. Production replaces it with an IMO POLARIS RIO calculation, which is indexed by ice *type*, not concentration. |
+| Fuel | — | not quoted (ADR-012); polynomial is fitted to a different hull |
+
+The ice class being ULA — the top non-icebreaker tier of the pre-1999 Russian
+scale — is new information this session. It was previously recorded as "not
+found".
+
+---
+
+## 6. What is honest to claim from this section
+
+**Claim:** Bharati's own grid cell was closed to this vessel on 74% of December
+2019 days, while the approach 100 km north was open every day. The operational
+problem is the final approach, not the ocean crossing.
+
+**Claim:** The NOAA/NSIDC CDR suppresses coastal cells and writes them as 0.0%.
+This affects the Bharati approach box on 43.2% of days across 2018–2020, and
+four of the eight days Bharati appeared reachable in December 2019 were such
+artifacts. We detect and mask them.
+
+**Claim:** Fixing the vessel specification changed computed transit from 17.4 to
+8.6 days. Specification errors dominate model errors at this stage.
+
+**Do not claim:** that daily re-planning beats static planning. On the one
+departure date tested it did not.
+
+**Do not claim:** 8.6 days as a voyage duration. It is steaming time with no
+weather, no bathymetry, and no station operations.
+
+**Do not claim:** any fuel figure.

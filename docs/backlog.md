@@ -72,3 +72,20 @@ One line per item: `[severity][area] what's wrong — pointer to full evidence`.
 - [resolved][pitch] "Pareto set" overclaim and D4's cherry-picked headline — RESOLVED: 12-run dominance-filtered sweep (ADR-021); D4 leads with the measured worst case.
 - [resolved][data] GEBCO predicted-bathymetry disclosure — RESOLVED: TID grid ingested, provenance-conditional depth margin (ADR-026).
 - [resolved][routing] PolarRoute iceberg-hazard handling — RESOLVED by source inspection: no native iceberg model, but `excluded_zones` is a native extension point, so no fork needed.
+
+## Open — raised 2026-09-02 (routing experiment + ice data-quality audit)
+
+- [critical][ml] **Iceberg trajectory has zero implementation.** It is one of the three pillars named in the problem statement title. Research on datasets and the Wagner et al. 2017 drift model was cut short by an auth failure — restart it. Nothing exists in the repo.
+- [critical][routing] Route-regret tested on **one departure date only** (2019-12-01), where static planning cost 0.03 days. One sample supports no general claim in either direction. Sweep departure dates across a season — `isih/route_regret.py --depart` per date.
+- [critical][data] QA-masked coastal cells fill from the **parent cell** and come back 30–36% when surrounding pixels read 80–95%. The fix removed a confident wrong answer but did not produce a right one. Treat spillover-suppressed cells as *unknown and high-risk*, not fillable. Evidence: `isih/RESULTS.md §2`.
+- [major][ml] **Training data still contains the land-spillover zeros.** `isih/features.py` does not read the QA flag, so the model has been fitted with fake open water at the coast. Retrain with `ice_quality.load_sic`. Affects the Bharati approach box on 43.2% of days.
+- [major][ml] `cdr_seaice_conc_stdev` — a per-pixel retrieval uncertainty the CDR already ships — is **unused**. Belongs in the input channels and in the conformal calibration. Free uncertainty information we are discarding.
+- [major][vessel] `force_limit: 96634.5` is the **RRS Sir David Attenborough's** value, used unchanged for Golovnin. Uncalibrated and load-bearing for every derated speed. No published figure for this hull was found.
+- [major][vessel] Golovnin's ice class is **RS old-system KM(\*) ULA** (verified), but the modern Arc/PC equivalent is **not sourced** — one Russian source explicitly denies ULA = Arc5. Needed before POLARIS RIV lookup is possible. Ask NCPOR/FESCO for the current RS certificate.
+- [major][routing] `max_ice_conc: 80` remains invented. POLARIS RIO is indexed by ice *type*, so this cannot be resolved without a thickness forecast — see the existing POLARIS items.
+- [major][data] **Maitri offload point unknown.** Maitri is inland in the Schirmacher Oasis; scoring its grid cell measures nothing. `isih/destination_window.py` excludes it until the real ice-shelf offload position is sourced.
+- [minor][build] `prenv` (the Python 3.11 PolarRoute venv) lives in the ephemeral job tmp directory and will not survive session cleanup. Recreate per `isih/make_route_figure.py` docstring, or relocate it somewhere durable.
+- [minor][routing] GEBCO still not downloaded — the mesh reports "no elevation data" for every cell, so **depth and land are not constraining any route**. Unchanged from the previous pass and now blocking any safety claim.
+- [minor][ml] SIPN South authors did **not** implement persistence benchmarks; our results are measured against persistence. Verify this gap before claiming it in a deck — it is a real methodological edge if it holds.
+- [minor][research] "No study propagates SIC uncertainty into a routing decision" is **medium confidence** — the search budget ran out mid-task. Re-verify before claiming novelty. Known nearest precedent: a Bharati–Maitri optimum-route paper, *Polar Science* 2021, deterministic only.
+- [minor][pitch] Do not say "IcySea is inaccurate" — we have not tested IcySea. We characterised the passive-microwave data layer beneath it, which is the defensible claim.

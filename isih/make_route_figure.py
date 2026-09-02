@@ -25,6 +25,8 @@ import pandas as pd
 import xarray as xr
 from pyproj import Transformer
 
+from ice_quality import load_sic
+
 # Cape Town harbour -> Bharati station (Larsemann Hills). The real corridor
 # India's Antarctic resupply actually sails, per COMPETITIVE_ANALYSIS.md.
 CAPE_TOWN = {"name": "Cape Town", "lat": -33.9, "long": 18.4}
@@ -36,15 +38,22 @@ BHARATI = {"name": "Bharati", "lat": -69.4, "long": 76.2}
 MESH_BOUNDS = {"lat_min": -70.0, "lat_max": -30.0, "long_min": 15.0, "long_max": 80.0}
 
 
-def nsidc_to_dataframe(nc_path: Path, step: int = 2) -> pd.DataFrame:
+def nsidc_to_dataframe(nc_path: Path, step: int = 2,
+                       apply_qa: bool = True) -> pd.DataFrame:
     """Convert one NSIDC file to the lat/long/value table meshiphi expects.
 
     `step` subsamples the 332x316 grid; the mesh cells are far coarser than
     25 km, so full resolution only costs time.
+
+    `apply_qa` drops cells the CDR's own QA flag marks as land-spillover
+    filtered or missing. Those cells are written as 0.0 inside `valid_range`,
+    so without this the router reads suppressed coastal pixels as open water
+    and plans through them -- see isih/ice_quality.py for the measured case at
+    Bharati. Dropping them lets meshiphi fill from the parent cell instead,
+    which is the difference between "unknown" and a confident wrong answer.
     """
+    sic, _suspect = load_sic(nc_path, apply_qa=apply_qa)
     ds = xr.open_dataset(nc_path)
-    sic = ds["cdr_seaice_conc"].isel(time=0).values.astype(np.float32)
-    sic = np.where((sic >= 0.0) & (sic <= 1.0), sic, np.nan)
 
     transformer = Transformer.from_crs("EPSG:3412", "EPSG:4326", always_xy=True)
     x_grid, y_grid = np.meshgrid(ds.x.values, ds.y.values)
