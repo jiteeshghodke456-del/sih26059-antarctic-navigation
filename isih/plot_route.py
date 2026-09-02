@@ -75,21 +75,27 @@ def main() -> int:
                     vmin=15, vmax=100, s=11, marker="s", linewidths=0)
     cbar = plt.colorbar(sc, ax=ax, pad=0.015, shrink=0.8)
     cbar.set_label("Sea ice covering the ocean surface (%)", fontsize=11)
-    cbar.ax.axhline(ICE_LIMIT, color="#b03a2e", lw=2.5)
-    cbar.ax.text(1.9, ICE_LIMIT, "  ship's\n  limit", transform=cbar.ax.get_yaxis_transform(),
-                 color="#b03a2e", fontsize=9.5, weight="bold", va="center")
+    cbar.ax.axhline(ICE_LIMIT, color="#D55E00", lw=2.5)
+    # Sits to the RIGHT of the tick labels, not on top of them.
+    cbar.ax.text(3.6, ICE_LIMIT, "ship's\nlimit",
+                 transform=cbar.ax.get_yaxis_transform(),
+                 color="#D55E00", fontsize=9.5, weight="bold",
+                 va="center", ha="left")
 
-    ax.plot(straight[:, 0], straight[:, 1], "--", color="#b03a2e", lw=2.2, zorder=3)
+    ax.plot(straight[:, 0], straight[:, 1], "--", color="#D55E00", lw=2.2, zorder=3)
     if len(blocked):
         ax.scatter(blocked[::40, 0], blocked[::40, 1], s=210, marker="X",
-                   color="#b03a2e", zorder=12, linewidths=1.4, edgecolors="white")
+                   color="#D55E00", zorder=12, linewidths=1.4, edgecolors="white")
 
     ax.plot(coords[:, 0], coords[:, 1], "-", color="white", lw=6, zorder=4)
-    ax.plot(coords[:, 0], coords[:, 1], "-", color="#117a3d", lw=3.4, zorder=5)
+    ax.plot(coords[:, 0], coords[:, 1], "-", color="#009E73", lw=3.4, zorder=5)
 
     for (x, y), name, off in [
         (start, "CAPE TOWN\n(start)", (14, 14)),
-        (end, "BHARATI STATION\n(destination)", (-95, -52)),
+        # Up and well to the left: below-right collided with the x-axis label,
+        # and a smaller offset covered the "impassable" X marker, which is the
+        # figure's actual evidence.
+        (end, "BHARATI STATION\n(destination)", (-210, 62)),
     ]:
         ax.plot(x, y, "o", ms=13, color="#111", zorder=8)
         ax.plot(x, y, "o", ms=6.5, color="white", zorder=9)
@@ -104,27 +110,27 @@ def main() -> int:
             f"This ship cannot pass above {ICE_LIMIT:.0f}% — it would\n"
             "be stuck here.",
             xy=(anchor[0], anchor[1]), xytext=(48.5, -41.0),
-            fontsize=11.5, weight="bold", color="#b03a2e", ha="left", zorder=11,
-            arrowprops=dict(arrowstyle="->", color="#b03a2e", lw=2.2,
+            fontsize=11.5, weight="bold", color="#D55E00", ha="left", zorder=11,
+            arrowprops=dict(arrowstyle="->", color="#D55E00", lw=2.2,
                             connectionstyle="arc3,rad=0.25"),
-            bbox=dict(boxstyle="round,pad=0.45", fc="white", ec="#b03a2e", lw=1.6))
+            bbox=dict(boxstyle="round,pad=0.45", fc="white", ec="#D55E00", lw=1.6))
 
     mid = coords[int(len(coords) * 0.30)]
     ax.annotate(
         f"Our route never exceeds {route_max:.0f}% ice.\n"
         "It stays passable the whole way.",
         xy=(mid[0], mid[1]), xytext=(16.5, -52.5),
-        fontsize=11.5, weight="bold", color="#117a3d", ha="left", zorder=11,
-        arrowprops=dict(arrowstyle="->", color="#117a3d", lw=2.2,
+        fontsize=11.5, weight="bold", color="#009E73", ha="left", zorder=11,
+        arrowprops=dict(arrowstyle="->", color="#009E73", lw=2.2,
                         connectionstyle="arc3,rad=-0.2"),
-        bbox=dict(boxstyle="round,pad=0.45", fc="white", ec="#117a3d", lw=1.6))
+        bbox=dict(boxstyle="round,pad=0.45", fc="white", ec="#009E73", lw=1.6))
 
     handles = [
-        Line2D([], [], color="#117a3d", lw=3.4,
+        Line2D([], [], color="#009E73", lw=3.4,
                label=f"Route our system computes — {travel_days:.1f} days, max {route_max:.0f}% ice"),
-        Line2D([], [], color="#b03a2e", lw=2.2, ls="--",
+        Line2D([], [], color="#D55E00", lw=2.2, ls="--",
                label=f"Straight line — reaches {str_max:.0f}% ice"),
-        Line2D([], [], color="#b03a2e", lw=0, marker="X", ms=11,
+        Line2D([], [], color="#D55E00", lw=0, marker="X", ms=11,
                label="Impassable for this ship"),
     ]
     ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.085),
@@ -136,6 +142,18 @@ def main() -> int:
             "Cape Town → Bharati, 1 December 2019 (start of the real resupply season). "
             "Ice measured by satellite (NOAA/NSIDC).",
             transform=ax.transAxes, ha="center", fontsize=10.5, color="#444")
+    # The dashed line is an illustration of why a router is needed at all. It is
+    # NOT a baseline: no master sails a straight line into pack ice, and saying
+    # so on the figure stops the comparison being read as a strawman win. The
+    # real baselines -- the same router given older ice -- are in RESULTS.md.
+    #
+    # Drawn in FIGURE coordinates, not axes coordinates: an axes-relative y
+    # below the legend falls outside the tight bounding box and gets clipped.
+    fig.text(0.5, 0.005,
+             "The dashed line shows why routing is needed at all — it is not a "
+             "competing method. Real baselines (same router, older ice) are "
+             "measured separately in RESULTS.md.",
+             ha="center", fontsize=9.5, color="#666", style="italic")
 
     ax.set_xlabel("Longitude (°E)", fontsize=11)
     ax.set_ylabel("Latitude (°S)", fontsize=11)
@@ -144,8 +162,10 @@ def main() -> int:
     ax.set_ylim(-71, -30)
 
     out = FIG_DIR / "route_map.png"
-    plt.tight_layout()
-    plt.savefig(out, dpi=160, bbox_inches="tight")
+    # Reserve room at the bottom for the legend and the italic note; without
+    # this the note is clipped off the canvas.
+    plt.tight_layout(rect=(0, 0.045, 1, 1))
+    plt.savefig(out, dpi=160)
     print(f"wrote {out}")
     return 0
 

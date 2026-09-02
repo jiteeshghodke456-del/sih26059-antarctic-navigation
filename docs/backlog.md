@@ -103,3 +103,9 @@ One line per item: `[severity][area] what's wrong — pointer to full evidence`.
 - [minor][data] AMPS nest coverage over Dronning Maud Land / Prydz Bay unverified (domain maps 404'd). Confirm before claiming km-scale wind forecasts for the approaches.
 - [minor][research] No besetting incident documented for any Indian-flagged vessel; MV Magdalena Oldendorff (20th ISEA, beset 11 Jun 2002 near Novolazarevskaya, freed late Nov 2002, ~5.5 months) is closest and its dates conflict across sources. Needs NCPOR expedition reports.
 - [minor][research] Growler collision energies and drift-divergence noise floors in §7 are our own calculations, not citations. Source before any deck. Maitri summer blizzard count (0–2/season) is derived, not stated. SH free-drift turning angle 20–40° is mirrored from NH values, not SH-verified.
+
+## Resolved 2026-09-02 (prototype pass)
+
+- [resolved][figure] `route_map.png` was stale — generated 31 Aug with the wrong vessel config, reporting a 17.4-day transit computed at half the ship's real speed, contradicting RESULTS.md. Root cause was two copies of the vessel config; `make_route_figure.py` now imports `GOLOVNIN` from `ice_meshes.py` so there is one source of truth. Regenerated: 8.6 days.
+- [resolved][figure] Red/green colourblind risk in `plot_route.py` (`#117a3d` vs `#b03a2e`) — replaced with the Okabe-Ito CVD-safe pair (`#009E73` route, `#D55E00` hazard), and the two paths remain distinguishable by solid-vs-dashed regardless of colour.
+- [resolved][figure] The straight-line comparison is now labelled on the figure itself as an illustration of why routing is needed, explicitly **not** a competing method, so it cannot be read as a strawman baseline win.

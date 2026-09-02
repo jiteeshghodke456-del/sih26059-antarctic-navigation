@@ -112,20 +112,15 @@ def route(mesh_json: dict, out_dir: Path) -> dict:
     )
     from polar_route.route_planner.route_planner import RoutePlanner
 
-    # MV Vasiliy Golovnin's real published dimensions. Fuel is reported
-    # relatively only — the underlying polynomial is fitted to a different
-    # vessel (ADR-012), so absolute tonnes would be uncalibrated.
-    vessel_config = {
-        "vessel_type": "SDA",
-        "max_speed": 14.0,
-        "unit": "km/hr",
-        "beam": 18.6,
-        "hull_type": "slender",
-        "force_limit": 96634.5,
-        "max_ice_conc": 80,
-        "min_depth": 20,
-        "max_wave": 3.0,
-    }
+    # Single source of truth for the vessel. This used to be an inline dict
+    # with beam 18.6 m and max_speed 14.0 km/hr -- both wrong, and because the
+    # figure and the experiments each carried their own copy, the figure went
+    # on reporting a 17.4-day transit computed at half the ship's real speed
+    # long after the experiments were corrected. Imported locally because
+    # ice_meshes imports this module.
+    from ice_meshes import GOLOVNIN
+
+    vessel_config = GOLOVNIN
 
     vpm = VesselPerformanceModeller(mesh_json, vessel_config)
     vpm.model_accessibility()
