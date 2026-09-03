@@ -356,7 +356,7 @@ footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-siz
       <tr><td><b>Beyond the horizon</b></td><td>silent, or a confident line anyway</td>
         <td><b>graded degradation</b>: forecast &rarr; CMEMS-direct &rarr; climatology corridor, re-optimised daily</td></tr>
       <tr><td><b>Connectivity</b></td><td>assumes a live backend</td>
-        <td><b>offline-first, 50 KB budget enforced in CI</b>; weights by USB at port</td></tr>
+        <td><b>offline-first, with a written 50 KB budget</b>; weights by USB at port</td></tr>
       <tr><td><b>Scope</b></td><td>&ldquo;Antarctica&rdquo;</td>
         <td>the real ship, corridor and season &mdash; as configuration, not constants</td></tr>
     </tbody>
@@ -510,7 +510,7 @@ footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-siz
     <thead><tr><th>Payload</th><th>Size</th><th>Status</th></tr></thead>
     <tbody>
       <tr><td>Vessel-modelled mesh block, the representative daily unit</td><td class="n">76 KB gzip</td><td><span class="chip c-proven">Measured</span></td></tr>
-      <tr><td>Daily incremental delta &mdash; the number the design depends on</td><td class="n">50 KB target</td><td><span class="chip c-designed">CI-enforced, unmeasured</span></td></tr>
+      <tr><td>Daily incremental delta &mdash; the number the design depends on</td><td class="n">50 KB target</td><td><span class="chip c-open">Specified, not yet enforced</span></td></tr>
       <tr><td>Full corridor refresh</td><td class="n">0.5&ndash;1 MB</td><td><span class="chip c-designed">Extrapolated</span></td></tr>
       <tr><td>Route polyline plus summary &mdash; quoted last, on purpose</td><td class="n">796 B</td><td><span class="chip c-proven">Measured</span></td></tr>
       <tr><td>Model weights, five members</td><td class="n">~60 MB</td><td><span class="chip c-open">Never over Iridium &mdash; USB at port</span></td></tr>
@@ -519,8 +519,7 @@ footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-siz
   </table></div>
 
   <ul class="col">
-    <li><b>The build fails</b> if a daily pack exceeds 50 KB compressed or a full refresh exceeds 1 MB. A
-      bandwidth constraint that moves whenever the data moves is not a constraint.</li>
+    <li><b>The budget is written down as a build-breaking rule</b> (ADR-017) &mdash; but the test that would enforce it <b>is not written yet</b>, and the daily delta has never been measured. Until both exist this is an intention, not a constraint, and we say so.</li>
     <li><b>If measurement disappoints, the budget still does not move.</b> The pre-committed response is to
       coarsen the open-ocean mesh or stretch the refresh to two or three days.</li>
     <li><b>The ship re-corrects the whole ten-day packed forecast aboard</b> from one fresh corridor
@@ -648,8 +647,7 @@ footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-siz
     <li><b>The conformal gate</b> names its own failure and its own consequence, including the upper bound
       &mdash; over-coverage is failure too, because a bound that is right 99% of the time cannot change a
       route.</li>
-    <li><b>The bandwidth budget</b> is enforced by a test that fails the build, and the response to a bad
-      measurement is to change the mesh, never the budget.</li>
+    <li><b>The bandwidth budget</b> names its own response in advance &mdash; coarsen the mesh, never move the number. The enforcing test is still owed, and that gap is on the backlog rather than glossed.</li>
     <li><b>The iceberg buffer</b> auto-downgrades from hard exclusion to weighted cost if it would blockade
       more than 5% of the navigable corridor, and says so &mdash; a safety layer that closes the sea is not a
       safety layer.</li>
