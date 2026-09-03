@@ -146,9 +146,9 @@ ROWS = [
      ("proc", "Predict Iceberg trajectory"
       f"<br>{SM}Wagner closed form &#183; <b>physics, not machine learning</b> &#183; "
       f"23/23 tests pass &#183; &#8594; exclusion polygons{E}", ""),
-     ("gap", "USNIC tracks bergs &#8805; ~18.5 km"
-      f"<br>{SM}a growler is ~5 m. That gap is 3.5 orders of magnitude and nothing in orbit "
-      f"closes it &#8212; radar and the lookout own it{E}", "")),
+     ("gap", "USNIC's floor is 68.6 km&#178;. A 2026 Sentinel-1 catalogue reaches 0.016 km&#178;"
+      f"<br>{SM}4,000&#215; better, and free &#8212; a real upgrade path. Still 800&#215; "
+      f"coarser than a growler, so radar and the lookout keep that one{E}", "")),
 
     ("r4",
      ("proc", "Fetch Environment&nbsp; and Hazards lying ahead", ""),
@@ -162,13 +162,14 @@ ROWS = [
 
     ("r5",
      ("new", "NEW: Read protected and ecologically sensitive areas", ""),
-     "CCAMLR MPAs, ASPA / ASMA, marine-mammal measures",
+     "ATS protected-areas shapefile &#8212; 77 ASPA + 6 ASMA polygons, free, open",
      ("new", "Mark them as areas the route may not cross"
-      f"<br>{SM}rides the same excluded_zones hook as the icebergs (ADR-010) &#8212; "
-      f"the mechanism already exists, only the polygons are missing{E}", DASH),
-     ("gap", "Polar Code &#167;11.3.6&#8211;.8 requires this"
-      f"<br>{SM}protected areas and marine-mammal measures are mandatory planning "
-      f"factors. We currently consider neither{E}", DASH)),
+      f"<br>{SM}rides the same excluded_zones hook as the icebergs (ADR-010) &#8212; the "
+      f"mechanism already exists, only the polygons are missing{E}", DASH),
+     ("gap", "<b>Bharati sits inside ASMA No. 6, Larsemann Hills</b>"
+      f"<br>{SM}252 km&#178;, and <b>India is a co-proponent of it</b>. ASPA 174 Stornes is "
+      f"1.5 km away, ASPA 169 Amanda Bay (emperor penguins) 22 km. We model none of it{E}",
+      DASH)),
 
     ("r6",
      ("new", "NEW: Read the ship's own sensors", ""),
@@ -267,8 +268,11 @@ P1 += [
      c(460), y + 1120, 460, 92, DASH),
     ("rescue", "new",
      "NEW: if trouble is foreseen &#8212; nearest icebreaker, station and MRCC for this sector"
-     f"<br>{SM}Polar Code &#167;11.3.5 and &#167;11.3.9: places of refuge, and distance from "
-     f"SAR. Static data, zero bandwidth{E}", 1080, y + 1116, 420, 100, DASH),
+     f"<br>{SM}<b>the MRCC changes mid-corridor</b>: South Africa's search-and-rescue region "
+     f"ends at 75&#176;E, so Maitri (11.7&#176;E) is inside it and Bharati (76.2&#176;E) is "
+     f"~50 km outside. Best asset near Bharati is Russian Progress, 5&#8211;10 km away, with "
+     f"a 3,000 m runway. COMNAP's own best case for help is 5&#8211;6 days{E}",
+     1090, y + 1108, 460, 120, DASH),
     ("end", "term", "End", c(180), y + 1260, 180, 40, ""),
 ]
 P1_H = y + 1400

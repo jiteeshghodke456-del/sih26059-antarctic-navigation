@@ -79,7 +79,7 @@
         <mxCell id="r3b" value="Predict Iceberg trajectory&lt;br&gt;&lt;font style='font-size:9px'&gt;Wagner closed form &amp;#183; &lt;b&gt;physics, not machine learning&lt;/b&gt; &amp;#183; 23/23 tests pass &amp;#183; &amp;#8594; exclusion polygons&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
           <mxGeometry x="500" y="1024" width="400" height="88" as="geometry" />
         </mxCell>
-        <mxCell id="r3c" value="USNIC tracks bergs &amp;#8805; ~18.5 km&lt;br&gt;&lt;font style='font-size:9px'&gt;a growler is ~5 m. That gap is 3.5 orders of magnitude and nothing in orbit closes it &amp;#8212; radar and the lookout own it&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;" vertex="1" parent="1">
+        <mxCell id="r3c" value="USNIC's floor is 68.6 km&amp;#178;. A 2026 Sentinel-1 catalogue reaches 0.016 km&amp;#178;&lt;br&gt;&lt;font style='font-size:9px'&gt;4,000&amp;#215; better, and free &amp;#8212; a real upgrade path. Still 800&amp;#215; coarser than a growler, so radar and the lookout keep that one&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="930" y="1030" width="400" height="88" as="geometry" />
         </mxCell>
         <mxCell id="r4a" value="Fetch Environment&amp;nbsp; and Hazards lying ahead" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
@@ -97,13 +97,13 @@
         <mxCell id="r5a" value="NEW: Read protected and ecologically sensitive areas" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
           <mxGeometry x="70" y="1328" width="400" height="88" as="geometry" />
         </mxCell>
-        <mxCell id="r5n" value="CCAMLR MPAs, ASPA / ASMA, marine-mammal measures" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=10;" vertex="1" parent="1">
+        <mxCell id="r5n" value="ATS protected-areas shapefile &amp;#8212; 77 ASPA + 6 ASMA polygons, free, open" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=10;" vertex="1" parent="1">
           <mxGeometry x="70" y="1422" width="400" height="46" as="geometry" />
         </mxCell>
         <mxCell id="r5b" value="Mark them as areas the route may not cross&lt;br&gt;&lt;font style='font-size:9px'&gt;rides the same excluded_zones hook as the icebergs (ADR-010) &amp;#8212; the mechanism already exists, only the polygons are missing&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
           <mxGeometry x="500" y="1328" width="400" height="88" as="geometry" />
         </mxCell>
-        <mxCell id="r5c" value="Polar Code &amp;#167;11.3.6&amp;#8211;.8 requires this&lt;br&gt;&lt;font style='font-size:9px'&gt;protected areas and marine-mammal measures are mandatory planning factors. We currently consider neither&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
+        <mxCell id="r5c" value="&lt;b&gt;Bharati sits inside ASMA No. 6, Larsemann Hills&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;252 km&amp;#178;, and &lt;b&gt;India is a co-proponent of it&lt;/b&gt;. ASPA 174 Stornes is 1.5 km away, ASPA 169 Amanda Bay (emperor penguins) 22 km. We model none of it&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
           <mxGeometry x="930" y="1334" width="400" height="88" as="geometry" />
         </mxCell>
         <mxCell id="r6a" value="NEW: Read the ship's own sensors" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
@@ -187,8 +187,8 @@
         <mxCell id="advisory" value="NEW: write it in ice-navigator language, and show the calculation&lt;br&gt;&lt;font style='font-size:9px'&gt;&amp;quot;9/10 close pack, thick first-year, ridged&amp;quot; &amp;#8212; not &amp;quot;lots of ice&amp;quot;. WMO egg code: concentration, stage of development, floe size&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
           <mxGeometry x="610" y="2962" width="460" height="92" as="geometry" />
         </mxCell>
-        <mxCell id="rescue" value="NEW: if trouble is foreseen &amp;#8212; nearest icebreaker, station and MRCC for this sector&lt;br&gt;&lt;font style='font-size:9px'&gt;Polar Code &amp;#167;11.3.5 and &amp;#167;11.3.9: places of refuge, and distance from SAR. Static data, zero bandwidth&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
-          <mxGeometry x="1080" y="2958" width="420" height="100" as="geometry" />
+        <mxCell id="rescue" value="NEW: if trouble is foreseen &amp;#8212; nearest icebreaker, station and MRCC for this sector&lt;br&gt;&lt;font style='font-size:9px'&gt;&lt;b&gt;the MRCC changes mid-corridor&lt;/b&gt;: South Africa's search-and-rescue region ends at 75&amp;#176;E, so Maitri (11.7&amp;#176;E) is inside it and Bharati (76.2&amp;#176;E) is ~50 km outside. Best asset near Bharati is Russian Progress, 5&amp;#8211;10 km away, with a 3,000 m runway. COMNAP's own best case for help is 5&amp;#8211;6 days&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="2950" width="460" height="120" as="geometry" />
         </mxCell>
         <mxCell id="end" value="End" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;align=center;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#5C1F1D;" vertex="1" parent="1">
           <mxGeometry x="750" y="3102" width="180" height="40" as="geometry" />
