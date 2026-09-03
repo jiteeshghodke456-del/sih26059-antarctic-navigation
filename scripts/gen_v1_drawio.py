@@ -20,7 +20,9 @@ Border style encodes build status, which is the honest part:
     dashed  designed, not built
     dotted  white space — no product exists anywhere
 
-Re-run after editing NODES/EDGES; do not hand-edit the XML.
+The seven-stream data band is emitted from ROWS rather than hand-placed, because
+the first cut hard-coded 300px columns and 26 labels overflowed their boxes.
+Geometry belongs in one place. Re-run after editing; do not hand-edit the XML.
 """
 from xml.sax.saxutils import escape
 
@@ -51,6 +53,14 @@ DOT = "dashed=1;dashPattern=2 4;"           # white space
 SM = "<font style='font-size:9px'>"         # small print inside a box
 E = "</font>"
 
+MID = 840                                   # canvas centre line
+
+
+def c(w):
+    """x that centres a box of width w."""
+    return MID - w // 2
+
+
 # ---------------------------------------------------------------- page 1 ----
 # id, style, label, x, y, w, h, extra
 P1 = [
@@ -58,213 +68,216 @@ P1 = [
      "LEGEND&nbsp; &nbsp;solid = built and measured&nbsp; &#183;&nbsp; dashed = designed, not built"
      "&nbsp; &#183;&nbsp; dotted = white space, no product exists anywhere"
      "<br>orange = Jiteesh's original step&nbsp; &#183;&nbsp; blue = added this pass&nbsp; &#183;&nbsp; "
-     "green = data source&nbsp; &#183;&nbsp; purple = external library we reuse",
-     40, 20, 1560, 60, ""),
+     "green = data source&nbsp; &#183;&nbsp; grey = a gap, stated plainly&nbsp; &#183;&nbsp; "
+     "purple = external library we reuse",
+     40, 20, 1600, 62, ""),
 
     # --- BAND A: two ways in --------------------------------------------
-    ("start", "term", "Start", 700, 110, 180, 40, ""),
-    ("marks", "proc", "Captain Marks Route in the Application", 620, 180, 340, 56, ""),
-    ("nlogin", "note", "Captain Logs in application", 1000, 186, 250, 44, ""),
-    ("aIn", "conn", "A", 556, 190, 36, 36, ""),
+    ("start", "term", "Start", c(180), 110, 180, 40, ""),
+    ("marks", "proc", "Captain Marks Route in the Application", c(340), 180, 340, 56, ""),
+    ("nlogin", "note", "Captain Logs in application", 1060, 186, 260, 44, ""),
+    ("aIn", "conn", "A", 606, 190, 36, 36, ""),
     ("trigger2", "new",
      "NEW: new pack, observation or ship-sensor update arrives"
      f"<br>{SM}the loop must also start without the captain asking &#8212; "
      f"an already cleared route may have closed up{E}",
-     100, 174, 380, 68, DASH),
-    ("backend", "proc", "Route is sent to the application's local processing", 620, 276, 340, 56, ""),
-    ("nnav", "note", "Navigation Decision Processing start", 1000, 282, 250, 44, ""),
+     90, 168, 420, 80, DASH),
+    ("backend", "proc", "Route is sent to the application's local processing", c(340), 280, 340, 56, ""),
+    ("nnav", "note", "Navigation Decision Processing start", 1060, 286, 260, 44, ""),
     ("nlocal", "new",
      "NEW: local = the bridge laptop"
      f"<br>{SM}no outbound network south of ~70&#176;S. Everything below reads the "
      f"voyage pack, not the internet &#8212; see page 2{E}",
-     100, 270, 380, 68, ""),
+     90, 268, 420, 80, ""),
 
     # --- BAND B: self-check and how loudly we fail -----------------------
     ("chk", "dec",
      "AI model checks yesterdays ice movement forecast correctness"
-     f"<br>{SM}yesterday's 1-day forecast vs today's observation &#8212; free, honest, daily{E}",
-     620, 370, 340, 120, DASH),
-    ("keep", "proc", "Keep default Confidence in route suggestion", 180, 400, 300, 60, ""),
-    ("lower", "proc", "Lower Confidence and increase number of safe routes", 1100, 400, 300, 60, ""),
+     f"<br>{SM}yesterday's 1-day forecast vs today's observation{E}",
+     c(360), 380, 360, 130, DASH),
+    ("keep", "proc", "Keep default Confidence in route suggestion", 150, 415, 330, 60, ""),
+    ("lower", "proc", "Lower Confidence and increase number of safe routes", 1200, 415, 330, 60, ""),
     ("rung", "new",
      "NEW: declare which rung we are running on, and show it to the captain"
-     f"<br>{SM}no do-overs at sea: the system must say how degraded it is "
+     f"<br>{SM}no do-overs at sea &#8212; the system must say how degraded it is "
      f"<b>before</b> the advice, not after{E}",
-     600, 530, 380, 76, DASH),
+     c(420), 550, 420, 96, DASH),
     ("nrung", "note",
      "1&nbsp; corrected forecast + calibrated interval<br>"
-     "2&nbsp; raw CMEMS forecast&nbsp;&nbsp;(our model failed verification)<br>"
-     "3&nbsp; persistence from newest observation&nbsp;&nbsp;(feed lost)<br>"
-     "4&nbsp; climatology for the date&nbsp;&nbsp;(no recent observation)",
-     1030, 526, 370, 84, ""),
+     "2&nbsp; raw CMEMS forecast (our model failed verification)<br>"
+     "3&nbsp; persistence from newest observation (feed lost)<br>"
+     "4&nbsp; climatology for the date (no recent observation)",
+     1120, 546, 410, 92, ""),
+]
 
-    # --- BAND C: what we read, seven streams ----------------------------
-    ("cband", "band",
-     "READ THE VOYAGE PACK &#8212; independent streams, in parallel."
-     "&nbsp;&nbsp;Nothing below can be skipped: the router consumes all of it.",
-     40, 650, 1560, 810, ""),
+# --- BAND C: the seven streams we read, generated on a grid --------------
+COLS = [(70, 400), (500, 400), (930, 400)]   # (x, width) for source / step / note-on-gap
+BAND_TOP = 720
+PITCH = 152
+BOX_H = 88
+NOTE_H = 46
+GAP_Y = 6                                    # nudge so the gap panel optically centres
 
-    # row 1 — ice observation
-    ("r1a", "proc", "Read Latest &amp; historical ice concentration map", 70, 700, 300, 56, ""),
-    ("r1n", "note", "Taken by NSIDC satellite with SSMIS sensor", 70, 762, 300, 36, ""),
-    ("r1b", "proc",
-     "Clean unreliable data/noise in satellite image"
-     f"<br>{SM}isih/ice_quality.py &#183; fires every day, ~118 cells{E}", 410, 700, 300, 56, ""),
-    ("r1c", "gap",
-     "NEW: Polar Code &#167;11.3.4 wants prior-year statistics"
-     f"<br>{SM}we hold 1,096 real daily files and use them only for training, "
-     f"never as climatology the captain can see{E}", 750, 696, 300, 64, DASH),
+# key, source style+label, green note, middle step (style, label, extra),
+# right-hand gap panel (style, label, extra)
+ROWS = [
+    ("r1",
+     ("proc", "Read Latest &amp; historical ice concentration map", ""),
+     "Taken by NSIDC satellite with SSMIS sensor",
+     ("proc", "Clean unreliable data/noise in satellite image"
+      f"<br>{SM}isih/ice_quality.py &#183; fires every single day, ~118 cells{E}", ""),
+     ("gap", "NEW: Polar Code &#167;11.3.4 wants prior-year statistics"
+      f"<br>{SM}we hold 1,096 real daily files and use them only for training, never as "
+      f"climatology the captain can actually see{E}", DASH)),
 
-    # row 2 — forecast
-    ("r2a", "proc", "Fetch weather model's Sea-ice forecast", 70, 815, 300, 56, ""),
-    ("r2n", "note", "CMEMS Sea-ice forecast", 70, 877, 300, 36, ""),
-    ("r2b", "proc",
-     "AI model corrects mistakes in the forecast"
-     f"<br>{SM}residual U-Net &#183; corrected = clip(background + &#916;, 0, 1)"
-     f"<br>zero-init head: a broken model degrades to CMEMS, not to zero{E}",
-     410, 811, 300, 64, ""),
-    ("r2c", "proc",
-     "Add calibrated safety margin for vessel"
-     f"<br>{SM}stratified conformal &#8594; SIC_upper, the number the router really uses{E}",
-     750, 811, 300, 64, DASH),
+    ("r2",
+     ("proc", "Fetch weather model's Sea-ice forecast", ""),
+     "CMEMS Sea-ice forecast",
+     ("proc", "AI model corrects mistakes in the forecast"
+      f"<br>{SM}residual U-Net &#183; corrected = clip(background + &#916;, 0, 1)"
+      f"<br>zero-init head, so a broken model degrades to CMEMS, not to zero{E}", ""),
+     ("proc", "Add calibrated safety margin for vessel"
+      f"<br>{SM}stratified conformal &#8594; SIC_upper, the number the router really uses{E}",
+      DASH)),
 
-    # row 3 — icebergs
-    ("r3a", "proc", "Fetch current iceberg location near the course", 70, 930, 300, 56, ""),
-    ("r3n", "note", "USNIC Current iceberg positions", 70, 992, 300, 36, ""),
-    ("r3b", "proc",
-     "Predict Iceberg trajectory"
-     f"<br>{SM}Wagner closed form &#183; <b>physics, not machine learning</b> &#183; 23/23 tests"
-     f"<br>&#8594; exclusion polygons{E}", 410, 926, 300, 64, ""),
-    ("r3c", "gap",
-     "USNIC tracks bergs &#8805; ~18.5 km"
-     f"<br>{SM}a growler is ~5 m. That gap is 3.5 orders of magnitude and nothing in "
-     f"orbit closes it &#8212; radar and the lookout own it{E}", 750, 926, 300, 64, ""),
+    ("r3",
+     ("proc", "Fetch current iceberg location near the course", ""),
+     "USNIC Current iceberg positions",
+     ("proc", "Predict Iceberg trajectory"
+      f"<br>{SM}Wagner closed form &#183; <b>physics, not machine learning</b> &#183; "
+      f"23/23 tests pass &#183; &#8594; exclusion polygons{E}", ""),
+     ("gap", "USNIC tracks bergs &#8805; ~18.5 km"
+      f"<br>{SM}a growler is ~5 m. That gap is 3.5 orders of magnitude and nothing in orbit "
+      f"closes it &#8212; radar and the lookout own it{E}", "")),
 
-    # row 4 — weather and seabed
-    ("r4a", "proc", "Fetch Environment&nbsp; and Hazards lying ahead", 70, 1045, 300, 56, ""),
-    ("r4n", "note", "ERA5/GFS wind + waves , GEBCO/IBCSO bathymetry", 70, 1107, 300, 36, ""),
-    ("r4b", "proc",
-     "Analyze weather forecast and hazards ahead"
-     f"<br>{SM}wind sets the ice: free drift &#8776; 2% of wind speed, deflected "
-     f"20&#8211;40&#176; <b>left</b> in the southern hemisphere{E}", 410, 1041, 300, 64, ""),
-    ("r4c", "gap",
-     "ERA5 under-reads the winds that beset ships"
-     f"<br>{SM}bias &#8722;3.89 m/s above 20 m/s. Bias-correct with the ship's own "
-     f"anemometer, or say so{E}", 750, 1041, 300, 64, DASH),
+    ("r4",
+     ("proc", "Fetch Environment&nbsp; and Hazards lying ahead", ""),
+     "ERA5/GFS wind + waves , GEBCO/IBCSO bathymetry",
+     ("proc", "Analyze weather forecast and hazards ahead"
+      f"<br>{SM}wind sets the ice: free drift &#8776; 2% of wind speed, deflected "
+      f"20&#8211;40&#176; <b>left</b> in the southern hemisphere{E}", ""),
+     ("gap", "ERA5 under-reads the winds that beset ships"
+      f"<br>{SM}bias &#8722;3.89 m/s above 20 m/s. Bias-correct it with the ship's own "
+      f"anemometer, or say so out loud{E}", DASH)),
 
-    # row 5 — protected areas  (NEW)
-    ("r5a", "new", "NEW: Read protected and ecologically sensitive areas", 70, 1160, 300, 56, ""),
-    ("r5n", "note", "CCAMLR MPAs, ASPA / ASMA, marine-mammal measures", 70, 1222, 300, 36, ""),
-    ("r5b", "new",
-     "Mark them as areas the route may not cross"
-     f"<br>{SM}rides the same excluded_zones hook as the icebergs (ADR-010) &#8212; "
-     f"the mechanism already exists{E}", 410, 1156, 300, 64, DASH),
-    ("r5c", "gap",
-     "Polar Code &#167;11.3.6&#8211;.8 requires this"
-     f"<br>{SM}protected areas and marine-mammal measures are mandatory planning "
-     f"factors. We currently consider neither{E}", 750, 1156, 300, 64, DASH),
+    ("r5",
+     ("new", "NEW: Read protected and ecologically sensitive areas", ""),
+     "CCAMLR MPAs, ASPA / ASMA, marine-mammal measures",
+     ("new", "Mark them as areas the route may not cross"
+      f"<br>{SM}rides the same excluded_zones hook as the icebergs (ADR-010) &#8212; "
+      f"the mechanism already exists, only the polygons are missing{E}", DASH),
+     ("gap", "Polar Code &#167;11.3.6&#8211;.8 requires this"
+      f"<br>{SM}protected areas and marine-mammal measures are mandatory planning "
+      f"factors. We currently consider neither{E}", DASH)),
 
-    # row 6 — the ship itself  (NEW)
-    ("r6a", "new", "NEW: Read the ship's own sensors", 70, 1275, 300, 56, ""),
-    ("r6n", "note",
+    ("r6",
+     ("new", "NEW: Read the ship's own sensors", ""),
      "shaft power, speed log, X/S-band radar, AIS, met station, helicopter ice recon",
-     70, 1337, 300, 44, ""),
-    ("r6b", "new",
-     "Correct our own models with what the ship actually measures"
-     f"<br>{SM}shaft power is a <b>measured</b> ice resistance &#8212; the one number "
-     f"our vessel config admits is borrowed from another hull{E}", 410, 1271, 300, 68, DASH),
-    ("r6c", "gap",
-     "Golovnin already flies ice reconnaissance"
-     f"<br>{SM}she carries two helicopters used for ice air recon on the route. "
-     f"That observation has no path into the system{E}", 750, 1271, 300, 68, DOT),
+     ("new", "Correct our own models with what the ship actually measures"
+      f"<br>{SM}shaft power is a <b>measured</b> ice resistance &#8212; the one number our "
+      f"vessel config admits is borrowed from another hull{E}", DASH),
+     ("gap", "Golovnin already flies ice reconnaissance"
+      f"<br>{SM}she carries two helicopters used for ice air recon on the route. That "
+      f"observation has no path into the system{E}", DOT)),
 
-    # row 7 — pressure  (NEW, white space)
-    ("r7a", "new", "NEW: Estimate ice pressure / compression risk", 70, 1390, 300, 56, DOT),
-    ("r7n", "note", "modelled drift field &#8594; divergence &#8706;u/&#8706;x + &#8706;v/&#8706;y",
-     70, 1452, 300, 36, ""),
-    ("r7b", "new",
-     "Flag convergence setting into the fast-ice edge"
-     f"<br>{SM}the documented besetting geometry &#8212; and exactly where the ship sits "
-     f"to offload at Bharati and Maitri{E}", 410, 1386, 300, 64, DOT),
-    ("r7c", "gap",
-     "No operational Antarctic pressure product exists, anywhere"
-     f"<br>{SM}POLARIS never uses the words pressure, compression, ridge or drift. "
-     f"This is white space, not an oversight{E}", 750, 1386, 300, 64, DOT),
+    ("r7",
+     ("new", "NEW: Estimate ice pressure / compression risk", DOT),
+     "modelled drift field &#8594; divergence &#8706;u/&#8706;x + &#8706;v/&#8706;y",
+     ("new", "Flag convergence setting into the fast-ice edge"
+      f"<br>{SM}the documented besetting geometry &#8212; and exactly where the ship sits "
+      f"to offload at Bharati and Maitri{E}", DOT),
+     ("gap", "No operational Antarctic pressure product exists, anywhere"
+      f"<br>{SM}POLARIS never uses the words pressure, compression, ridge or drift. "
+      f"This is white space, not an oversight{E}", DOT)),
+]
 
+for i, (key, (sst, slab, sx), note, (pst, plab, px), (gst, glab, gx)) in enumerate(ROWS):
+    y = BAND_TOP + i * PITCH
+    P1.append((f"{key}a", sst, slab, COLS[0][0], y, COLS[0][1], BOX_H, sx))
+    P1.append((f"{key}n", "note", note, COLS[0][0], y + BOX_H + 6, COLS[0][1], NOTE_H, ""))
+    P1.append((f"{key}b", pst, plab, COLS[1][0], y, COLS[1][1], BOX_H, px))
+    P1.append((f"{key}c", gst, glab, COLS[2][0], y + GAP_Y, COLS[2][1], BOX_H, gx))
+
+BAND_BOT = BAND_TOP + (len(ROWS) - 1) * PITCH + BOX_H + 6 + NOTE_H
+P1.append(("cband", "band",
+           "READ THE VOYAGE PACK &#8212; independent streams, in parallel."
+           "&nbsp;&nbsp;Nothing here is optional: the router consumes all of it.",
+           40, BAND_TOP - 56, 1600, (BAND_BOT - BAND_TOP) + 80, ""))
+
+y = BAND_BOT + 70
+P1 += [
     # --- BAND D: the routing engine -------------------------------------
-    ("mesh", "proc", "build vessel modelled ice mesh", 500, 1520, 600, 56, ""),
-    ("tmesh", "tag", "meshiphi", 1140, 1528, 130, 40, ""),
+    ("mesh", "proc", "build vessel modelled ice mesh", c(620), y, 620, 60, ""),
+    ("tmesh", "tag", "meshiphi", 1200, y + 10, 140, 40, ""),
     ("nmesh", "note",
-     "non-uniform: splits hardest where the ice is most variable. Calibrated to "
-     "MV Vasiliy Golovnin &#8212; beam 22.4 m, 16.4 kn",
-     190, 1516, 280, 64, ""),
-    ("router", "proc", "Compute candidate routes", 500, 1616, 600, 56, ""),
-    ("trouter", "tag", "PolarRoute", 1140, 1624, 130, 40, ""),
+     "non-uniform &#8212; splits hardest where the ice is most variable. "
+     "Calibrated to MV Vasiliy Golovnin: beam 22.4 m, 16.4 kn",
+     170, y - 6, 320, 72, ""),
+    ("router", "proc", "Compute candidate routes", c(620), y + 100, 620, 60, ""),
+    ("trouter", "tag", "PolarRoute", 1200, y + 110, 140, 40, ""),
     ("ntime", "new",
      "NEW: one mesh layer per forecast day"
-     f"<br>{SM}today the router plans a 17-day voyage on day-0 ice, as if the field "
-     f"holds still. It does not{E}", 1300, 1608, 300, 72, DASH),
+     f"<br>{SM}today the router plans a 17-day voyage on day-0 ice, as if the field holds "
+     f"still. It does not{E}", 90, y + 92, 400, 76, DASH),
 
     # --- BAND E: safety screen ------------------------------------------
     ("polaris", "dec",
      "Is course's POLARIS ice concentration safe"
-     f"<br>{SM}TODAY: a flat 80% cutoff. POLARIS is indexed by ice <b>type</b>, "
-     f"so real compliance needs a thickness channel first{E}",
-     620, 1720, 340, 130, ""),
-    ("recarto", "proc", "Advise Captain to recartograph a new route", 1080, 1755, 300, 60, ""),
-    ("aOut", "conn", "A", 1212, 1840, 36, 36, ""),
+     f"<br>{SM}TODAY: a flat 80% cutoff. POLARIS is indexed by ice <b>type</b>, so real "
+     f"compliance needs a thickness channel first{E}",
+     c(400), y + 215, 400, 140, ""),
+    ("recarto", "proc", "Advise Captain to recartograph a new route", 1140, y + 255, 330, 60, ""),
+    ("aOut", "conn", "A", 1287, y + 340, 36, 36, ""),
     ("hold", "new",
      "NEW: if no candidate ever passes &#8212; hold at the ice edge and wait"
      f"<br>{SM}the real answer at sea, and what Aurora Australis did at Mawson in 2014. "
-     f"An endless redraw loop is not an outcome{E}", 100, 1745, 380, 80, DASH),
+     f"An endless redraw loop is not an outcome{E}", 90, y + 241, 420, 96, DASH),
     ("annot", "new",
      "NEW: attach the hazards we cannot hard-gate on"
-     f"<br>{SM}pressure risk &#183; protected-area proximity &#183; "
-     f"<b>when the lookout will be blind</b>: sea state &gt; 4 ft hides growlers, "
-     f"blizzard visibility &#8804; 100 m{E}", 590, 1890, 400, 80, DASH),
+     f"<br>{SM}pressure risk &#183; protected-area proximity &#183; <b>when the lookout will "
+     f"be blind</b>: sea state &gt; 4 ft hides growlers, blizzard visibility &#8804; 100 m{E}",
+     c(460), y + 400, 460, 88, DASH),
 
     # --- BAND F: the two modes ------------------------------------------
     ("mode", "dec",
      "NEW: is this the departure decision, or are we already underway?"
      f"<br>{SM}the captain's own instruction: argue once, then support{E}",
-     620, 2015, 340, 130, DASH),
-
+     c(400), y + 530, 400, 140, DASH),
     ("tau", "dec",
      "Is new route better enough to suggest it?"
-     f"<br>{SM}Cost(current) &#8722; Cost(alt) &gt; &#964;, where &#964; is our own "
+     f"<br>{SM}Cost(current) &#8722; Cost(alt) &gt; &#964;, where &#964; comes from our own "
      f"calibrated interval &#8212; not a hand-tuned number{E}",
-     180, 2190, 340, 130, DASH),
-    ("draw", "proc", "Draw recommended route and two backups for captain", 30, 2370, 300, 60, ""),
-    ("keeporig", "proc", "Keep the captains original route", 380, 2370, 300, 60, ""),
+     170, y + 720, 400, 140, DASH),
+    ("draw", "proc", "Draw recommended route and two backups for captain", 70, y + 905, 320, 64, ""),
+    ("keeporig", "proc", "Keep the captains original route", 420, y + 905, 320, 64, ""),
     ("picks", "new",
      "NEW: the captain picks. His choice becomes THE route."
-     f"<br>{SM}from here we never re-argue it{E}", 180, 2460, 340, 64, DASH),
-
+     f"<br>{SM}from here we never re-argue it{E}", 190, y + 1005, 400, 64, DASH),
     ("micro", "new",
-     "NEW: do not re-open the strategic choice. Suggest micro changes, and the "
-     "things he can miss."
-     f"<br>{SM}a system that keeps arguing for a route the captain already rejected "
-     f"is a system that gets switched off{E}", 1060, 2190, 380, 96, DASH),
+     "NEW: do not re-open the strategic choice. Suggest micro changes, and the things "
+     "he can miss."
+     f"<br>{SM}a system that keeps arguing for a route the captain already rejected is a "
+     f"system that gets switched off{E}", 1080, y + 745, 420, 96, DASH),
 
     # --- BAND G: how it is said, and who to call ------------------------
     ("advisory", "new",
      "NEW: write it in ice-navigator language, and show the calculation"
-     f"<br>{SM}9/10 close pack, thick first-year, ridged &#8212; not "
-     f"&quot;lots of ice&quot;. WMO egg code: concentration, stage of development, "
-     f"floe size{E}", 590, 2560, 400, 84, DASH),
+     f"<br>{SM}&quot;9/10 close pack, thick first-year, ridged&quot; &#8212; not &quot;lots "
+     f"of ice&quot;. WMO egg code: concentration, stage of development, floe size{E}",
+     c(460), y + 1120, 460, 92, DASH),
     ("rescue", "new",
      "NEW: if trouble is foreseen &#8212; nearest icebreaker, station and MRCC for this sector"
-     f"<br>{SM}Polar Code &#167;11.3.5 and &#167;11.3.9: places of refuge, and distance "
-     f"from SAR. Static data, zero bandwidth{E}", 1060, 2556, 380, 92, DASH),
-    ("end", "term", "End", 700, 2690, 180, 40, ""),
+     f"<br>{SM}Polar Code &#167;11.3.5 and &#167;11.3.9: places of refuge, and distance from "
+     f"SAR. Static data, zero bandwidth{E}", 1080, y + 1116, 420, 100, DASH),
+    ("end", "term", "End", c(180), y + 1260, 180, 40, ""),
 ]
+P1_H = y + 1400
 
 E_O = "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;"
 E_N = ("edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;"
        "endArrow=none;strokeColor=#82b366;")
 E_G = E_O + "dashed=1;dashPattern=3 3;strokeColor=#999999;endArrow=none;"
 
-# source, target, label, extra
 X1 = [
     ("start", "marks", "", ""),
     ("aIn", "marks", "", ""),
@@ -279,25 +292,9 @@ X1 = [
     ("keep", "rung", "", ""),
     ("lower", "rung", "", ""),
     ("nrung", "rung", "", E_N),
-    ("rung", "r1a", "", ""),
-    ("rung", "r2a", "", ""),
-    ("rung", "r3a", "", ""),
-    ("rung", "r4a", "", ""),
-    ("rung", "r5a", "", ""),
-    ("rung", "r6a", "", ""),
-    ("rung", "r7a", "", ""),
-    ("r1n", "r1a", "", E_N), ("r1a", "r1b", "", ""), ("r1c", "r1b", "", E_G),
-    ("r2n", "r2a", "", E_N), ("r2a", "r2b", "", ""), ("r2b", "r2c", "", ""),
-    ("r3n", "r3a", "", E_N), ("r3a", "r3b", "", ""), ("r3c", "r3b", "", E_G),
-    ("r4n", "r4a", "", E_N), ("r4a", "r4b", "", ""), ("r4c", "r4b", "", E_G),
-    ("r5n", "r5a", "", E_N), ("r5a", "r5b", "", ""), ("r5c", "r5b", "", E_G),
-    ("r6n", "r6a", "", E_N), ("r6a", "r6b", "", ""), ("r6c", "r6b", "", E_G),
-    ("r7n", "r7a", "", E_N), ("r7a", "r7b", "", ""), ("r7c", "r7b", "", E_G),
-    ("r1b", "mesh", "", ""), ("r2c", "mesh", "", ""), ("r3b", "mesh", "", ""),
-    ("r4b", "mesh", "", ""), ("r5b", "mesh", "", ""), ("r6b", "mesh", "", ""),
-    ("r7b", "mesh", "", ""),
-    ("nmesh", "mesh", "", E_N), ("tmesh", "mesh", "", E_N + "strokeColor=#9673a6;"),
     ("mesh", "router", "", ""),
+    ("nmesh", "mesh", "", E_N),
+    ("tmesh", "mesh", "", E_N + "strokeColor=#9673a6;"),
     ("trouter", "router", "", E_N + "strokeColor=#9673a6;"),
     ("ntime", "router", "", E_N + "strokeColor=#6c8ebf;"),
     ("router", "polaris", "", ""),
@@ -306,9 +303,9 @@ X1 = [
     ("recarto", "hold", "repeatedly", E_O + "dashed=1;strokeColor=#6c8ebf;"),
     ("polaris", "annot", "YES", "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
     ("annot", "mode", "", ""),
-    ("mode", "tau", "DEPARTURE&nbsp;&#8212; argue once",
+    ("mode", "tau", "DEPARTURE &#8212; argue once",
      "exitX=0;exitY=0.5;entryX=0.5;entryY=0;"),
-    ("mode", "micro", "UNDERWAY&nbsp;&#8212; support",
+    ("mode", "micro", "UNDERWAY &#8212; support",
      "exitX=1;exitY=0.5;entryX=0.5;entryY=0;"),
     ("tau", "draw", "YES", "exitX=0;exitY=0.5;entryX=0.5;entryY=0;"),
     ("tau", "keeporig", "NO", "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
@@ -320,78 +317,77 @@ X1 = [
     ("advisory", "end", "", ""),
     ("rescue", "end", "", ""),
 ]
+# every stream is fed by the confidence decision and feeds the mesh
+for key, *_ in ROWS:
+    X1 += [("rung", f"{key}a", "", ""),
+           (f"{key}n", f"{key}a", "", E_N),
+           (f"{key}a", f"{key}b", "", ""),
+           (f"{key}c", f"{key}b", "", E_G),
+           (f"{key}b", "mesh", "", "")]
 
 # ---------------------------------------------------------------- page 2 ----
 P2 = [
     ("t2", "band",
      "WHERE EACH STEP RUNS. The split is not ours: the Canadian Coast Guard's ice "
-     "navigation manual already separates a STRATEGIC phase ashore from a TACTICAL "
-     "phase on the bridge, and leaves the routing recommendation with the shore ice "
-     "desk while the bridge keeps real-time deviation authority.",
-     40, 20, 1560, 66, ""),
+     "navigation manual already separates a STRATEGIC phase ashore from a TACTICAL phase "
+     "on the bridge, and leaves the routing recommendation with the shore ice desk while "
+     "the bridge keeps real-time deviation authority.",
+     40, 20, 1600, 66, ""),
 
-    ("ashore", "band",
-     "ASHORE &#8212; bandwidth, archives and GPUs live here",
-     40, 110, 1560, 470, "fillColor=#F3F7FB;strokeColor=#6c8ebf;dashed=0;"),
-    ("s1", "note", "NSIDC daily ice concentration", 70, 165, 235, 50, ""),
-    ("s2", "note", "CMEMS sea-ice forecast", 320, 165, 235, 50, ""),
-    ("s3", "note", "USNIC iceberg positions", 570, 165, 235, 50, ""),
-    ("s4", "note", "ERA5 / GFS wind and waves", 820, 165, 235, 50, ""),
-    ("s5", "note", "CCAMLR MPA + ASPA / ASMA<br>(static, ships once)", 1070, 165, 235, 50, ""),
-    ("s6", "note", "IBCSO / GEBCO bathymetry<br>(static, ships once)", 1320, 165, 250, 50, ""),
+    ("ashore", "band", "ASHORE &#8212; bandwidth, archives and GPUs live here",
+     40, 110, 1600, 470, "fillColor=#F3F7FB;strokeColor=#6c8ebf;dashed=0;"),
+    ("s1", "note", "NSIDC daily ice concentration", 70, 165, 245, 54, ""),
+    ("s2", "note", "CMEMS sea-ice forecast", 330, 165, 245, 54, ""),
+    ("s3", "note", "USNIC iceberg positions", 590, 165, 245, 54, ""),
+    ("s4", "note", "ERA5 / GFS wind and waves", 850, 165, 245, 54, ""),
+    ("s5", "note", "CCAMLR MPA + ASPA / ASMA<br>(static, ships once)", 1110, 165, 245, 54, ""),
+    ("s6", "note", "IBCSO / GEBCO bathymetry<br>(static, ships once)", 1370, 165, 245, 54, ""),
 
-    ("p1", "proc", "Quality control<br>isih/ice_quality.py", 70, 265, 285, 60, ""),
-    ("p2", "proc", "Train the U-Net<br>(GPU &#8212; never at sea)", 385, 265, 285, 60, ""),
-    ("p3", "proc", "Inference + conformal<br>&#8594; SIC_upper", 700, 265, 285, 60, DASH),
-    ("p4", "proc", "Build the vessel mesh<br>meshiphi", 1015, 265, 285, 60, ""),
-    ("p5", "new", "Fulfil imagery<br>requests from the ship", 1330, 265, 240, 60, DASH),
+    ("p1", "proc", "Quality control<br>isih/ice_quality.py", 70, 270, 290, 64, ""),
+    ("p2", "proc", "Train the U-Net<br>(GPU &#8212; never at sea)", 390, 270, 290, 64, ""),
+    ("p3", "proc", "Inference + conformal<br>&#8594; SIC_upper", 710, 270, 290, 64, DASH),
+    ("p4", "proc", "Build the vessel mesh<br>meshiphi", 1030, 270, 290, 64, ""),
+    ("p5", "new", "Fulfil imagery requests<br>from the ship", 1350, 270, 265, 64, DASH),
 
-    ("pack", "new", "Build and sign the voyage pack", 500, 385, 600, 60, DASH),
-    ("wts", "gap",
-     "Model weights ~60 MB"
+    ("wts", "gap", "Model weights ~60 MB"
      f"<br>{SM}never over the satellite link &#8212; USB stick at port{E}",
-     70, 385, 380, 60, ""),
+     70, 390, 420, 64, ""),
+    ("pack", "new", "Build and sign the voyage pack", 540, 390, 520, 64, DASH),
     ("nharvest", "note", "the CMEMS harvest already runs daily on GitHub Actions",
-     1150, 390, 420, 50, ""),
+     1110, 392, 505, 60, ""),
 
     ("link", "band",
      "ACROSS THE LINK &#8212; Iridium-class, ~704 kbps at best and usually far less. "
      "No geostationary VSAT reaches south of ~70&#176;S.",
-     40, 615, 1560, 200, "fillColor=#FFF6E8;strokeColor=#d79b00;dashed=0;"),
-    ("down", "proc",
-     "&#8595;&nbsp; DOWN to the ship"
-     f"<br>{SM}vessel-modelled mesh block <b>76 KB gzipped (measured)</b> &#183; "
-     f"daily delta target 50 KB &#183; full corridor refresh 0.5&#8211;1 MB (extrapolated, "
-     f"not yet measured){E}", 70, 670, 480, 76, ""),
-    ("up", "new",
-     "&#8593;&nbsp; UP from the ship"
-     f"<br>{SM}route polyline <b>796 B</b> &#183; a request for tactical imagery is a few "
-     f"bytes &#8212; the <i>image</i> is what we cannot afford &#183; sensor summary{E}",
-     580, 670, 480, 76, DASH),
-    ("never", "gap",
-     "&#10007;&nbsp; NEVER crosses"
-     f"<br>{SM}60 MB model weights &#183; raw NetCDF &#183; any live API call. "
-     f"If a feature needs the internet at 70&#176;S, it is not a feature{E}",
-     1090, 670, 480, 76, ""),
+     40, 615, 1600, 210, "fillColor=#FFF6E8;strokeColor=#d79b00;dashed=0;"),
+    ("down", "proc", "&#8595;&nbsp; DOWN to the ship"
+     f"<br>{SM}vessel-modelled mesh block <b>76 KB gzipped (measured)</b> &#183; daily delta "
+     f"target 50 KB &#183; full corridor refresh 0.5&#8211;1 MB (extrapolated, not measured){E}",
+     70, 680, 500, 88, ""),
+    ("up", "new", "&#8593;&nbsp; UP from the ship"
+     f"<br>{SM}route polyline <b>796 B</b> &#183; a request for tactical imagery is a few bytes "
+     f"&#8212; the <i>image</i> is what we cannot afford &#183; sensor summary{E}",
+     600, 680, 500, 88, DASH),
+    ("never", "gap", "&#10007;&nbsp; NEVER crosses"
+     f"<br>{SM}60 MB model weights &#183; raw NetCDF &#183; any live API call. If a feature "
+     f"needs the internet at 70&#176;S, it is not a feature{E}",
+     1130, 680, 485, 88, ""),
 
-    ("aboard", "band",
-     "ABOARD &#8212; everything that has to answer a question",
-     40, 850, 1560, 320, "fillColor=#F4FAF4;strokeColor=#82b366;dashed=0;"),
-    ("v1", "proc", "The voyage pack, on disk", 90, 905, 300, 56, ""),
-    ("v2", "new", "The ship's own sensors<br>radar, AIS, shaft power, met, helicopter recon",
-     430, 905, 320, 56, DASH),
-    ("v3", "proc", "PolarRoute &#8212; routes are computed here, locally", 790, 905, 340, 56, ""),
-    ("v4", "note", "so the master can re-plan with no link at all", 1170, 908, 350, 50, ""),
-    ("v5", "proc", "The decision flow on page 1", 350, 1010, 400, 56, ""),
-    ("v6", "term", "The Captain decides", 830, 1010, 300, 56, ""),
-    ("v7", "gap",
-     "why not send finished routes only?"
-     f"<br>{SM}because then the master cannot re-plan when the ice disagrees with "
-     f"the forecast &#8212; and it will{E}", 90, 1090, 500, 62, ""),
-    ("v8", "gap",
-     "why not run ingestion aboard?"
+    ("aboard", "band", "ABOARD &#8212; everything that has to answer a question",
+     40, 860, 1600, 330, "fillColor=#F4FAF4;strokeColor=#82b366;dashed=0;"),
+    ("v1", "proc", "The voyage pack, on disk", 90, 915, 320, 60, ""),
+    ("v2", "new", "The ship's own sensors"
+     f"<br>{SM}radar, AIS, shaft power, met, helicopter recon{E}", 450, 915, 340, 60, DASH),
+    ("v3", "proc", "PolarRoute &#8212; routes are computed here, locally", 830, 915, 340, 60, ""),
+    ("v4", "note", "so the master can re-plan with no link at all", 1210, 918, 400, 54, ""),
+    ("v5", "proc", "The decision flow on page 1", 380, 1020, 400, 60, ""),
+    ("v6", "term", "The Captain decides", 850, 1020, 320, 60, ""),
+    ("v7", "gap", "why not send finished routes only?"
+     f"<br>{SM}because then the master cannot re-plan when the ice disagrees with the "
+     f"forecast &#8212; and it will{E}", 90, 1105, 520, 70, ""),
+    ("v8", "gap", "why not run ingestion aboard?"
      f"<br>{SM}GB-scale downloads and a GPU. Neither exists at 70&#176;S{E}",
-     640, 1090, 490, 62, ""),
+     650, 1105, 520, 70, ""),
 ]
 
 X2 = [
@@ -407,12 +403,12 @@ X2 = [
     ("v1", "v5", "", E_O), ("v2", "v5", "", E_O), ("v3", "v5", "", E_O),
     ("v4", "v3", "", E_N),
     ("v5", "v6", "", E_O),
-    # the three rationale panels are commentary, so they attach with a plain
-    # line and no arrowhead — but they do attach, so nothing floats
+    ("v6", "up", "his route, and what he asked for", E_O + "dashed=1;strokeColor=#6c8ebf;"),
+    # the rationale panels are commentary, so they attach with a plain line and
+    # no arrowhead — but they do attach, so nothing floats
     ("pack", "never", "excluded from the pack", E_G),
     ("v7", "v3", "", E_G),
     ("v8", "v1", "", E_G),
-    ("v6", "up", "his route, and what he asked for", E_O + "dashed=1;strokeColor=#6c8ebf;"),
 ]
 
 
@@ -453,14 +449,14 @@ def page(name, pid, nodes, edges, w, h, prefix):
     return "".join(out), ids
 
 
-x1, ids1 = page("Decision workflow", "navflow", P1, X1, 1680, 2800, "a")
-x2, ids2 = page("Where it runs", "tiers", P2, X2, 1680, 1240, "b")
+x1, _ = page("Decision workflow", "navflow", P1, X1, 1680, P1_H, "a")
+x2, _ = page("Where it runs", "tiers", P2, X2, 1680, 1260, "b")
 
 xml = '<mxfile host="app.diagrams.net" type="device">\n' + x1 + x2 + '</mxfile>\n'
 with open(OUT, "w", encoding="utf-8") as fh:
     fh.write(xml)
 
 print(f"wrote {OUT}")
-print(f"  page 1: {len(P1)} shapes, {len(X1)} connectors")
+print(f"  page 1: {len(P1)} shapes, {len(X1)} connectors, canvas 1680x{P1_H}")
 print(f"  page 2: {len(P2)} shapes, {len(X2)} connectors")
 print(f"  {len(xml)} bytes total")
