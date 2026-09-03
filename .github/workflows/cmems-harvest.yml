@@ -24,7 +24,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - run: pip install copernicusmarine
+      # xarray + netCDF4 are for the compression step in harvest_cmems.sh.
+      # Without them the harvest still succeeds, but the archive file lands
+      # uncompressed at ~42.6 MB instead of ~5 MB.
+      - run: pip install copernicusmarine xarray netCDF4
 
       - name: Authenticate to Copernicus Marine
         env:

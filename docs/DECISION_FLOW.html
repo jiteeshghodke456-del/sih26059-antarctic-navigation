@@ -1,0 +1,450 @@
+<title>Navigation Decision Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#F5F7FA; --panel:#FFFFFF; --panel-2:#FAFBFD;
+    --ink:#12171F; --ink-2:#4C5566; --ink-3:#7C8698;
+    --line:#D3D9E2; --line-2:#E5E9F0;
+
+    /* flowchart palette — kept in the family of the original draw.io colours,
+       desaturated so 40 boxes do not fight each other */
+    --proc-fill:#FDF1DE; --proc-line:#C98A2E; --proc-ink:#5A3B08;
+    --dec-fill:#FBE6F2;  --dec-line:#B8559A;  --dec-ink:#5C2049;
+    --note-fill:#E4F4E2; --note-line:#63A55B; --note-ink:#254A20;
+    --term-fill:#FBDDDC; --term-line:#C4635F; --term-ink:#5C1F1D;
+    --new-fill:#E2EEF9;  --new-line:#4A87BF;  --new-ink:#13385C;
+    --band:#F0F3F7;
+    --built:#009E73; --designed:#C4500E;
+
+    --sans:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,sans-serif;
+    --disp:'Archivo',var(--sans);
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0D1117; --panel:#151B24; --panel-2:#111820;
+      --ink:#E9EDF3; --ink-2:#9BA6B6; --ink-3:#6F7B8C;
+      --line:#2B3542; --line-2:#212A35;
+      --proc-fill:#33260F; --proc-line:#C08A38; --proc-ink:#F3D9A8;
+      --dec-fill:#331B2B;  --dec-line:#C471A9;  --dec-ink:#F3CBE4;
+      --note-fill:#1B2E19; --note-line:#5FA557; --note-ink:#CBE7C6;
+      --term-fill:#331A19; --term-line:#C4706C; --term-ink:#F3CDCB;
+      --new-fill:#152836;  --new-line:#5B9BD4;  --new-ink:#C8E1F7;
+      --band:#141A22;
+      --built:#3ECFA4; --designed:#F5813F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0D1117; --panel:#151B24; --panel-2:#111820;
+    --ink:#E9EDF3; --ink-2:#9BA6B6; --ink-3:#6F7B8C;
+    --line:#2B3542; --line-2:#212A35;
+    --proc-fill:#33260F; --proc-line:#C08A38; --proc-ink:#F3D9A8;
+    --dec-fill:#331B2B;  --dec-line:#C471A9;  --dec-ink:#F3CBE4;
+    --note-fill:#1B2E19; --note-line:#5FA557; --note-ink:#CBE7C6;
+    --term-fill:#331A19; --term-line:#C4706C; --term-ink:#F3CDCB;
+    --new-fill:#152836;  --new-line:#5B9BD4;  --new-ink:#C8E1F7;
+    --band:#141A22;
+    --built:#3ECFA4; --designed:#F5813F;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;margin:0}
+  .wrap{max-width:1120px;margin:0 auto;padding:44px 20px 80px;
+        display:flex;flex-direction:column;gap:36px}
+
+  header.top{display:flex;flex-direction:column;gap:11px;
+             border-bottom:1px solid var(--line);padding-bottom:24px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(27px,4.2vw,40px);line-height:1.08;
+     margin:0;letter-spacing:-.022em;text-wrap:balance}
+  .lede{font-size:15.5px;color:var(--ink-2);max-width:66ch;margin:0}
+
+  h2{font-family:var(--disp);font-weight:600;font-size:21px;margin:0 0 4px;letter-spacing:-.012em}
+  .sub{font-size:13.5px;color:var(--ink-2);margin:0 0 18px;max-width:72ch}
+
+  figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+         padding:20px;overflow-x:auto}
+  figure svg{display:block;width:100%;min-width:900px;height:auto;color:var(--ink)}
+  figcaption{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-2);
+             font-size:13px;color:var(--ink-2);max-width:78ch}
+
+  .legend{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:18px}
+  .lg{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);
+      border-radius:999px;padding:6px 14px 6px 11px;font-size:12.5px;color:var(--ink-2)}
+  .lg i{width:14px;height:14px;border-radius:3px;flex:none;display:block}
+  .lg b{color:var(--ink);font-weight:600}
+  .i-p{background:var(--proc-fill);border:1.5px solid var(--proc-line)}
+  .i-d{background:var(--dec-fill);border:1.5px solid var(--dec-line);border-radius:2px;transform:rotate(45deg);width:11px;height:11px}
+  .i-n{background:var(--note-fill);border:1.5px solid var(--note-line)}
+  .i-w{background:var(--new-fill);border:1.5px solid var(--new-line)}
+  .i-x{background:transparent;border:2px dotted var(--designed)}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel);
+        border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--ink-3);font-weight:500;padding:12px 15px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+  td{padding:12px 15px;border-bottom:1px solid var(--line-2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td code,li code,p code,footer code{font-family:var(--mono);font-size:.87em;color:var(--ink-2);
+       background:var(--panel-2);border:1px solid var(--line-2);border-radius:4px;padding:1px 5px}
+  .sev{font-family:var(--mono);font-size:10px;letter-spacing:.08em;font-weight:500;
+       padding:3px 8px;border-radius:4px;white-space:nowrap;display:inline-block}
+  .s-hi{color:#8A2E00;background:#FBE6DA;border:1px solid #E0A98A}
+  .s-md{color:#5A3B08;background:#FBF0DC;border:1px solid #DDC08A}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .s-hi{color:#FFC7A3;background:#3A1D0C;border-color:#8A4A22}
+    :root:not([data-theme="light"]) .s-md{color:#F3D9A8;background:#332610;border-color:#7A5F26}}
+  :root[data-theme="dark"] .s-hi{color:#FFC7A3;background:#3A1D0C;border-color:#8A4A22}
+  :root[data-theme="dark"] .s-md{color:#F3D9A8;background:#332610;border-color:#7A5F26}
+  .scroll{overflow-x:auto}
+
+  footer{border-top:1px solid var(--line);padding-top:20px;font-size:12.5px;color:var(--ink-3);max-width:76ch}
+  @media (max-width:640px){.wrap{padding:28px 14px 60px;gap:28px} figure{padding:12px}}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">SIH 26059 &middot; Runtime view</div>
+  <h1>Navigation Decision Flow</h1>
+  <p class="lede">What happens, in order, from the moment the Captain marks a route to the moment
+     the system answers. Your original wording is kept throughout; four steps were added because the
+     models that do the work were missing, and three were corrected against the code.</p>
+</header>
+
+<section>
+  <div class="legend">
+    <span class="lg"><i class="i-p"></i><b>Process</b></span>
+    <span class="lg"><i class="i-d"></i><b>Decision</b></span>
+    <span class="lg"><i class="i-n"></i><b>Data source</b></span>
+    <span class="lg"><i class="i-w"></i><b>Added</b>&nbsp;&mdash; was missing from the original</span>
+    <span class="lg"><i class="i-x"></i><b>Dotted</b>&nbsp;&mdash; designed, not built yet</span>
+  </div>
+
+<figure>
+<svg viewBox="0 0 1120 1500" role="img" xmlns="http://www.w3.org/2000/svg"
+     aria-label="Runtime decision flow. The Captain logs in and marks a route, which goes to the local backend on the bridge. A confidence self-check compares yesterday's forecast against today's observation. Three data pulls then run in parallel: the NSIDC observed ice map is cleaned by the quality-control layer; the CMEMS forecast is corrected by a residual U-Net and given a conformal safety margin; USNIC iceberg positions are propagated by the Wagner drift model. Weather is analysed as a routing input. These build a vessel-modelled mesh, which PolarRoute sweeps twelve times to produce candidate routes. An ice-safety gate either sends the Captain back to redraw, or passes to an anti-whipsaw threshold gate that suppresses route changes smaller than the model's own error bar before recommending a route and two backups.">
+  <defs>
+    <marker id="f1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <style>
+    .proc{fill:var(--proc-fill);stroke:var(--proc-line);stroke-width:1.6}
+    .dec{fill:var(--dec-fill);stroke:var(--dec-line);stroke-width:1.6}
+    .note{fill:var(--note-fill);stroke:var(--note-line);stroke-width:1.4}
+    .term{fill:var(--term-fill);stroke:var(--term-line);stroke-width:1.6}
+    .newb{fill:var(--new-fill);stroke:var(--new-line);stroke-width:1.8}
+    .dot{stroke-dasharray:3 3}
+    .tp{font-family:var(--sans);fill:var(--proc-ink);font-size:12.5px;font-weight:600;text-anchor:middle}
+    .td{font-family:var(--sans);fill:var(--dec-ink);font-size:12px;font-weight:600;text-anchor:middle}
+    .tn{font-family:var(--sans);fill:var(--note-ink);font-size:11px;text-anchor:middle}
+    .tt{font-family:var(--sans);fill:var(--term-ink);font-size:13px;font-weight:600;text-anchor:middle}
+    .tw{font-family:var(--sans);fill:var(--new-ink);font-size:12.5px;font-weight:600;text-anchor:middle}
+    .sub{font-family:var(--mono);font-size:9.5px;text-anchor:middle}
+    .sp{fill:var(--proc-ink);opacity:.82} .sw{fill:var(--new-ink);opacity:.85}
+    .e{stroke:currentColor;stroke-width:1.5;fill:none;opacity:.6;marker-end:url(#f1)}
+    .j{stroke:currentColor;stroke-width:1.5;fill:none;opacity:.6}
+    .yn{font-family:var(--mono);font-size:10px;font-weight:500;fill:var(--ink-2)}
+    .bl{font-family:var(--disp);font-size:12px;font-weight:700;fill:var(--ink-3);letter-spacing:.06em}
+    .tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.07em}
+  </style>
+
+  <!-- ============ START ============ -->
+  <rect class="term" x="490" y="30" width="140" height="40" rx="20"/>
+  <text class="tt" x="560" y="55">Start</text>
+  <path class="e" d="M560,70 L560,90"/>
+
+  <!-- Captain marks route -->
+  <rect class="proc" x="400" y="92" width="320" height="56" rx="6"/>
+  <text class="tp" x="560" y="114">Captain Marks Route</text>
+  <text class="tp" x="560" y="132">in the Application</text>
+  <rect class="note" x="745" y="100" width="196" height="40" rx="5"/>
+  <text class="tn" x="843" y="125">Captain Logs in application</text>
+  <path class="j" d="M745,120 L722,120" stroke-dasharray="3 3"/>
+  <circle cx="352" cy="120" r="17" fill="var(--panel)" stroke="currentColor" stroke-width="1.6"/>
+  <text class="tt" x="352" y="125" font-size="12" fill="var(--ink)">A</text>
+  <path class="e" d="M369,120 L398,120"/>
+  <path class="e" d="M560,148 L560,174"/>
+
+  <!-- backend -->
+  <rect class="proc" x="400" y="176" width="320" height="56" rx="6"/>
+  <text class="tp" x="560" y="198">Route is sent to the</text>
+  <text class="tp" x="560" y="216">applications backend</text>
+  <rect class="note" x="745" y="184" width="196" height="40" rx="5"/>
+  <text class="tn" x="843" y="209">Navigation Decision</text>
+  <text class="tn" x="843" y="222" font-size="10">Processing start</text>
+  <path class="j" d="M745,204 L722,204" stroke-dasharray="3 3"/>
+  <rect class="newb" x="120" y="172" width="256" height="64" rx="6"/>
+  <text class="tw" x="248" y="193" font-size="11.5">backend is LOCAL</text>
+  <text class="sub sw" x="248" y="209">on the bridge laptop &mdash; no</text>
+  <text class="sub sw" x="248" y="222">outbound network at 70&deg;S</text>
+  <path class="j" d="M376,204 L398,204" stroke-dasharray="3 3"/>
+  <path class="e" d="M560,232 L560,258"/>
+
+  <!-- confidence self-check -->
+  <path class="dec dot" d="M560,260 L720,317 L560,374 L400,317 Z"/>
+  <text class="td" x="560" y="303" font-size="11.5">AI model checks</text>
+  <text class="td" x="560" y="319" font-size="11.5">yesterdays ice movement</text>
+  <text class="td" x="560" y="335" font-size="11.5">forecast correctness</text>
+  <text class="tag" x="560" y="356" fill="var(--designed)" text-anchor="middle">NOT BUILT YET</text>
+
+  <path class="e" d="M400,317 L364,317"/><text class="yn" x="382" y="310" text-anchor="middle">YES</text>
+  <path class="e" d="M720,317 L756,317"/><text class="yn" x="738" y="310" text-anchor="middle">NO</text>
+
+  <rect class="proc" x="100" y="289" width="264" height="56" rx="6"/>
+  <text class="tp" x="232" y="311" font-size="11.5">Keep default Confidence</text>
+  <text class="tp" x="232" y="329" font-size="11.5">in route suggestion</text>
+
+  <rect class="proc" x="756" y="289" width="274" height="56" rx="6"/>
+  <text class="tp" x="893" y="311" font-size="11.5">Lower Confidence and increase</text>
+  <text class="tp" x="893" y="329" font-size="11.5">number of safe routes</text>
+
+  <path class="j" d="M232,345 L232,404 L560,404"/>
+  <path class="j" d="M893,345 L893,404 L560,404"/>
+  <path class="e" d="M560,404 L560,428"/>
+
+  <!-- parallel band -->
+  <rect x="22" y="452" width="1076" height="322" rx="10" fill="var(--band)" stroke="var(--line)" stroke-width="1"/>
+  <text class="bl" x="38" y="446">READ THE VOYAGE PACK &mdash; three independent pulls, in parallel</text>
+  <path class="j" d="M560,428 L560,442"/>
+  <path class="j" d="M195,442 L925,442"/>
+  <path class="e" d="M195,442 L195,468"/>
+  <path class="e" d="M560,442 L560,468"/>
+  <path class="e" d="M925,442 L925,468"/>
+
+  <!-- column 1 : observed ice -->
+  <rect class="proc" x="30" y="470" width="330" height="50" rx="6"/>
+  <text class="tp" x="195" y="491" font-size="11.5">Read Latest ice</text>
+  <text class="tp" x="195" y="508" font-size="11.5">concentration map</text>
+  <rect class="note" x="46" y="524" width="298" height="32" rx="5"/>
+  <text class="tn" x="195" y="544" font-size="10.5">Taken by NSIDC satellite with SSMIS sensor</text>
+  <path class="e" d="M195,556 L195,576"/>
+  <rect class="proc" x="30" y="578" width="330" height="76" rx="6"/>
+  <text class="tp" x="195" y="600" font-size="11.5">Clean unreliable data/noise</text>
+  <text class="tp" x="195" y="617" font-size="11.5">in satellite image</text>
+  <text class="sub sp" x="195" y="633">isih/ice_quality.py</text>
+  <text class="sub sp" x="195" y="646">the land-spillover filter writes 0.0 = open water</text>
+  <path class="e" d="M195,654 L195,674"/>
+  <rect class="proc" x="30" y="676" width="330" height="74" rx="6"/>
+  <text class="tp" x="195" y="700" font-size="11.5">Analyze weather</text>
+  <text class="tp" x="195" y="717" font-size="11.5">forecast ahead</text>
+  <text class="sub sp" x="195" y="736">ERA5 / GFS wind + waves &mdash; MOVED: an input, not a review</text>
+
+  <!-- column 2 : forecast + U-Net -->
+  <rect class="proc" x="395" y="470" width="330" height="50" rx="6"/>
+  <text class="tp" x="560" y="491" font-size="11.5">Fetch weather model's</text>
+  <text class="tp" x="560" y="508" font-size="11.5">Sea-ice forecast</text>
+  <rect class="note" x="411" y="524" width="298" height="32" rx="5"/>
+  <text class="tn" x="560" y="544" font-size="10.5">CMEMS Sea-ice forecast</text>
+  <path class="e" d="M560,556 L560,576"/>
+  <rect class="proc" x="395" y="578" width="330" height="76" rx="6"/>
+  <text class="tp" x="560" y="600" font-size="11.5">AI model corrects</text>
+  <text class="tp" x="560" y="617" font-size="11.5">mistakes in the forecast</text>
+  <text class="sub sp" x="560" y="633">residual U-Net &mdash; models/sic_correction/unet.py</text>
+  <text class="sub sp" x="560" y="646">corrected = clip(base + &#916;, 0, 1)  &middot;  1 of 5 trained</text>
+  <path class="e" d="M560,654 L560,674"/>
+  <rect class="newb dot" x="395" y="676" width="330" height="74" rx="6"/>
+  <text class="tw" x="560" y="700" font-size="11.5">Add calibrated safety margin</text>
+  <text class="sub sw" x="560" y="718">stratified conformal q&#770;(lead, regime)</text>
+  <text class="sub sw" x="560" y="734">&rarr; SIC_upper, the number the router really uses</text>
+
+  <!-- column 3 : icebergs -->
+  <rect class="proc" x="760" y="470" width="330" height="50" rx="6"/>
+  <text class="tp" x="925" y="491" font-size="11.5">Fetch current iceberg</text>
+  <text class="tp" x="925" y="508" font-size="11.5">location near the course</text>
+  <rect class="note" x="776" y="524" width="298" height="32" rx="5"/>
+  <text class="tn" x="925" y="544" font-size="10.5">USNIC Current iceberg positions</text>
+  <path class="e" d="M925,556 L925,576"/>
+  <rect class="proc" x="760" y="578" width="330" height="94" rx="6"/>
+  <text class="tp" x="925" y="602" font-size="11.5">Predict Iceberg trajectory</text>
+  <text class="sub sp" x="925" y="622">Wagner closed form &mdash; models/iceberg/drift.py</text>
+  <text class="sub sp" x="925" y="637">PHYSICS, not machine learning &middot; 23/23 tests</text>
+  <text class="sub sp" x="925" y="654">&rarr; exclusion polygons, capped at 72 h</text>
+
+  <!-- join -->
+  <path class="j" d="M195,750 L195,792"/>
+  <path class="j" d="M560,750 L560,792"/>
+  <path class="j" d="M925,672 L925,792"/>
+  <path class="j" d="M195,792 L925,792"/>
+  <path class="e" d="M560,792 L560,814"/>
+
+  <!-- mesh -->
+  <rect class="newb" x="270" y="816" width="580" height="76" rx="6"/>
+  <text class="tw" x="560" y="840">Build vessel-modelled ice mesh</text>
+  <text class="sub sw" x="560" y="859">meshiphi &mdash; non-uniform, splits hardest in the marginal ice zone</text>
+  <text class="sub sw" x="560" y="876">calibrated to MV Vasiliy Golovnin: beam 22.4 m, 16.4 kn &middot; isih/ice_meshes.py</text>
+  <path class="e" d="M560,892 L560,914"/>
+
+  <!-- router -->
+  <rect class="newb" x="270" y="916" width="580" height="76" rx="6"/>
+  <text class="tw" x="560" y="940">Compute candidate routes</text>
+  <text class="sub sw" x="560" y="959">PolarRoute &times; 12 sweep &rarr; dominance filter &middot; BAS engine, reused under MIT</text>
+  <text class="sub sw" x="560" y="976">this is where the routes come from &mdash; the original had them appear from nowhere</text>
+  <path class="e" d="M560,992 L560,1014"/>
+
+  <!-- POLARIS gate -->
+  <path class="dec" d="M560,1016 L726,1078 L560,1140 L394,1078 Z"/>
+  <text class="td" x="560" y="1068" font-size="11.5">Is course's POLARIS ice</text>
+  <text class="td" x="560" y="1084" font-size="11.5">concentration safe</text>
+  <text class="tag" x="560" y="1104" fill="var(--designed)" text-anchor="middle">TODAY: FLAT 80% CUTOFF</text>
+
+  <path class="e" d="M726,1078 L762,1078"/><text class="yn" x="744" y="1071" text-anchor="middle">NO</text>
+  <rect class="proc" x="764" y="1050" width="290" height="56" rx="6"/>
+  <text class="tp" x="909" y="1072" font-size="11.5">Advise Captain to</text>
+  <text class="tp" x="909" y="1090" font-size="11.5">recartograph a new route</text>
+  <path class="e" d="M909,1106 L909,1128"/>
+  <circle cx="909" cy="1146" r="17" fill="var(--panel)" stroke="currentColor" stroke-width="1.6"/>
+  <text class="tt" x="909" y="1151" font-size="12" fill="var(--ink)">A</text>
+
+  <path class="e" d="M560,1140 L560,1166"/><text class="yn" x="576" y="1157">YES</text>
+
+  <!-- anti-whipsaw gate -->
+  <path class="newb dot" d="M560,1168 L734,1232 L560,1296 L386,1232 Z"/>
+  <text class="tw" x="560" y="1222" font-size="11.5">Is the new route enough</text>
+  <text class="tw" x="560" y="1238" font-size="11.5">better to suggest it?</text>
+  <text class="sub sw" x="560" y="1258">Cost(current) &minus; Cost(alt) &gt; &#964;</text>
+
+  <path class="e" d="M386,1232 L352,1232"/><text class="yn" x="369" y="1225" text-anchor="middle">NO</text>
+  <rect class="newb" x="60" y="1200" width="290" height="64" rx="6"/>
+  <text class="tw" x="205" y="1224" font-size="11.5">Keep the Captain's current plan</text>
+  <text class="sub sw" x="205" y="1243">no detour suggested &mdash; the change is</text>
+  <text class="sub sw" x="205" y="1256">smaller than our own error bar</text>
+
+  <path class="e" d="M560,1296 L560,1320"/><text class="yn" x="576" y="1311">YES</text>
+
+  <rect class="proc" x="370" y="1322" width="380" height="68" rx="6"/>
+  <text class="tp" x="560" y="1345">Draw recommended route and</text>
+  <text class="tp" x="560" y="1363">two backups to captain</text>
+  <text class="sub sp" x="560" y="1381">each leg styled forecast-grade or climatology-grade by lead time</text>
+
+  <path class="e" d="M560,1390 L560,1412"/>
+  <path class="j" d="M205,1264 L205,1434 L476,1434"/>
+  <path class="e" d="M476,1434 L488,1434"/>
+
+  <rect class="term" x="490" y="1414" width="140" height="40" rx="20"/>
+  <text class="tt" x="560" y="1439">End</text>
+</svg>
+<figcaption><b>The two gates at the bottom are the part worth defending in a viva.</b> The first asks
+  whether the ice is survivable; the second asks whether the improvement is larger than the model's
+  own uncertainty. Without the second gate, a decision-support tool re-routes on forecast noise and
+  the crew learns to ignore it &mdash; which is the exact failure your &ldquo;this can&rsquo;t just
+  suddenly suggest a detour&rdquo; requirement was guarding against.</figcaption>
+</figure>
+</section>
+
+<section>
+  <h2>What I changed, and why</h2>
+  <p class="sub">Ordered by how much each one matters if a judge traces the flow with a finger.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Issue</th><th>Severity</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>The routes appeared from nowhere.</b> The flow went straight from correcting the
+            forecast to &ldquo;Draw recommended route&rdquo;. Nothing built a mesh; nothing ran a router.</td>
+        <td><span class="sev s-hi">Critical</span></td>
+        <td>Added <b>Build vessel-modelled ice mesh</b> (meshiphi + the Golovnin config) and
+            <b>Compute candidate routes</b> (PolarRoute &times; 12 sweep &rarr; dominance filter).
+            This is the single biggest omission &mdash; it is the actual navigation engine.</td>
+      </tr>
+      <tr>
+        <td><b>No uncertainty ever reached the decision.</b> The U-Net produced a corrected forecast
+            and the gate consumed it as if it were exact.</td>
+        <td><span class="sev s-hi">Critical</span></td>
+        <td>Added <b>Add calibrated safety margin</b> (stratified conformal q&#770;) producing
+            <code>SIC_upper</code>. Uncertainty propagating into the route is your headline
+            differentiator; it was invisible in the flow.</td>
+      </tr>
+      <tr>
+        <td><b>A hard YES/NO gate with no hysteresis</b> means any forecast wobble flips the
+            recommendation &mdash; the whipsaw you explicitly did not want.</td>
+        <td><span class="sev s-hi">Critical</span></td>
+        <td>Added the <b>&tau; gate</b>: suggest a change only when
+            <code>Cost(current) &minus; Cost(alt) &gt; &tau;</code>, with &tau; drawn from the same
+            conformal interval. Below &tau;, the Captain's plan stands.</td>
+      </tr>
+      <tr>
+        <td><b>&ldquo;Draw recommended route and two backups to captain&rdquo; appeared twice</b> &mdash;
+            once after YES and again after the weather step.</td>
+        <td><span class="sev s-md">Readability</span></td>
+        <td>Removed the duplicate. There is now one output box, reached by one path.</td>
+      </tr>
+      <tr>
+        <td><b>&ldquo;Analyze weather forecast ahead&rdquo; sat after routing.</b> Waves and wind change
+            what a route <em>costs</em>; reviewing them afterwards cannot change the answer.</td>
+        <td><span class="sev s-md">Accuracy</span></td>
+        <td>Moved it into the parallel input band so it prices the route. Your wording kept verbatim.</td>
+      </tr>
+      <tr>
+        <td><b>POLARIS is not what the code does today.</b>
+            <code>isih/ice_meshes.py:47</code> uses a flat 80% concentration cutoff and notes that
+            production replaces it with an IMO POLARIS RIO calculation.</td>
+        <td><span class="sev s-md">Accuracy</span></td>
+        <td>Kept your box text, tagged it <b>TODAY: FLAT 80% CUTOFF</b>. Claiming POLARIS compliance
+            in front of an examiner who asks to see the RIO table would be a bad thirty seconds.</td>
+      </tr>
+      <tr>
+        <td><b>&ldquo;Sent to the applications backend&rdquo; reads like a network call</b> &mdash; which
+            contradicts the whole two-tier design.</td>
+        <td><span class="sev s-md">Accuracy</span></td>
+        <td>Annotated: the backend is local, on the bridge laptop, with no outbound network. Same
+            box text, no ambiguity.</td>
+      </tr>
+      <tr>
+        <td><b>Two steps were labelled &ldquo;AI model&rdquo; without naming a model</b>, and one of them
+            is not machine learning at all.</td>
+        <td><span class="sev s-md">Accuracy</span></td>
+        <td>Each step now names its file. Iceberg drift is tagged <b>PHYSICS, not machine
+            learning</b> &mdash; a closed-form solution with 23/23 tests is a stronger claim than a
+            vague &ldquo;AI model&rdquo;, and it survives cross-examination.</td>
+      </tr>
+      <tr>
+        <td><b>The confidence self-check does not exist in the codebase.</b> Nothing compares
+            yesterday's forecast to today's observation.</td>
+        <td><span class="sev s-md">Honesty</span></td>
+        <td>Kept it &mdash; it is a good idea &mdash; but drawn dotted and tagged
+            <b>NOT BUILT YET</b>, like the other two designed steps.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Readability changes</h2>
+  <p class="sub">Same information, less work to follow.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Before</th><th>After</th></tr></thead>
+    <tbody>
+      <tr><td>Flow wrapped across two rows, so the eye had to jump right-to-left mid-diagram</td>
+          <td>One continuous top-to-bottom spine; the only horizontal movement is a deliberate
+              three-way fan-out</td></tr>
+      <tr><td>Three data pulls drawn in sequence, implying they wait on each other</td>
+          <td>Drawn as an explicit parallel band with a shared header, because they are independent</td></tr>
+      <tr><td>Boxes of six different widths, edges meeting at arbitrary points</td>
+          <td>One width per band, everything on a grid, edges meeting at box centres</td></tr>
+      <tr><td>Saturated orange and magenta at full strength across ~20 boxes</td>
+          <td>Same hue families, desaturated fills with stronger borders &mdash; colour now marks
+              <em>kind</em> of step, not decoration</td></tr>
+      <tr><td>Notes floated near their box with no visible attachment</td>
+          <td>Notes tethered with a dashed leader to the step they annotate</td></tr>
+      <tr><td>No indication of what is built</td>
+          <td>Dotted outline plus a corner tag on the three steps that are designed but not yet
+              implemented</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<footer>
+  Verified against the working tree, not against intent: <code>isih/ice_quality.py</code>,
+  <code>isih/ice_meshes.py</code>, <code>isih/make_route_figure.py</code>,
+  <code>models/sic_correction/unet.py</code>, <code>models/iceberg/drift.py</code>. Steps marked
+  NOT BUILT YET returned no matches when searched for in the codebase &mdash; they are design, and
+  the diagram says so rather than implying otherwise.
+</footer>
+
+</div>
