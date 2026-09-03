@@ -5,20 +5,65 @@ name: CMEMS daily harvest
 # archive (docs/ML_ARCHITECTURE.md §1.3) cannot be back-filled, so this
 # must run every day starting now regardless of whether anyone's machine
 # is on.
+#
+# SCHEDULING NOTE — read before changing the cron.
+# This ran as `0 6 * * *` for its first week and fired at 10:38, 11:05 and
+# 10:40 UTC on three consecutive days: four to five hours late, every time.
+# It never actually failed. GitHub documents that scheduled workflows are
+# delayed under load, that the start of every hour is the worst of it, and
+# that events can be dropped entirely rather than merely delayed. So:
+#
+#   * never schedule on the hour — use an odd minute
+#   * run twice a day; the second is free because harvest_cmems.sh exits
+#     early when the cycle is already on disk
+#
+# AND THE CONSTRAINT THAT BOUNDS ALL OF THAT — do not move these earlier.
+# CMEMS guarantees the daily bulletin only "by 1200 UTC" (product user manual
+# CMEMS-GLO-PUM-001-024, issue 2.4); the product page's 08:00 is a target, not
+# a guarantee. This script still names the output file from the wall clock, so
+# a run that fires BEFORE the bulletin lands would download the previous day's
+# forecast and archive it under today's filename — and the already-have guard
+# would then block the correct capture for the rest of the day. Wrong data
+# under a right-looking name is worse than a missed day.
+#
+# Both slots therefore sit after 12:00 UTC. The proper fix is to derive the
+# bulletin date from the dataset's own time axis instead of the clock; until
+# that lands (docs/backlog.md), these times are load-bearing.
+#
+# A missed day is permanently lost — CMEMS overwrites each bulletin with the
+# next one — so redundancy is worth more than tidiness.
 
 on:
   schedule:
-    - cron: '0 6 * * *'   # 06:00 UTC daily
-  workflow_dispatch: {}     # manual "Run workflow" button, for testing
+    - cron: '23 12 * * *'   # primary    — first slot after the 12:00 UTC guarantee
+    - cron: '23 17 * * *'   # safety net — no-op if the cycle already landed
+  workflow_dispatch:
+    inputs:
+      cycle_date:
+        description: 'Cycle date to fetch, YYYY-MM-DD. Blank means today (UTC).'
+        required: false
+        default: ''
 
 permissions:
   contents: write
 
+# A manual run and a scheduled run must never push at the same moment.
+# Queue the second rather than cancelling it: the already-have guard makes
+# it cheap, and cancelling could drop the only attempt of the day.
+concurrency:
+  group: cmems-harvest
+  cancel-in-progress: false
+
 jobs:
   harvest:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          # full history so the push retry below can rebase when main has
+          # moved (PR merges land during the day)
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -35,13 +80,55 @@ jobs:
           COPERNICUSMARINE_SERVICE_PASSWORD: ${{ secrets.CMEMS_PASSWORD }}
         run: copernicusmarine login --force-overwrite
 
-      - name: Harvest today's forecast cycle
+      - name: Harvest the forecast cycle
+        env:
+          CYCLE_DATE: ${{ inputs.cycle_date }}
         run: bash scripts/harvest_cmems.sh
+
+      # A green tick must mean data arrived. Before this step existed the
+      # harvest wrote everything to a log file and printed nothing, so a
+      # silent no-op looked identical to a good run.
+      - name: Verify the cycle is on disk
+        run: |
+          set -euo pipefail
+          CYCLE="${{ inputs.cycle_date }}"
+          [ -n "$CYCLE" ] || CYCLE="$(date -u +%F)"
+          F="data/cmems_forecast_archive/cmems_siconc_${CYCLE}.nc"
+          if [ ! -f "$F" ]; then
+            echo "::error::No archive file for ${CYCLE} — expected ${F}"
+            exit 1
+          fi
+          BYTES=$(stat -c%s "$F")
+          echo "${F} is ${BYTES} bytes"
+          # compressed cycles land near 5 MB, uncompressed near 42 MB;
+          # anything under 1 MB is a truncated or failed download
+          if [ "$BYTES" -lt 1000000 ]; then
+            echo "::error::${F} is only ${BYTES} bytes — treating as a failed download"
+            exit 1
+          fi
 
       - name: Commit archive
         run: |
+          set -euo pipefail
           git config user.name "cmems-harvest-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/cmems_forecast_archive data/cmems_harvest.log
-          git diff --cached --quiet || git commit -m "CMEMS harvest $(date -u +%F)"
-          git push
+          if git diff --cached --quiet; then
+            echo "nothing new to commit — the cycle was already archived"
+            exit 0
+          fi
+          git commit -m "CMEMS harvest $(date -u +%F)"
+          # main can move between checkout and push, so rebase and retry
+          # rather than failing the day's only attempt
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "pushed on attempt ${attempt}"
+              exit 0
+            fi
+            echo "push failed on attempt ${attempt}, rebasing onto origin/main"
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; exit 1; }
+            sleep 5
+          done
+          echo "::error::could not push after 3 attempts"
+          exit 1
