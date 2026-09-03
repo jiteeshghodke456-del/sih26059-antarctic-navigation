@@ -1,0 +1,459 @@
+<title>Antarctic Navigation Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#F5F7FA; --panel:#FFFFFF; --panel-2:#FAFBFD;
+    --ink:#12171F; --ink-2:#4C5566; --ink-3:#7C8698;
+    --line:#D3D9E2; --line-2:#E5E9F0;
+    --built:#009E73; --partial:#B87700; --designed:#C4500E; --open:#A8558A; --ext:#8A94A6;
+    --shore-tint:#F0F5FA; --vessel-tint:#FAF6F0;
+    --sans:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,sans-serif;
+    --disp:'Archivo',var(--sans);
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0D1117; --panel:#151B24; --panel-2:#111820;
+      --ink:#E9EDF3; --ink-2:#9BA6B6; --ink-3:#6F7B8C;
+      --line:#2B3542; --line-2:#212A35;
+      --built:#3ECFA4; --partial:#F0B23A; --designed:#F5813F; --open:#DE9AC4; --ext:#7C8899;
+      --shore-tint:#121B25; --vessel-tint:#1E1913;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0D1117; --panel:#151B24; --panel-2:#111820;
+    --ink:#E9EDF3; --ink-2:#9BA6B6; --ink-3:#6F7B8C;
+    --line:#2B3542; --line-2:#212A35;
+    --built:#3ECFA4; --partial:#F0B23A; --designed:#F5813F; --open:#DE9AC4; --ext:#7C8899;
+    --shore-tint:#121B25; --vessel-tint:#1E1913;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+       margin:0;padding:0;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:44px 20px 80px;
+        display:flex;flex-direction:column;gap:38px}
+
+  header.top{display:flex;flex-direction:column;gap:12px;
+             border-bottom:1px solid var(--line);padding-bottom:26px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+           color:var(--ink-3)}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(28px,4.4vw,42px);line-height:1.08;
+     margin:0;letter-spacing:-.022em;text-wrap:balance}
+  .lede{font-size:16px;color:var(--ink-2);max-width:64ch;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--mono);font-size:11.5px;
+        color:var(--ink-3);margin-top:4px}
+  .meta b{color:var(--ink-2);font-weight:500}
+
+  .thesis{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+  .thesis p{margin:0 0 10px}
+  .thesis p:last-child{margin-bottom:0}
+  .thesis .rule{font-family:var(--disp);font-weight:600;font-size:17px;line-height:1.4;
+                color:var(--ink);text-wrap:balance}
+  .thesis .why{font-size:14px;color:var(--ink-2)}
+
+  h2{font-family:var(--disp);font-weight:600;font-size:22px;margin:0 0 4px;letter-spacing:-.012em}
+  .sub{font-size:13.5px;color:var(--ink-2);margin:0 0 18px;max-width:70ch}
+
+  figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+         padding:20px;overflow-x:auto}
+  figure svg{display:block;width:100%;min-width:760px;height:auto;color:var(--ink)}
+  figcaption{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-2);
+             font-size:13px;color:var(--ink-2);max-width:78ch}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px}
+  .lg{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);
+      border-radius:999px;padding:7px 15px 7px 12px;font-size:12.5px;color:var(--ink-2)}
+  .lg i{width:15px;height:15px;border-radius:4px;flex:none;display:block}
+  .lg b{color:var(--ink);font-weight:600}
+  .i-built{border:2px solid var(--built)}
+  .i-partial{border:2px dashed var(--partial)}
+  .i-designed{border:2px dotted var(--designed)}
+  .i-open{border:2px dotted var(--open)}
+  .i-ext{border:1.5px solid var(--ext);opacity:.75}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel);
+        border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+     text-transform:uppercase;color:var(--ink-3);font-weight:500;
+     padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+  td{padding:12px 16px;border-bottom:1px solid var(--line-2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td.n{font-family:var(--mono);font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums}
+  td code,p code,li code,footer code{font-family:var(--mono);font-size:.88em;color:var(--ink-2);
+       background:var(--panel-2);border:1px solid var(--line-2);border-radius:4px;padding:1px 5px}
+  .scroll{overflow-x:auto}
+
+  ul.gaps{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+  ul.gaps li{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--designed);
+             border-radius:8px;padding:13px 17px;font-size:13.5px;color:var(--ink-2)}
+  ul.gaps li b{color:var(--ink);font-weight:600}
+  ul.gaps li.open{border-left-color:var(--open)}
+
+  footer{border-top:1px solid var(--line);padding-top:20px;font-size:12.5px;color:var(--ink-3);
+         max-width:74ch}
+  @media (max-width:640px){ .wrap{padding:28px 14px 60px;gap:30px} figure{padding:12px} }
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">SIH 26059 &middot; MoES / NCPOR</div>
+  <h1>Antarctic Navigation Architecture</h1>
+  <p class="lede">AI-enabled sea-ice forecasting, iceberg trajectory prediction, and navigation
+     decision support for the Cape&nbsp;Town &rarr; Bharati resupply corridor. This is what the
+     system is, what runs today, and what is still only designed.</p>
+  <div class="meta">
+    <span><b>Vessel</b> MV Vasiliy Golovnin</span>
+    <span><b>Corridor</b> 0&ndash;80&deg;E, 55&ndash;78&deg;S</span>
+    <span><b>Code</b> 3,508 lines Python</span>
+    <span><b>Data</b> 1,096 real daily satellite files</span>
+    <span><b>Synthetic data</b> none</span>
+  </div>
+</header>
+
+<section class="thesis">
+  <p class="rule">Ashore: everything that needs bandwidth or a GPU. Aboard: everything that needs to
+     answer a question. Across the link: a compressed environmental state &mdash; never an answer.</p>
+  <p class="why">That single rule produces the entire shape of the system, and it is forced by one
+     physical fact: geostationary VSAT does not reliably reach south of about 70&deg;S. Polar comms
+     are Iridium-class. <b>A decision-support tool that calls a live data API from the bridge is
+     assuming infrastructure the ship does not have.</b> So the vessel receives the environment and
+     computes its own answers &mdash; which is also why the master can ask a second question, and a
+     third, without waiting on a satellite.</p>
+</section>
+
+<section>
+  <h2>How to read the diagrams</h2>
+  <p class="sub">Border style encodes build status, and it is the same encoding in both figures.
+     Nothing here is drawn as finished unless it actually is.</p>
+  <div class="legend">
+    <span class="lg"><i class="i-built"></i><b>Built &amp; verified</b>&nbsp;&mdash; evidence in repo</span>
+    <span class="lg"><i class="i-partial"></i><b>Partly built</b>&nbsp;&mdash; works, not at full scale</span>
+    <span class="lg"><i class="i-designed"></i><b>Designed</b>&nbsp;&mdash; specified, December build</span>
+    <span class="lg"><i class="i-open"></i><b>Open white space</b>&nbsp;&mdash; nobody does this yet</span>
+    <span class="lg"><i class="i-ext"></i><b>External</b>&nbsp;&mdash; reused, not ours</span>
+  </div>
+</section>
+
+<section>
+  <h2>1 &middot; The two tiers, and the link between them</h2>
+  <p class="sub">The load-bearing decision is where the boundary sits. We push it further toward the
+     ship than &ldquo;cached recommendations&rdquo; &mdash; because routing is cheap (~9&nbsp;s) and
+     only ingestion and training are expensive.</p>
+
+<figure>
+<svg viewBox="0 0 980 1180" role="img" xmlns="http://www.w3.org/2000/svg"
+     aria-label="Two-tier architecture. A shore tier ingests and quality-controls satellite data, trains models, and builds a signed voyage pack under one megabyte. That pack crosses an Iridium satellite link, while sixty megabytes of model weights travel by USB at port instead. The vessel tier stores the pack and runs routing and inference locally with no outbound network.">
+  <defs>
+    <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <style>
+    .bx{fill:var(--panel);stroke:var(--line);stroke-width:1.3}
+    .built{stroke:var(--built);stroke-width:2}
+    .partial{stroke:var(--partial);stroke-width:2;stroke-dasharray:7 4}
+    .designed{stroke:var(--designed);stroke-width:2;stroke-dasharray:2 3.5}
+    .ext{stroke:var(--ext);stroke-width:1.3}
+    .t{font-family:var(--sans);fill:var(--ink)}
+    .m{font-family:var(--mono);fill:var(--ink-2)}
+    .mu{fill:var(--ink-2)} .fa{fill:var(--ink-3)}
+    .h{font-family:var(--disp);font-weight:700;fill:var(--ink)}
+    .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em}
+    .ar{stroke:currentColor;stroke-width:1.4;fill:none;opacity:.55;marker-end:url(#a1)}
+  </style>
+
+  <rect x="20" y="44" width="940" height="468" rx="14" fill="var(--shore-tint)" stroke="var(--line)" stroke-width="1.2"/>
+  <text class="h" x="44" y="79" font-size="19">SHORE TIER</text>
+  <text class="t mu" x="44" y="98" font-size="11.5">Ops Core &middot; workstation or campus box &middot; GPU available</text>
+  <text class="t fa" x="936" y="79" font-size="11.5" text-anchor="end">everything that needs bandwidth or a GPU</text>
+
+  <rect class="bx ext" x="46" y="118" width="168" height="54" rx="7"/>
+  <text class="t" x="130" y="141" font-size="11" font-weight="600" text-anchor="middle">NSIDC CDR</text>
+  <text class="t fa" x="130" y="157" font-size="9.5" text-anchor="middle">sea-ice concentration</text>
+
+  <rect class="bx ext" x="226" y="118" width="168" height="54" rx="7"/>
+  <text class="t" x="310" y="141" font-size="11" font-weight="600" text-anchor="middle">CMEMS</text>
+  <text class="t fa" x="310" y="157" font-size="9.5" text-anchor="middle">forecast + drift &middot; daily cron</text>
+
+  <rect class="bx ext" x="406" y="118" width="168" height="54" rx="7"/>
+  <text class="t" x="490" y="141" font-size="11" font-weight="600" text-anchor="middle">USNIC</text>
+  <text class="t fa" x="490" y="157" font-size="9.5" text-anchor="middle">iceberg catalogue</text>
+
+  <rect class="bx ext" x="586" y="118" width="168" height="54" rx="7"/>
+  <text class="t" x="670" y="141" font-size="11" font-weight="600" text-anchor="middle">ERA5 / GFS</text>
+  <text class="t fa" x="670" y="157" font-size="9.5" text-anchor="middle">wind &middot; waves</text>
+
+  <rect class="bx designed" x="766" y="118" width="168" height="54" rx="7"/>
+  <text class="t" x="850" y="141" font-size="11" font-weight="600" text-anchor="middle">GEBCO</text>
+  <text class="t fa" x="850" y="157" font-size="9.5" text-anchor="middle">bathymetry &middot; not yet wired</text>
+
+  <path class="ar" d="M130,174 L130,191"/><path class="ar" d="M310,174 L310,191"/>
+  <path class="ar" d="M490,174 L490,191"/><path class="ar" d="M670,174 L670,191"/>
+  <path class="ar" d="M850,174 L850,191"/>
+
+  <rect class="bx built" x="46" y="194" width="888" height="52" rx="7"/>
+  <text class="t" x="64" y="216" font-size="12" font-weight="600">QUALITY CONTROL + REGRID</text>
+  <text class="t mu" x="64" y="234" font-size="10">land-spillover and artifact masking &middot; range checks &middot; swath-gap flags &rarr; qc_flags &middot; regrid everything to one 25 km polar-stereographic grid</text>
+  <text class="lbl" x="916" y="216" fill="var(--built)" text-anchor="end">BUILT</text>
+
+  <path class="ar" d="M490,248 L490,275"/>
+
+  <rect class="bx partial" x="46" y="278" width="436" height="84" rx="7"/>
+  <text class="t" x="64" y="302" font-size="12" font-weight="600">Residual sea-ice U-Net</text>
+  <text class="m" x="64" y="322" font-size="10">corrected = clip(base + &#916;, 0, 1)</text>
+  <text class="t fa" x="64" y="341" font-size="9.5">zero-init head, so an untrained model is a strict no-op</text>
+  <text class="lbl" x="464" y="302" fill="var(--partial)" text-anchor="end">1 OF 5</text>
+
+  <rect class="bx built" x="498" y="278" width="436" height="84" rx="7"/>
+  <text class="t" x="516" y="302" font-size="12" font-weight="600">Wagner iceberg drift &mdash; closed form</text>
+  <text class="m" x="516" y="322" font-size="10">v_i = v_w + &#947;(&#945; k&#770;&times;v_a + &#946; v_a)</text>
+  <text class="t fa" x="516" y="341" font-size="9.5">23/23 tests &middot; reproduces the published coefficient table</text>
+  <text class="lbl" x="916" y="302" fill="var(--built)" text-anchor="end">BUILT</text>
+
+  <path class="ar" d="M490,364 L490,391"/>
+
+  <rect class="bx partial" x="46" y="394" width="888" height="96" rx="7"/>
+  <text class="t" x="64" y="416" font-size="12" font-weight="600">NIGHTLY PACK BUILD</text>
+  <text class="m" x="64" y="440" font-size="10">SIC &#956;, &#963; for leads +1 to +10      &rarr;      conformal q&#770;(lead, regime)      &rarr;      SIC_upper</text>
+  <text class="m" x="64" y="459" font-size="10">iceberg exclusion polygons (72 h cap)   &middot;   waves   &middot;   bathymetry      &rarr;      hazard fusion</text>
+  <text class="m" x="64" y="478" font-size="10">meshiphi non-uniform mesh      &rarr;      PolarRoute &times; 12 sweep      &rarr;      dominance-filtered candidates</text>
+
+  <path class="ar" d="M490,512 L490,531"/>
+
+  <rect x="330" y="534" width="320" height="60" rx="10" fill="var(--panel)" stroke="var(--ink)" stroke-width="2.4"/>
+  <text class="h" x="490" y="559" font-size="14" text-anchor="middle">VOYAGE PACK</text>
+  <text class="t mu" x="490" y="578" font-size="10" text-anchor="middle">signed &middot; versioned &middot; delta &middot; under 1 MB gzip</text>
+
+  <path d="M490,594 L490,741" stroke="currentColor" stroke-width="1.6" stroke-dasharray="6 5" fill="none" opacity=".55" marker-end="url(#a1)"/>
+
+  <text class="lbl" x="46" y="634" fill="var(--ink-3)">WHAT CROSSES</text>
+  <text class="t mu" x="46" y="655" font-size="10">76 KB gzip &mdash; vessel-modelled mesh block (measured)</text>
+  <text class="t mu" x="46" y="672" font-size="10">50 KB &mdash; daily delta target, enforced by a CI test</text>
+  <text class="t mu" x="46" y="689" font-size="10">under 1 MB &mdash; full corridor refresh</text>
+
+  <text class="lbl" x="934" y="634" fill="var(--ink-3)" text-anchor="end">WHAT NEVER CROSSES</text>
+  <text class="t mu" x="934" y="655" font-size="10" text-anchor="end">60 MB of model weights &rarr; USB at port instead</text>
+  <text class="t mu" x="934" y="672" font-size="10" text-anchor="end">raw NetCDF &middot; GB-scale ingestion</text>
+  <text class="t mu" x="934" y="689" font-size="10" text-anchor="end">any live API call from the bridge</text>
+
+  <rect x="372" y="642" width="236" height="44" rx="22" fill="var(--bg)" stroke="var(--line)" stroke-width="1.4"/>
+  <text class="t" x="490" y="661" font-size="11" font-weight="600" text-anchor="middle">IRIDIUM LINK</text>
+  <text class="t fa" x="490" y="677" font-size="9.5" text-anchor="middle">~704 kbps peak, often far less</text>
+
+  <rect x="20" y="742" width="940" height="406" rx="14" fill="var(--vessel-tint)" stroke="var(--line)" stroke-width="1.2"/>
+  <text class="h" x="44" y="777" font-size="19">VESSEL TIER</text>
+  <text class="t mu" x="44" y="796" font-size="11.5">Bridge &middot; same codebase, MODE=vessel &middot; no outbound network required</text>
+  <text class="t fa" x="936" y="777" font-size="11.5" text-anchor="end">everything that needs to answer a question</text>
+
+  <rect class="bx built" x="46" y="814" width="888" height="46" rx="7"/>
+  <text class="t" x="64" y="842" font-size="11.5" font-weight="600">LOCAL STORE</text>
+  <text class="t mu" x="176" y="842" font-size="10">latest pack + N previous &middot; roll back if a pack is corrupt, or simply looks wrong out the window</text>
+
+  <path class="ar" d="M490,862 L490,883"/>
+
+  <rect class="bx built" x="46" y="886" width="436" height="74" rx="7"/>
+  <text class="t" x="64" y="910" font-size="11.5" font-weight="600">PolarRoute re-plan, on demand</text>
+  <text class="m" x="64" y="929" font-size="10">~9 s on a bridge-laptop CPU</text>
+  <text class="t fa" x="64" y="947" font-size="9.5">the master asks &ldquo;what if&rdquo; and gets an answer</text>
+
+  <rect class="bx partial" x="498" y="886" width="436" height="74" rx="7"/>
+  <text class="t" x="516" y="910" font-size="11.5" font-weight="600">U-Net re-correction on fresh obs</text>
+  <text class="m" x="516" y="929" font-size="10">~0.3 to 1 s, CPU</text>
+  <text class="t fa" x="516" y="947" font-size="9.5">no GPU aboard &middot; never retrains at sea</text>
+
+  <path class="ar" d="M490,962 L490,983"/>
+
+  <rect class="bx partial" x="46" y="986" width="888" height="44" rx="7"/>
+  <text class="t" x="64" y="1006" font-size="11.5" font-weight="600">REST API &mdash; FastAPI, identical routes in both modes</text>
+  <text class="m" x="64" y="1023" font-size="9.5">every response carries pack_built_at &middot; age_hours &middot; per-layer valid_until</text>
+
+  <path class="ar" d="M490,1032 L490,1053"/>
+
+  <rect class="bx designed" x="46" y="1056" width="888" height="74" rx="7"/>
+  <text class="t" x="64" y="1080" font-size="11.5" font-weight="600">BRIDGE UI &mdash; React + Leaflet</text>
+  <text class="t mu" x="64" y="1099" font-size="10">staleness banner shown permanently, never hidden in a tooltip &middot; confidence decays visibly with pack age</text>
+  <text class="t mu" x="64" y="1117" font-size="10">candidate-route selector &middot; risk slider labelled by measured coverage &middot; forecast-grade vs climatology-grade leg styling</text>
+  <text class="lbl" x="916" y="1080" fill="var(--designed)" text-anchor="end">DESIGNED</text>
+</svg>
+<figcaption><b>The pinch point is the middle of this picture.</b> Everything above it is expensive
+  and runs where power and bandwidth exist; everything below it is cheap and runs where the decision
+  is actually made. The 60&nbsp;MB of model weights is the number that proves the split is real
+  &mdash; it physically cannot cross an Iridium link, so it travels on a USB stick at Cape Town, and
+  the ship still runs full inference.</figcaption>
+</figure>
+</section>
+
+<section>
+  <h2>2 &middot; The three pillars, and where the AI plugs in</h2>
+  <p class="sub">The problem statement names exactly three things. This traces each one from raw data
+     to the routing decision &mdash; nothing more, nothing less.</p>
+
+<figure>
+<svg viewBox="0 0 980 700" role="img" xmlns="http://www.w3.org/2000/svg"
+     aria-label="Three pillars feed one router. Sea-ice forecasting runs a residual U-Net over a CMEMS background field with conformal calibration, producing an upper concentration bound. Iceberg trajectory uses the real USNIC catalogue and the Wagner closed-form drift model, producing exclusion polygons capped at seventy-two hours. Environment and hazard covers waves, bathymetry, and an unbuilt ice-compression risk field. All three build a hazard mesh consumed by a twelve-run PolarRoute sweep, then a time-expanded graph, ending in a proposed decision that switches plans only when the cost gap exceeds a conformal threshold.">
+  <defs>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <style>
+    .b2{fill:var(--panel);stroke:var(--line);stroke-width:1.3}
+    .t2{font-family:var(--sans);fill:var(--ink)}
+    .m2{font-family:var(--mono);fill:var(--ink-2)}
+    .f2{fill:var(--ink-3)} .u2{fill:var(--ink-2)}
+    .ar2{stroke:currentColor;stroke-width:1.4;fill:none;opacity:.5;marker-end:url(#a2)}
+    .jn{stroke:currentColor;stroke-width:1.4;fill:none;opacity:.5}
+    .cap{font-family:var(--disp);font-weight:700;fill:var(--ink)}
+  </style>
+
+  <text class="cap" x="46" y="26" font-size="13">1 &middot; SEA-ICE FORECAST</text>
+  <rect class="b2" x="46" y="40" width="278" height="56" rx="7" stroke="var(--ext)" stroke-width="1.3"/>
+  <text class="t2" x="62" y="62" font-size="11.5" font-weight="600">CMEMS physical forecast</text>
+  <text class="t2 f2" x="62" y="80" font-size="9.5">background field, leads +1 to +10 &middot; harvested daily</text>
+  <path class="ar2" d="M185,98 L185,114"/>
+  <rect class="b2" x="46" y="116" width="278" height="56" rx="7" stroke="var(--partial)" stroke-width="2" stroke-dasharray="7 4"/>
+  <text class="t2" x="62" y="138" font-size="11.5" font-weight="600">Residual U-Net &mdash; learns &#916;</text>
+  <text class="t2 f2" x="62" y="156" font-size="9.5">1 model built and scored &middot; 5-model ensemble in Dec</text>
+  <path class="ar2" d="M185,174 L185,190"/>
+  <rect class="b2" x="46" y="192" width="278" height="56" rx="7" stroke="var(--designed)" stroke-width="2" stroke-dasharray="2 3.5"/>
+  <text class="t2" x="62" y="214" font-size="11.5" font-weight="600">Stratified conformal q&#770;</text>
+  <text class="t2 f2" x="62" y="232" font-size="9.5">calibrated coverage, not a Gaussian assumption</text>
+  <path class="ar2" d="M185,250 L185,264"/>
+  <text class="m2" x="185" y="280" font-size="10" text-anchor="middle">&rarr; SIC_upper</text>
+  <text class="t2 f2" x="185" y="295" font-size="9.5" text-anchor="middle">a safety margin, not a colour on a map</text>
+
+  <text class="cap" x="350" y="26" font-size="13">2 &middot; ICEBERG TRAJECTORY</text>
+  <rect class="b2" x="350" y="40" width="278" height="56" rx="7" stroke="var(--built)" stroke-width="2"/>
+  <text class="t2" x="366" y="62" font-size="11.5" font-weight="600">USNIC catalogue &mdash; real</text>
+  <text class="t2 f2" x="366" y="80" font-size="9.5">33 bergs tracked &middot; 15 inside our corridor</text>
+  <path class="ar2" d="M489,98 L489,114"/>
+  <rect class="b2" x="350" y="116" width="278" height="56" rx="7" stroke="var(--built)" stroke-width="2"/>
+  <text class="t2" x="366" y="138" font-size="11.5" font-weight="600">Wagner closed-form drift</text>
+  <text class="t2 f2" x="366" y="156" font-size="9.5">23/23 tests &middot; 765 m critical length reproduced</text>
+  <path class="ar2" d="M489,174 L489,190"/>
+  <rect class="b2" x="350" y="192" width="278" height="56" rx="7" stroke="var(--designed)" stroke-width="2" stroke-dasharray="2 3.5"/>
+  <text class="t2" x="366" y="214" font-size="11.5" font-weight="600">Step forward through time</text>
+  <text class="t2 f2" x="366" y="232" font-size="9.5">blocked only on a CMEMS ocean-current field</text>
+  <path class="ar2" d="M489,250 L489,264"/>
+  <text class="m2" x="489" y="280" font-size="10" text-anchor="middle">&rarr; exclusion polygons</text>
+  <text class="t2 f2" x="489" y="295" font-size="9.5" text-anchor="middle">capped at a 72 h projection horizon</text>
+
+  <text class="cap" x="654" y="26" font-size="13">3 &middot; ENVIRONMENT &amp; HAZARD</text>
+  <rect class="b2" x="654" y="40" width="278" height="56" rx="7" stroke="var(--partial)" stroke-width="2" stroke-dasharray="7 4"/>
+  <text class="t2" x="670" y="62" font-size="11.5" font-weight="600">ERA5 / GFS wind + waves</text>
+  <text class="t2 f2" x="670" y="80" font-size="9.5">today a cut-off, not a cost &mdash; declared as a known gap</text>
+  <path class="ar2" d="M793,98 L793,114"/>
+  <rect class="b2" x="654" y="116" width="278" height="56" rx="7" stroke="var(--designed)" stroke-width="2" stroke-dasharray="2 3.5"/>
+  <text class="t2" x="670" y="138" font-size="11.5" font-weight="600">GEBCO bathymetry</text>
+  <text class="t2 f2" x="670" y="156" font-size="9.5">free download &middot; depth constrains nothing today</text>
+  <path class="ar2" d="M793,174 L793,190"/>
+  <rect class="b2" x="654" y="192" width="278" height="56" rx="7" stroke="var(--open)" stroke-width="2" stroke-dasharray="2 3.5"/>
+  <text class="t2" x="670" y="214" font-size="11.5" font-weight="600">Ice compression risk</text>
+  <text class="t2 f2" x="670" y="232" font-size="9.5">no Antarctic service forecasts this &mdash; white space</text>
+  <path class="ar2" d="M793,250 L793,264"/>
+  <text class="m2" x="793" y="280" font-size="10" text-anchor="middle">&rarr; hazard layers</text>
+  <text class="t2 f2" x="793" y="295" font-size="9.5" text-anchor="middle">the hazard that traps ships, not the one that slows them</text>
+
+  <path class="jn" d="M185,304 L185,322 L490,322"/>
+  <path class="jn" d="M793,304 L793,322 L490,322"/>
+  <path class="jn" d="M489,304 L489,322"/>
+  <path class="ar2" d="M490,322 L490,340"/>
+
+  <rect class="b2" x="46" y="342" width="886" height="52" rx="7" stroke="var(--partial)" stroke-width="2" stroke-dasharray="7 4"/>
+  <text class="t2" x="64" y="364" font-size="12" font-weight="600">HAZARD MESH &mdash; meshiphi, non-uniform, vessel-modelled</text>
+  <text class="t2 u2" x="64" y="382" font-size="10">calibrated to MV Vasiliy Golovnin: beam 22.4 m, 16.4 kn service speed (both verified) &middot; ice force limit still borrowed from another hull</text>
+
+  <path class="ar2" d="M490,396 L490,418"/>
+
+  <rect class="b2" x="46" y="420" width="886" height="52" rx="7" stroke="var(--ext)" stroke-width="1.3"/>
+  <text class="t2" x="64" y="442" font-size="12" font-weight="600">POLARROUTE &times; 12 SWEEP  &rarr;  dominance filter  &rarr;  candidate route set</text>
+  <text class="t2 u2" x="64" y="460" font-size="10">BAS engine, reused under MIT &middot; extended through its own documented hooks &mdash; never forked</text>
+
+  <path class="ar2" d="M490,474 L490,496"/>
+
+  <rect class="b2" x="46" y="498" width="886" height="52" rx="7" stroke="var(--designed)" stroke-width="2" stroke-dasharray="2 3.5"/>
+  <text class="t2" x="64" y="520" font-size="12" font-weight="600">TIME-EXPANDED GRAPH &mdash; one mesh layer per forecast day</text>
+  <text class="t2 u2" x="64" y="538" font-size="10">the single change that lets a forecast reach the router &middot; a static mesh plans voyage day 17 using day-zero ice</text>
+
+  <path class="ar2" d="M490,552 L490,574"/>
+
+  <rect class="b2" x="46" y="576" width="886" height="88" rx="7" fill="var(--panel-2)" stroke="var(--ink)" stroke-width="1.8"/>
+  <text class="t2" x="64" y="600" font-size="12.5" font-weight="600">DECISION &mdash; proposed, never applied</text>
+  <text class="m2" x="64" y="624" font-size="11">switch plans only if    Cost(current) &minus; Cost(alternative)   &gt;   &#964;          &#964; from the conformal interval</text>
+  <text class="t2 u2" x="64" y="646" font-size="10.5">No sudden detours. Below &#964; the current plan stands, because a router that re-routes on noise trains the crew to ignore it.</text>
+</svg>
+<figcaption><b>The last box is the point of the whole system.</b> A model that changes its mind daily
+  is worse than no model, because the crew stops reading it. The threshold &tau; comes from the same
+  conformal interval that produces the safety margin &mdash; so the system stays quiet exactly when
+  it is uncertain, and speaks only when the difference is larger than its own error bar.</figcaption>
+</figure>
+</section>
+
+<section>
+  <h2>3 &middot; What is real today</h2>
+  <p class="sub">Every row has a file in the repository that produces the number. Anything we believe
+     but cannot put on screen is in the next section instead.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Result</th><th>Number</th><th>Produced by</th></tr></thead>
+    <tbody>
+      <tr><td>Beats persistence &mdash; the baseline that actually matters &mdash; at every horizon 1&ndash;7 days</td>
+          <td class="n">+18.5% to +30.6%</td><td><code>isih/RESULTS.md</code></td></tr>
+      <tr><td>The advantage <em>grows</em> with lead time (our error rises 2.1&times;, persistence 2.5&times;)</td>
+          <td class="n">2.1&times; vs 2.5&times;</td><td><code>isih/RESULTS.md</code></td></tr>
+      <tr><td>Satellite record reports suppressed coastal pixels as open water &mdash; a defect we found</td>
+          <td class="n">100% of days</td><td><code>isih/ice_quality.py</code></td></tr>
+      <tr><td>&hellip; affecting the 200 km approach to Bharati</td>
+          <td class="n">43.2% of days</td><td><code>isih/audit_ice_quality.py</code></td></tr>
+      <tr><td>Fixing it moves coastal ice <em>up</em>, i.e. the router becomes more cautious, not less</td>
+          <td class="n">46.8% &rarr; 54.6%</td><td><code>isih/RESULTS.md</code></td></tr>
+      <tr><td>Bharati's own cell closed to this vessel in Dec 2019; the approach 100 km north open</td>
+          <td class="n">23/31 vs 31/31</td><td><code>isih/destination_window.py</code></td></tr>
+      <tr><td>Iceberg drift reproduces the published coefficients and the 765 m critical length</td>
+          <td class="n">23/23 tests</td><td><code>models/iceberg/test_drift.py</code></td></tr>
+      <tr><td>Live icebergs tracked, of which inside our corridor (incl. D15A at 3,037 km&sup2;)</td>
+          <td class="n">33 &middot; 15 inside</td><td><code>models/iceberg/catalogue.py</code></td></tr>
+      <tr><td>Route computed on real satellite ice with a real open-source router, Cape Town &rarr; Bharati</td>
+          <td class="n">8.6 days</td><td><code>isih/route_regret.py</code></td></tr>
+      <tr><td>Real daily satellite files processed, zero failures, zero synthetic data</td>
+          <td class="n">1,096 files</td><td><code>isih/build_dataset.py</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>4 &middot; What is not built yet</h2>
+  <p class="sub">Drawn dotted in the figures above. All are design decisions with known options
+     &mdash; none needs a research breakthrough, which is the thing worth being able to say out loud.</p>
+  <ul class="gaps">
+    <li><b>Time-expanded routing graph.</b> One mesh layer per forecast day. The single change that
+        makes a forecast usable by a router at all &mdash; today the mesh is frozen at day zero.</li>
+    <li><b>Iceberg trajectories over time.</b> The physics is done and tested; it needs an ocean
+        current field to step forward. Both inputs are free.</li>
+    <li><b>Five-model ensemble and conformal calibration.</b> Specified with a pre-committed
+        pass/fail gate, so the result cannot be quietly reinterpreted afterwards.</li>
+    <li><b>Thickness channel, for POLARIS compliance.</b> Forced by IMO regulation, not scope creep:
+        POLARIS is indexed by ice <em>type</em>, so concentration alone cannot satisfy it.</li>
+    <li><b>Bathymetry.</b> A free download; depth currently constrains nothing in the router.</li>
+    <li><b>Vessel force limit.</b> Golovnin's dimensions are verified across four registries, but the
+        ice-resistance force limit is still borrowed from a different hull. Disclosed, not hidden.</li>
+    <li class="open"><b>Ice compression risk field &mdash; genuine white space.</b> Compression is the
+        hazard that traps ships, and no Antarctic service forecasts it. Blocked on one data decision:
+        modelled drift, or our own feature tracking.</li>
+  </ul>
+</section>
+
+<footer>
+  Generated from the working tree: <code>docs/ARCHITECTURE.md</code> rev 2,
+  <code>docs/TRUE_CLAIMS.md</code>, and the code itself &mdash; 3,508 lines of Python across
+  <code>isih/</code>, <code>models/</code> and <code>scripts/</code>. Border style in both figures
+  reflects build status verified against the repository, not intended scope. No synthetic data
+  appears anywhere in the product; the only fixtures are inside unit tests that check plumbing.
+</footer>
+
+</div>
