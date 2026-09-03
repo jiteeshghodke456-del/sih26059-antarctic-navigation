@@ -1,0 +1,731 @@
+<title>Antarctic Navigation Ledger</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#EFF2F5;
+  --surface:#FFFFFF;
+  --surface-2:#E6EBF0;
+  --ink:#12212E;
+  --ink-2:#31465A;
+  --muted:#5A6B7A;
+  --line:#CBD5DE;
+  --line-soft:#DDE4EB;
+  --accent:#0B6E8C;
+  --accent-soft:#DCEDF3;
+  --proven:#1B7F5E;
+  --proven-soft:#DCEFE7;
+  --designed:#B0740A;
+  --designed-soft:#F6EBD6;
+  --open:#B0392C;
+  --open-soft:#F7E2DE;
+  --external:#6B4E9B;
+  --external-soft:#EBE4F5;
+  --shadow:0 1px 2px rgba(18,33,46,.06),0 4px 14px rgba(18,33,46,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C151E;
+    --surface:#132030;
+    --surface-2:#1B2B3D;
+    --ink:#DEE8F0;
+    --ink-2:#B4C5D4;
+    --muted:#8CA0B2;
+    --line:#2C3F53;
+    --line-soft:#223244;
+    --accent:#57BEDC;
+    --accent-soft:#123441;
+    --proven:#54C79B;
+    --proven-soft:#10322A;
+    --designed:#E3A73C;
+    --designed-soft:#33280F;
+    --open:#E8796A;
+    --open-soft:#3A1E1A;
+    --external:#B295E0;
+    --external-soft:#261E3A;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C151E;
+  --surface:#132030;
+  --surface-2:#1B2B3D;
+  --ink:#DEE8F0;
+  --ink-2:#B4C5D4;
+  --muted:#8CA0B2;
+  --line:#2C3F53;
+  --line-soft:#223244;
+  --accent:#57BEDC;
+  --accent-soft:#123441;
+  --proven:#54C79B;
+  --proven-soft:#10322A;
+  --designed:#E3A73C;
+  --designed-soft:#33280F;
+  --open:#E8796A;
+  --open-soft:#3A1E1A;
+  --external:#B295E0;
+  --external-soft:#261E3A;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  font-size:15.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 26px 90px}
+.col{max-width:74ch}
+
+h1,h2,h3,.eyebrow,.chip,th{font-family:Archivo,ui-sans-serif,system-ui,sans-serif}
+h1{font-size:clamp(2rem,4.4vw,3.05rem);line-height:1.04;letter-spacing:-.026em;font-weight:700;margin:0;text-wrap:balance}
+h2{font-size:1.42rem;line-height:1.2;letter-spacing:-.016em;font-weight:700;margin:0;text-wrap:balance}
+h3{font-size:1.02rem;line-height:1.3;letter-spacing:-.006em;font-weight:600;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:var(--accent)}
+
+.eyebrow{
+  font-size:.685rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+
+/* ---------- masthead ---------- */
+header{
+  border-bottom:2px solid var(--ink);
+  padding:56px 0 26px;
+  display:flex;flex-direction:column;gap:20px;
+}
+.mast-top{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:baseline;justify-content:space-between}
+.lede{font-size:1.08rem;color:var(--ink-2);max-width:66ch}
+.mast-meta{display:flex;flex-wrap:wrap;gap:8px 26px;font-size:.8rem;color:var(--muted)}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+/* ---------- status chips ---------- */
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.645rem;font-weight:600;letter-spacing:.085em;text-transform:uppercase;
+  padding:3px 8px;border-radius:2px;white-space:nowrap;
+  border:1px solid;
+}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.c-proven{color:var(--proven);border-color:var(--proven);background:var(--proven-soft)}
+.c-designed{color:var(--designed);border-color:var(--designed);background:var(--designed-soft)}
+.c-open{color:var(--open);border-color:var(--open);background:var(--open-soft)}
+.c-ext{color:var(--external);border-color:var(--external);background:var(--external-soft)}
+
+.legend-bar{
+  display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+  padding:14px 18px;background:var(--surface);border:1px solid var(--line);
+}
+.legend-bar span.def{font-size:.83rem;color:var(--muted)}
+
+/* ---------- sections ---------- */
+section{padding-top:56px;display:flex;flex-direction:column;gap:22px}
+.sec-head{display:flex;gap:16px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:12px}
+.sec-no{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.8rem;font-weight:600;
+  color:var(--accent);flex:none;padding-top:2px;letter-spacing:.04em;
+}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:22px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;border:1px solid var(--line);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.845rem;min-width:600px}
+th{
+  text-align:left;font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);
+  background:var(--surface-2);white-space:nowrap;
+}
+td{padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:none}
+td b,td strong{color:var(--ink);font-weight:600}
+td.n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+caption{caption-side:bottom;text-align:left;padding:10px 14px;font-size:.78rem;color:var(--muted);border-top:1px solid var(--line-soft)}
+
+/* ---------- callouts ---------- */
+.note{
+  border-left:3px solid var(--accent);background:var(--surface);
+  padding:16px 20px;display:flex;flex-direction:column;gap:8px;
+}
+.note.warn{border-left-color:var(--open)}
+.note.good{border-left-color:var(--proven)}
+.note .t{font-family:Archivo,sans-serif;font-weight:600;font-size:.94rem;color:var(--ink)}
+.note p{font-size:.9rem;color:var(--ink-2)}
+
+/* ---------- ladder ---------- */
+.ladder{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);background:var(--surface)}
+.rung{display:flex;gap:0;border-bottom:1px solid var(--line-soft);align-items:stretch}
+.rung:last-child{border-bottom:none}
+.rung .step{flex:none;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--line-soft);background:var(--surface-2)}
+.rung .body{padding:13px 16px;display:flex;flex-direction:column;gap:3px}
+.rung .body .h{font-family:Archivo,sans-serif;font-weight:600;font-size:.92rem;color:var(--ink)}
+.rung .body .s{font-size:.83rem;color:var(--muted)}
+.r1 .step{width:64px;background:var(--proven-soft);color:var(--proven)}
+.r2 .step{width:96px;background:var(--designed-soft);color:var(--designed)}
+.r3 .step{width:128px;background:var(--designed-soft);color:var(--designed)}
+.r4 .step{width:160px;background:var(--open-soft);color:var(--open)}
+.rung .step span{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:.78rem}
+
+/* ---------- figure ---------- */
+figure{margin:0;background:var(--surface);border:1px solid var(--line);padding:22px}
+figure svg{display:block;width:100%;height:auto}
+figcaption{margin-top:14px;padding-top:12px;border-top:1px solid var(--line-soft);font-size:.83rem;color:var(--muted);max-width:78ch}
+
+/* ---------- kv grid ---------- */
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.kv > div{background:var(--surface);padding:15px 17px;display:flex;flex-direction:column;gap:5px}
+.kv .k{font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:Archivo,sans-serif}
+.kv .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:1.28rem;font-weight:600;color:var(--ink);line-height:1.1}
+.kv .d{font-size:.79rem;color:var(--muted)}
+
+ul{margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:8px}
+li{padding-left:.15rem}
+li::marker{color:var(--accent)}
+code{font-family:"IBM Plex Mono",monospace;font-size:.87em;background:var(--surface-2);padding:1px 5px;border-radius:2px;color:var(--ink)}
+.eq{
+  font-family:"IBM Plex Mono",monospace;font-size:.88rem;background:var(--surface);
+  border:1px solid var(--line);padding:13px 16px;overflow-x:auto;color:var(--ink);
+}
+footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+@media (max-width:640px){
+  body{font-size:15px}
+  .rung .step{width:44px !important}
+  .r2 .step{width:60px !important}.r3 .step{width:76px !important}.r4 .step{width:92px !important}
+}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="mast-top">
+    <div class="stack" style="gap:12px">
+      <p class="eyebrow">SIH26059 &middot; MoES / NCPOR &middot; Software</p>
+      <h1>Antarctic Navigation Ledger</h1>
+    </div>
+  </div>
+  <p class="lede">Every rubric answer for the Grand Finale submission, carrying its evidence and its
+    status. Nothing here is aspirational unless it is labelled aspirational. The numbers are the
+    ones we measured, including the two that came out against us.</p>
+  <div class="mast-meta">
+    <span><b>Corridor</b> Cape Town &rarr; Bharati / Maitri</span>
+    <span><b>Vessel</b> MV Vasiliy Golovnin, IMO 8723426</span>
+    <span><b>Window</b> austral summer, Dec&ndash;Mar</span>
+    <span><b>Verified</b> 3 Sep 2026</span>
+  </div>
+</header>
+
+<div class="legend-bar" style="margin-top:26px">
+  <span class="chip c-proven">Measured</span><span class="def">a number exists, from real data</span>
+  <span class="chip c-designed">Designed</span><span class="def">specified, not yet built</span>
+  <span class="chip c-open">Open</span><span class="def">white space or an unmade decision</span>
+  <span class="chip c-ext">Reused</span><span class="def">external code we extend, never fork</span>
+</div>
+
+<!-- ============================================ 0 -->
+<section>
+  <div class="sec-head"><span class="sec-no">00</span><h2>What the problem statement asks, clause by clause</h2></div>
+  <p class="col">The statement is one sentence: <i>&ldquo;Develop an AI/ML-enabled decision support
+    platform capable of forecasting Antarctic sea-ice concentration, predicting iceberg trajectories,
+    and identifying safe and fuel-efficient navigation routes for research vessels using satellite,
+    oceanographic and meteorological datasets.&rdquo;</i> Read strictly, it contains five obligations.
+    We meet three, partly meet one, and cannot presently meet one.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Clause</th><th>Status</th><th>Evidence</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Forecasting Antarctic sea-ice concentration</b></td>
+        <td><span class="chip c-proven">Measured</span></td>
+        <td>Beats persistence at every lead 1&ndash;7 days: <span class="num">+18.5%</span> at day 1 rising to
+          <span class="num">+30.6%</span> at day 7. Test set scored exactly once, split by time.</td>
+      </tr>
+      <tr>
+        <td><b>Predicting iceberg trajectories</b></td>
+        <td><span class="chip c-designed">Designed</span></td>
+        <td>Wagner (2017) closed-form drift implemented, reproduces the published coefficient table and
+          its own 765 m critical length, <span class="num">23/23</span> tests pass. Stepping it forward in
+          time needs an ocean-current field we have not yet wired.</td>
+      </tr>
+      <tr>
+        <td><b>Identifying safe navigation routes</b></td>
+        <td><span class="chip c-proven">Measured</span></td>
+        <td>Real route computed on real satellite ice with PolarRoute 1.1.11:
+          <span class="num">8.6</span> days steaming, Cape Town &rarr; Bharati. Safety currently means a flat
+          80% ice cutoff, not a POLARIS index.</td>
+      </tr>
+      <tr>
+        <td><b>&hellip; and fuel-efficient</b></td>
+        <td><span class="chip c-open">Open</span></td>
+        <td><b>We cannot honour this word today.</b> PolarRoute&rsquo;s fuel polynomial is fitted to a
+          different hull, so we decline to quote any absolute figure. This needs a decision, not silence
+          &mdash; see the callout below.</td>
+      </tr>
+      <tr>
+        <td><b>Using satellite, oceanographic and meteorological datasets</b></td>
+        <td><span class="chip c-proven">Measured</span></td>
+        <td><span class="num">1,096</span> real daily NOAA/NSIDC files, <span class="num">0</span> failures,
+          plus CMEMS GLORYS12. No synthetic data anywhere in the product.</td>
+      </tr>
+    </tbody>
+    <caption>Scope fidelity. The system deliberately does nothing the statement does not ask for.</caption>
+  </table></div>
+
+  <div class="note warn">
+    <p class="t">The fuel clause needs a decision before the deck is written</p>
+    <p>Two honest options. <b>Calibrate</b> &mdash; fit a resistance curve for this hull from the shaft-power
+      method already published for SA Agulhas II, which would let us quote fuel properly. Or <b>report
+      relatively</b> &mdash; give fuel only as a ratio between candidate routes and state plainly that the
+      absolute figure belongs to another vessel. The second is achievable now and is what the code already
+      does; the first is the better answer if there is time. What is not acceptable is quoting a number the
+      hull does not own.</p>
+  </div>
+</section>
+
+<!-- ============================================ 1 -->
+<section>
+  <div class="sec-head"><span class="sec-no">01</span><h2>The solution, in the three decisions that shape it</h2></div>
+
+  <div class="stack-lg">
+    <div class="stack">
+      <h3>One &mdash; we correct the operational forecast rather than compete with it</h3>
+      <p class="col">CMEMS already forecasts Antarctic sea ice ten days ahead while assimilating live
+        satellite data. A team training a U-Net to beat it from scratch is picking a fight with an
+        assimilating physical model. We predict the <i>correction</i> instead:</p>
+      <div class="eq">corrected_SIC = clip( CMEMS_forecast + model_&Delta; , 0 , 1 )</div>
+      <p class="col">The prediction head is zero-initialised, so an untrained or failing model contributes
+        exactly nothing and the output <i>is</i> the physics forecast. The floor is CMEMS&rsquo;s skill, not
+        zero. That is a genuine safety property: model failure degrades to the baseline rather than falling
+        off a cliff.</p>
+    </div>
+
+    <div class="stack">
+      <h3>Two &mdash; ashore and aboard are different machines, because the link says so</h3>
+      <p class="col">Geostationary VSAT does not reach south of about 70&deg;S. Polar comms are Iridium-class,
+        704 kbps at absolute best and usually far less. So: <b>everything needing bandwidth or a GPU stays
+        ashore; everything needing to answer a question runs aboard; what crosses the link is a compressed
+        environmental state, never an answer.</b></p>
+      <p class="col">This is not our invention. The Canadian Coast Guard&rsquo;s <i>Ice Navigation in Canadian
+        Waters</i> already separates a strategic phase ashore from a tactical phase on the bridge, and leaves
+        the routing recommendation with the shore ice desk while the bridge keeps real-time deviation
+        authority. We arrived at the same split from bandwidth arithmetic and then found the doctrine.</p>
+    </div>
+
+    <div class="stack">
+      <h3>Three &mdash; the master decides, and the system argues only once</h3>
+      <p class="col">We never open by drawing our line over theirs. The system evaluates the master&rsquo;s
+        intended route <i>first</i> &mdash; transit distribution, worst ice, where the risk sits &mdash; then
+        offers alternatives as annotated deltas with reasons and triggers. At departure it argues its case.
+        Once the master chooses, that route becomes <i>the</i> route and the system stops re-litigating it,
+        switching to micro-adjustments and hazards he might miss.</p>
+      <p class="col">A route we produce that the master rejects for good reasons is a <b>successful</b>
+        interaction. The failure mode we care about is an unexplained recommendation, not a rejected one
+        &mdash; and a system that keeps arguing for a rejected route is a system that gets switched off.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 2 -->
+<section>
+  <div class="sec-head"><span class="sec-no">02</span><h2>Innovation and uniqueness</h2></div>
+  <p class="col">Uniqueness is only meaningful against what everyone else will build. For an MoES data
+    problem, convergence is documented: the SIH 2025 <span class="mono">FloatChat</span> statement produced
+    at least four independent public implementations of the same pattern &mdash; a chatbot over real NetCDF,
+    with retrieval standing in for the model. The predictable shape here is CMEMS plus a U-Net plus A* plus
+    a Leaflet dashboard.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Dimension</th><th>The convergent build</th><th>This system</th></tr></thead>
+    <tbody>
+      <tr><td><b>Ice forecast</b></td><td>U-Net point forecast from scratch, competing with CMEMS and losing</td>
+        <td><b>Bias-correction head on the operational CMEMS forecast</b>, conditioned on recent observations</td></tr>
+      <tr><td><b>Baseline</b></td><td>naive persistence</td>
+        <td><b>Raw packed CMEMS, build-blocking</b>, plus damped anomaly persistence; strictly temporal split; 2023 anomaly year reported separately</td></tr>
+      <tr><td><b>Uncertainty</b></td><td>none, or a sigma in the legend</td>
+        <td><b>Stratified conformal bound that is the field the router consumes</b>, with a written demotion branch if coverage misses [85%, 96%]</td></tr>
+      <tr><td><b>Iceberg drift</b></td><td>physics <i>or</i> ML</td>
+        <td>physics <b>plus</b> a classical-ML residual, leave-one-berg-out, 72 h projection cap so the buffer stays navigable</td></tr>
+      <tr><td><b>Routing</b></td><td>grid A*, single cost</td>
+        <td><b>PolarRoute extended</b>, 12-run sweep, dominance-filtered candidate set</td></tr>
+      <tr><td><b>Ice truth</b></td><td>one source, presented as ground truth</td>
+        <td>multi-source, <b>quality-controlled first</b>, disagreement widens caution</td></tr>
+      <tr><td><b>Beyond the horizon</b></td><td>silent, or a confident line anyway</td>
+        <td><b>graded degradation</b>: forecast &rarr; CMEMS-direct &rarr; climatology corridor, re-optimised daily</td></tr>
+      <tr><td><b>Connectivity</b></td><td>assumes a live backend</td>
+        <td><b>offline-first, 50 KB budget enforced in CI</b>; weights by USB at port</td></tr>
+      <tr><td><b>Scope</b></td><td>&ldquo;Antarctica&rdquo;</td>
+        <td>the real ship, corridor and season &mdash; as configuration, not constants</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note good">
+    <p class="t">We checked whether the customer already has this. They do not.</p>
+    <p>Claiming novelty without checking the ministry&rsquo;s own tooling is how a pitch dies in the first
+      question. We manually reviewed <span class="mono">npdc.ncpor.res.in</span>, NCPOR&rsquo;s &ldquo;Research
+      Vessel Movements&rdquo; pages and <span class="mono">data.ncpor.res.in</span>. What exists is static
+      archival material &mdash; PDF cruise schedules and historical reports for ORV Sagar Kanya, a different
+      vessel &mdash; plus station observations from the Maitri and Bharati weather systems and generic
+      catalogue and plotting tools. <b>No sea-ice forecast, no iceberg tracking, no routing tool anywhere.</b>
+      This is greenfield, and we can say so having looked.</p>
+  </div>
+
+  <div class="note good">
+    <p class="t">The one that is hardest to copy</p>
+    <p>Ordering quality control <i>before</i> fusion. A fusion layer without QC cannot tell a sensor artifact
+      from genuine inter-source disagreement, and will widen a route around a phantom. We found this the
+      expensive way: the NOAA/NSIDC record writes suppressed coastal pixels as <span class="mono">0.0</span>,
+      inside <span class="mono">valid_range [0,100]</span>, so any unguarded reader accepts them as open
+      water. It fires on <b>100% of days</b>. Four of the eight December 2019 days on which Bharati looked
+      reachable were this artifact.</p>
+  </div>
+</section>
+
+<!-- ============================================ 3 -->
+<section>
+  <div class="sec-head"><span class="sec-no">03</span><h2>Technical approach and stack</h2></div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Layer</th><th>Choice</th><th>Why this and not the obvious alternative</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Ice forecast correction</td><td>Residual U-Net, 1.93 M params, 12 input channels, PyTorch</td>
+        <td>Zero-init head means the untrained model is a strict no-op, so the baseline is inherited rather than risked</td><td><span class="chip c-proven">Measured</span></td></tr>
+      <tr><td>Uncertainty</td><td>Stratified split-conformal, 30 strata (lead &times; regime)</td>
+        <td>Distribution-free; a Gaussian inflation on a variable bounded in [0,1] is wrong at both ends</td><td><span class="chip c-designed">Designed</span></td></tr>
+      <tr><td>Iceberg drift</td><td>Wagner, Dell &amp; Eisenman (2017) closed form</td>
+        <td>Physics, not ML &mdash; and it is testable against a published coefficient table, which a network is not</td><td><span class="chip c-proven">Measured</span></td></tr>
+      <tr><td>Environmental mesh</td><td>meshiphi, non-uniform</td>
+        <td>Splits hardest where the ice is most variable; a regular grid wastes cells on empty ocean</td><td><span class="chip c-ext">Reused</span></td></tr>
+      <tr><td>Router</td><td>PolarRoute 1.1.11 (BAS, MIT), extended via documented hooks</td>
+        <td>Reuse &rarr; adapt &rarr; extend &rarr; wrap &rarr; replace, in that order. We never fork it</td><td><span class="chip c-ext">Reused</span></td></tr>
+      <tr><td>Hazard injection</td><td>Native <code>excluded_zones</code> vessel-config hook</td>
+        <td>One mechanism carries icebergs <i>and</i> protected areas; no engine surgery</td><td><span class="chip c-designed">Designed</span></td></tr>
+      <tr><td>Data quality</td><td>Reads the product&rsquo;s own <code>cdr_seaice_conc_qa_flag</code></td>
+        <td>The file already knows it lied; almost nobody reads the flag</td><td><span class="chip c-proven">Measured</span></td></tr>
+      <tr><td>Ingest</td><td>Python, xarray, netCDF4; harvest on GitHub Actions</td>
+        <td>Already running daily; the archive cannot be back-filled, so it had to start early</td><td><span class="chip c-proven">Measured</span></td></tr>
+      <tr><td>Transport</td><td>Signed, versioned voyage packs; int16 packing, deflate, shuffle</td>
+        <td>Measured <span class="num">8.4&times;</span> compression on the raw NetCDF</td><td><span class="chip c-proven">Measured</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <p class="t">No LLM, no RAG, no agent framework appears anywhere in this system</p>
+    <p>There is no natural-language task in the problem statement. Every component is a numerical prediction
+      or a graph search, for which deterministic and classical methods are cheaper here, verifiable against
+      held-out data, and able to run offline on a ship&rsquo;s bridge. That last property is not a preference
+      &mdash; it is the deployment constraint.</p>
+  </div>
+</section>
+
+<!-- ============================================ 4 -->
+<section>
+  <div class="sec-head"><span class="sec-no">04</span><h2>How the system knows it is degraded</h2></div>
+  <p class="col">This is the mechanism judges will probe, because it is where most decision-support systems
+    are hollow. It runs at three timescales, and they are genuinely separate things.</p>
+
+  <div class="kv">
+    <div><span class="k">Per cell, at ingest</span><span class="v">100%</span>
+      <span class="d">of days the land-spillover filter fires; mean 118 cells, max 488</span></div>
+    <div><span class="k">Bharati 200 km box</span><span class="v">43.2%</span>
+      <span class="d">of days across 2018&ndash;2020 carry suspect cells</span></div>
+    <div><span class="k">Between sources</span><span class="v">4</span>
+      <span class="d">independent SIC products; disagreement widens the routed bound</span></div>
+    <div><span class="k">Over time</span><span class="v">1 day</span>
+      <span class="d">yesterday&rsquo;s forecast against today&rsquo;s observation, free and daily at sea</span></div>
+  </div>
+
+  <p class="col">What makes it more than a banner is a pre-committed number. <code>SIC_upper</code> claims 90%
+    coverage and must <i>measure</i> between 85% and 96% on held-out marginal-ice-zone cells at lead 5.
+    Over-coverage is also failure: a bound right 99% of the time is too wide to change a route. If it misses,
+    the response is already written &mdash; the bound stops being the routed field, the confidence slider is
+    <b>removed from the interface rather than left as theatre</b>, and the claim is publicly demoted. That
+    branch was written before the numbers existed, so it cannot be renegotiated after them.</p>
+
+  <h3>The degradation ladder &mdash; every rung always available, and announced</h3>
+  <div class="ladder">
+    <div class="rung r1"><div class="step"><span>1</span></div><div class="body">
+      <span class="h">Corrected forecast plus calibrated interval</span>
+      <span class="s">Normal operation. Full route line, waypoints, iceberg exclusion polygons.</span></div></div>
+    <div class="rung r2"><div class="step"><span>2</span></div><div class="body">
+      <span class="h">Raw CMEMS, labelled uncorrected</span>
+      <span class="s">Our model failed its daily verification. Band from measured CMEMS-versus-observation error.</span></div></div>
+    <div class="rung r3"><div class="step"><span>3</span></div><div class="body">
+      <span class="h">Persistence from the newest observation</span>
+      <span class="s">Forecast feed lost. Lighter line, waypoints indicative only.</span></div></div>
+    <div class="rung r4"><div class="step"><span>4</span></div><div class="body">
+      <span class="h">Climatology for the date</span>
+      <span class="s">No recent observation at all. Dashed corridor, not a route: &ldquo;which way to go, not where to steer.&rdquo;</span></div></div>
+  </div>
+  <p class="col">Falling to rung 3 or 4 <b>widens the corridor and moves decision points earlier</b> &mdash;
+    less information means committing later, not sailing the same line with less confidence. The climatology
+    uses only the last ten years, because a 1979-based climatology would be biased high against the
+    documented post-2016 Antarctic regime shift.</p>
+</section>
+
+<!-- ============================================ 5 -->
+<section>
+  <div class="sec-head"><span class="sec-no">05</span><h2>Feasibility &mdash; what is already measured</h2></div>
+  <p class="col">Nine claims that can be reproduced from the repository today. Two of them came out
+    against us, and both are included deliberately.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Claim</th><th>Number</th><th>Where it comes from</th></tr></thead>
+    <tbody>
+      <tr><td>Model beats persistence at every horizon, and the gain grows with lead</td><td class="n">+18.5% &rarr; +30.6%</td><td>1&ndash;7 day leads; our error rises 2.1&times; day 1 to 7, persistence 2.5&times;</td></tr>
+      <tr><td>Test set scored exactly once, split by time not randomly</td><td class="n">70/15/15</td><td>A random split leaks badly on a field this autocorrelated</td></tr>
+      <tr><td>Coastal pixels reported as open water when they are not</td><td class="n">1,096 / 1,096</td><td>Land-spillover filter fires on every single day of the record</td></tr>
+      <tr><td>Bharati&rsquo;s own cell closed to this vessel, December 2019</td><td class="n">23 of 31</td><td>The approach 100 km north was open 31 of 31</td></tr>
+      <tr><td>&hellip; and of the days it looked open, artifacts</td><td class="n">4 of 8</td><td>Raw product reading exactly 0.0% ice</td></tr>
+      <tr><td>Masking those cells moves coastal ice <i>up</i></td><td class="n">46.8% &rarr; 54.6%</td><td>The fix makes the router more cautious, which is the correct direction</td></tr>
+      <tr><td>Iceberg drift reproduces the published physics</td><td class="n">23 / 23</td><td>Including the paper&rsquo;s own 765 m critical length</td></tr>
+      <tr><td>Live icebergs tracked, and how many sit in our corridor</td><td class="n">33 &rarr; 15</td><td>Including D15A at 3,037 km&sup2; beside Bharati&rsquo;s approach</td></tr>
+      <tr><td>Vessel mesh block, gzipped &mdash; the load-bearing bandwidth number</td><td class="n">76 KB</td><td>Makes the 50 KB daily delta target plausible, not proven</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note warn">
+    <p class="t">Two results that came out against us, kept in the record</p>
+    <p><b>Daily re-planning did not beat static planning.</b> On the one departure date tested, regret was
+      0.03 days and the daily arm was <i>slower</i>, because re-planning from the ship&rsquo;s live position
+      takes locally-optimal turns a single global optimisation avoids. One date is one sample and the sweep is
+      not yet run &mdash; but we report the null.</p>
+    <p><b>We withdrew a headline number.</b> An earlier 17.4-day transit was computed with the beam and top
+      speed both wrong; corrected, it is 8.6 days. Specification errors dominated model errors at that stage.
+      And 8.6 days is steaming time only &mdash; no sea state, no bathymetry, no cargo operations. It is a
+      lower bound, not a voyage.</p>
+  </div>
+</section>
+
+<!-- ============================================ 6 -->
+<section>
+  <div class="sec-head"><span class="sec-no">06</span><h2>Viability &mdash; it has to work at 70&deg;S</h2></div>
+  <p class="col">Viability for this system means one thing: does it still function when the link is gone?
+    The bandwidth budget is therefore a build-breaking constraint rather than a documented aspiration.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Payload</th><th>Size</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Vessel-modelled mesh block, the representative daily unit</td><td class="n">76 KB gzip</td><td><span class="chip c-proven">Measured</span></td></tr>
+      <tr><td>Daily incremental delta &mdash; the number the design depends on</td><td class="n">50 KB target</td><td><span class="chip c-designed">CI-enforced, unmeasured</span></td></tr>
+      <tr><td>Full corridor refresh</td><td class="n">0.5&ndash;1 MB</td><td><span class="chip c-designed">Extrapolated</span></td></tr>
+      <tr><td>Route polyline plus summary &mdash; quoted last, on purpose</td><td class="n">796 B</td><td><span class="chip c-proven">Measured</span></td></tr>
+      <tr><td>Model weights, five members</td><td class="n">~60 MB</td><td><span class="chip c-open">Never over Iridium &mdash; USB at port</span></td></tr>
+    </tbody>
+    <caption>Leading with the route polyline would be quoting the smallest payload in the system as if it were representative. The mesh is the honest unit.</caption>
+  </table></div>
+
+  <ul class="col">
+    <li><b>The build fails</b> if a daily pack exceeds 50 KB compressed or a full refresh exceeds 1 MB. A
+      bandwidth constraint that moves whenever the data moves is not a constraint.</li>
+    <li><b>If measurement disappoints, the budget still does not move.</b> The pre-committed response is to
+      coarsen the open-ocean mesh or stretch the refresh to two or three days.</li>
+    <li><b>The ship re-corrects the whole ten-day packed forecast aboard</b> from one fresh corridor
+      observation, roughly 5&ndash;15 KB. A packed third-party forecast is frozen at build time and cannot do
+      this at any bandwidth.</li>
+    <li><b>The demo is unfakeable:</b> disconnect the network mid-presentation and keep re-planning. The demo
+      setup <i>is</i> the product.</li>
+  </ul>
+</section>
+
+<!-- ============================================ 7 -->
+<section>
+  <div class="sec-head"><span class="sec-no">07</span><h2>Challenges and risks</h2></div>
+  <p class="col">A conventional probability-by-impact matrix would be dishonest here, because most of our
+    real risks are not probabilistic &mdash; they are <i>certain</i>, known, and written down. So the
+    horizontal axis is how settled the problem is, and the vertical axis is what it costs if we leave it
+    alone. What separates the dots is whether a response is already written.</p>
+
+  <figure>
+    <svg viewBox="0 0 880 600" role="img" aria-label="Risk map plotting twelve project risks by how settled the problem is against its impact if left alone. Ten carry a written pre-committed response, drawn as filled dots. Two are drawn as hollow rings because nobody has decided them yet: which drift field feeds the ice-pressure layer, and how the fuel-efficiency clause of the problem statement is answered. The most severe cluster sits at the far right, meaning already true rather than merely possible.">
+      <rect x="110" y="50" width="720" height="420" fill="var(--surface)"/>
+      <!-- the quadrant that actually decides the schedule: settled AND severe -->
+      <rect x="650" y="50" width="180" height="210" fill="var(--open)" opacity="0.09"/>
+      <text x="822" y="68" text-anchor="end" font-family="Archivo, sans-serif" font-size="10.5"
+            font-weight="600" letter-spacing="0.08em" fill="var(--open)">KNOWN AND COSTLY</text>
+
+      <!-- grid -->
+      <g stroke="var(--line)" stroke-width="1" fill="none">
+        <line x1="290" y1="50" x2="290" y2="470"/>
+        <line x1="470" y1="50" x2="470" y2="470"/>
+        <line x1="650" y1="50" x2="650" y2="470"/>
+        <line x1="110" y1="365" x2="830" y2="365"/>
+        <line x1="110" y1="260" x2="830" y2="260"/>
+        <line x1="110" y1="155" x2="830" y2="155"/>
+      </g>
+      <g stroke="var(--ink)" stroke-width="1.5" fill="none">
+        <line x1="110" y1="470" x2="830" y2="470"/>
+        <line x1="110" y1="50" x2="110" y2="470"/>
+      </g>
+
+      <!-- axis labels -->
+      <g font-family="Archivo, sans-serif" font-size="11" fill="var(--muted)">
+        <text x="110" y="492" text-anchor="start">speculative</text>
+        <text x="350" y="492" text-anchor="middle">possible</text>
+        <text x="590" y="492" text-anchor="middle">likely</text>
+        <text x="830" y="492" text-anchor="end">already true</text>
+      </g>
+      <g font-family="Archivo, sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">
+        <text x="100" y="473">low</text>
+        <text x="100" y="369">moderate</text>
+        <text x="100" y="264">high</text>
+        <text x="100" y="159">severe</text>
+        <text x="100" y="54">critical</text>
+      </g>
+      <text x="470" y="516" text-anchor="middle" font-family="Archivo, sans-serif" font-size="12.5" font-weight="600" fill="var(--ink)">How settled the problem is &rarr;</text>
+      <text x="30" y="260" text-anchor="middle" font-family="Archivo, sans-serif" font-size="12.5" font-weight="600" fill="var(--ink)" transform="rotate(-90 30 260)">Impact if left alone &rarr;</text>
+
+      <!-- dots: filled = written response exists -->
+      <g font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" text-anchor="middle">
+        <!-- response already written -->
+        <g fill="var(--accent)">
+          <circle cx="801" cy="96"  r="13"/><circle cx="801" cy="126" r="13"/>
+          <circle cx="801" cy="156" r="13"/><circle cx="801" cy="216" r="13"/>
+          <circle cx="801" cy="276" r="13"/><circle cx="801" cy="306" r="13"/>
+          <circle cx="506" cy="134" r="13"/><circle cx="650" cy="281" r="13"/>
+          <circle cx="470" cy="268" r="13"/><circle cx="434" cy="239" r="13"/>
+        </g>
+        <g fill="var(--surface)">
+          <text x="801" y="100">4</text><text x="801" y="130">6</text>
+          <text x="801" y="160">11</text><text x="801" y="220">5</text>
+          <text x="801" y="280">9</text><text x="801" y="310">10</text>
+          <text x="506" y="138">1</text><text x="650" y="285">2</text>
+          <text x="470" y="272">7</text><text x="434" y="243">8</text>
+        </g>
+        <!-- needs a decision -->
+        <g fill="var(--surface)" stroke="var(--open)" stroke-width="3">
+          <circle cx="801" cy="186" r="13"/><circle cx="801" cy="246" r="13"/>
+        </g>
+        <g fill="var(--open)">
+          <text x="801" y="190">3</text><text x="801" y="250">12</text>
+        </g>
+      </g>
+
+      <!-- key -->
+      <g transform="translate(110,540)" font-family="IBM Plex Sans, sans-serif" font-size="12">
+        <circle cx="9" cy="-4" r="9" fill="var(--accent)"/>
+        <text x="26" y="0" fill="var(--ink-2)">Response already written and pre-committed</text>
+        <circle cx="399" cy="-4" r="9" fill="var(--surface)" stroke="var(--open)" stroke-width="3"/>
+        <text x="416" y="0" fill="var(--ink-2)">Needs a decision from the team</text>
+      </g>
+    </svg>
+    <figcaption>Ten of twelve risks already carry a written response, committed before the outcome was known.
+      The two hollow rings are decisions nobody has made yet: which drift field feeds the ice-pressure layer
+      &mdash; modelled <code>siu</code>/<code>siv</code> or our own Sentinel-1 feature tracking &mdash; and how
+      we answer the statement&rsquo;s &ldquo;fuel-efficient&rdquo; clause. Neither is a technical blocker.
+      Both block work that is waiting on them.</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Risk</th><th>Response</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td>The post-2016 regime shift breaks conformal exchangeability, so measured coverage misses [85%, 96%]</td><td>Written demotion branch: the bound stops being routed on, the slider is removed, the claim is publicly downgraded</td></tr>
+      <tr><td class="n">2</td><td>Daily re-planning shows no benefit over planning once &mdash; already observed on one departure date</td><td>Run the multi-date sweep before claiming either way. The null is published meanwhile</td></tr>
+      <tr><td class="n">3</td><td><b>No observational Antarctic drift product exists in our season</b> &mdash; OSI-405-d runs April to October only, and the resupply window is December to March</td><td><b>Undecided.</b> Either CMEMS modelled <code>siu</code>/<code>siv</code> at 1/12&deg;, or our own Sentinel-1 feature tracking. The ice-pressure layer cannot start until this is settled</td></tr>
+      <tr><td class="n">4</td><td>The router plans a seventeen-day voyage on day-zero ice, as though the field holds still</td><td>Time-expanded graph: one mesh layer per forecast day. Designed, and the highest-value single change</td></tr>
+      <tr><td class="n">5</td><td>POLARIS is not implemented; a flat 80% concentration cutoff stands in</td><td>Add a thickness output channel &mdash; POLARIS is indexed by ice <i>type</i>. Forced by the regulation, not scope creep</td></tr>
+      <tr><td class="n">6</td><td>Bharati sits inside ASMA No. 6, which India co-proposed, and we model no protected areas at all</td><td>Load the Treaty Secretariat shapefile through the <code>excluded_zones</code> hook the icebergs already use</td></tr>
+      <tr><td class="n">7</td><td>The daily delta exceeds the 50 KB budget</td><td>Coarsen the open-ocean mesh or lengthen the refresh cadence. The budget itself does not move</td></tr>
+      <tr><td class="n">8</td><td>The prototype&rsquo;s background is a reanalysis, so it may carry information a true forecast would not</td><td>Retrain with the background channel zeroed. Twenty minutes, and it either kills the objection or obliges us to disclose</td></tr>
+      <tr><td class="n">9</td><td>The vessel&rsquo;s force limit is carried over from a different hull</td><td>Derive it from shaft power, using the method already published for SA Agulhas II</td></tr>
+      <tr><td class="n">10</td><td>PolarRoute never calls its own wave-resistance function, so sea state costs nothing</td><td>Disclosed: every transit time we quote is explicitly a lower bound</td></tr>
+      <tr><td class="n">11</td><td>The open-ocean leg from port to the ice edge is entirely unbuilt, and it is half the problem statement</td><td>meshiphi already ships the ERA5 wave, wind and GEBCO loaders, so the data plane exists and only the cost model is missing. Reuse it; do not build a second engine</td></tr>
+      <tr><td class="n">12</td><td><b>The statement asks for fuel-efficient routes and we cannot quote fuel</b></td><td><b>Unanswered.</b> Calibrate the hull, or report fuel relatively and say why</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============================================ 8 -->
+<section>
+  <div class="sec-head"><span class="sec-no">08</span><h2>The strategy, which is the same in every case</h2></div>
+  <p class="col">Write the response before the result. Every mitigation in the table above was committed to
+    in writing while the outcome was still unknown, which is what stops a threshold from quietly moving once
+    the numbers arrive. Four worked examples:</p>
+  <ul class="col">
+    <li><b>The conformal gate</b> names its own failure and its own consequence, including the upper bound
+      &mdash; over-coverage is failure too, because a bound that is right 99% of the time cannot change a
+      route.</li>
+    <li><b>The bandwidth budget</b> is enforced by a test that fails the build, and the response to a bad
+      measurement is to change the mesh, never the budget.</li>
+    <li><b>The iceberg buffer</b> auto-downgrades from hard exclusion to weighted cost if it would blockade
+      more than 5% of the navigable corridor, and says so &mdash; a safety layer that closes the sea is not a
+      safety layer.</li>
+    <li><b>The drift model</b> falls back to pure physics when the learned correction goes out of
+      distribution, with the trigger unit-tested to actually fire.</li>
+  </ul>
+  <div class="note">
+    <p class="t">And the ordering rule for anything new</p>
+    <p>Reuse, then adapt, then extend, then wrap, then replace &mdash; in that order. PolarRoute and meshiphi
+      are extended through their own documented hooks and never forked, which is why an upstream fix reaches
+      us for free and why the routing engine is not ours to get wrong.</p>
+  </div>
+</section>
+
+<!-- ============================================ 9 -->
+<section>
+  <div class="sec-head"><span class="sec-no">09</span><h2>Impact, stated in the terms the operation uses</h2></div>
+  <p class="col">The measured result reframed what this system is for, and it is worth being precise about,
+    because it is not the answer most teams will give.</p>
+
+  <div class="note good">
+    <p class="t">The ocean is not the problem. The last hundred kilometres is.</p>
+    <p>For this vessel at an 80% ice limit through December 2019, Bharati&rsquo;s own cell was closed on
+      <b>23 of 31 days</b> while the approach point 100 km north was open on <b>31 of 31</b>. The open-ocean
+      leg &mdash; about 5,800 km of a 5,813 km route &mdash; carries mean 6% ice. There is almost nothing to
+      optimise out there.</p>
+    <p>So the question this system exists to answer is not &ldquo;which line do we draw across the Southern
+      Ocean.&rdquo; It is: <b>when should we arrive, will the last 100 km be open when we get there, how long
+      will it stay open, and if it is shut &mdash; do we wait, or switch to helicopter and barge?</b> That is
+      a forecasting question with a horizon of days, which is exactly the horizon our model addresses.</p>
+  </div>
+
+  <ul class="col">
+    <li><b>It matches how Indian resupply actually works.</b> The vessel holds at the fast-ice edge and moves
+      cargo the remaining distance by air and barge, which is why Golovnin carries two helicopters. Timing
+      that decision is worth days of station time.</li>
+    <li><b>It removes a class of confident wrong answer.</b> A planner reading the raw record would have
+      called Bharati reachable on four December days when the satellite had simply stopped looking.</li>
+    <li><b>It is honest about a hazard it cannot see.</b> The smallest iceberg any Antarctic-wide product
+      tracks is roughly 800 times larger than a growler. We say so rather than implying a warning we cannot
+      give &mdash; and instead forecast <i>when the lookout will be blind</i>, which we can.</li>
+    <li><b>It is reusable beyond this ship.</b> The vessel, corridor and season are configuration, so the
+      same system serves a different charter or a different station without a rewrite.</li>
+  </ul>
+</section>
+
+<!-- ============================================ 10 -->
+<section>
+  <div class="sec-head"><span class="sec-no">10</span><h2>What this system will never claim</h2></div>
+  <p class="col">Declaring the boundary is not a weakness in a safety context; it is the part that makes the
+    rest believable. An examiner who finds an undeclared limit stops trusting the declared numbers.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>We do not</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><b>Warn about growlers or bergy bits</b></td><td>A growler is about 5 m. The most sensitive Antarctic catalogue published resolves 16,000 m&sup2;. Radar and the lookout own this, and nothing in orbit changes that</td></tr>
+      <tr><td><b>Steer the ship</b></td><td>We work at hours-to-days and tens of kilometres. Tactical steering stays on the bridge</td></tr>
+      <tr><td><b>Replace the master&rsquo;s judgement</b></td><td>The statement says <i>decision support</i>, and we take it literally</td></tr>
+      <tr><td><b>Quote an absolute fuel figure</b></td><td>The polynomial is fitted to a different hull</td></tr>
+      <tr><td><b>See leads, ridges or ice pressure</b></td><td>A 25 km field cannot resolve a navigable lead, and no operational Antarctic pressure product exists anywhere in the world</td></tr>
+      <tr><td><b>Claim POLARIS compliance yet</b></td><td>Our 80% threshold is a working stand-in; POLARIS is indexed by ice type</td></tr>
+      <tr><td><b>Solve Southern Ocean traffic</b></td><td>255 unique vessels crossed the entire Southern Ocean in five years, 88% of them near the Peninsula. There is no congestion problem here to solve</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <p><b>Sources.</b> Measured numbers: <span class="mono">isih/RESULTS.md</span>,
+    <span class="mono">isih/figures/</span>, <span class="mono">models/iceberg/</span>. Design decisions:
+    <span class="mono">docs/ARCHITECTURE.md</span>, <span class="mono">docs/DECISION_ARCHITECTURE.md</span>,
+    <span class="mono">docs/ML_ARCHITECTURE.md</span>. Open work:
+    <span class="mono">docs/backlog.md</span>. External: IMO MSC.1/Circ.1519 (POLARIS); IMO Polar Code
+    Part I-A Ch. 11; Canadian Coast Guard, <i>Ice Navigation in Canadian Waters</i>; Wagner, Dell &amp;
+    Eisenman (2017); Antarctic Treaty Secretariat protected-areas shapefile.</p>
+  <p>Every figure on this page is traceable to a file in the repository or to a cited external document.
+    Where a number is extrapolated rather than measured, it says so.</p>
+</footer>
+
+</div>
