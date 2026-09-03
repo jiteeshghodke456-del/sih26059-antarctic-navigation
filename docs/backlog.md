@@ -108,6 +108,16 @@ One line per item: `[severity][area] what's wrong — pointer to full evidence`.
 - [minor][research] No besetting incident documented for any Indian-flagged vessel; MV Magdalena Oldendorff (20th ISEA, beset 11 Jun 2002 near Novolazarevskaya, freed late Nov 2002, ~5.5 months) is closest and its dates conflict across sources. Needs NCPOR expedition reports.
 - [minor][research] Growler collision energies and drift-divergence noise floors in §7 are our own calculations, not citations. Source before any deck. Maitri summer blizzard count (0–2/season) is derived, not stated. SH free-drift turning angle 20–40° is mirrored from NH values, not SH-verified.
 
+## Open — CMEMS harvest reliability (raised 2026-09-03)
+
+- [critical][data] **The harvest names files from the wall clock, not from the data, and that is a silent-corruption bug waiting for a punctual run.** CMEMS guarantees the bulletin only "by 1200 UTC" (PUM CMEMS-GLO-PUM-001-024 issue 2.4; the product page's 08:00 is a target). A run firing before delivery downloads bulletin D−1 and archives it as `cmems_siconc_D.nc`, after which the already-have guard blocks the correct capture all day. **Fix:** derive the bulletin date from the dataset's own time axis — `copernicusmarine describe` gives a time maximum of bulletin+9 days — and refuse to write if it is neither today nor yesterday. Until then the post-12:00 cron slots are load-bearing and must not be moved earlier.
+- [high][ops] **Nothing tells us when a bulletin is missed.** A miss is unrecoverable: CMEMS overwrites each bulletin with the next, verified by listing the native store (`glo12_rg_1d-m_<date>_2D_{fcst|nwct|hcst}_R<bulletin>.nc` — the `R` date is always the newest). Add a sentinel workflow that checks the live bulletin is present on main and fails (and opens an assigned issue) while bulletin D is still fetchable. Turn on Actions email for failed workflows.
+- [medium][data] **The `cmems_siconc_` prefix is a misnomer** — the files hold `siconc`, `sithick`, `usi` and `vsi`. Harmless today, misleading later.
+- [medium][data] `cmems_siconc_2026-09-01.nc` and `..._09-02.nc` are still 40.6 MB uncompressed on main; compression landed after the 2 Sep run. Recompress in one commit.
+- [medium][ml] **Training loader must not glob the archive directory.** Add a manifest with `captured` / `missing` rows so a gap is explicit, and keep any back-filled *analysis* fields in a separate `data/cmems_analysis_archive/` — the analysis for a past date is recoverable, the forecast as issued that day is not, and the two must never be mixed into one training set.
+- [minor][ops] Pin `copernicusmarine`, `xarray` and `netCDF4` versions in the workflow. Unpinned dependencies already bit us once, when the CLI deprecated `--force-download`.
+- [minor][ops] Consider `--raise-if-updating` and an explicit `--dataset-version` on the subset call, so a half-updated dataset fails the run instead of being archived, and a future version bump cannot change the grid mid-series. Both flags need verifying against the installed CLI before use.
+
 ## Open — IMO Polar Code Ch.11 compliance gaps (raised 2026-09-03)
 
 Polar Code Part I-A §11.3 lists what a master **must** consider when planning a
