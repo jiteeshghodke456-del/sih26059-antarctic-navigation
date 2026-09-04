@@ -46,10 +46,10 @@ static = [r for r in rr['results'] if r['planner'] == 'STATIC'][0]
 check("static regret days", static['regret_days'], 0.03)
 check("transit days (rounded)", round(static['actual_days'], 1), 8.6)
 
-res = (R / 'isih/RESULTS.md').read_text()
+res = (R / 'docs/ISIH_RESULTS.md').read_text()
 for token in ["+18.5%", "+30.6%", "1,929,601", "43.2%", "46.8%", "54.6%",
               "23 / 31", "8.58"]:
-    (ok if token in res else bad).append(f"RESULTS.md contains {token!r}")
+    (ok if token in res else bad).append(f"ISIH_RESULTS.md contains {token!r}")
 
 for f in ["docs/SIH_PPT.md", "docs/TRUE_CLAIMS.md",
           "models/iceberg/drift.py", "models/iceberg/catalogue.py"]:

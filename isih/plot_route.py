@@ -145,14 +145,14 @@ def main() -> int:
     # The dashed line is an illustration of why a router is needed at all. It is
     # NOT a baseline: no master sails a straight line into pack ice, and saying
     # so on the figure stops the comparison being read as a strawman win. The
-    # real baselines -- the same router given older ice -- are in RESULTS.md.
+    # real baselines -- the same router given older ice -- are in ISIH_RESULTS.md.
     #
     # Drawn in FIGURE coordinates, not axes coordinates: an axes-relative y
     # below the legend falls outside the tight bounding box and gets clipped.
     fig.text(0.5, 0.005,
              "The dashed line shows why routing is needed at all — it is not a "
              "competing method. Real baselines (same router, older ice) are "
-             "measured separately in RESULTS.md.",
+             "measured separately in ISIH_RESULTS.md.",
              ha="center", fontsize=9.5, color="#666", style="italic")
 
     ax.set_xlabel("Longitude (°E)", fontsize=11)

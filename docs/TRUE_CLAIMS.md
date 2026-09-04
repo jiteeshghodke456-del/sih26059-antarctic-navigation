@@ -15,18 +15,18 @@ Each of these has a file in this repository that produces the number.
 
 | # | Claim | Evidence |
 |---|---|---|
-| 1.1 | Our sea-ice model beats **persistence** — the baseline that actually matters — at every horizon from 1 to 7 days, by **+18.5% to +30.6%** | `isih/RESULTS.md` |
-| 1.2 | The advantage **grows with lead time**: our error rises 2.1× from day 1 to day 7, persistence rises 2.5× | `isih/RESULTS.md` |
-| 1.3 | The test set was scored **exactly once**, split by time, never randomly | `isih/RESULTS.md` |
+| 1.1 | Our sea-ice model beats **persistence** — the baseline that actually matters — at every horizon from 1 to 7 days, by **+18.5% to +30.6%** | `docs/ISIH_RESULTS.md` |
+| 1.2 | The advantage **grows with lead time**: our error rises 2.1× from day 1 to day 7, persistence rises 2.5× | `docs/ISIH_RESULTS.md` |
+| 1.3 | The test set was scored **exactly once**, split by time, never randomly | `docs/ISIH_RESULTS.md` |
 | 1.4 | The satellite record reports suppressed coastal pixels as **0.0% ice — open water**. It fires on **100% of days**, ~118 cells/day | `isih/figures/ice_quality_audit.json` |
 | 1.5 | In the **200 km approach to Bharati** this affects **43.2% of days** across 2018–2020 | same |
 | 1.6 | Bharati's own cell was **closed to this vessel on 23 of 31** December 2019 days; the approach 100 km north was open **31 of 31** | `isih/figures/destination_window.json` |
 | 1.7 | **Four of the eight** days Bharati appeared reachable were data artifacts reading exactly 0.0% | same |
-| 1.8 | Masking those cells moves coastal ice **up** — 46.8% → 54.6% mean — i.e. the fix makes the router *more* cautious | `isih/RESULTS.md` §2 |
+| 1.8 | Masking those cells moves coastal ice **up** — 46.8% → 54.6% mean — i.e. the fix makes the router *more* cautious | `docs/ISIH_RESULTS.md` §2 |
 | 1.9 | Our iceberg drift model reproduces the published coefficient table and the paper's own 765 m critical length — **23/23 tests pass** | `models/iceberg/test_drift.py` |
 | 1.10 | **33 icebergs** tracked live; **15 of them inside our routing corridor**, including D15A at 3,037 km² beside Bharati's approach | `models/iceberg/regime_report.json` |
-| 1.11 | Route computed on real satellite ice with a real open-source router: **8.6 days steaming**, Cape Town → Bharati | `isih/RESULTS.md` |
-| 1.12 | Built on **1,096 real daily satellite files, zero failures**. No synthetic data anywhere in the product | `isih/RESULTS.md` |
+| 1.11 | Route computed on real satellite ice with a real open-source router: **8.6 days steaming**, Cape Town → Bharati | `docs/ISIH_RESULTS.md` |
+| 1.12 | Built on **1,096 real daily satellite files, zero failures**. No synthetic data anywhere in the product | `docs/ISIH_RESULTS.md` |
 
 ---
 

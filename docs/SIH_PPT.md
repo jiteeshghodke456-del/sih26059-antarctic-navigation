@@ -410,15 +410,15 @@ Keep this off the slides; keep it in your head.
 
 | Claim | Number | Where it lives |
 |---|---|---|
-| Sea-ice model vs persistence | +18.5% (1 d) → **+30.6% (7 d)** | `isih/RESULTS.md` |
-| Model size | 1,929,601 parameters, 12 channels | `isih/RESULTS.md` |
-| Satellite files used | 1,096, zero failures | `isih/RESULTS.md` |
+| Sea-ice model vs persistence | +18.5% (1 d) → **+30.6% (7 d)** | `docs/ISIH_RESULTS.md` |
+| Model size | 1,929,601 parameters, 12 channels | `docs/ISIH_RESULTS.md` |
+| Satellite files used | 1,096, zero failures | `docs/ISIH_RESULTS.md` |
 | Coastal data artifact | **43.2%** of days, Bharati 200 km box | `isih/figures/ice_quality_audit.json` |
 | Destination closed | **23 of 31** December days | `isih/figures/destination_window.json` |
 | Approach 100 km north open | **31 of 31** days | same |
 | Icebergs tracked / in corridor | **33 / 15** | `models/iceberg/regime_report.json` |
 | Iceberg regime flip | 20/33 current-driven at 10 m/s → **28/33 wind-driven at 30 m/s** | same |
-| Transit, Cape Town → Bharati | **8.6 days steaming** (not total voyage) | `isih/RESULTS.md` |
+| Transit, Cape Town → Bharati | **8.6 days steaming** (not total voyage) | `docs/ISIH_RESULTS.md` |
 | Drift model tests passing | **23/23**, reproducing the paper's own table | `models/iceberg/test_drift.py` |
 
 **Three things to say before you are asked** — they convert doubt into credit:

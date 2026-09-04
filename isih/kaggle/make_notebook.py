@@ -60,7 +60,7 @@ def build_embed_cell() -> str:
 NOTEBOOK_INTRO = """# ISIH Prototype — Sea-Ice Bias-Correction Model
 
 **This trains the Sept 8 ISIH prototype, not the December production model.**
-See `isih/README.md` in the repo for the difference.
+See `docs/ISIH_README.md` in the repo for the difference.
 
 What this does: learns to correct the GLORYS12 ocean-reanalysis sea-ice field
 toward what satellites actually observed (NOAA/NSIDC CDR).
