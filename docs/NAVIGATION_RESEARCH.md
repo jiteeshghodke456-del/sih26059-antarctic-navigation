@@ -315,7 +315,7 @@ ice the sensor is worst at. This cuts both ways and is worth saying out loud.
   neighbourhood and assumes land pixels radiate like 90% SIC.
 
 **This is the mechanism behind our own measured finding** (§ `isih/ice_quality.py`,
-`RESULTS.md §2`): the CDR's land-spillover filter zeroes coastal cells and
+`ISIH_RESULTS.md §2`): the CDR's land-spillover filter zeroes coastal cells and
 writes `0.0`, which reads as open water. The literature describes the
 overestimate; what bites us operationally is the **overcorrection**, at exactly
 the cells nearest a station.

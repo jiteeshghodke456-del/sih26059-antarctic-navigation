@@ -20,3 +20,6 @@ venv/
 
 # Local-only: diagram generation prompts, deliberately not pushed.
 docs/DIAGRAM_PROMPTS.md
+
+# staged for review before deletion — see the reorg commit
+_quarantine/

@@ -240,7 +240,7 @@
     Generated 1 September 2026 · Sources: <code>docs/ARCHITECTURE.md</code>,
     <code>docs/ML_ARCHITECTURE.md</code>, <code>docs/DATASET.md</code>,
     <code>docs/DECISIONS.md</code>, <code>docs/DIFFERENTIATION.md</code>,
-    <code>docs/NAVIGATION_RESEARCH.md</code>, <code>isih/RESULTS.md</code>.
+    <code>docs/NAVIGATION_RESEARCH.md</code>, <code>docs/ISIH_RESULTS.md</code>.
     Every number in this document is traceable to one of those files or to a measurement recorded there.
   </div>
 </section>
@@ -1499,7 +1499,6 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
   <h3>11.1 Where everything lives</h3>
   <pre>SIH26059-antarctic-navigation/
 ├── isih/                        ISIH PROTOTYPE (8 Sept) — kept separate on purpose
-│   ├── RESULTS.md               ← the numbers to quote, with caveats
 │   ├── download_nsidc.py        fetch observed sea-ice concentration (no auth needed)
 │   ├── grid.py                  NSIDC grid definition + GLORYS12→NSIDC area-average regridder
 │   ├── build_dataset.py         pair background with truth; nothing imputed, missing days dropped
@@ -1526,16 +1525,18 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
 │   ├── PRIMER.md                domain background
 │   ├── VIVA_PREP.md             expected questions and answers
 │   ├── TEAM_GUIDE.md            working agreements
-│   └── DEMO_PLAN.md             how the demo runs
+│   ├── DEMO_PLAN.md             how the demo runs
+│   ├── ISIH_RESULTS.md          ← the numbers to quote, with caveats
+│   └── ISIH_README.md           how to run the ISIH prototype
 │
 └── .github/workflows/
-    └── cmems-harvest.yml        daily 06:00 UTC — DO NOT SWITCH OFF</pre>
+    └── cmems-harvest.yml        daily 12:23 + 17:23 UTC — DO NOT SWITCH OFF</pre>
 
   <h3>11.2 If you are new, read in this order</h3>
   <ol class="tight">
     <li>This document, §1 and §2.</li>
     <li><code>docs/backlog.md</code> — under two minutes, and tells you everything still open.</li>
-    <li><code>isih/RESULTS.md</code> — the real numbers and their caveats.</li>
+    <li><code>docs/ISIH_RESULTS.md</code> — the real numbers and their caveats.</li>
     <li><code>docs/ML_ARCHITECTURE.md</code> §1 — the model, in full depth.</li>
     <li><code>docs/DIFFERENTIATION.md</code> — why this is not the obvious build.</li>
   </ol>
