@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bharati Approach — ISIH prototype</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>Antarctic Navigation Decision Support <span class="tag">ISIH prototype</span></h1>
+    <p class="sub">MV Vasiliy Golovnin · Cape Town → Bharati · December 2019 resupply window.
+      Every number on this page is read from a real file, named beside it. Nothing is simulated.</p>
+  </div>
+  <div class="offline" id="offline">works offline · no map tiles · no internet used</div>
+</header>
+
+<div id="error" class="error" hidden></div>
+
+<main class="grid">
+
+  <!-- ============ MAP ============ -->
+  <section class="card map-card">
+    <div class="map-head">
+      <div>
+        <div class="eyebrow">Satellite ice on <span id="map-date">—</span></div>
+        <div class="small" id="map-source">—</div>
+      </div>
+      <div class="legend">
+        <span class="lg-label">0 %</span>
+        <span class="ramp"><span class="limit" title="ship's limit 80 %"></span></span>
+        <span class="lg-label">100 % ice</span>
+        <span class="lg-sep"></span>
+        <span class="sw route"></span><span class="lg-label">computed route</span>
+        <span class="sw straight"></span><span class="lg-label">straight line</span>
+        <span class="sw unknown"></span><span class="lg-label">unknown (QA)</span>
+      </div>
+    </div>
+    <div class="map-wrap" id="map-wrap">
+      <canvas id="ice"></canvas>
+      <svg id="vec" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+    <div class="map-foot small">
+      Route: <span id="route-engine">—</span>, solved on the ice of <span id="route-date">—</span>.
+      Grid: NSIDC 25 km polar stereographic, drawn in plain latitude/longitude, 1 in 2 cells.
+    </div>
+  </section>
+
+  <!-- ============ CONTROLS ============ -->
+  <aside class="side">
+
+    <section class="card">
+      <div class="eyebrow">Day</div>
+      <div class="day-row">
+        <div class="day-big" id="day-label">—</div>
+        <div class="day-n small" id="day-n">—</div>
+      </div>
+      <input type="range" id="day" min="0" max="30" value="0" step="1" aria-label="day of December 2019">
+      <div class="strip" id="strip" aria-label="open or closed, each day"></div>
+      <div class="small strip-key">
+        <span class="k open"></span>Bharati open &nbsp; <span class="k closed"></span>closed &nbsp; <span class="k today"></span>selected
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="eyebrow">Read the satellite as</div>
+      <div class="seg" role="radiogroup">
+        <button class="seg-btn on" id="qa-on" role="radio" aria-checked="true">Quality-checked</button>
+        <button class="seg-btn" id="qa-off" role="radio" aria-checked="false">Raw</button>
+      </div>
+      <p class="small" id="qa-note">Quality-checked: cells the product's own QA flag marks as
+        land-spillover or no-input are shown as <b>unknown</b>, not as a value.</p>
+    </section>
+
+    <section class="card status">
+      <div class="eyebrow">Can this ship reach it today?</div>
+      <div class="st" id="st-bharati">
+        <div class="st-name">Bharati station cell</div>
+        <div class="st-badge" id="b-badge">—</div>
+        <div class="st-vals small">
+          quality-checked <b id="b-on">—</b> · raw <b id="b-off">—</b>
+        </div>
+      </div>
+      <div class="st" id="st-approach">
+        <div class="st-name">Approach, 100 km north</div>
+        <div class="st-badge" id="a-badge">—</div>
+        <div class="st-vals small">quality-checked <b id="a-on">—</b></div>
+      </div>
+      <p class="small" id="limit-note">Closed means the vessel-performance mesh gives zero speed for
+        this ship (working ice limit <b id="limit">—</b> %). Source: <code>isih/figures/destination_window.json</code>.</p>
+    </section>
+
+    <section class="card tally">
+      <div class="eyebrow">Over the whole window</div>
+      <div class="tally-big"><span id="t-closed">—</span> <span class="small">of</span> <span id="t-obs">—</span> <span class="small">days the station cell was closed</span></div>
+      <div class="tally-pct" id="t-pct">—</div>
+      <div class="small">The approach was closed <b id="t-app">—</b> days. <b>The ship can always reach the approach. It usually cannot reach the station.</b></div>
+    </section>
+
+    <section class="card">
+      <div class="eyebrow">Computed route</div>
+      <div class="kv"><span>Steaming time</span><b id="r-days">—</b></div>
+      <div class="kv"><span>Heaviest ice on the route</span><b id="r-max">—</b></div>
+      <div class="kv"><span>Ship's limit</span><b id="r-limit">—</b></div>
+      <div class="kv"><span>Straight line would meet</span><b id="r-straight">—</b></div>
+      <div class="kv"><span>Legs</span><b id="r-legs">—</b></div>
+      <p class="small">Steaming time only — no waiting, no fuel figure. Source: <code>isih/figures/routes.json</code>.</p>
+    </section>
+
+  </aside>
+</main>
+
+<section class="card wide">
+  <details>
+    <summary><span class="eyebrow">What this prototype can and cannot claim</span></summary>
+    <div class="claims">
+      <div>
+        <div class="claims-h ok">Measured</div>
+        <ul id="claims"></ul>
+      </div>
+      <div>
+        <div class="claims-h no">We do not claim</div>
+        <ul id="noclaims"></ul>
+      </div>
+    </div>
+    <div class="small" id="claims-src">—</div>
+  </details>
+</section>
+
+<footer class="small foot">
+  Ice: <span id="f-ice">—</span>. Routing: <span id="f-route">—</span>.
+  API: <code>/api/summary</code> · <code>/api/route</code> · <code>/api/cells</code> · <code>/api/day/2019-12-10?qa=on</code>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
