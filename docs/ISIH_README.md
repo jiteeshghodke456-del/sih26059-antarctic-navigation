@@ -82,3 +82,52 @@ notebook in the Kaggle web UI needs none of this.
 1. `python isih/download_nsidc.py` — truth data
 2. *(next increment)* GLORYS12 background + regridding to the NSIDC grid
 3. *(next increment)* train on Kaggle
+
+## Running the demo (`isih/demo/`) — what the examiner sees
+
+A small local web app over the prototype's real, already-computed outputs.
+Nothing on the page is simulated; every panel names the file it came from.
+Design: `docs/superpowers/specs/2026-09-04-isih-mvp-design.md`.
+
+```
+uv venv .venv-demo --python 3.12
+uv pip install --python .venv-demo/bin/python -r isih/demo/requirements.txt
+.venv-demo/bin/uvicorn isih.demo.app:app --port 8000
+```
+
+Open <http://127.0.0.1:8000>. Needs no internet — no map tiles, no fonts, no CDN.
+
+**Before the demo, run the tests once.** They read the same real files the app
+reads and assert the published numbers come out unchanged:
+
+```
+.venv-demo/bin/python -m pytest isih/demo -q
+```
+
+Startup refuses to proceed if any day in the window has no satellite file on
+disk, and warms all 31 days into memory (about 3 s) before it serves — so the
+one failure that matters, a slider dying mid-demo, cannot happen after the
+server says "ready".
+
+### What to click, in order
+
+1. **The map** — the real PolarRoute route (green) over the real NOAA/NSIDC ice
+   of 1 Dec 2019; the dashed line is the straight path, blocked by 92 % ice.
+2. **The day slider** (or ← →) — the ice updates from the real daily files;
+   Bharati flips open/closed. 23 of 31 days closed; the approach open every day.
+3. **Quality-checked / Raw** — at Bharati on 1 Dec the raw product reads
+   0.0 % (looks like open water); quality-checked reads 30.7 %. The amber
+   outlines are the cells the product's own QA flag says not to trust.
+4. **"What this prototype can and cannot claim"** at the bottom — open it if a
+   judge presses. The do-not-claim list is there on purpose.
+
+Endpoints, for anyone who asks to see the backend:
+`/api/summary` · `/api/route` · `/api/cells` · `/api/day/2019-12-10?qa=on`
+
+### Not in this demo, and why
+
+- **Live re-routing** — PolarRoute needs Python ≤ 3.11 in its own env;
+  planned as the next iteration (all 92 daily meshes are already on disk).
+- **Model inference** — the trained checkpoint is on Kaggle, not in the repo.
+  The measured skill numbers are shown as text with their caveats until it is
+  fetched (`isih_prototype_lead*.pt` from the Kaggle notebook output).
