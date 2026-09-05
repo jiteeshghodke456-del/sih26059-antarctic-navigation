@@ -166,3 +166,11 @@ system claims to support.
 - [resolved][infra] `--force-download` removed from the harvest — the CLI deprecated it and warned on every run.
 - [minor][infra] The three already-committed 42.6 MB files (31 Aug – 2 Sept, ~128 MB) stay in git history. Recompressing them would *add* blobs rather than remove them; only a history rewrite would reclaim it, which is not worth doing on a shared branch.
 - [minor][data] The harvest requests a 10-day window that runs past the dataset's end, so the longest lead is silently truncated on some days (`WARNING - Some of your subset selection ... exceed the dataset coordinates`). Benign, but know it before evaluating lead-10 skill.
+
+## Open — ISIH demo (`isih/demo/`, built 4 Sep 2026)
+
+- [high][demo] **Real-browser check not yet done.** Verified in the sandbox by 20 tests, live endpoint fetches and `node --check`; nobody has opened the page in a browser. Run it on the laptop before Sept 8 — see docs/ISIH_README.md "Running the demo".
+- [high][demo] Live re-routing button (iteration 2): PolarRoute needs Python ≤ 3.11 in its own env (`prenv`, see isih/make_route_figure.py docstring); all 92 daily vessel meshes are already in isih/data/vessel_meshes, so a re-plan is a ~9 s Dijkstra per day — docs/superpowers/specs/2026-09-04-isih-mvp-design.md.
+- [high][demo] Model panel (iteration 3) is blocked on the trained checkpoint: `isih_prototype_lead*.pt` exists only in the Kaggle notebook output, not in the repo. Fetch it via the Kaggle CLI before adding any inference to the page; until then the page shows the measured numbers as text with caveats only.
+- [minor][demo] `.venv-demo/` created inside the sandbox links to the sandbox's /usr/bin/python3 — rebuild it on the laptop (`rm -rf .venv-demo` first). Pinned versions in isih/demo/requirements.txt were the ones the tests passed under.
+- [minor][demo] The route card's "heaviest ice" (79 %) and "straight line" (92 %) are sampled from `sic_points.csv` with the same method as plot_route.py, reproduced in isih/demo/data.py to avoid a scipy dependency; a test asserts both numbers equal the figure's. If plot_route.py's sampling ever changes, change both or the slide and the app will disagree.
