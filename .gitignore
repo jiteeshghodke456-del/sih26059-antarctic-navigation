@@ -26,3 +26,7 @@ _quarantine/
 
 # ISIH demo virtualenv (rebuild: see isih/demo/requirements.txt)
 .venv-demo/
+
+# agent skills installed by `npx skills` — bodies are reproducible from skills-lock.json
+.agents/
+.claude/skills/
