@@ -119,6 +119,9 @@
       host.appendChild(el('p', 'note', 'The application starts from local files. ' +
         'Nothing on this screen needs the network.'));
       primary(host, v ? 'Start another voyage' : 'New voyage', 'new-voyage');
+      var fut = el('a', 'linkish future-link', 'Future scope — Baymax Mode and the master\u2019s assistant (simulated)');
+      fut.href = '/future';
+      host.appendChild(fut);
       C.setLayers({ route: false, ship: false, waypoints: false,
                     straightLine: true, stations: true, protectedAreas: true });
       C.setDayLabel('browse the window');

@@ -464,3 +464,55 @@ summary:focus-visible, [tabindex]:focus-visible {
 .vt .gcell.s-MARGINAL { color: var(--degraded); }
 .vt .gcell.s-FAIL     { color: var(--critical); }
 .vt .gcell.s-UNKNOWN  { color: var(--unknown); }
+
+/* ---------------- future scope (§25 / §26) ---------------- */
+
+/* Simulation is stated in three places on that page — a badge, a bar, and a
+   chip on every panel — because §25 permits a simulation that looks
+   integrated and forbids one that reads as real. */
+.badge.sim { border-color: #b58bc4; background: #f7eefb; color: #6b2f80; font-weight: 650; }
+.chip.sim {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.03em; vertical-align: middle;
+  border: 1px solid #b58bc4; background: #f7eefb; color: #6b2f80;
+  border-radius: 2px; padding: 1px 6px; margin-left: 8px;
+}
+.simbar {
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline;
+  padding: 10px 20px; font-size: 12.5px;
+  background: #f7eefb; border-bottom: 1px solid #d9bde5; color: #4d2260;
+}
+.panel.sim-panel { border-left: 3px solid #b58bc4; }
+
+.vitals { display: flex; gap: 8px; flex-wrap: wrap; }
+.vital {
+  flex: 1; min-width: 128px; border: 1px solid var(--rule-soft);
+  border-radius: 2px; padding: 8px 10px;
+}
+.vital.warn { border-color: #d8a53c; background: #fdf9f0; }
+.vital-t { font-weight: 700; font-size: 13px; }
+.vital-grid {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; margin: 6px 0 4px;
+}
+.vk { font-size: 11px; color: var(--ink-3); }
+.vv { font-size: 11.5px; text-align: right; }
+.vital-load { font-size: 11px; color: var(--ink-2); }
+
+.suggests { list-style: none; margin: 0; padding: 0; }
+.suggests li { padding: 7px 0; }
+.suggests li + li { border-top: 1px solid var(--rule-soft); }
+.suggests b { display: block; font-size: 12.5px; }
+
+.asklist { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.askbtn {
+  font: inherit; font-size: 12px; padding: 5px 11px; cursor: pointer;
+  background: var(--panel); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 2px;
+}
+.chat { display: grid; gap: 7px; max-height: 300px; overflow-y: auto; }
+.bubble {
+  border-radius: 2px; padding: 8px 11px; font-size: 12.5px; max-width: 85%;
+}
+.bubble.you { background: var(--sea); color: #fff; justify-self: end; }
+.bubble.sys { background: var(--deck); border: 1px solid var(--rule-soft); }
+.bubble-src { display: block; margin-top: 5px; font-size: 10.5px; color: var(--ink-3); }
+.future-link { display: inline-block; margin-top: 12px; }

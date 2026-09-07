@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Future scope — ISIH</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="ident">
+    <h1>Future scope</h1>
+    <p class="sub">Capabilities that are designed and demonstrated, but not built.
+      Nothing on this page is a real measurement.</p>
+  </div>
+  <div class="badges">
+    <span class="badge sim">SIMULATED — not operational capability</span>
+    <a class="badge" href="/">Back to the bridge console</a>
+  </div>
+</header>
+
+<!-- Said once, loudly, before anything on this page is read. §25 permits a
+     simulation that looks integrated; it forbids presenting one as real. -->
+<section class="simbar">
+  <strong>Everything below this line is simulated.</strong>
+  <span>No wearable is connected, no physiological signal is measured, and no
+    language model is running. These screens exist to show the intended
+    interaction, and each one states what it would need to become real.</span>
+</section>
+
+<main class="grid">
+
+  <div class="col-main">
+
+    <section class="panel sim-panel">
+      <div class="phead">
+        <h2>Baymax Mode <span class="chip sim">SIMULATED</span></h2>
+        <p class="src">§25 — a watch-worn assistant for the officer on watch.</p>
+      </div>
+
+      <p class="note"><b>This is not a medical device and does not give medical
+        advice.</b> It is a fatigue-and-workload aid of the kind bridge
+        resource management already uses, and the values below are a fixed
+        demonstration sequence — not readings from any person.</p>
+
+      <div class="vitals" id="vitals"></div>
+
+      <div class="phead" style="margin-top:14px"><h3>What it would say</h3></div>
+      <ul class="suggests" id="suggests"></ul>
+
+      <p class="note">To become real this needs: a watch or wearable exposing
+        heart-rate variability and SpO₂, a sleep model validated against
+        watchkeeping rosters, and — because it touches crew health data — a
+        consent and data-protection position that does not exist yet. Any of
+        those missing is why it is on this page and not on the bridge console.</p>
+    </section>
+
+    <section class="panel sim-panel">
+      <div class="phead">
+        <h2>Master's assistant <span class="chip sim">NOT A LANGUAGE MODEL</span></h2>
+        <p class="src">§26 — a locally run assistant, so the ship keeps it when the link drops.</p>
+      </div>
+
+      <p class="note">The replies below are <b>composed from the live decision
+        object</b> — the same gates, health and corridors the bridge console
+        serves. They are templated, not generated. No model runs here, locally
+        or otherwise. What this demonstrates is the interaction: asking the
+        system a question in words and getting an answer that cites its own
+        evidence.</p>
+
+      <div class="ask">
+        <div class="asklist" id="asklist"></div>
+        <div class="chat" id="chat"></div>
+      </div>
+
+      <p class="note">To become real this needs a small instruction-tuned model
+        that runs on the bridge laptop without a GPU, and a retrieval layer
+        over the decision object and the research documents. The honest reason
+        to run it locally is the same reason the rest of the system is offline:
+        south of about 70°S the link is Iridium or nothing.</p>
+    </section>
+
+  </div>
+
+  <div class="rail">
+    <section class="panel">
+      <div class="phead"><h2>Why these are separated</h2></div>
+      <p class="note">The bridge console shows only measured or computed
+        values, each with its source. Mixing a simulated health monitor into
+        that screen would make every real number on it answerable to the
+        question "so what else here is fake?".</p>
+      <p class="note">Keeping the simulation on its own page is the cheapest
+        way to keep the console's claims intact — and it is what §25 asks for:
+        integrated and smooth, but never represented as real operational or
+        medical capability.</p>
+    </section>
+
+    <section class="panel">
+      <div class="phead"><h2>Status of each</h2></div>
+      <dl class="kv">
+        <dt>Baymax Mode</dt><dd>designed · simulated</dd>
+        <dt>Local assistant</dt><dd>designed · templated</dd>
+        <dt>Wearable link</dt><dd>none</dd>
+        <dt>Language model</dt><dd>none</dd>
+        <dt>Health data held</dt><dd>none</dd>
+      </dl>
+    </section>
+  </div>
+
+</main>
+
+<script src="/static/future.js"></script>
+</body>
+</html>
