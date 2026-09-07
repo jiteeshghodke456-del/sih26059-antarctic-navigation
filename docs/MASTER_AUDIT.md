@@ -487,3 +487,320 @@ Two numbers not to manufacture: the false-positive/false-negative *rate* of the 
 **6. The environment has changed — the non-manufactured urgency.** Antarctic sea ice has sat in a post-2016 low-extent regime with record lows in 2022, 2023 and 2025 and "different seasonal persistence characteristics"; the literature's own words are that climatology is "by definition, not meaningful" in a non-stationary state `[S]`. **A master without a forecast navigates on a personal climatology, and that is exactly the quantity a regime shift degrades.** "Ships already go" was true under a climate that held still.
 
 **What has not changed, stated so the argument is not oversold.** Connectivity below ~70°S is still Iridium-class in every source this repo holds; the claim that LEO broadband is absent there was not assessed `[H]` — if Starlink-class coverage reaches the corridor, the bandwidth argument weakens, the metered-comms argument remains, and **the decision layer is unaffected**. Growlers remain invisible to everything in orbit. No Antarctic compression product exists anywhere. The market is fifty-odd hulls, and the closest competitor has been seven people for twelve years. The customer's tender already anticipates that ice will stop the discharge, with **no clause for when it is not workable** — and that clause has been in the contract for years. The point of starting now is that, for the first time, the inputs to answer it are free, the engine to compute it is open, and the programme that needs it is about to move a station across that coast on a deadline.
+
+---
+
+## N. Solution in one sentence
+
+**For the master of India's chartered Antarctic resupply ship, who today decides whether to push the last 100 km into Bharati station on yesterday's ice picture and his own judgement, this is a laptop tool that, from real satellite ice and this ship's real dimensions, says each day whether that approach is open for this hull, what the alternatives cost, and — for the six of nine safety questions it has no data to answer — says so out loud instead of drawing a confident line over an unknown.**
+
+The version a layperson keeps: *the ocean crossing is easy; the station door is shut three days in four (**Measured**: 23 of 31 December-2019 days); this tells the captain whether the door is open today, and refuses to pretend it can see what it cannot.*
+
+What the sentence deliberately does not say: "AI", "forecast", "route optimisation". The demo runs no model, plans on one day's observed ice with no time dimension, and the route is a fixed 41-leg line solved once. **The honest product today is a reachability-and-evidence console, not a forecasting router.**
+
+---
+
+## O. Core innovation
+
+### What the user had to do before
+A master approaching Prydz Bay works from an AMSR2/PolarView image (yesterday's at best), the USNIC weekly berg list, helicopter reconnaissance, and experience. Every one of those shows *what was seen*; none says *what this hull can do with it*, and none says *what was not seen*. The professional aids that exist are binary or scalar: an ECDIS route check lights red or green; POLARIS returns one number. **In all of them, absence of evidence renders as absence of hazard.** The repo hit this on its own data twice: the CDR writes suppressed coastal pixels as `0.0` inside `valid_range`, so an unguarded reader saw open water on four of the eight days Bharati "looked open" (**Measured**); and a never-scored target rendered as "closed 31 of 31" until the code separated *unavailable* from *closed*.
+
+### What the user can do now
+Read one state — VALID / DEGRADED / CRITICAL / INVALID — *derived* as the worst of nine named questions, where a question without data is **UNKNOWN**, UNKNOWN caps health at DEGRADED, and each UNKNOWN names the dataset that would settle it. Approve under a named person; when a later observation flips a gate, the console names it ("logistics: PASS to FAIL") and stays silent when nothing changed (**Measured** on 1/5/9 December 2019: DEGRADED → INVALID → DEGRADED).
+
+### The bottleneck that disappears
+Not computation — the **reconciliation step** a master does in his head: *"the chart says X; what does the chart not know; does that change my plan?"* That step is unbounded, unrecorded and non-transferable at watch handover. The system makes it structural: nine fixed questions, each with provenance, evaluated automatically on each new observation, and the record survives handover. What used to be judgement about *coverage* becomes a displayed number: "3 of 9 gates evaluable".
+
+### Why UNKNOWN is innovation and not an excuse for incompleteness
+The accusation writes itself: *"six grey lights is a prototype that did not finish."* Four answers, and one condition that bounds them.
+
+1. **It inverts the default failure mode of every dashboard, and it is enforced in code, not in a caveat.** `health_from_gates` treats UNKNOWN exactly like MARGINAL; an *empty* gate list is DEGRADED, not VALID; a test asserts a gate with no data can never read as a pass. A competitor cannot bolt this on later, because their whole visual language (green = fine) assumes the opposite default. It is the CATZOC "U — unassessed" principle applied to the whole decision rather than one attribute.
+2. **It is what the regulation asks for.** Polar Code Part I-A §11.3.2 obliges the master to consider "any limitations of the hydrographic information … available"; MSC.1/Circ.1519 §1.4 says POLARIS is "not a 'Go/No Go' tool but a decision support tool". A tool returning "chart: UNKNOWN — no bathymetry in the mesh" is producing the §11.3.2 statement automatically.
+3. **It generates operational value from missing data.** Each UNKNOWN is a costed request: the execution gate is closed by a live sensor feed *or a helicopter recon observation entered by the bridge*; the chart gate by GEBCO with its TID grid. "We don't know" becomes "here is what to go and get, in what order."
+4. **It composes with change detection.** A paper checklist has the same nine questions. It does not flip on the 5 December observation, does not distinguish "an assumption changed" from "new data arrived", and does not version the approval it invalidates.
+
+**The bounding condition — write it down, because it is where this claim dies.** UNKNOWN is innovation only while the count of UNKNOWNs *falls monotonically and each closure is measured*. The ice gate today evaluates an invented 80 % limit against a pixel maximum the router never optimised, on a cell 139 km wide at Bharati (**Measured**). If in December the same six gates are still grey and the three evaluable ones still rest on an assumed limit, the honest reading becomes "a scaffold with no building," and a judge will say so.
+
+---
+
+## P. Unique selling points
+
+### Primary USP 1 — Evidence-gated route health with a first-class UNKNOWN
+
+| | |
+|---|---|
+| **Problem** | Every incumbent renders no-data as no-hazard. The repo's own artefact — coastal pixels reading `0.0 %` on 43.2 % of days in the Bharati box (**Measured**) — is what that looks like in practice |
+| **Mechanism** | Nine named gates → worst-state derivation → UNKNOWN caps at DEGRADED and names its blocker → approval versioned and attributed → divergence names the flipped gate and is silent on identical evidence. **Health is never a score** |
+| **Evidence** | Health transitions on real observations: DEGRADED (1 Dec) → INVALID (5 Dec) → DEGRADED (9 Dec) (**Measured**). Re-evaluating the same day yields the same digest and no divergence (**Measured**) |
+| **Advantage** | The master sees coverage — "3 of 9 gates have data" — *before* he sees a route; an approved plan is invalidated by a named assumption, not by every new file |
+| **Defensibility** | Low as an *idea* (nine gates copy in a day); high as a *discipline*, because it forbids the green dashboard that wins demo rooms. Defensible exactly as long as §O's bounding condition holds |
+
+### Primary USP 2 — The last-100-km reachability verdict for this hull, on an audited coastal record
+
+| | |
+|---|---|
+| **Problem** | The PS reads as "route across the Southern Ocean". The measured problem is different: the open-ocean leg carries **mean 6 % ice**, while the station cell is closed **74.2 %** of December-2019 days and the approach 100 km north **0 %** (**Measured**). And the satellite record lies at exactly that cell |
+| **Mechanism** | Daily NSIDC CDR → QA-flag masking → meshiphi mesh → PolarRoute vessel performance with this hull's verified beam and speed → per-day passability of station and approach cells → the mission's `destination_policy` decides which cell counts |
+| **Evidence** | 23/31 vs 0/31 (**Measured**); four of eight "open" days are spillover artefacts (**Measured**); masking moves coastal mean ice *up*, 46.8 → 54.6 % — the safe direction (**Measured**); the filter fires on 1,096/1,096 days, mean 118 cells/day (**Measured**) |
+| **Advantage** | Converts "which line" into the decision that actually exists on this run: arrive when, hold at the fast-ice edge, or switch to helicopter and barge |
+| **Defensibility** | Rests on a data-quality finding a team that has not opened the QA flag will not have. **Weak points a judge with a ruler will find:** the 80 % limit is invented, the Bharati mesh cell is 139 × 49 km, and reachability flips at an assumed limit between 45 and 50 % |
+
+### Basic USPs
+1. **BAS's own router reused with three verified limitations named** — `wave_resistance()` dead code, no time dimension, `IceNetDataLoader` drops `sic_stddev`, all verified in installed source. Basic, because the extensions are designed, not built.
+2. **A trained residual U-Net beating persistence +18.5 % to +30.6 % on a held-out melt season, scored once** — with its own caveat that this is an upper bound. Basic until the leak-free ablation runs.
+3. **Offline by construction** — no tile, font, CDN or external URL, test-enforced; boot refuses on a missing satellite file rather than rendering a gap. Basic, because IcySea already ships Iridium-tested offline caching; ours is a zero-network page, not yet a sync design.
+
+**Not a USP yet, and should not be sold as one:** the Wagner–Dell–Eisenman drift implementation. Correct, tested, three numerical traps fixed — and wired to nothing, fed no real forcing, with no trajectory error ever measured.
+
+---
+
+## Q. Killer feature
+
+**"Approve on an open day; drag to 5 December; route health goes INVALID and the console names the gate that broke. Drag back; it says nothing changed."**
+
+Visible (a band changes state, a sentence names a gate), operational (it is the hold-or-press-on decision), credible (nothing is scripted — it is the vessel mesh on that day's observation), demonstrable in thirty seconds offline, and tied to the primary pain.
+
+| Stage | What actually happens | Honest gap |
+|---|---|---|
+| **Input** | NOAA/NSIDC CDR G02202 v6, 25 km, with QA flag | Observation of *that* day, not a forecast of arrival day |
+| **Processing** | QA bits → NaN; polar stereographic → lat/lon; meshiphi 5° cells; vessel model marks cells inaccessible above `max_ice_conc: 80` | Bharati's cell was only split to 1.25° |
+| **Model** | **None.** In production: corrected SIC at lead *k* from the residual U-Net | Weights absent; nothing consumes the model |
+| **Risk** | `logistics_gate` → FAIL; `ice_gate` → MARGINAL (74 % vs 80 %, inside the 7.4-point band from the CDR's own stdev); six UNKNOWN → health INVALID | Ice gate uses a pixel max the router never optimised |
+| **Route** | Unchanged — solved once on 1 Dec ice; A/B/C precomputed | No re-plan |
+| **Recommendation** | "Bharati is not reachable for this ship today"; alternatives with ETA deltas; preview shows destination state on the *arrival* day | Arrival-day state is a replayed observation, not a forecast |
+| **User decision** | Keep / edit / take alternative; keep re-approves as a new version; approve is 400 without a name | Log is in-memory; a reboot loses the plan of record |
+| **Outcome** | In replay the closure is caught the day it is observed. Ship-days saved — **Target, unmeasured** | The outcome metric has no baseline |
+
+**What must change for this to be a killer feature in December rather than a demo beat:** the trigger must be the *forecast for the ship's ETA at the approach*, not today's observation of a cell the ship is nine days from. Without that, the feature detects closures the master could see out of a porthole.
+
+---
+
+## R. Hyper-specific MVP
+
+**One user:** the master. **One decision:** *inside D+7 of arrival, continue to the station cell, hold at the approach (68.5°S, 76.2°E), or switch to helicopter-and-barge?* **One workflow:** sign in → mission → route → waypoints → nine gates → approve → monitor → workspace on divergence → re-approve. **One measurable outcome:** ship-days lost at or before a closed approach per season, versus the previous seasons' record (baseline unknown).
+
+**Bottleneck sentence:** *Today, the master cannot efficiently decide whether to commit to the station approach because the ice picture he receives shows concentration, not this ship's reachability, and it reports suppressed coastal pixels as open water on 43 % of days near Bharati (**Measured**). Our system reduces that by computing per-day reachability for this hull on a QA-masked record, and by declaring, per safety question, what it cannot see.*
+
+**MUST-EXIST:** daily SIC ingest with QA masking (built) · vessel mesh at native 25 km in the coastal band (**partial** — coastal cell is 1.25°) · station/approach reachability per day (built, on the coarse cell) · nine-gate health with UNKNOWN, versioning, divergence (built) · **a forecast-grade input for the arrival day** (**absent** — without it the MVP answers "is it open today", not "will it be open when we get there") · valid/init/received time on every field (**absent**) · durable plan-of-record (**absent**) · offline page (built) / sync design (**absent**) · data-mode badge (built).
+
+**USEFUL-BUT-OPTIONAL:** A/B/C sweep · two-vessel comparison · protected areas · coastline · dated berg overlay · POLARIS advisory *band* · waypoint ETAs.
+
+**EXPLICITLY-EXCLUDED:** growler warning (3.5 orders of magnitude below any satellite product) · tactical steering · a POLARIS RIO *number* for this hull · absolute fuel figures · fleet coordination · any LLM/RAG in the decision path · compression risk field · time-expanded routing (v2, not MVP).
+
+---
+
+## S. Architecture verdict
+
+| Component | Verdict |
+|---|---|
+| **Frontend** | Right for a bridge laptop — no build step, no CDN, 2,390 lines readable in an afternoon. Two real defects: a hand-rolled projection already shipped one geometry bug (2.92× error at Bharati, **Measured**); no polar-stereographic mode for the leg that matters |
+| **Map engine** | Adequate for the demo, wrong for the approach. Draw in EPSG:3412/3031 directly and use BAS ADD coastline — ice-front vs grounding line are operational distinctions at Bharati. A tile server is unnecessary |
+| **Backend** | Right shape, wrong persistence: **a reboot loses the approved plan** |
+| **API layer** | Good — refusals are typed (409 out-of-order, 400 unattributed, 503 missing artefact). Missing: any field-level time metadata |
+| **Ingestion** | The one piece of *operational* infrastructure, and it has two live bugs: files named from the wall clock (silent D−1 capture) and a harvest box that does not match the training corridor. **Unrecoverable data is being lost at the margins every day** |
+| **Validation** | Present where it was needed most (coast); absent for CMEMS content beyond a size check |
+| **Normalisation** | Correct and worth defending — truth is never resampled |
+| **Database** | None. Fine for read-only replay; a product needs a pack store with manifest, versions and rollback — designed, zero code |
+| **Sync** | The most-cited design claim in the docs and the least-built: no pack format, no delta, no signature, no key management |
+| **Offline** | Page yes; re-planning no. "Cut the cable and keep planning" is not demonstrable today |
+| **ML inference** | None aboard. The "Real AI" bar is met by the training artefact, not by the product |
+| **Route engine** | Correct reuse; wrong configuration for the PS's "fuel-efficient" deliverable |
+| **Risk engine** | The strongest module. Thin inputs |
+| **Telemetry** | None. Own-ship position is computed from the planned track — correctly labelled, still absent |
+| **Onboard deployment** | **Not deployable as-is**: two Python runtimes, per-machine venv rebuild, and data reached by a symlink into a sibling git worktree (P0) |
+| **Monitoring** | Three numbers should be watched — pack age, gate coverage, route latency. None is |
+| **Security** | Acceptable for a demo. For a bridge: signed manifests, read-only OS user, USB ingestion as an attack surface, pinned dependencies |
+
+### Data flow, every boundary named
+
+```
+External   NSIDC CDR (HTTP, no auth, ~368 KB/day) · CMEMS GLO12 (auth, 42.6 MB → 5.2 MB)
+           GLORYS12 (Kaggle only) · USNIC CSV (1.9 KB) · ATS shapefile · Natural Earth
+   │ B1 network→disk. Contract: date-named file, size check.        [BUG: harvest names by wall clock]
+Ingestion  download_nsidc.py · harvest_cmems.sh · compress_netcdf.py · catalogue.py · coastline.py
+   │ B2 NetCDF/CSV/shapefile → arrays. Contract: dataset with conc + qa_flag.
+Validation ice_quality.py::load_sic  (QA bits → NaN + suspect mask) · audit_ice_quality.py
+   │ B3 (sic, suspect) in EPSG:3412. Contract: NaN means unknown, never 0.
+Normalise  grid.py::GlorysToNsidcRegridder (area-average; truth never resampled)
+   │ B4 DataFrame(lat, long, SIC) — meshiphi's scalar_csv contract.
+Storage    nsidc_sic/ (1,096 files, symlinked — P0) · vessel_meshes/ · figures/*.json
+   │ B5 JSON on disk. No manifest, no valid_time, no signature.
+Processing meshiphi mesh (5°, split_depth 4) · VesselPerformanceModeller
+   │ B6 vessel mesh JSON — cells carry SIC, speed[8], inaccessible.
+Model      U-Net: trained on Kaggle, consumed by NOTHING
+           Wagner drift: tested, fed by NOTHING, consumed by NOTHING
+   │ B7 DOES NOT EXIST. Designed: corrected SIC → mesh layer; berg polygons → excluded_zones.
+Route      PolarRoute Dijkstra + smoothing, offline, single day, single objective
+   │ B8 GeoJSON paths + per-leg traveltime → routes.json / alternatives.json
+Risk       gates.py::evaluate_all → decision.py::health_from_gates, gate_digest
+   │ B9 list[GateResult] → Decision.as_dict().  [SEAM: consumes a pixel statistic the router never saw]
+Decision   decision_service.py (DecisionLog: approve/supersedes/divergence) · workflow.py
+   │ B10 JSON over HTTP, localhost.
+UI         app.js (Canvas raster, SVG vectors, Mercator) · workflow.js · index.html
+```
+
+**Boundaries B7 and the model half of B9 are the ones the product's value rests on, and they are the two that do not exist.**
+
+### Would I choose this architecture again for a real Antarctic deployment?
+**The shape, yes. Four implementation choices, no.**
+
+Keep: two-tier "sync environmental state, not answers" with the full router aboard; decision layer as pure functions over explicit evidence; committed extracts so the runtime has no geospatial dependency that can fail live; PolarRoute reused; no LLM anywhere.
+
+Change, in order:
+1. **Time.** A static single-day mesh cannot consume a forecast; the router meets day-0 ice on day 9. Either a time-expanded mesh stack or the two-phase solve (ocean leg on today's field, approach leg on the corrected field valid at the arrival band, solved backwards to a cost-to-go). **Without this the model has no path to the route and "AI-enabled routing" is a slide.**
+2. **A pack format instead of loose JSON** — one signed manifest per pack, every field carrying init/valid/received time, tier, source, qc version; N previous kept; delta = changed cells.
+3. **One runtime.** Pin to Python 3.11, vendor PolarRoute, ship one executable. The 3.11/3.12 split makes on-board re-planning impossible.
+4. **Resolution where the decision is** — force native 25 km inside a 300 km coastal band so the router optimises the same quantity the gate reports.
+
+Plus: an NMEA listener (the ship already logs position, heading, wind, echo sounder, shaft power — and speed-through-ice vs predicted is a *free daily model validation*), and a durable store for the plan of record.
+
+---
+
+## T. Tech-stack verdict
+
+**Vanilla JS + Canvas + FastAPI is right for a bridge laptop with no internet, and is not a liability at the scale this problem has.** No build step means no toolchain to break on a ship; no CDN means the page is airtight; a single Python process is what a 4-core, 8 GB bridge laptop can run.
+
+Where it breaks: **projection by hand** (one geometry bug already shipped — vendor `proj4js` or `d3-geo` *locally*, which does not violate the no-network rule); **raster draw cost** if drift animation is ever wanted (move to `ImageData` blit or WebGL — not needed now); **in-memory state** (SQLite with WAL, one file); **two Python versions** — the single biggest deployment liability in the repository; **no JS tests** (one offline Playwright smoke test would cost an hour).
+
+What does *not* break: one bridge user; 10 leads × 5 members × ~25 k cells × uint8 ≈ 1.25 MB/day (**Derived**); a 12-route sweep at ~7 s each ≈ 84 s as a background job. Circumpolar, the mesh grows ~10× and Dijkstra is still seconds.
+
+What I would **not** add: MapLibre/Leaflet (no tiles to serve, 800 KB for nothing), React (a build step on a ship), a message queue, Docker on the bridge. **The stack's virtue is that it contains nothing that can fail for a reason unrelated to ice.**
+
+---
+
+## U. Connectivity verdict
+
+Geostationary VSAT does not reliably cover south of ~70°S; polar maritime data is Iridium-class — Certus peaks ~704 kbps and is usually far less; legacy Iridium is provisioned for sub-50 KB messages (SBD is 340 bytes each). Inmarsat-C SafetyNET reaches only to roughly 76° because the satellites are geostationary; **Iridium SafetyCast, operational since December 2020, is the only broadcast maritime-safety channel with true polar coverage.**
+
+Built against this: a page that fetches nothing (**Measured**). Designed and unbuilt: everything else.
+
+| State | Budget | What moves | What the system does |
+|---|---|---|---|
+| **Connected** (Cape Town) | GB | archive, CMEMS cycles, model weights (~60 MB), bathymetry, climatology tables, last season's log | Full pack build; **weights only here** |
+| **Constrained** (Certus, metered) | ≤ 1 MB refresh, ≤ 50 KB delta (**Target**) | corridor forecast ~60–120 KB gzip (**Hypothesis**); delta 6–15 KB; USNIC ~2 KB | Daily pack; re-plan aboard |
+| **Intermittent** (~2.4 kbps or SBD) | 50 KB ≈ 3 min, or 150 SBD messages (**Derived**) | P0 hazard alerts (~100 B); P1 observed SIC delta in a 300 km box (5–15 KB); P2 next-3-day leads | **On-board re-correction of the packed forecast from the fresh observation** — the one capability a packed third-party forecast cannot have |
+| **Disconnected** (days) | 0 | nothing | Forecast ages past its horizon → tiering; berg projection stops at 72 h; ship sensors and rule gates become the evidence |
+
+### Countering stale data — the question that decides whether this is a safety tool
+
+Three distinct failures: **F1** a stale hazard field rendered as current (the ship steers around a ghost into the real thing); **F2** a forecast displayed past its horizon; **F3** "no update" read as "no change" — the most insidious, because silence from the link is indistinguishable from a benign world unless the system says otherwise.
+
+Seven layers, cheapest and most data-independent at the bottom:
+
+- **L0 — Nothing renders without a time and a tier.** Valid time, lead, age, tier badge. A field without a badge is a bug. Kills F1 and F3 as *display* failures. *Absent.*
+- **L1 — Uncertainty grows with age from the project's own measured error curve.** An observation aged *k* days **is** a persistence forecast at lead *k*, and the curve is already measured: RMSE 0.0570 / 0.0958 / 0.1204 / 0.1395 at 1/3/5/7 days. So routed `SIC_upper = SIC_last + q(age)` — one lookup, no new science. **The ice gate then goes UNKNOWN by itself once the aged error (0.14 at 7 d) exceeds the 7.4-point band around the limit: the system can no longer tell "under" from "over", and says so.** The arrival-day cell is not "open"; it is *"last observed 31 %, 8 days ago, ±14 points — unknown against an 80 % limit."* *Absent; ingredients exist.*
+- **L2 — Physics dead-reckoning with forcing the ship measures itself.** The ship has an anemometer regardless of link. Free drift moves ice at ~2 % of the 10 m wind, turned 20–40° left in the Southern Hemisphere. Semi-Lagrangian advection of the last observed field by the ship's own wind record beats persistence and costs nothing. Above ~90 % concentration the pack is locked and it should switch to packed drift. At 30 m/s a blizzard moves the field ~52 km/day — which is why a 25-hour event makes a two-day-old chart useless. *Absent.*
+- **L3 — Decisions carry expiries; the plan is pre-committed with hold points.** Each gate gets a `valid_until` derived from L1; on expiry it flips to UNKNOWN and the existing divergence machinery names it. The approved plan carries decision points chosen while data was fresh: *"hold at 68.5°S unless recon confirms ≤ 6/10"*; *"abort if speed-through-ice below 3 kn for 2 h."* **The ship then arrives at the ice edge with a plan that does not depend on the link having worked.** *Machinery exists; expiry does not.*
+- **L4 — The ship's own observations become primary evidence.** Speed-through-ice vs predicted (the vessel mesh predicts a derated speed per cell; slower means heavier ice — the same innovation channel as `background − observation`); radar and the lookout; **helicopter reconnaissance, which this ship carries two of and uses on this route.** Today there is no path for a recon observation into the system at all. *Absent.*
+- **L5 — Rules that need no data.** Stand-off from the fast-ice edge when the wind has an onshore component (AARI: *"the most dangerous case for shipping is compression at the fast-ice edge when the general drift sets into it at an angle"* — **precisely the Bharati offloading geometry**); speed caps below the growler-detection threshold; no entry above a stated concentration without recon; point-of-no-return against bunker and the nearest capable asset. *Absent.*
+- **L6 — The 100-byte request.** The ship cannot afford an image; it can afford a request. And the hazard broadcast channel exists whether or not our link does — METAREA VII warnings by SafetyNET/SafetyCast. *Absent.*
+
+### If we never get fresh data and a hazard is ahead
+Day 0: pack shows the approach open, arrival day beyond D+9 — climatology only, and the system may **not** say "open on arrival". Days 1–7: no link. Day 8, 66°S, last observation 8 days old. L0 shows every field aged 8 days, tier climatology-grade, route reduced to a dashed corridor with no waypoints into ice. L1 has widened the approach cell to "31 % ± 14 → unknown against 80 %" and the ice gate is UNKNOWN. L2 has advected the last field by the ship's own wind; if it was onshore for three days, the coastal band is drawn *heavier*, not lighter. L3 fires the pre-committed hold at 68.5°S — the cell open 31 of 31 days. L4: the helicopter flies, the observation is entered, the execution gate closes on a *fresh local* observation. L5 holds the ship off the fast-ice edge. L6 sends 100 bytes.
+
+**The principle underneath all seven: a stale forecast is never an input to a route; it is an input to a widening.** The system's job when blind is not to keep recommending — it is to shrink what it claims, keep the pre-committed plan visible, and make the ship's own observations first-class.
+
+### Degrades vs hard-fails
+
+| Degrades (visibly) | Hard-fails (refuses) |
+|---|---|
+| Route line → dashed corridor, waypoints withdrawn | Rendering any field without valid/init/received time |
+| Point ETA → range | A pack whose manifest hash or signature fails |
+| Berg polygons → last-seen points with dates after 72 h | A bridge clock not synchronised to GPS time |
+| Forecast-grade → CMEMS-direct → climatology | Approach-phase route solving with no bathymetry (today this only DEGRADES — too weak for a product) |
+| Health VALID → DEGRADED as gates expire | **An ice-gate PASS from stale numbers once aged error exceeds the band — must return UNKNOWN** |
+| Own-ship GPS → dead reckoning, labelled | An approval without a name; serving replay as live |
+
+**Standing verdict:** the repository has the right *doctrine* and almost none of the *machinery*. Of L0–L6, only the health cap exists. **L0 and L1 are a schema and a lookup table, and should be built before any further model work** — without them, every other capability is a way to display stale numbers more confidently.
+
+---
+
+## V. Data-source verdict
+
+"Real-time" appears nowhere below, because nothing in this stack is: the fastest product available (OSI SAF, 5 h) is not used, and the fastest thing that *is* used is a daily file.
+
+| Source | Variable | Spatial | Temporal | Latency | Licence | Reliability / missing data | Bandwidth | Why this over alternatives |
+|---|---|---|---|---|---|---|---|---|
+| **NSIDC CDR G02202 v6** *(used)* | SIC, QA flag, stdev (unused) | 25 km EPSG:3412 | daily | final latency **conflicting** (~1 wk vs 3–6 mo, UNVERIFIED) | NOAA, open | 1,096/1,096 files. Spillover 118 cells/day mean, max 488; Bharati box suspect 43.2 % of days. Accuracy ~10 %, 0–100 % at coast/edge; summer melt bias 10–30 % low | ~368 KB/day | 48-year record, same family in NRT (no train/serve mismatch). Its weakness is exactly where the decision is — which is why the QA layer exists |
+| **CMEMS GLO12 001_024** *(harvested, unused by model)* | siconc, sithick, usi/vsi, uo/vo | 1/12° | daily D+0…D+9 | "by 12:00 UTC"; missed bulletins unrecoverable | Copernicus | 13 runs, 1 login failure; wall-clock naming bug; box clipped on all four sides. **CMEMS underestimates summer Antarctic SIC — the unsafe direction** | 42.6 MB → 5.2 MB | The only Antarctic-covering ice-ocean *forecast* with SIC, thickness, drift and currents in one product. Also **the only product that can make fuel and time diverge** |
+| **GLORYS12** *(training background)* | siconc | 1/12° | daily 1993– | reanalysis — **the leak** | Copernicus | flat 0.163 error at every lead | Kaggle only | Deep archive of the same model family; defensible only for Stage A with disclosure |
+| **USNIC icebergs** *(archived once)* | bergs ≥ 10 nmi axis | point | weekly | days | US Gov, public | 33 bergs, largest 3,037 km². **No history endpoint — must be archived weekly or trajectories are impossible** | 1.9 KB | Authoritative positions; BYU consolidated DB (1978–2025, 4.1 MB) for validation history |
+| **GFS + GFS-Wave** *(verified live, not ingested)* | wind, MSLP, Hs | 0.25° | 4/day to 384 h | ≤ 6 h 16 min | public | Hs corr > 0.9 to day 5 — global; **polar skill explicitly uncharacterised** | small corridor subset | Free, native southern grid over the whole corridor |
+| **ERA5** *(planned forcing)* | wind, 2T, waves | 0.25° hourly | 5-day | C3S | −3.89 m/s bias above 20 m/s at the Antarctic coast | MBs | **Leak rule: forcing at *t*, never *t+lead*** |
+| **OSI SAF 401/408/405** *(verified, unused)* | SIC, edge, type, drift | 10 km; drift 62.5 km | daily, 5 h | CC-BY-4.0 | SH target accuracy 15 %. **Drift produced 1 Apr–31 Oct only — the resupply season has no observational drift** | MBs | Best second observation for a disagreement layer |
+| **GEBCO 2025 / IBCSO v2** *(not downloaded)* | depth, TID | ~450 m | static | open | East Antarctica singlebeam-dominant; **23.79 % direct measurement south of 50°S** | tens of MB | Only open bathymetry. Its absence keeps `min_depth` inert and the chart gate UNKNOWN |
+| **ATS protected areas** *(used)* | 148 polygons | vector | static | Treaty Secretariat | **0 of 33 corridor polygons marine → none restricts transit** | 33 KB | Legal authority, no substitute |
+| **Sentinel-1 EW** *(not ingested)* | C-band SAR | 20–40 m | ~24 h median at Prydz Bay, max 47.7 h | Copernicus | cloud/darkness-proof | 1–4 GB/scene — **far beyond Iridium** | The only source that sees leads, fast-ice edge and small bergs; shore-side only |
+| **CMEMS 1 km Antarctic L3** *(not used)* | SIC (S1+AMSR2) | **1 km** | daily NRT | Copernicus | observation, not forecast | MBs | **25× finer than what the router reasons on** — worth a look before any coastal claim |
+| **ISRO EOS-06 SCAT** *(not used)* | ice/water flag | 12.5 km | daily, ~1 d | UNVERIFIED | ~96 % agreement vs AMSR2 on heritage | small | Different physics (Ku-band) → an honest independent ice-edge check; cannot train a concentration model |
+| **S-411 sea ice (JCOMM ILP)** *(not explored)* | ice chart, S-100, "Southern (Antarctica)" | chart | operational | — | — | — | **A live standards-based Antarctic ice source the project had not heard of. Look before building anything else ice-related** |
+
+Two plumbing facts outrank every row: the NSIDC archive is a **symlink into a sibling git worktree** (an ordinary tidy-up deletes the demo's data), and **both irreplaceable archives are being lost daily** — CMEMS through a clipped box, USNIC through the absence of a weekly cron.
+
+---
+
+## W. AI/ML verdict
+
+**Problem.** SIC on the 25 km grid over the corridor at leads 1/3/5/7 days, as a residual on a background field.
+
+**Why ML at all.** Persistence is strong (0.0359 same-day over 2020) and the dynamical model carries a state-dependent MIZ bias. A residual learner conditioned on the *innovation* (`background − observed`) is the cheapest way to learn where the background is wrong; **the v1 model without observation channels scored 0.1051 and lost to persistence** — the experiment that justifies the architecture. Palerme et al. 2024 report 19–33 % for the same class of post-processing; +18.5–30.6 % sits inside that band — plausible, not spectacular.
+
+**Model.** 3-level residual U-Net, 1,929,601 parameters, zero-initialised head so an untrained model reproduces the background, masked MSE, Adam 1e-3, batch 8, ≤ 60 epochs, early stop, seed 0. **Consistency hazard: `models/sic_correction/unet.py` defaults to 19 channels and 40 filters (3.0 M params); what was trained is 12 channels and 32 filters. The repo file describes a model that was never trained.**
+
+**Training data.** NSIDC CDR 2019–2020 — about 730 days, corridor only. **The December 2019 replay window used by the demo lies inside the training slice.** Harmless today because the demo runs no model; **it becomes a leak the moment anyone shows model output on the demo dates.**
+
+**Preprocessing — a defect stated plainly.** `isih/features.py` does not read the QA flag. **The model was fitted with land-spillover zeros present** — fake open water at the coast on 43.2 % of days in the Bharati box. The product's headline data-quality finding was applied to the router and *not* to the model.
+
+**Splits and leakage.** Temporal 70/15/15, contiguous, test scored once — correct, and an earlier +27 % from epoch-selection on the test set was withdrawn. The remaining leak is structural: channel 0 is a *reanalysis* valid at the target date, which assimilated observations near that date. **The flat raw-GLORYS12 error (0.1630 → 0.1637 across leads) is the fingerprint.** The old defence ("if it leaked, its error would be near zero") was correctly withdrawn.
+
+**Tuning.** None. No capacity sweep, no learning-rate search, one seed. **Any comparison between arms differing by a few percent is unresolvable at one seed.**
+
+**Baselines.** Persistence, background + constant, background + per-pixel bias, raw background — all computed before training. **Missing: damped anomaly persistence, wind-advected persistence, and the one that matters — raw CMEMS forecast cycles** (build-blocking by the project's own rule; 7 cycles archived, zero scored).
+
+**Metrics.** RMSE only, pooled over the whole box: 0.0465 / 0.0720 / 0.0938 / 0.0968 vs persistence 0.0570 / 0.0958 / 0.1204 / 0.1395. Missing: IIEE, CRPS, F1 at the vessel threshold, signed bias, and any stratification by distance to coast or MIZ. **The pooled box is dominated by open ocean and pack where model and persistence are trivially equal — the skill has never been measured where the pitch says the decision lives.** Also: day-1 RMSE 0.0465 is *below* the reference product's own ~10 % accuracy — **the absolute number cannot be distinguished from a perfect forecast by this reference; only the relative gain is defensible.**
+
+**Uncertainty.** None. One model, no ensemble, no calibration. The conformal design is good and entirely paper.
+
+**Failure conditions.** Melt season (the test slice, and the resupply season); coastal cells (trained on artefacts); post-2016 regime shift (no OOD year held out); transfer from reanalysis background to true forecast background (untested).
+
+**Verdict, plainly.** *The model was correctly split and honestly scored, and it was not tuned, not validated on the field it will correct in production, trained on artefact-contaminated coastal data, and its headline contains a leak of unknown magnitude that inflates the largest number most. It is a proof of plumbing and of an honest evaluation habit, not a validated forecast product.*
+
+**What the ablation must show — pre-committed, before it runs.** Two arms at lead 3 then all leads, three seeds each: **Arm A** (background zeroed) tests whether observation history alone beats persistence; **Arm B** (background = the analysis at initialisation) tests whether a background *available at forecast time* keeps the gain — **the arm that matters, because it is what production actually has.** Decision rule written now: if Arm B beats persistence by more than the seed spread at every lead, the headline stands and the current figures become a secondary "with perfect ocean analysis" bound. **If Arm B's gain falls inside the seed spread at lead 7, retire the +30.6 % figure from every slide and lead the pitch on the decision architecture.**
+
+---
+
+## X. Routing and decision-support verdict
+
+**1. Prediction — in the product: none.** The demo routes on a single day's *observation*. Every "forecast" word on a slide about routing is therefore false today. The route-regret experiment compares two *no-forecast* arms; it says nothing about forecast value. **DAILY being slower than STATIC is a real finding about local re-planning without a global re-solve**, and it undercuts "daily re-optimisation" unless the re-plan is global and forecast-driven.
+
+**2. Risk assessment.** Three gates evaluate: ice (pixel max vs an assumed 80 %, with a 7.4-point band derived from the CDR's own retrieval σ — **the one invented threshold that was replaced by a measured one**), logistics, contingency. Six UNKNOWN. No probabilistic risk, no route-integrated exposure, no iceberg risk, no weather, no compression. Health is a max over gates — correct, and consistent with "never a score". *(Fix the 15-vs-11 in-corridor berg discrepancy between two docs; "in corridor" is a longitude-band test and the largest berg is ~390 km from the station.)*
+
+**3. Route planning.**
+
+| Parameter | Value | Status |
+|---|---|---|
+| Objective | `traveltime` only | fuel never solved for; sweep unrun |
+| Constraints | `max_ice_conc` 80 (**assumed**); `min_depth` 20 (**inert**); `max_wave` 3.0 (**inert**); `force_limit` (**borrowed from another hull**) | **three of four constraints are inert or borrowed** |
+| Safety margins | none in the router | the band lives in the gate |
+| Ice | concentration only; thickness/density from a climatological LUT | no type, no stage, no fast-ice edge |
+| Icebergs | none | `excluded_zones` verified as the injection point |
+| Weather | none; `wave_resistance()` dead in 1.1.11 | **the Roaring Forties cost nothing** |
+| Time | 8.58 d steaming; ~15.2 d at the AIS average | a lower bound, never a voyage duration |
+| Fuel | 309.7 units, another hull's polynomial | not to be quoted |
+
+**4. Human decision support** — built and tested, and **this layer is the product's real substance today**.
+
+### The fuel/time collinearity, honestly
+With `zero_currents: True` and wave resistance dead, per-edge speed depends only on ice, so fuel is a monotone function of time along every edge and the two objectives share an argmin — solving for fuel returns a byte-identical path at every limit tested. **"Fuel-efficient routing" — one of the PS's three named deliverables — is therefore unsubstantiated.** What makes them diverge, in cost order: (1) **currents** — `uo`/`vo` are already in the harvested product; set `zero_currents: False`; expected divergence small (0.1–0.3 m/s is 1–4 % of ship speed); (2) **waves** — override `model_resistance` so `wave_resistance()` is actually called, fed by GFS-Wave; **this is where the trade-off surface will come from, because the Forties are where the fuel burns**; (3) only then the sweep. Until (2) exists, present one objective and say why.
+
+### The identical two-ship track, honestly
+The reason is mechanical: the only parameters that differ change edge *costs* roughly proportionally and change *accessibility* not at all — same ice limit, depth inert, same borrowed force limit. **A track changes only when accessibility or resistance is ship-specific, and all three ship-specific quantities are the missing ones.** The defensible version: fit the comparison ship's force limit from her sourced "5 kn in 1.0 m level ice", leave this hull's explicitly UNVERIFIED, and present *the asymmetry of evidence* as the finding. Never say "different ships get different routes"; do say **"vessel awareness is proven for cost, not for track, and here is exactly what would make it bite."**
+
+### Three things the routing layer must do to be decision support rather than a drawing
+1. **Unify the quantity.** The router optimises 5° cell means; the gate reports 25 km pixel maxima. Force native cells in the coastal band; report pixel max separately as "ice encountered", never as the optimised figure.
+2. **Replace the boolean with a band.** Bharati is reachable at assumed limits ≥ 50 % and unreachable ≤ 45 %. Since 80 % is invented, **the honest daily output is the *critical assumed limit* at which reachability flips** — computable, cheap, and more useful to a master than "open".
+3. **Give the router time.** Without it the model, the drift and the whole forecast vocabulary have no consumer.
+
+Risk weights: **recommend none.** Use a lexicographic order — hard exclusions → objective → expose `P(closed on arrival)` and the critical assumed limit as separate numbers. A weighted sum would reintroduce the single score the decision layer was written to refuse.
+
+**Standing verdict:** the human-decision layer is real and better than the competition will bring; the risk layer is a sound frame with three thin evaluators; the planning layer is a correctly reused engine in a configuration where three of four constraints cannot fire and the two objectives are one; **the prediction layer does not reach the route.** The routing claim that survives a domain judge today is: *"a real router, on real ice, for the real ship, tells you whether the station cell is passable at an assumed limit — and we can show you where that assumption stops holding."* Everything beyond that sentence is roadmap.
