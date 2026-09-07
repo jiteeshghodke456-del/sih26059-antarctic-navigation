@@ -157,8 +157,25 @@ downloads its own data. Roughly 1–2 hours.
    differentiator, not a scaling exercise.
 3. **More training years** — NSIDC needs no authentication; 2 years to 10 is a
    download, not new engineering.
-4. **ERA5 wind and temperature channels** — the physical drivers of ice motion
-   are currently invisible to the model.
+4. **ERA5 wind, valid at initialisation time `t` — not at `t + lead`.** The
+   physical drivers of ice motion are currently invisible to the model, but
+   the obvious implementation would repeat the mistake we already disclose.
+   In ERA5 and MERRA-2 sea ice is a *prescribed* lower boundary taken from
+   satellite SIC, so 2 m temperature at the target date is close to a
+   deterministic function of the observed ice at that date, given the
+   ice/water thermal contrast. Adding ERA5 2T at `t + lead` would therefore
+   add a **second** leak on top of the GLORYS12 one, and a larger one. Wind at
+   `t + lead` leaks only weakly, through surface roughness and stability, but
+   not zero.
+
+   So: winds valid at `t`, which is causal and free. Better still, feed the
+   **wind-advected first guess** rather than raw wind — semi-Lagrangian
+   advection of SIC(`t`) by the free-drift rule (roughly 2% of the 10 m wind,
+   deflected left of the wind in the Southern Hemisphere). That is a stronger
+   baseline the model must beat *and* a better channel than raw wind, because
+   it encodes physics the network would otherwise have to infer from ~1,000
+   days. Coefficient and turning angle to be verified against Thorndike &
+   Colony before publication. See `docs/research/MODEL_REUSE_MATRIX.md` §2.1.
 
 ---
 
