@@ -300,11 +300,13 @@ what makes the rest of our claims credible.
 ## Anticipated questions
 
 **"Your background is a reanalysis, not a forecast — isn't that leakage?"**
-Partly defended: if GLORYS12 contained the answer its own RMSE would be near
-zero, not 0.163 — worse than persistence at every horizon. But it may carry some
-future signal and we do not claim otherwise. The clean test is the no-background
-ablation; it is written and not yet run. Production corrects a real forecast
-where this cannot arise.
+Partly, yes — and we won't defend it with the raw-GLORYS12 error, because that
+argument is unsound: 0.163 is grid and ice-model mismatch, it is bias, and bias
+says nothing about whether the target leaked. Channel 0 is the reanalysis valid
+at the target date, so the assimilated tendency is reachable by the network.
+Treat the numbers as an upper bound on forecast skill rather than a measurement
+of it. The clean test is the no-background ablation — written, not yet run — and
+production corrects real CMEMS forecast cycles, archived daily since 31 August.
 
 **"Is 74% closure a data artifact rather than real ice?"**
 The closed days read 80–99% consistently across neighbouring cells and across

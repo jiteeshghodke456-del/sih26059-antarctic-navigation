@@ -135,9 +135,19 @@ disclose its own failures stops hunting for them.
   ice (19.6% vs 8.4%); only the maximum matters. Caption removed.
 
 - **Our background is a reanalysis, not a live forecast.** This is the sharpest
-  question we will be asked. Partial defence: if it contained the answer its own
-  error would be near zero, not 0.163 — worse than persistence at every horizon.
-  But we do not claim immunity. The clean test is written and not yet run.
+  question we will be asked, and we no longer offer the old defence — that if
+  GLORYS12 contained the answer its own error would be near zero rather than
+  0.163. That argument does not hold: 0.163 measures grid, algorithm and
+  ice-model mismatch between a 1/12° LIM field and a 25 km passive-microwave
+  CDR. It is bias, and bias is not evidence about the target. Channel 0 is the
+  background valid *at the target date* and channel 8 carries the background at
+  t, so the assimilated tendency is a linear combination the first convolution
+  can form. The flat raw-GLORYS12 error across lead (0.1630 → 0.1637) is the
+  fingerprint of a field that has seen the target, not a reassurance.
+  **So: this is an upper bound on forecast skill, not a measurement of it.** The
+  clean test is the no-background ablation, written and not yet run; production
+  corrects real CMEMS forecast cycles, of which one has been archived daily
+  since 31 Aug 2026.
 
 - **One physics detail is inferred, not verified.** The reference code for our
   iceberg model deflects icebergs to the right of the wind at every latitude,
@@ -226,10 +236,13 @@ consecutive days. It is the **open** days that are suspect — four of eight wer
 artifacts. If anything the true closure rate is higher."*
 
 **"Your model saw a reanalysis, not a forecast. Isn't that leakage?"**
-*"Partly defended: if it contained the answer its own error would be near zero,
-not 0.163 — worse than persistence at every horizon. But we don't claim
-immunity. The ablation that settles it is written and not yet run, and
-production corrects a real forecast where the question cannot arise."*
+*"You're right to push. We don't defend it with the raw-GLORYS12 error — that
+number is grid and ice-model mismatch, it's bias, and bias tells you nothing
+about whether the target leaked. Channel 0 is the reanalysis valid at the target
+date, so the assimilated tendency is available to the network. Treat our figure
+as an upper bound on forecast skill, not a measurement of it. The ablation that
+settles it is written and not yet run, and production corrects real CMEMS
+forecast cycles — we've been archiving one a day since 31 August."*
 
 **"Can it tell a captain about the ice that actually sinks ships?"**
 *"No, and we say so on the slide. A growler is five metres; the smallest berg

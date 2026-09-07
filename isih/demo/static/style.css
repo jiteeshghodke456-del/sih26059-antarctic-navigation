@@ -174,3 +174,4 @@ details[open] summary .eyebrow::after { content: " ▾"; }
 .pa-chip.inside { background: #FBE9E7; color: var(--closed); }
 .pa-chip.near { background: #EEF2F5; color: var(--ink-2); }
 .pa-regime { color: var(--ink-2); font-size: 11.5px; }
+.pa-scale { color: var(--ink-2); margin-right: 12px; font-style: italic; }

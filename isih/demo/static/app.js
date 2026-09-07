@@ -83,24 +83,65 @@
     // constraint layer should be legible without ever competing with the
     // navigation picture — master prompt §2.2 and §48A.27.
     if (!S.protected || !S.protected.available || !S.paShow) { return; }
+
+    // These areas are 0.3 to 250 km across on a map spanning 65 degrees of
+    // longitude, so most of them are a pixel or two — drawn faithfully, they
+    // are invisible, and an invisible constraint layer is not a constraint
+    // layer. Anything below MIN_PX is therefore substituted with a point
+    // symbol at its centre, which is ordinary cartographic practice at small
+    // scale and is stated in the map footnote rather than left for the
+    // viewer to infer. The polygon is still drawn underneath at true size,
+    // so nothing is misrepresented — the marker only makes it findable.
+    var MIN_PX = 9;
+    var marked = 0;
+
     S.protected.areas.forEach(function (a) {
       var isAsma = a.kind === 'ASMA';
+      var col = isAsma ? '#7B4BA8' : '#A8434B';
+      var xs = [], ys = [];
+
       a.rings.forEach(function (ring) {
         var d = ring.map(function (c, i) {
           var q = px(c[0], c[1]);
+          xs.push(q[0]); ys.push(q[1]);
           return (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1);
         }).join(' ') + ' Z';
         svg.appendChild(el('path', {
           d: d,
-          fill: isAsma ? '#7B4BA8' : '#A8434B',
+          fill: col,
           'fill-opacity': 0.13,
-          stroke: isAsma ? '#7B4BA8' : '#A8434B',
+          stroke: col,
           'stroke-width': 1.3,
           'stroke-dasharray': isAsma ? '5 3' : '',
           'vector-effect': 'non-scaling-stroke'
         }));
       });
+
+      if (!xs.length) { return; }
+      var w = Math.max.apply(null, xs) - Math.min.apply(null, xs);
+      var h = Math.max.apply(null, ys) - Math.min.apply(null, ys);
+      if (Math.max(w, h) >= MIN_PX) { return; }
+
+      marked++;
+      var cx = (Math.max.apply(null, xs) + Math.min.apply(null, xs)) / 2;
+      var cy = (Math.max.apply(null, ys) + Math.min.apply(null, ys)) / 2;
+      svg.appendChild(el('circle', {
+        cx: cx.toFixed(1), cy: cy.toFixed(1), r: 5.5,
+        fill: col, 'fill-opacity': 0.18,
+        stroke: col, 'stroke-width': 1.4,
+        'stroke-dasharray': isAsma ? '4 2.5' : ''
+      }));
+      var t = el('title', {}, a.kind + ' ' + a.number + ' — ' + a.name);
+      svg.lastChild.appendChild(t);
     });
+
+    var note = document.getElementById('pa-scale-note');
+    if (note) {
+      note.textContent = marked
+        ? marked + ' area' + (marked === 1 ? '' : 's') +
+          ' smaller than the map scale shown as markers'
+        : '';
+    }
   }
 
   function drawVectors() {

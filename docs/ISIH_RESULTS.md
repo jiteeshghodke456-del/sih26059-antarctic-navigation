@@ -39,11 +39,19 @@ That is an operational claim, not a benchmark score.
   random split would put adjacent days in both train and test and produce a
   spectacular, meaningless score. This is the most common way results in this
   field are inflated.
-- **Persistence is included, and it is not a strawman.** Measured on real 2020
-  NSIDC data it scores 0.0359 at 1-day lead — better than any background
-  correction. At 3-day lead it is 0.0958, and we beat it. Had we evaluated at
-  same-day lead, persistence would have won and the honest conclusion would
-  have been that the model adds nothing.
+- **Persistence is included, and it is not a strawman.** Over full-year 2020,
+  all seasons, it scores 0.0359 at 1-day lead — better than any background
+  correction. Had we evaluated at same-day lead, persistence would have won and
+  the honest conclusion would have been that the model adds nothing.
+
+  **Do not mix that number with the table above.** The table is the held-out
+  test slice — the last 15% of 2019–2020, which falls in the austral melt
+  season — where persistence scores 0.0570 / 0.0958 / 0.1204 / 0.1395 at 1, 3,
+  5 and 7 days. The full-year figures are lower (0.0610 at 3 days, 0.0893 at 7)
+  because winter days, when the ice barely moves, are averaged in and
+  persistence is nearly free there. Quoting the full-year 0.0893 beside the
+  model's test-set 0.0968 would appear to show persistence winning at 7 days.
+  It is a period mismatch, not a result. **Always quote the table.**
 - **Baselines were computed before training**, so the bar was fixed before the
   result was known.
 - **Real data throughout.** NOAA/NSIDC CDR observations (1096 files, 0 failed)
@@ -63,12 +71,24 @@ a genuine forecast would not have.
 *The expected question:* "Your background already saw the observations you are
 predicting. Isn't that leakage?"
 
-*The honest answer:* Partly defended by the numbers — if GLORYS12 contained the
-answer, its own RMSE would be near zero rather than 0.163, which is worse than
-persistence at every horizon. So it is not handing over the target. But it may
-carry some future signal, and we do not claim otherwise. **The clean test is the
-ablation below**, and production corrects a real CMEMS forecast where this
-cannot arise.
+*The honest answer:* Yes, partly — and the defence this document used to give
+was wrong, so it has been removed. It argued that if GLORYS12 contained the
+answer its own RMSE would be near zero rather than 0.163. That does not follow.
+0.163 measures grid, algorithm and ice-model mismatch between a 1/12° LIM field
+and a 25 km passive-microwave CDR; it is a bias term, and a field can carry
+substantial information about the target while still scoring badly in absolute
+error. Worse, the flat error across lead time (0.1630 → 0.1637) is exactly the
+fingerprint of a field that has seen the target, and "the advantage grows with
+lead time" is what a leaked tendency produces.
+
+Concretely: channel 0 is `background[t + lead]`, the reanalysis valid **at** the
+target date, and channel 8 carries the background at `t`. Their difference — the
+assimilated tendency — is a linear combination the first convolution can form.
+
+**So the figures above are an upper bound on forecast skill, not a measurement
+of it.** The number stands; what it means is scoped. **The clean test is the
+ablation below**, and the production path corrects real CMEMS forecast cycles,
+one archived every day since 31 August 2026.
 
 **2. Validation scores better than test at every lead** (e.g. lead 3: val 0.0611
 vs test 0.0720). Expected: validation selects the epoch, so it is optimistically
