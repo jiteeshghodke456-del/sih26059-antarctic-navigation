@@ -36,6 +36,31 @@ Have ready in case you are asked to prove something: `isih/figures/`,
 
 ---
 
+## Beat 0 — the workflow IS the demo
+
+The page now opens on **"Who is on watch"**, not on the console. Do not
+apologise for it and do not look for a bypass — there isn't one, and a test
+enforces that. Say:
+
+> "This is a passage-planning application, so it starts where a bridge starts.
+> Everything after this is ordered: you cannot approve a route before a mission
+> says what a good one is. If I try" — and try it, from the browser console or
+> just describe it — "the server answers 409 and names the step I skipped."
+
+Then walk it: **sign in → command centre → new voyage → mission → route →
+waypoints → review → approve → begin navigation.** Eight clicks, each with one
+primary button. Two of them are worth stopping on:
+
+- **Mission definition.** The two policies carry their consequences: the
+  station cell was closed 23 of 31 days, the approach 100 km north was open on
+  all 31. *"This one radio button changes route health on 23 of the 31 days.
+  It is the most consequential field in the application."*
+- **Route creation.** "Import a passage plan" is deliberately disabled with its
+  reason on screen: an imported plan carries assumptions we cannot inspect.
+
+The mode badge flips **ROUTE PLANNING → ROUTE MONITORING** when you begin
+navigation. Say why: *"that is ECDIS's own split, not one we invented."*
+
 ## The eight beats
 
 **1 — The header. First sentence out of your mouth.**
@@ -78,6 +103,16 @@ Type a name, click Approve, then move the slider.
 > should degrade when an assumption breaks, not every time new data arrives."
 
 That contrast is the single best thirty seconds in the demo. Do both halves.
+
+**5b — The decision workspace, and the three choices.**
+Open it from the heads-up. The preview recomputes for the day you are on:
+> "Corridor B fails its own ice limit — 91 % sampled against a 55 % limit —
+> and you can see that before you choose it, not after. And look at the arrival
+> column: departing today we arrive on the 13th, when the station is closed.
+> That is the question this whole product exists to answer."
+
+Then take one of the three. **Keep plan** is the one to demonstrate: it records
+a version too, because deciding that nothing needs to change is a decision.
 
 **6 — Alternative corridors.**
 > "Three corridors, and the third is the interesting one: at a 45 % ice limit
