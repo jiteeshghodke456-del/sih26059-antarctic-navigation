@@ -14,11 +14,18 @@ reason, distinct from the row's overall SETTLED/PARTIAL/OPEN status — a row ca
 while individual sub-claims inside it carry different confidence levels, and several do).
 
 Two companion files this matrix defers to rather than duplicates: `docs/research/
-POLARIS_APPLICABILITY.md` and `docs/research/FORECAST_HORIZONS.md` were being written by other
-agents at the time this file was assembled (2026-09-07) and did not yet exist in `docs/research/`.
-Where a row's deeper question belongs to one of those files, this matrix states what is already
-established elsewhere in the repo and marks the remainder "in progress, see docs/research/" rather
-than re-deriving or guessing at it.
+POLARIS_APPLICABILITY.md` and `docs/research/FORECAST_HORIZONS.md` did not exist in
+`docs/research/` when this matrix's first pass was written, and were still absent when this
+completion pass began. **Both appeared partway through this pass** (confirmed by a direct
+filesystem check immediately after the pass started, and again once the 18-row table and the
+first round of field additions were done) — so, per this task's own instruction, they are now
+cited directly in rows 2, 3, 4, 5, 6 and 7 rather than left as a deferral. Row 3 (POLARIS) and
+row 5 (Sea ice) absorb the most from them, since those are the two rows this matrix's own note
+below originally named as deferred to these files by name; rows 2, 4, 6 and 7 pick up smaller,
+more targeted findings the same two files happen to also settle. Nothing in either companion file
+changes any row's SETTLED/PARTIAL/OPEN status — the additions sharpen and, in two cases (row 4's
+loose end; ADR-025's stated reasoning, now in `docs/backlog.md`), close specific sub-questions
+without moving a row's overall bottom line.
 
 ---
 
@@ -61,19 +68,32 @@ than re-deriving or guessing at it.
 
 ## Notes on individual rows, where the table cell compresses too much
 
-### Row 3 / Row 5 — the two rows this task was told to defer
+### Row 3 / Row 5 — the two rows this task was originally told to defer, now absorbed
 
 `docs/research/POLARIS_APPLICABILITY.md` and `docs/research/FORECAST_HORIZONS.md` did not exist
-in `docs/research/` when this matrix was assembled (checked immediately before writing and again
-just before finishing). This matrix does not attempt either file's job. What it does instead: for
-POLARIS (row 3), it reports what the repository has already established about the *framework*
-(the full RIV table, the thresholds, the compression blind spot) and names precisely what remains
-open (RIO for this specific hull, blocked on the unsourced ice-class equivalence). For sea ice
-(row 5), it reports the measured prototype result and the designed production protocol, and flags
-that the declared per-lead skill horizon is an *output* of an evaluation that has not yet run at
-production scale — which is presumably the deeper question `FORECAST_HORIZONS.md` is for. If
-either file exists by the time this matrix is read, treat it as authoritative on its narrower
-question and this matrix's rows 3 and 5 as the surrounding context.
+in `docs/research/` when this matrix's first pass was assembled, and this matrix's original text
+(preserved in spirit above, updated in fact here) deferred rows 3 and 5's deeper questions to them
+by name. Both files appeared during this completion pass and have now been read in full — 782 and
+1046 lines respectively, both dated 2026-09-07, both explicitly research-only with no unapproved
+design decisions — and both are cited directly in the matrix rather than left as a deferral.
+
+**What actually came back, briefly, because the table cells compress it hard.** POLARIS
+(row 3): the framework extraction this matrix already had was correct, and the new file adds a
+recommendation with four independently-sufficient reasons (advisory panel, never a hard
+constraint; do not publish a numeric RIO for Golovnin until her ice-class equivalency is on
+paper), a quantified worst case (one plausible ice regime spans RIO +19 to −21 depending on which
+class row is assumed), and a resolution to row 4's own loose end (the unnamed third IMO system is
+the Russian Ice Certificate). Sea ice (row 5): the declared per-lead skill horizon this matrix
+flagged as an unrun evaluation is now a stated answer — useful to D+7, degraded to D+9,
+unavailable beyond — cross-checked against a real published analogue (Zhao et al. 2024, "SOIPS,"
+run for the same Zhongshan/Bharati approach) and an independent literature comparison (Palerme et
+al. 2024) that places this project's own measured gain inside a plausible published band rather
+than in leakage territory. Both files also reached sideways into rows 2, 4, 6 and 7 with
+findings precise enough that leaving them out would have made this matrix less accurate than the
+information already sitting in its own `docs/research/` directory — see those rows directly for
+what changed and `docs/backlog.md` for the two items (an ADR's stated reasoning not matching its
+own cited source; an unhandled >90%-concentration iceberg regime) that came out of this reading
+and needed recording as new deferred work, not just as matrix prose.
 
 ### Row 8 — bathymetry has a real double gap
 

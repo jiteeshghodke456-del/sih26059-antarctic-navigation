@@ -102,3 +102,23 @@ def test_qa_off_shows_suppressed_cells_as_zero():
 def test_other_days_load(d):
     f = data.day_field(d, qa=True)
     assert f["date"] == d and f["n_known"] > 1000
+
+
+def test_unscored_targets_are_not_reported_as_closed():
+    """A target with no mesh cell must read UNAVAILABLE, never "100 % closed".
+
+    destination_window.json still carries a stale "Maitri (Leningradskaya
+    coast)" row whose 31 days are all null. Read naively it says the coast was
+    closed every day of December 2019, which is a claim nobody measured.
+    """
+    from isih.demo import data
+
+    w = data.window()
+    assert "Maitri (Leningradskaya coast)" not in w["summary"]
+    un = w["unavailable"]["Maitri (Leningradskaya coast)"]
+    assert un["days_with_data"] == 0
+    assert un["days_in_window"] == 31
+
+    # the two real targets are unaffected
+    assert w["summary"]["Bharati"]["days_closed"] == 23
+    assert w["summary"]["Bharati approach (100 km N)"]["days_closed"] == 0

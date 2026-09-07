@@ -361,6 +361,35 @@ This affects the Bharati approach box on 43.2% of days across 2018–2020, and
 four of the eight days Bharati appeared reachable in December 2019 were such
 artifacts. We detect and mask them.
 
+**State this before a judge finds it — the eight open days do not survive
+inspection, and neither does the arrival date of the regret experiment.**
+
+Bharati's eight "open" days split cleanly in two, and both halves are weak:
+
+| Date | QA-on | QA-off | What it actually is |
+|---|---|---|---|
+| 12-01, 12-07, 12-08, 12-09 | 30.7, 33.7, 35.2, 36.3 % | **0.0 %** | the four spillover artifacts above |
+| 12-21, 12-29, 12-30, 12-31 | 80.0, 77, 79, 75 % | same | at or just under our **invented** 80 % limit |
+
+So the only days below 75 % ice are the four we already call artifacts, and
+12-21 sits at exactly 80.0 against a working limit that came from no ice class
+and no POLARIS row. **At a 60 % limit — which needs no re-run to state —
+Bharati's cell is open on zero non-artifact days in December 2019.** The
+finding gets stronger, not weaker, but it must be said in that order.
+
+Worse for the flagship regret number: the STATIC arm departs 2019-12-01 and
+takes 8.61 days, and `route_regret.py:222` floors that to a whole day, so it
+arrives **2019-12-09** — one of the four suppressed-pixel days. The "0.03 days
+of regret, essentially nothing" result therefore depends on the ship passing
+through the exact cell this section says must be treated as unknown. The
+STATIC-noQA arm, which trusts those cells, records 0.00 days: the cheaper
+answer comes from believing the artifact.
+
+Neither number is wrong. Both are conditional on a cell we do not trust, and
+that condition has not been stated anywhere until now. **The named next
+experiment is to re-run the regret sweep with the QA-suspect cells treated as
+impassable, and over more than one departure date.**
+
 **Claim:** Fixing the vessel specification changed computed transit from 17.4 to
 8.6 days. Specification errors dominate model errors at this stage.
 
