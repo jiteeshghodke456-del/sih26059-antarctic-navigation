@@ -180,6 +180,7 @@
     marker(st.start, 4, 'start');
     marker(st.destination, 4, 'end');
     marker(st.approach, -8, 'end');
+    drawShip();
 
     updatePaNote();
   }
@@ -197,6 +198,78 @@
     txt('pa-note', pa.transit_finding + ' ' + scale +
       c.polygons + ' polygons in the corridor (' + c.aspa_polygons + ' ASPA, ' +
       c.asma_polygons + ' ASMA, ' + c.marine + ' marine). Source: ' + pa.source);
+  }
+
+  // ---------- own ship on its own track ----------
+  // PolarRoute reports a cumulative transit time at each waypoint, so a day
+  // index maps to a position by interpolating between the two waypoints that
+  // bracket it. This is a computed position, not a fix, and the card says so.
+  function shipAt(elapsedDays) {
+    var r = S.route;
+    if (!r || !r.traveltime_cumulative || r.traveltime_cumulative.length < 2) { return null; }
+    var t = r.traveltime_cumulative, c = r.coords;
+    var total = t[t.length - 1];
+    if (elapsedDays >= total) {
+      return { lon: c[c.length - 1][0], lat: c[c.length - 1][1], leg: c.length - 1,
+               arrived: true, sog: null, cog: null };
+    }
+    var i = 0;
+    while (i < t.length - 1 && t[i + 1] <= elapsedDays) { i++; }
+    var span = t[i + 1] - t[i];
+    var f = span > 0 ? (elapsedDays - t[i]) / span : 0;
+    var lon = c[i][0] + (c[i + 1][0] - c[i][0]) * f;
+    var lat = c[i][1] + (c[i + 1][1] - c[i][1]) * f;
+
+    // Great-circle bearing and speed over the current leg, from real geometry.
+    var R = 6371.0, rad = Math.PI / 180;
+    var p1 = c[i][1] * rad, p2 = c[i + 1][1] * rad;
+    var dl = (c[i + 1][0] - c[i][0]) * rad, dp = p2 - p1;
+    var a = Math.sin(dp / 2) * Math.sin(dp / 2) +
+            Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) * Math.sin(dl / 2);
+    var km = 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var y = Math.sin(dl) * Math.cos(p2);
+    var x = Math.cos(p1) * Math.sin(p2) - Math.sin(p1) * Math.cos(p2) * Math.cos(dl);
+    var cog = (Math.atan2(y, x) / rad + 360) % 360;
+    var sogKn = span > 0 ? (km / (span * 24)) / 1.852 : null;
+    return { lon: lon, lat: lat, leg: i + 1, arrived: false, sog: sogKn, cog: cog };
+  }
+
+  function fmtPos(lat, lon) {
+    function part(v, pos, neg) {
+      var d = Math.abs(v), deg = Math.floor(d), min = (d - deg) * 60;
+      return deg + '\u00b0' + min.toFixed(1) + "'" + (v >= 0 ? pos : neg);
+    }
+    return part(lat, 'N', 'S') + ' ' + part(lon, 'E', 'W');
+  }
+
+  function renderOwnShip(idx) {
+    var s = shipAt(idx);
+    if (!s) { return; }
+    txt('v-pos', fmtPos(s.lat, s.lon));
+    txt('v-cogsog', s.arrived ? 'alongside'
+      : Math.round(s.cog) + '\u00b0 / ' + s.sog.toFixed(1) + ' kn');
+    txt('v-wp', s.arrived ? 'arrived'
+      : s.leg + ' of ' + (S.route.coords.length - 1));
+    var total = S.route.total_traveltime_days;
+    var eta = new Date(Date.UTC(2019, 11, 1) + total * 86400000);
+    txt('v-eta', eta.getUTCDate() + ' Dec 2019 (day ' + total.toFixed(2) + ')');
+    txt('v-xte', '0.0 nm \u2014 on the planned track by construction');
+    txt('v-state', S.decision ? S.decision.health : '\u2014');
+  }
+
+  function drawShip() {
+    var s = shipAt(S.dayIdx);
+    if (!s) { return; }
+    var p = px(s.lon, s.lat);
+    // A heading triangle, which is what a bridge display uses — a dot would
+    // lose the course information the leg geometry already gives us.
+    var ang = (s.cog === null ? 0 : s.cog) - 90;
+    var g = el('g', { transform: 'translate(' + p[0].toFixed(1) + ',' + p[1].toFixed(1) +
+                                 ') rotate(' + ang.toFixed(1) + ')' });
+    g.appendChild(el('path', { d: 'M 11 0 L -7 7 L -3 0 L -7 -7 Z',
+      fill: '#0F1720', stroke: '#FFFFFF', 'stroke-width': 1.6, 'stroke-linejoin': 'round' }));
+    svg.appendChild(g);
+    g.appendChild(el('title', {}, 'Own ship, computed position on the planned track'));
   }
 
   // ---------- the decision ----------
@@ -354,12 +427,16 @@
     renderAlternatives(dec);
     renderRisks(dec);
     renderFreshness(dec);
+    renderOwnShip(S.dayIdx);
 
     var v = dec.vessel_state || {};
     txt('limit', v.max_ice_conc);
     txt('v-class', v.ice_class || 'not recorded');
     txt('v-cat', v.polar_ship_category || 'not published — unverified');
-    txt('v-pos', v.position_source || '—');
+    // v-pos is owned by renderOwnShip — it holds the computed position on the
+    // planned track. The "no live GPS" caveat lives in the note under the
+    // card, so writing it here would overwrite the readout with its own
+    // disclaimer and the card would show no position at all.
 
     // The question a bridge asks is not "was this object approved" — every
     // fresh evaluation is unapproved by construction — but "is the plan we
@@ -456,6 +533,8 @@
   function setDay(idx) {
     S.dayIdx = idx; $('day').value = idx;
     updateStatus(idx);
+    renderOwnShip(idx);
+    drawVectors();
     var my = ++pending;
     loadField(idx, S.qa).then(function (f) {
       if (my !== pending) { return; }

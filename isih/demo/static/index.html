@@ -123,10 +123,21 @@
     <section class="panel">
       <div class="phead"><h2>Own ship</h2></div>
       <dl class="kv" id="own-ship">
+        <dt>Position</dt><dd id="v-pos">—</dd>
+        <dt>COG / SOG</dt><dd id="v-cogsog">—</dd>
+        <dt>Next waypoint</dt><dd id="v-wp">—</dd>
+        <dt>ETA Bharati</dt><dd id="v-eta">—</dd>
+        <dt>Cross-track error</dt><dd id="v-xte">—</dd>
+        <dt>Operational state</dt><dd id="v-state">—</dd>
+      </dl>
+      <p class="note" id="ship-note">Position, course and speed are computed from the
+        planned track and its per-leg transit times — this is where the ship
+        <em>would</em> be, not a GPS fix. Cross-track error is therefore zero by
+        construction, not by good steering.</p>
+      <dl class="kv" style="margin-top:10px">
         <dt>Ice limit assumed</dt><dd><b id="limit">—</b>&thinsp;% concentration</dd>
         <dt>Ice class</dt><dd class="wrap" id="v-class">—</dd>
         <dt>Polar Ship Category</dt><dd id="v-cat">—</dd>
-        <dt>Position</dt><dd id="v-pos">—</dd>
       </dl>
       <p class="note">No ice class anywhere indexes ice <em>concentration</em> — every
         framework indexes thickness or type. The limit above is our assumption, not a
