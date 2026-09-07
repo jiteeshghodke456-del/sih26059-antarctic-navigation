@@ -133,6 +133,12 @@ def day(d: str, qa: str = "on"):
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
+@app.get("/api/coastline")
+def coastline():
+    """Land and coastline for the chart. Optional: absent extract degrades."""
+    return data.coastline()
+
+
 @app.get("/api/protected")
 def protected():
     """ASPA/ASMA constraint layer. Optional: absent extract degrades, not fails."""

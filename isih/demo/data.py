@@ -357,6 +357,24 @@ DATA_MODE = {
 
 
 @lru_cache(maxsize=1)
+def coastline() -> dict:
+    """Natural Earth land and coastline, clipped to the corridor.
+
+    Same contract as protected(): read the committed extract, never the
+    source data, and degrade to an explicitly-unavailable structure rather
+    than raising. A missing basemap should not take down a demo.
+    """
+    path = FIG / "coastline.json"
+    if not path.exists():
+        return {"available": False,
+                "why": "run isih/coastline.py to build the extract",
+                "land": [], "coast": []}
+    doc = json.loads(path.read_text())
+    doc["available"] = True
+    return doc
+
+
+@lru_cache(maxsize=1)
 def protected() -> dict:
     """Antarctic Treaty Secretariat protected areas for the corridor.
 

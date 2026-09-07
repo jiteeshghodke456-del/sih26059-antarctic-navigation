@@ -20,7 +20,8 @@
   // route cannot appear before it has been solved, and the ship cannot appear
   // before the voyage is under way.
   var Layers = { route: true, straightLine: true, stations: true,
-                 protectedAreas: true, ship: true, waypoints: false };
+                 protectedAreas: true, ship: true, waypoints: false,
+                 graticule: true };
   var $ = function (id) { return document.getElementById(id); };
 
   // ---------- errors are shown, never swallowed ----------
@@ -68,13 +69,45 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
   }
+  // Mercator. The previous projection mapped latitude linearly to pixels,
+  // which draws every latitude at the same horizontal scale — measured, a
+  // degree of longitude came out 2.92x too wide at Bharati (69.4S) relative
+  // to truth, and Bharati was drawn at the same scale as Cape Town though a
+  // degree there is 0.42x the length.
+  //
+  // Mercator is the marine chart projection: it is conformal, so shapes are
+  // locally correct at every latitude, and a rhumb line is straight, which is
+  // the habit passage planning is built on. It stretches badly approaching
+  // the pole, which is why an Antarctic *ice* chart would use polar
+  // stereographic — that is the right second mode and is filed, not faked.
+  function merc(lat) {
+    var f = Math.max(-85, Math.min(85, lat)) * Math.PI / 180;
+    return Math.log(Math.tan(Math.PI / 4 + f / 2));
+  }
+  var MY0 = null, MY1 = null;
   function px(lon, lat) {
+    if (MY0 === null) { MY0 = merc(B.lat_max); MY1 = merc(B.lat_min); }
     return [ (lon - B.lon_min) / (B.lon_max - B.lon_min) * W,
-             (B.lat_max - lat) / (B.lat_max - B.lat_min) * H ];
+             (MY0 - merc(lat)) / (MY0 - MY1) * H ];
+  }
+
+  // The frame must match the projection, not a guessed 3:2. Deriving it means
+  // the picture can never be squashed a second time by its container.
+  function applyAspect() {
+    if (!B) { return; }
+    var wRad = (B.lon_max - B.lon_min) * Math.PI / 180;
+    var hRad = merc(B.lat_max) - merc(B.lat_min);
+    wrap.style.aspectRatio = (wRad / hRad).toFixed(4);
   }
 
   // ---------- colour ramp (same stops as the CSS legend) ----------
-  var STOPS = [[0,[242,247,252]],[25,[198,219,239]],[50,[107,174,214]],[75,[33,113,181]],[100,[8,48,107]]];
+  // The zero stop is the sea colour exactly, so a cell measuring 0% ice
+  // disappears into open water instead of tiling the whole ocean with pale
+  // squares. Nothing is hidden — 0% IS open water, and that is how a chart
+  // draws it. Any ice at all shows against the sea.
+  var SEA = [226, 236, 244];
+  var STOPS = [[0, SEA], [25,[198,219,239]], [50,[107,174,214]],
+               [75,[33,113,181]], [100,[8,48,107]]];
   function ramp(p) {
     p = Math.max(0, Math.min(100, p));
     for (var i = 1; i < STOPS.length; i++) {
@@ -91,16 +124,33 @@
   function drawIce(f) {
     ctx.clearRect(0, 0, W, H);
     if (!f) { return; }
-    var s = Math.max(3, Math.round(H / ((B.lat_max - B.lat_min) / 0.45)));
-    var half = s / 2, i, p;
+    // Cell size has to follow the projection. Under Mercator a fixed pixel
+    // size leaves gaps at low latitude and overlaps near the pole, so the
+    // height is measured from the projection itself.
+    //
+    // The extra 1.35 is not fudge. The CDR grid is polar stereographic, so
+    // its samples are NOT a regular lat/lon lattice — their longitude spacing
+    // widens towards the pole. Drawn as lat/lon squares they leave gaps that
+    // read as missing data when the data is not missing. The cells are
+    // therefore drawn at a nominal size that closes the lattice, and the map
+    // footnote says so. The alternative is to draw in EPSG:3412 directly,
+    // which is the right answer and is filed.
+    var CELL_NOMINAL = 1.35;
+    var i, p, s, half;
+    function cellPx(lat) {
+      var a = px(0, lat + 0.225)[1], b = px(0, lat - 0.225)[1];
+      return Math.max(3, Math.abs(b - a) * CELL_NOMINAL);
+    }
     for (i = 0; i < f.lat.length; i++) {
       p = px(f.lon[i], f.lat[i]);
+      s = cellPx(f.lat[i]); half = s / 2;
       ctx.fillStyle = ramp(f.sic[i]);
       ctx.fillRect(p[0] - half, p[1] - half, s, s);
     }
     ctx.strokeStyle = '#C97B1E'; ctx.lineWidth = 1.2;
     for (i = 0; i < f.unknown_lat.length; i++) {
       p = px(f.unknown_lon[i], f.unknown_lat[i]);
+      s = cellPx(f.unknown_lat[i]); half = s / 2;
       ctx.strokeRect(p[0] - half + 0.6, p[1] - half + 0.6, s - 1.2, s - 1.2);
     }
   }
@@ -111,6 +161,56 @@
     Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
     if (text !== undefined) { n.textContent = text; }
     return n;
+  }
+
+  // ---------- basemap: land, coast, graticule ----------
+  function drawBase() {
+    if (!S.coast || !S.coast.available) { return; }
+
+    S.coast.land.forEach(function (ring) {
+      var d = ring.map(function (c, i) {
+        var q = px(c[0], c[1]);
+        return (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1);
+      }).join(' ') + ' Z';
+      svg.appendChild(el('path', { d: d, fill: '#E4E0D6', stroke: 'none' }));
+    });
+    S.coast.coast.forEach(function (line) {
+      var d = line.map(function (c, i) {
+        var q = px(c[0], c[1]);
+        return (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1);
+      }).join(' ');
+      svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#8A8574',
+        'stroke-width': 1, 'vector-effect': 'non-scaling-stroke' }));
+    });
+  }
+
+  function drawGraticule() {
+    if (!Layers.graticule) { return; }
+    var lon, lat, p0, p1, i;
+    for (lon = Math.ceil(B.lon_min / 10) * 10; lon <= B.lon_max; lon += 10) {
+      p0 = px(lon, B.lat_max); p1 = px(lon, B.lat_min);
+      svg.appendChild(el('line', { x1: p0[0], y1: p0[1], x2: p1[0], y2: p1[1],
+        stroke: '#B9C3CB', 'stroke-width': 0.7, 'stroke-dasharray': '2 4' }));
+      svg.appendChild(el('text', { x: p0[0] + 3, y: 12, 'font-size': 9.5,
+        fill: '#6D7A85' }, Math.abs(lon) + '\u00b0' + (lon < 0 ? 'W' : 'E')));
+    }
+    for (lat = Math.ceil(B.lat_min / 10) * 10; lat <= B.lat_max; lat += 10) {
+      p0 = px(B.lon_min, lat); p1 = px(B.lon_max, lat);
+      svg.appendChild(el('line', { x1: p0[0], y1: p0[1], x2: p1[0], y2: p1[1],
+        stroke: '#B9C3CB', 'stroke-width': 0.7, 'stroke-dasharray': '2 4' }));
+      svg.appendChild(el('text', { x: 3, y: p0[1] - 3, 'font-size': 9.5,
+        fill: '#6D7A85' }, Math.abs(lat) + '\u00b0' + (lat < 0 ? 'S' : 'N')));
+    }
+    // The Antarctic Circle, drawn and named — Polarstern's MapViewer gives it
+    // its own line, and it is the one parallel that means something here.
+    var ac = -66.5634;
+    if (ac > B.lat_min && ac < B.lat_max) {
+      p0 = px(B.lon_min, ac); p1 = px(B.lon_max, ac);
+      svg.appendChild(el('line', { x1: p0[0], y1: p0[1], x2: p1[0], y2: p1[1],
+        stroke: '#7E8C97', 'stroke-width': 1, 'stroke-dasharray': '7 4' }));
+      svg.appendChild(el('text', { x: p1[0] - 6, y: p0[1] - 4, 'font-size': 9.5,
+        'text-anchor': 'end', fill: '#5A6770' }, 'Antarctic Circle'));
+    }
   }
 
   var paMarked = 0;
@@ -165,6 +265,8 @@
   function drawVectors() {
     while (svg.firstChild) { svg.removeChild(svg.firstChild); }
     if (!S.route || !S.summary) { return; }
+    drawBase();
+    drawGraticule();
     if (Layers.protectedAreas) { drawProtected(); } else { paMarked = 0; }
     var st = {}; S.summary.stations.forEach(function (s) { st[s.role] = s; });
     var a = px(st.start.lon, st.start.lat), b = px(st.destination.lon, st.destination.lat);
@@ -627,9 +729,12 @@
     Promise.all([
       getJSON('/api/summary'),
       getJSON('/api/route'),
-      getJSON('/api/protected').catch(function () { return { available: false }; })
+      getJSON('/api/protected').catch(function () { return { available: false }; }),
+      getJSON('/api/coastline').catch(function () { return { available: false, land: [], coast: [] }; })
     ]).then(function (res) {
-      S.summary = res[0]; S.route = res[1]; S.protected = res[2]; B = S.summary.bounds;
+      S.summary = res[0]; S.route = res[1]; S.protected = res[2];
+      S.coast = res[3]; B = S.summary.bounds;
+      applyAspect();
 
       // Say what kind of data this is, before anything else is read.
       var dm = S.summary.data_mode;
