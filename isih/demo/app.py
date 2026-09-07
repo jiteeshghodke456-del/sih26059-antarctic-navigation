@@ -176,6 +176,21 @@ def waypoints():
     return workflow_service.waypoints()
 
 
+@app.get("/api/preview")
+def preview(day: str):
+    """Live impact preview for the decision workspace (§4).
+
+    Read-only: it must not advance the workflow, so opening the what-if
+    cannot change the passage state.
+    """
+    if day not in data.dates():
+        raise HTTPException(404, f"{day} is outside the demo window")
+    try:
+        return workflow_service.preview(day)
+    except workflow_service.WorkflowError as exc:
+        raise HTTPException(503, str(exc))
+
+
 @app.post("/api/workflow/{action}")
 def workflow_action(action: str, body: WorkflowAction):
     """Advance the workflow. Out-of-order steps are refused with a reason."""

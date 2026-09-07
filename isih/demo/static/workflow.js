@@ -50,6 +50,9 @@
         return j;
       });
     }).then(apply).catch(function (e) {
+      // Never swallow. A rendering bug here previously left the panel blank
+      // with no message anywhere, which is far worse than an ugly error.
+      if (!e.status) { console.error('workflow apply failed:', e); }
       var s = $('stage-error');
       if (s) { s.textContent = e.message; s.hidden = false; }
       var g = $('signin-state');
@@ -295,6 +298,18 @@
 
       var table = el('div', 'preview'); host.appendChild(table);
       renderPreview(table);
+      // The day slider is the what-if lever while the workspace is open, so
+      // the preview has to follow it.
+      var slider = $('day');
+      if (slider && !slider.dataset.wfBound) {
+        slider.dataset.wfBound = '1';
+        slider.addEventListener('input', function () {
+          if (W.doc && W.doc.stage === 'workspace') {
+            var t = document.querySelector('#stage-panel .preview');
+            if (t) { renderPreview(t); }
+          }
+        });
+      }
 
       // §4's three choices, in its order.
       var why = el('input'); why.type = 'text'; why.id = 'ws-why';
@@ -327,15 +342,14 @@
   function renderPreview(host) {
     host.innerHTML = '';
     var day = C.currentDate();
-    getJSON('/api/alternatives').then(function (a) {
+    getJSON('/api/preview?day=' + day).then(function (pv) {
       var t = el('table', 'vt');
       var hr = el('tr');
-      ['Corridor', 'Legs', 'Steaming', 'Δ vs plan', 'Worst ice / limit'].forEach(function (h) {
-        hr.appendChild(el('th', null, h));
-      });
+      ['Corridor', 'Legs', 'Steaming', 'Δ', 'Worst ice / limit', 'Ice gate', 'Arrives', 'Destination then']
+        .forEach(function (h) { hr.appendChild(el('th', null, h)); });
       var th = el('thead'); th.appendChild(hr); t.appendChild(th);
       var tb = el('tbody');
-      a.corridors.forEach(function (c) {
+      pv.corridors.forEach(function (c) {
         var tr = el('tr');
         if (!c.solved) { tr.className = 'unsolved'; }
         tr.appendChild(el('td', null, c.label + ' — ' + c.name));
@@ -343,38 +357,47 @@
         tr.appendChild(el('td', null, c.solved ? c.traveltime_days.toFixed(2) + ' d' : 'no route'));
         tr.appendChild(el('td', null,
           (c.eta_delta_days === undefined || c.eta_delta_days === null)
-            ? (c.solved ? 'reference' : '—')
+            ? (c.solved ? 'ref' : '—')
             : (c.eta_delta_days > 0 ? '+' : '') + c.eta_delta_days.toFixed(2) + ' d'));
         tr.appendChild(el('td', null, c.solved
           ? (c.worst_ice_pct + '% / ' + c.ice_limit_pct + '%')
           : 'limit ' + c.ice_limit_pct + '% closes it'));
+        var g = el('td', null, c.ice_gate || '—');
+        if (c.ice_gate) { g.className = 'gcell s-' + c.ice_gate; }
+        tr.appendChild(g);
+        tr.appendChild(el('td', null, c.arrival_day ? C.h.longDate(c.arrival_day) : '—'));
+        var dest = el('td', null, c.destination_on_arrival);
+        if (c.destination_on_arrival === 'closed') { dest.className = 'gcell s-FAIL'; }
+        if (c.destination_on_arrival === 'open') { dest.className = 'gcell s-PASS'; }
+        tr.appendChild(dest);
         tb.appendChild(tr);
       });
       t.appendChild(tb); host.appendChild(t);
-      host.appendChild(el('p', 'src', 'Evidence as of ' + C.h.longDate(day) +
-        ' · ' + a.router));
-    }).catch(function () {
-      host.appendChild(el('p', 'note', 'Run isih/alternatives.py to compute corridors.'));
+      host.appendChild(el('p', 'src',
+        'Departing ' + C.h.longDate(pv.day) + ' · destination read as ' + pv.target +
+        ' · ' + pv.router));
+      host.appendChild(el('p', 'note', pv.scope));
+    }).catch(function (e) {
+      host.appendChild(el('p', 'note', 'Preview unavailable: ' + e.message));
     });
   }
 
   function renderVoyageFacts(d) {
     var host = $('voyage-facts');
+    if (!host) { return; }
     host.innerHTML = '';
     var v = d.voyage, m = d.mission, r = d.route_plan;
-    var rows = [
-      ['Watchkeeper', d.watchkeeper || '—'],
-      ['Voyage', v ? v.name : 'not started'],
-      ['Destination', v ? v.destination : '—'],
-      ['Departure', v && v.depart_day ? C.h.longDate(v.depart_day) : '—'],
-      ['Mission', m ? m.meaning : 'not defined'],
-      ['Route', r ? (r.n_waypoints + ' waypoints, ' +
-        (r.total_days ? r.total_days.toFixed(2) + ' d' : '—')) : 'not solved'],
-      ['Waypoints', d.waypoints_confirmed ? 'confirmed' : 'not confirmed']
-    ];
-    rows.forEach(function (r2) {
-      host.appendChild(el('dt', null, r2[0]));
-      host.appendChild(el('dd', 'wrap', r2[1]));
+    [['Watchkeeper', d.watchkeeper || '—'],
+     ['Voyage', v ? v.name : 'not started'],
+     ['Destination', v ? v.destination : '—'],
+     ['Departure', v && v.depart_day ? C.h.longDate(v.depart_day) : '—'],
+     ['Mission', m ? m.meaning : 'not defined'],
+     ['Route', r ? (r.n_waypoints + ' waypoints, ' +
+       (r.total_days ? r.total_days.toFixed(2) + ' d' : '—')) : 'not solved'],
+     ['Waypoints', d.waypoints_confirmed ? 'confirmed' : 'not confirmed']
+    ].forEach(function (row) {
+      host.appendChild(el('dt', null, row[0]));
+      host.appendChild(el('dd', 'wrap', row[1]));
     });
   }
 

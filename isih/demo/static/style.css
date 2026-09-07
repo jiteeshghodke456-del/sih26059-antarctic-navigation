@@ -455,3 +455,11 @@ summary:focus-visible, [tabindex]:focus-visible {
 .choices3 button[data-primary] {
   background: var(--sea); color: #fff; border-color: var(--sea);
 }
+
+/* Gate verdicts inside the what-if table reuse the gate palette exactly, so
+   a PASS in the preview reads the same as a PASS in the rail. */
+.vt .gcell { font-weight: 650; font-size: 11.5px; }
+.vt .gcell.s-PASS     { color: var(--valid); }
+.vt .gcell.s-MARGINAL { color: var(--degraded); }
+.vt .gcell.s-FAIL     { color: var(--critical); }
+.vt .gcell.s-UNKNOWN  { color: var(--unknown); }

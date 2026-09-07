@@ -88,6 +88,93 @@ def waypoints() -> dict[str, Any]:
     }
 
 
+def preview(day: str) -> dict[str, Any]:
+    """What each corridor would mean if the ship departed on `day`.
+
+    Read-only and side-effect free: it touches neither the workflow nor the
+    decision log, so opening the what-if cannot advance the passage. A test
+    asserts /api/workflow is byte-identical either side of a call.
+
+    Every number is read from artifacts already on disk. The only computation
+    is the ice gate, evaluated with each corridor's own worst-ice figure
+    against its own limit — the same function the console already trusts. The
+    arrival reading is the honest addition: a corridor that gets there 0.08
+    days later can arrive on a day the station is shut.
+    """
+    import gates as G
+    from decision import GateState
+
+    doc = _load_alternatives()
+    if doc is None:
+        raise WorkflowError("alternatives not computed — run isih/alternatives.py")
+
+    dates = data.dates()
+    w = data.window()
+    approach = accepts_approach()
+    target = APPROACH_NAME if approach else "Bharati"
+
+    def open_on(iso: str) -> bool | None:
+        for row in w.get("daily", []):
+            if row.get("date") == iso and target in row:
+                v = row[target].get("sic_qa_on")
+                return None if v is None else bool(row[target].get("passable"))
+        return None
+
+    def label(state: bool | None) -> str:
+        if state is None:
+            return "not scored"
+        return "open" if state else "closed"
+
+    rows = []
+    for c in doc.get("corridors", []):
+        arrival = None
+        if c.get("solved") and c.get("traveltime_days") is not None:
+            i = dates.index(day) + int(c["traveltime_days"])
+            arrival = dates[i] if i < len(dates) else None
+
+        gate = (G.ice_gate(c.get("worst_ice_pct"), float(c["ice_limit_pct"]))
+                if c.get("solved") else None)
+
+        rows.append({
+            "label": c["label"],
+            "name": c["name"],
+            "solved": bool(c.get("solved")),
+            "legs": c.get("legs"),
+            "traveltime_days": c.get("traveltime_days"),
+            "eta_delta_days": c.get("eta_delta_days"),
+            "worst_ice_pct": c.get("worst_ice_pct"),
+            "ice_limit_pct": c["ice_limit_pct"],
+            "ice_gate": gate.state.value if gate else None,
+            "ice_reason": gate.reason if gate else c.get("why"),
+            "arrival_day": arrival,
+            "destination_on_departure": label(open_on(day)),
+            "destination_on_arrival": (
+                label(open_on(arrival)) if arrival else
+                ("outside the replay window" if c.get("solved") else "—")
+            ),
+        })
+
+    return {
+        "day": day,
+        "target": target,
+        "mission_accepts_approach": approach,
+        "corridors": rows,
+        "provenance": "isih/figures/alternatives.json",
+        "scope": ("Corridors were solved on 1 Dec 2019 ice and held fixed. "
+                  "Changing the departure day changes the ETAs and the "
+                  "destination reading, not the geometry."),
+        "router": doc.get("router", ""),
+    }
+
+
+def _load_alternatives():
+    from . import decision_service
+    return decision_service.alternatives_doc()
+
+
+APPROACH_NAME = "Bharati approach (100 km N)"
+
+
 def state() -> dict[str, Any]:
     """Workflow state, plus what the current step needs to offer."""
     doc = WF.as_dict()
