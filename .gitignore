@@ -27,6 +27,12 @@ _quarantine/
 # ISIH demo virtualenv (rebuild: see isih/demo/requirements.txt)
 .venv-demo/
 
+# MLflow local tracking store — regenerable from isih/mlflow_backfill.py
+# (backfilled runs) plus whatever future local training runs log. Binary
+# run data, not source; see docs/MLFLOW_SETUP.md.
+mlruns/
+mlartifacts/
+
 # agent skills installed by `npx skills` — bodies are reproducible from skills-lock.json
 .agents/
 .claude/skills/

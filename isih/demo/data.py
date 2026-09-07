@@ -200,6 +200,15 @@ def route() -> dict:
         "ice_date": window()["start"],
         "engine": SOURCE_ROUTE,
         "coords": [[round(float(lon), 3), round(float(lat), 3)] for lon, lat in coords],
+        # Cumulative days-since-departure at each waypoint. PolarRoute reports
+        # one arrival time per leg, so the departure point is prepended at
+        # zero to give one value per coordinate. This is what lets the day
+        # slider place the ship on its own track instead of only changing the
+        # ice underneath it — §5 asks the system to look further down the
+        # route, which needs to know where "down the route" currently is.
+        "traveltime_cumulative": [0.0] + [
+            round(float(t), 4) for t in (props.get("traveltime") or [])
+        ],
         "total_traveltime_days": float(props["total_traveltime"]),
         "n_legs": len(props.get("CellIndices", [])),
         # sampled from the satellite raster along each line, as in the figure
