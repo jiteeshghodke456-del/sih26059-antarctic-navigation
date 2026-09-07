@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" data-palette="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISIH — bridge console</title>
+<link rel="stylesheet" href="/static/bridge.css">
+</head>
+<body>
+
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">ISIH <span>PS-26059</span></div>
+    <span class="mode-badge" id="wf-mode" data-mode="planning">ROUTE PLANNING</span>
+    <div class="clock"><b id="clk-time">--:--</b><span id="clk-date">—</span><span>UTC</span></div>
+    <div class="spacer"></div>
+    <button class="tool" id="btn-alerts" style="width:auto;padding:0 8px">
+      ALM <span class="alert-count" id="alm-count">0</span>
+    </button>
+    <div class="palette-switch" id="pal">
+      <button data-pal="day">DAY</button>
+      <button data-pal="dusk">DUSK</button>
+      <button data-pal="night" class="on">NGT</button>
+    </div>
+    <button id="btn-future" title="Future scope">FUT</button>
+  </header>
+
+  <nav class="toolrail" id="toolrail"></nav>
+
+  <div class="chartwrap" id="chartwrap">
+    <canvas id="chart"></canvas>
+    <canvas id="overlay"></canvas>
+
+    <div class="chart-hud">
+      <div class="hud-chip" id="hud-cursor">—</div>
+      <div class="hud-chip" id="hud-range">—</div>
+    </div>
+
+    <div class="scalebar" id="scalebar">
+      <div class="bar" id="scale-bar" style="width:90px"></div>
+      <span id="scale-label">—</span>
+    </div>
+
+    <div class="timebar">
+      <button id="t-back" title="Back 6 h">&#9664;</button>
+      <button id="t-play" data-primary title="Play">&#9654;</button>
+      <button id="t-fwd" title="Forward 6 h">&#9654;&#9654;</button>
+      <span class="t-read" id="t-read">—</span>
+      <input type="range" id="t-slider" min="0" max="168" step="1" value="0" aria-label="forecast hour">
+      <span class="t-lead" id="t-lead">now</span>
+    </div>
+
+    <div id="tooltip" hidden></div>
+  </div>
+
+  <aside class="rail" id="rail"></aside>
+
+  <footer class="statusbar" id="statusbar"></footer>
+
+</div>
+
+<div class="signin-scrim" id="signin" >
+  <form class="signin" id="signin-form">
+    <div class="mark">ISIH</div>
+    <div class="sub">ANTARCTIC BRIDGE DECISION SUPPORT</div>
+    <input id="signin-name" type="text" placeholder="Name and rank" autocomplete="off" required>
+    <button data-primary type="submit">Take the watch</button>
+  </form>
+</div>
+
+<div class="stage-scrim" id="stage-scrim" hidden>
+  <section class="stage" id="stage"></section>
+</div>
+
+<div id="toast" hidden></div>
+
+<script src="/static/bridge.js" type="module"></script>
+</body>
+</html>
