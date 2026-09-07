@@ -5,10 +5,11 @@ Written as a generator rather than hand-authored XML so the layout stays on a
 grid: every box in a band shares a width, and edge endpoints are derived, not
 eyeballed. Re-run it after editing NODES/EDGES to regenerate.
 """
+from pathlib import Path
 from xml.sax.saxutils import escape
 
-OUT = ('/home/jiteesh/sih/SIH26059-antarctic-navigation/.claude/worktrees/'
-       'foamy-seeking-allen/docs/DECISION_FLOW.drawio')
+# Derived from this file's location — see the note in gen_v1_drawio.py.
+OUT = str(Path(__file__).resolve().parents[1] / "docs" / "DECISION_FLOW.drawio")
 
 # draw.io style vocabulary, kept in the colour family of the original diagram
 BASE = "rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;"

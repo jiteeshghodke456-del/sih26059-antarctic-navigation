@@ -22,7 +22,7 @@
         <mxCell id="s4" value="ERA5 / GFS wind and waves" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="850" y="165" width="245" height="54" as="geometry" />
         </mxCell>
-        <mxCell id="s5" value="ASPA / ASMA protected areas&lt;br&gt;(static, ships once)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="s5" value="ASPA / ASMA protected areas&lt;br&gt;&lt;font style='font-size:9px'&gt;Treaty Secretariat register &amp;#8212; isih/protected_areas.py&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="1110" y="165" width="245" height="54" as="geometry" />
         </mxCell>
         <mxCell id="s6" value="IBCSO / GEBCO bathymetry&lt;br&gt;(static, ships once)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
