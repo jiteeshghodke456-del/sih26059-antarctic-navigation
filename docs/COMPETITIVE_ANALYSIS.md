@@ -148,3 +148,124 @@ What can honestly be said, which is less than a full post-mortem:
 **Still open:** a genuine post-mortem of a discontinued polar navigation or ice
 service — why it ended, who paid for it, what replaced it. Filed in
 `docs/backlog.md`. Writing one would be worth more than another feature.
+
+---
+
+# The 12-question benchmark
+
+Reinstated from the master prompt, where a `# COMPETITIVE / OPERATIONAL
+BENCHMARK` section (line 5070) was **lost in compression** — only §30's weaker
+bullet list survived (`docs/MASTER_AUDIT.md` §A.4). The lost version is
+materially more rigorous, because it refuses the question "what software already
+exists?" and replaces it with twelve questions about what that software actually
+*does for a decision*.
+
+> Do not merely ask "What software already exists?" Ask:
+> what decision does it support · what data does it use · at what latency · what
+> forecast horizon · what vessel assumptions · what risk methodology · what
+> routing methodology · what uncertainty does it expose · what does the user
+> actually see · what is genuinely better · what remains unsolved · what can this
+> system demonstrate that they cannot.
+>
+> **Do not create a strawman competitor.**
+
+Answers below are marked `UNVERIFIED` wherever they could not be confirmed from
+public documentation. An unverified answer is not a weakness in the competitor.
+
+## IcySea (Drift+Noise Polar Services)
+
+| Question | Answer |
+|---|---|
+| Decision supported | "Where is the ice edge and what does the imagery show me right now" — situational awareness for the ice pilot |
+| Data | Sentinel-1 SAR, AMSR2 passive microwave |
+| Latency | Near-real-time on acquisition; hours (`UNVERIFIED` exact) |
+| Forecast horizon | **None — it is observation, not forecast** |
+| Vessel assumptions | None; vessel-agnostic viewer |
+| Risk methodology | None published; interpretation is left to the mariner |
+| Routing methodology | **None** — it does not route |
+| Uncertainty exposed | Imagery quality is visible to the eye; no quantified uncertainty (`UNVERIFIED`) |
+| User sees | High-resolution SAR imagery, bandwidth-adapted for shipboard links |
+| Genuinely better than us | **SAR resolution.** Metres against our 25 km passive microwave. For close-quarters ice navigation this is a decisive advantage and we should not pretend otherwise. Also a real product with real customers — Polarstern and Nuyina both use it |
+| Remains unsolved | Forecast, route, vessel-specific consequence, decision record |
+| What we can show that they cannot | A route whose validity is tied to named evidence, and a refusal to certify what has not been observed |
+
+## PolarView
+
+| Question | Answer |
+|---|---|
+| Decision supported | Ice information distribution to polar operators |
+| Data | Multi-mission SAR and passive microwave, ice charts |
+| Latency | Product-dependent (`UNVERIFIED`) |
+| Forecast horizon | Distributes forecasts produced elsewhere |
+| Vessel assumptions | None |
+| Risk methodology | None of its own |
+| Routing methodology | None |
+| Uncertainty exposed | Inherits whatever the source product carries |
+| User sees | A portal of layers |
+| Genuinely better | Breadth of sources and institutional continuity |
+| Remains unsolved | Turning layers into a decision — the exact gap this project targets |
+| What we can show | Fragmented layers reduced to one route-health state with its reasons |
+
+## BAS PolarRoute / meshiphi
+
+| Question | Answer |
+|---|---|
+| Decision supported | Optimal path under ice and vessel-performance constraints |
+| Data | Whatever mesh you supply — SIC, thickness, currents, bathymetry |
+| Latency | Offline; a corridor solve takes ~9 s (**Measured**, this repo) |
+| Forecast horizon | Inherits the input mesh's |
+| Vessel assumptions | **Explicit and well modelled** — speed/ice-resistance curves, fuel |
+| Risk methodology | Constraint-based; not a published risk index |
+| Routing methodology | Dijkstra / A* over a non-uniform mesh, with smoothing |
+| Uncertainty exposed | None natively |
+| User sees | A Python API and JSON — **no operational interface** |
+| Genuinely better | The routing itself. It is the state of the art and **we reuse it rather than compete with it** |
+| Remains unsolved | Provenance, freshness, human approval, monitoring, the bridge |
+| What we can show | The workflow around the solver: mission definition, gates, approval, versioning, divergence detection |
+
+## National ice services (AARI, AWI, NIC/USNIC)
+
+| Question | Answer |
+|---|---|
+| Decision supported | Authoritative ice charting and iceberg cataloguing |
+| Data | Multi-sensor, analyst-interpreted |
+| Latency | Daily to weekly depending on product |
+| Forecast horizon | Some short-range; principally analysis |
+| Vessel assumptions | None |
+| Risk methodology | Ice charts feed POLARIS externally; the chart itself is not a risk index |
+| Routing methodology | None |
+| Uncertainty exposed | Egg-code conventions carry stage and concentration, not error bars |
+| User sees | Charts, and for USNIC a public iceberg catalogue we consume |
+| Genuinely better | **Authority and human analyst judgement.** An automated product does not replace a national ice service and should not claim to |
+| Remains unsolved | Ship-specific consequence; anything at decision time on the bridge |
+| What we can show | The catalogue joined to a specific hull, a specific track, and a specific date |
+
+## Commercial ECDIS + ice overlay (Kongsberg, Furuno, Wärtsilä)
+
+| Question | Answer |
+|---|---|
+| Decision supported | Certified navigation and passage planning |
+| Data | ENC + overlays |
+| Latency | Chart update cycle; overlay-dependent |
+| Forecast horizon | Overlay-dependent |
+| Vessel assumptions | Draft, safety contour, manoeuvring data |
+| Risk methodology | Depth/UKC alarms, not ice risk |
+| Routing methodology | Manual waypoint planning with route check |
+| Uncertainty exposed | CATZOC on the chart — genuinely good practice we borrow |
+| User sees | The certified bridge display the crew already trusts |
+| Genuinely better | **It is type-approved and legally sufficient. We are not, and must not imply otherwise.** It is also already installed, already trained on, and already in the workflow |
+| Remains unsolved | Antarctic ice forecasting, iceberg trajectory, ice-constrained optimisation |
+| What we can show | A decision layer that sits *beside* ECDIS, in ECDIS's own planning/monitoring idiom, without pretending to replace it |
+
+## What this table changes
+
+Two honest conclusions fall out of asking the twelve questions rather than
+listing products:
+
+1. **No competitor is weak.** Each is strong at the thing it was built for; the
+   gap is that none of them closes the loop from observation to a versioned,
+   approved, monitored route decision for a *named vessel on a named day*.
+2. **The two we should be most careful about are IcySea and ECDIS** — IcySea
+   because its data is genuinely better than ours, and ECDIS because it is
+   certified and we are not. Any claim that steps on either is a claim a judge
+   can dismantle.

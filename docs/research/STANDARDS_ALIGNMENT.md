@@ -219,6 +219,52 @@ recognise rather than as an apology.
 
 ---
 
+## 7A. MARPOL and the Antarctic Special Area
+
+Reinstated here because **MARPOL was named in the master prompt and lost when it
+was compressed** (`docs/MASTER_AUDIT.md` §A.4). Worth stating precisely: the
+requirement went missing from the *prompt*, not from the project — the heavy
+fuel oil ban was already researched and recorded in `docs/backlog.md` and
+`docs/ppt_source/research.md`. What was missing was its place in the standards
+stack, which is what this section fixes.
+
+### 7A.1 Annex I Regulation 43 — the heavy fuel oil ban
+
+Carriage **and** use of heavy fuel oil is prohibited south of 60°S. Mandatory
+since 1 August 2011; the only exemption is for vessels engaged in securing the
+safety of a ship or in a search-and-rescue operation.
+
+Consequences for this project, in order of how much they change the software:
+
+1. **The entire modelled route south of 60°S is inside the ban.** The vessel runs
+   MGO/MDO, not HFO. Any fuel-consumption figure that assumes a residual fuel
+   price or density is wrong for this corridor.
+2. It is **a single latitude test**, not a polygon — cheaper than the protected
+   areas layer already implemented.
+3. Do **not** conflate it with Regulation 43A, which is the *Arctic* ban
+   (MEPC.329(76), in force 1 July 2024 with waivers to 2029). Different
+   instrument, different geography, different dates.
+
+### 7A.2 Annexes IV and V — sewage and garbage
+
+The Antarctic area is a **Special Area** under Annexes I, II and V. Garbage
+discharge is prohibited; sewage discharge is restricted by distance from ice
+shelves and fast ice, not merely from land. For a decision-support tool the
+operational consequence is that **discharge planning is a voyage constraint with
+a geographic component**, in the same family as the ASPA/ASMA layer already
+built — it is a candidate layer, not a compliance engine, and this project does
+not implement it.
+
+### 7A.3 Why it belongs in a navigation tool at all
+
+It does not change where the ship can safely go; it changes what the ship must
+carry and what it may release along the way. The honest scope statement is that
+MARPOL constrains **voyage preparation and waste handling**, and this system
+touches it at exactly one point: the fuel assumption behind any energy or cost
+figure. That point is now recorded rather than assumed.
+
+---
+
 ## 8. Everything left UNVERIFIED
 
 WMO-No. 558 and No. 574 identities; WMO-No. 259 as the sea-ice nomenclature;
