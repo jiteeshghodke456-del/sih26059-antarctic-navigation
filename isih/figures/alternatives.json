@@ -1,0 +1,439 @@
+{
+ "generated": "2026-09-07T14:59:24Z",
+ "date": "2019-12-01",
+ "vessel": "MV Vasiliy Golovnin (IMO 8723426)",
+ "ice_source": "NOAA/NSIDC Sea Ice Concentration CDR G02202 v6, 25 km",
+ "router": "PolarRoute 1.1.11 + meshiphi 2.3.1 (British Antarctic Survey, MIT)",
+ "corridors": [
+  {
+   "objective": "traveltime",
+   "solved": true,
+   "track": [
+    [
+     -33.900000000000006,
+     18.400000000000006
+    ],
+    [
+     -35.0,
+     20.0
+    ],
+    [
+     -37.5,
+     22.5
+    ],
+    [
+     -40.0,
+     25.0
+    ],
+    [
+     -42.5,
+     27.5
+    ],
+    [
+     -45.0,
+     30.0
+    ],
+    [
+     -47.5,
+     32.5
+    ],
+    [
+     -50.0,
+     35.0
+    ],
+    [
+     -52.5,
+     37.5
+    ],
+    [
+     -55.0,
+     40.0
+    ],
+    [
+     -57.5,
+     42.5
+    ],
+    [
+     -60.0,
+     45.0
+    ],
+    [
+     -61.25,
+     46.25
+    ],
+    [
+     -61.25,
+     47.5
+    ],
+    [
+     -61.25,
+     48.75
+    ],
+    [
+     -61.25,
+     50.0
+    ],
+    [
+     -61.25,
+     51.25
+    ],
+    [
+     -61.25,
+     52.5
+    ],
+    [
+     -61.25,
+     53.75
+    ],
+    [
+     -61.25,
+     55.0
+    ],
+    [
+     -61.25,
+     56.25
+    ],
+    [
+     -61.25,
+     57.5
+    ],
+    [
+     -61.25,
+     58.75
+    ],
+    [
+     -61.25,
+     60.0
+    ],
+    [
+     -61.25,
+     61.25
+    ],
+    [
+     -61.25,
+     62.5
+    ],
+    [
+     -61.25,
+     63.75
+    ],
+    [
+     -61.67808256054025,
+     65.0
+    ],
+    [
+     -62.5,
+     67.5
+    ],
+    [
+     -65.0,
+     70.0
+    ],
+    [
+     -65.625,
+     70.625
+    ],
+    [
+     -65.625,
+     71.25
+    ],
+    [
+     -65.625,
+     71.875
+    ],
+    [
+     -65.625,
+     72.5
+    ],
+    [
+     -65.625,
+     73.125
+    ],
+    [
+     -66.25,
+     73.75
+    ],
+    [
+     -66.875,
+     74.375
+    ],
+    [
+     -67.5,
+     75.0
+    ],
+    [
+     -68.125,
+     75.625
+    ],
+    [
+     -68.75,
+     75.625
+    ],
+    [
+     -69.40683,
+     76.19533000000001
+    ]
+   ],
+   "traveltime_days": 8.576775694072595,
+   "fuel": 309.6960930101392,
+   "legs": 41,
+   "worst_ice_pct": 74.0,
+   "label": "A",
+   "name": "Planned",
+   "rationale": "The corridor the prototype has always shown, at the configured 80% working ice limit.",
+   "ice_limit_pct": 80,
+   "eta_delta_days": 0.0,
+   "fuel_delta": 0.0
+  },
+  {
+   "objective": "traveltime",
+   "solved": true,
+   "track": [
+    [
+     -33.900000000000006,
+     18.400000000000006
+    ],
+    [
+     -35.0,
+     20.0
+    ],
+    [
+     -37.5,
+     22.5
+    ],
+    [
+     -40.0,
+     25.0
+    ],
+    [
+     -42.5,
+     27.5
+    ],
+    [
+     -45.0,
+     30.0
+    ],
+    [
+     -47.5,
+     32.5
+    ],
+    [
+     -50.0,
+     35.0
+    ],
+    [
+     -52.5,
+     37.5
+    ],
+    [
+     -55.0,
+     40.0
+    ],
+    [
+     -57.5,
+     42.5
+    ],
+    [
+     -60.0,
+     45.0
+    ],
+    [
+     -61.25,
+     46.25
+    ],
+    [
+     -61.25,
+     47.5
+    ],
+    [
+     -61.25,
+     48.75
+    ],
+    [
+     -61.25,
+     50.0
+    ],
+    [
+     -61.25,
+     51.25
+    ],
+    [
+     -61.25,
+     52.5
+    ],
+    [
+     -61.25,
+     53.75
+    ],
+    [
+     -61.25,
+     55.0
+    ],
+    [
+     -61.25,
+     56.25
+    ],
+    [
+     -61.25,
+     57.5
+    ],
+    [
+     -61.25,
+     58.75
+    ],
+    [
+     -61.25,
+     60.0
+    ],
+    [
+     -61.25,
+     61.25
+    ],
+    [
+     -61.25,
+     62.5
+    ],
+    [
+     -61.25,
+     63.75
+    ],
+    [
+     -61.67808256054025,
+     65.0
+    ],
+    [
+     -62.5,
+     67.5
+    ],
+    [
+     -65.0,
+     70.0
+    ],
+    [
+     -65.625,
+     70.625
+    ],
+    [
+     -65.625,
+     71.25
+    ],
+    [
+     -65.625,
+     71.875
+    ],
+    [
+     -65.625,
+     72.5
+    ],
+    [
+     -65.625,
+     73.125
+    ],
+    [
+     -65.625,
+     73.75
+    ],
+    [
+     -65.625,
+     74.375
+    ],
+    [
+     -65.625,
+     75.0
+    ],
+    [
+     -65.625,
+     75.625
+    ],
+    [
+     -65.625,
+     76.25
+    ],
+    [
+     -65.625,
+     76.875
+    ],
+    [
+     -65.625,
+     77.5
+    ],
+    [
+     -65.625,
+     78.125
+    ],
+    [
+     -66.25,
+     78.75
+    ],
+    [
+     -66.875,
+     79.375
+    ],
+    [
+     -67.5,
+     78.75
+    ],
+    [
+     -68.125,
+     78.125
+    ],
+    [
+     -68.125,
+     77.5
+    ],
+    [
+     -68.125,
+     76.875
+    ],
+    [
+     -68.75,
+     76.25
+    ],
+    [
+     -69.40683,
+     76.19533000000001
+    ]
+   ],
+   "traveltime_days": 8.65626573964801,
+   "fuel": 310.853104093062,
+   "legs": 51,
+   "worst_ice_pct": 91.0,
+   "label": "B",
+   "name": "Conservative",
+   "rationale": "Same ship and ice, limit tightened to 55%. Costs 0.08 days and ten extra legs \u2014 and raises the worst ice actually sampled along the line from 74% to 91%, because the router optimises on 5\u00b0 cell means while this figure comes from 25 km pixels.",
+   "ice_limit_pct": 55,
+   "eta_delta_days": 0.079,
+   "fuel_delta": 1.16
+  },
+  {
+   "objective": "traveltime",
+   "solved": false,
+   "why": "no route exists for this vessel on this mesh \u2014 Dijkstra could not connect the waypoints",
+   "label": "C",
+   "name": "Cautious",
+   "rationale": "At a 45% limit no route to Bharati exists at all. Not slower \u2014 unreachable. Since 80% is an assumption rather than a certificated limit, this is where that assumption stops being survivable.",
+   "ice_limit_pct": 45
+  }
+ ],
+ "findings": [
+  {
+   "id": "objectives-collinear",
+   "finding": "Solving for fuel instead of traveltime returns a byte-identical path at every ice limit tested.",
+   "why": "zero_currents is True and PolarRoute's wave-added-resistance function is dead code in 1.1.11, so fuel is a monotone function of time and there is no trade-off surface.",
+   "consequence": "Do not present fuel and time as two objectives until a current or wave field makes them diverge. ADR-021's unrun sweep would have found this."
+  },
+  {
+   "id": "resolution-mismatch",
+   "finding": "Tightening the ice limit from 60% to 55% raises the worst ice sampled along the route from 74% to 91%.",
+   "why": "The router plans on 5\u00b0 cellbox means; the published figure is sampled from 25 km pixels. A cell whose mean is under the limit can still contain pixels far above it.",
+   "consequence": "The 'heaviest ice on the route' number is not a quantity the router ever optimised against, and must not be presented as though it were."
+  },
+  {
+   "id": "reachability-cliff",
+   "finding": "Bharati is reachable at assumed limits of 50% and above, and unreachable at 45% and below.",
+   "why": "Dijkstra cannot connect the waypoints once too many cells close.",
+   "consequence": "Reachability of the destination rests on an assumed threshold with a cliff edge, not on a certificated limit."
+  }
+ ],
+ "caveat": "Steaming time only. PolarRoute's wave-added-resistance function is dead code in this version, so sea state applies no speed or fuel penalty and every duration here is a lower bound."
+}
