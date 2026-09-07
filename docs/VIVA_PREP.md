@@ -111,10 +111,16 @@ Our design: the heavy work (gathering data, training, computing routes) happens
 on land. Then everything the ship needs is squeezed into one small file — under
 1 KB for a route — sent over the slow link, or carried aboard on a USB stick.
 
-**The ship then re-plans routes entirely offline, in about 9 seconds.**
+**The routing pipeline itself needs no network at all** — mesh, vessel model,
+Dijkstra and smoothing run in about 9 seconds on a laptop CPU, a measured
+benchmark of the reused PolarRoute engine.
 
-In the demo: unplug the network, keep planning. That's not a trick — that's how
-it's designed to work at sea.
+We do not stage a live "unplug the network" demo: there is no on-demand
+re-plan control wired into the app yet, so nothing would visibly happen if a
+judge asked for it. What is true and demoable today is narrower and still
+real — the running app makes no network call at all; every screen loads from
+files already on disk. Wiring a captain-triggered re-plan onto that 9-second
+pipeline is designed, not built.
 
 ## Prototype vs. Product — be precise about this
 
@@ -201,10 +207,26 @@ Tracking databases only cover icebergs above about 10 nautical miles. The small
 rather state that than imply we've solved iceberg safety.
 
 **Q: Why only project drift 72 hours?**
-Because beyond that, honest error bars get so large (100+ km) the danger zone
-would block the entire route — technically correct, practically useless. We cap
-it at 72 hours and refresh daily from new observations. Past that we show last
-known positions, labelled as observations, not predictions.
+**Say first that we do not project drift at all yet.** `models/iceberg/drift.py`
+computes an instantaneous drift *velocity* from the Wagner–Dell–Eisenman
+equations — there is no time integrator, so no berg has been stepped forward an
+hour, and no trajectory error has been measured. What we have run on the real
+USNIC catalogue is a regime check (wind-dominated vs current-dominated) under a
+declared sensitivity sweep, because we do not have wind and current at those
+positions and did not invent them.
+
+The 72-hour cap is the *design* limit for when projection is built: beyond it
+the honest error bars grow large enough that the danger zone would block the
+entire route — technically correct, practically useless. Note our own stated
+reason for that number has been corrected too: the cap is not supported by a
+measured 127–147 km error figure, because the paper that number comes from
+never states the rollout length behind it. The defensible reason is simpler —
+**no Antarctic tabular-berg error curve exists in the literature at any lead**,
+so 72 hours is where the evidence stops, not where a measured curve stops.
+
+Today the map shows last known positions, labelled as observations. That is
+honest and it is also one third of PS-26059 still on the roadmap. Do not let
+the question pass as though the capability exists.
 
 ## On routing
 
@@ -255,8 +277,9 @@ They're already scheduled — not aspirations.
 > mistakes. We predict iceberg drift with real physics instead of guessing. We
 > feed both into the British Antarctic Survey's own routing engine, which we
 > extended to actually use uncertainty — something their version throws away.
-> And because the ship has almost no internet, everything runs offline on a
-> laptop on the bridge. Unplug the network and it still works.
+> And because the ship has almost no internet, the design keeps heavy compute
+> ashore and runs the router locally — a 9-second offline benchmark today,
+> with the on-demand control for a captain to trigger it still to be built.
 
 ## If you remember three things
 

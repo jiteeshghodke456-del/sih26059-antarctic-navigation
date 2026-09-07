@@ -24,9 +24,9 @@ Each of these has a file in this repository that produces the number.
 | 1.7 | **Four of the eight** days Bharati appeared reachable were data artifacts reading exactly 0.0% | same |
 | 1.8 | Masking those cells moves coastal ice **up** — 46.8% → 54.6% mean — i.e. the fix makes the router *more* cautious | `docs/ISIH_RESULTS.md` §2 |
 | 1.9 | Our iceberg drift model reproduces the published coefficient table and the paper's own 765 m critical length — **23/23 tests pass** | `models/iceberg/test_drift.py` |
-| 1.10 | **33 icebergs** tracked live; **15 of them inside our routing corridor**, including D15A at 3,037 km² beside Bharati's approach | `models/iceberg/regime_report.json` |
+| 1.10 | **33 icebergs** as of 27 Aug 2026 (USNIC weekly product); **15 of them inside our routing corridor**, including D15A at 3,037 km² beside Bharati's approach | `models/iceberg/regime_report.json` |
 | 1.11 | Route computed on real satellite ice with a real open-source router: **8.6 days steaming**, Cape Town → Bharati | `docs/ISIH_RESULTS.md` |
-| 1.12 | Built on **1,096 real daily satellite files, zero failures**. No synthetic data anywhere in the product | `docs/ISIH_RESULTS.md` |
+| 1.12 | Built on **1,096 real daily satellite files, zero failures**. No synthetic observations anywhere — the router's ice thickness and density are literature lookup tables, disclosed in ADR-013 | `docs/ISIH_RESULTS.md` |
 
 ---
 
@@ -50,9 +50,11 @@ more at the ice edge** than in thick pack — standard deviations from 2.8% to
 28.8% at low concentration (Ivanova et al. 2015). The ice edge is exactly where
 a ship makes its decisions.
 
-**What we do:** the route changes when the model is unsure. Model disagreement
-becomes a calibrated safety margin that widens the corridor, rather than a
-colour on a map.
+**What we do:** we name it as a known gap, not a shipped fix. The design is
+settled — model disagreement becomes a calibrated safety margin that widens
+the corridor, rather than a colour on a map — and gated by a written pass/fail
+test (§5). It is **designed, not wired into the router yet**: the prototype
+being demoed plans on a single model with no uncertainty band.
 
 > **Search result we could not disprove:** we found **no published study that
 > propagates sea-ice forecast uncertainty into a routing decision.** Stated as
@@ -76,9 +78,12 @@ mesh. Verified by reading the installed source: the route planner has no time
 dimension. A 17-day voyage is planned as though it will meet day-zero ice on
 day seventeen.
 
-**What we do:** a time-expanded graph — one ice layer per forecast day, so a
-lead-time forecast can actually change the route. **A static router structurally
-cannot consume a forecast**, which is why this matters more than it sounds.
+**What we do:** we name it as a known gap, not a shipped fix. The fix is
+specified — a time-expanded graph, one ice layer per forecast day, so a
+lead-time forecast could actually change the route — but it is **designed,
+not built** (§5); today's router still plans on the single frozen mesh above.
+**A static router structurally cannot consume a forecast**, which is exactly
+why this is the highest-priority item on the roadmap, not a footnote.
 
 ### 2.4 Sea state costs nothing in the current engine
 

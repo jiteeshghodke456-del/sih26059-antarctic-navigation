@@ -332,7 +332,9 @@
     small compressed file called a <strong>voyage pack</strong>.</li>
     <li><strong>The vessel tier</strong> runs on a laptop on the ship's bridge. It receives the
     voyage pack over Iridium — or on a USB stick at port — and then works with <strong>no internet
-    at all</strong>. It can recompute routes on demand in about nine seconds.</li>
+    at all</strong>. The routing pipeline itself is measured at about nine seconds on a laptop CPU
+    (§2.3); wiring that into an on-demand control the master can trigger is <strong>designed, not
+    built yet</strong>.</li>
   </ol>
 
   <div class="box ok">
@@ -438,7 +440,7 @@
 ┌──────────────────────────────────▼──── VESSEL TIER ("Bridge") ────────────────────┐
 │  same codebase, MODE=vessel, no outbound network required                          │
 │  [5] Local store   latest pack + N previous (rollback)                             │
-│  [6] Local compute PolarRoute re-plan on demand (~9 s)                             │
+│  [6] Local compute PolarRoute pipeline, ~9 s — UI trigger: designed                │
 │                    U-Net re-correction when fresh observations arrive (~0.3–1 s)   │
 │  [7] REST API  →  [8] React + Leaflet UI                                           │
 │        staleness banner · confidence decay · candidate-route selector              │
@@ -1195,11 +1197,14 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
     ground truth is building on a documented bias without saying so. Where our sources disagree, the
     system becomes <em>more cautious automatically</em>.</dd>
 
-    <dt>D4 — Bandwidth-honest offline-first design, enforced in CI</dt>
-    <dd>The tier boundary is set at “sync environmental state, not answers,” so the master can change
-    waypoints and re-plan with zero connectivity. A CI test <strong>fails the build</strong> if a
-    pack exceeds budget. <em>Demo consequence:</em> disconnect the network mid-demo and continue
-    re-planning routes — unfakeable, and it is how the system is designed to work at sea.</dd>
+    <dt>D4 — Bandwidth-honest, offline-first design (CI enforcement specified, not built)</dt>
+    <dd>The tier boundary is set at “sync environmental state, not answers,” so the design goal is
+    a master who can change waypoints and re-plan with zero connectivity. ADR-017 specifies a CI
+    test that would <strong>fail the build</strong> if a pack exceeds budget — that test is not
+    written yet, and the daily delta has never been measured. <em>Demo consequence:</em> the
+    running app makes no network call at all, so disconnecting it changes nothing you would
+    notice; we do not stage a live re-plan demo, because the on-demand control is designed, not
+    built.</dd>
 
     <dt>D5 — Corridor- and season-specific, against the real vessel</dt>
     <dd>Built for the actual Cape Town → Bharati/Maitri austral-summer run, not for “Antarctica” in
