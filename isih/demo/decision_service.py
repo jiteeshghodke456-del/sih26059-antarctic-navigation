@@ -99,15 +99,26 @@ def _alternatives() -> list[Alternative]:
     return out
 
 
-def _destination_state(day: str) -> tuple[bool | None, str, int | None, int | None]:
-    """Is the primary destination reachable on `day`?
+APPROACH = "Bharati approach (100 km N)"
+
+
+def _destination_state(day: str, accepts_approach: bool = False
+                       ) -> tuple[bool | None, str, int | None, int | None]:
+    """Is the mission's destination reachable on `day`?
+
+    `accepts_approach` is what makes §4's mission-definition screen matter.
+    Bharati's own cell was closed 23 of 31 days in this window while the water
+    100 km north was open on all 31, so a mission that accepts discharge at
+    the approach succeeds on days a station-required mission does not. The
+    same ice, the same ship, a different definition of success — and the
+    logistics gate changes answer.
 
     Returns None for open when the target was never scored — no mesh cell
     contains it — which the logistics gate turns into UNKNOWN rather than
     into 'closed'. That distinction was a real bug once.
     """
     w = data.window()
-    name = "Bharati"
+    name = APPROACH if accepts_approach else "Bharati"
     summ = w.get("summary", {}).get(name)
     if summ is None:
         return None, name, None, None
@@ -123,15 +134,19 @@ def _destination_state(day: str) -> tuple[bool | None, str, int | None, int | No
     return open_today, name, closed, total
 
 
-def build(day: str | None = None) -> Decision:
-    """Build the current decision from real artifacts."""
+def build(day: str | None = None, accepts_approach: bool = False) -> Decision:
+    """Build the current decision from real artifacts.
+
+    `accepts_approach` comes from the mission definition, and is the one input
+    here that a human chose rather than a satellite measured.
+    """
     day = day or data.dates()[0]
     route = data.route()
     routes_cfg = _load("routes.json") or {}
     alts = _alternatives()
     solved_alts = [a for a in alts if a.eta_days is not None]
 
-    open_today, dest, closed, total = _destination_state(day)
+    open_today, dest, closed, total = _destination_state(day, accepts_approach)
 
     gate_list = G.evaluate_all(
         vessel=VESSEL,
@@ -234,14 +249,14 @@ class DecisionLog:
                 return e
         return None
 
-    def current(self, day: str | None = None) -> dict[str, Any]:
+    def current(self, day: str | None = None, accepts_approach: bool = False) -> dict[str, Any]:
         """Evaluate for `day`, and say how it stands against the approval.
 
         Re-evaluating on identical evidence produces an identical gate
         digest and therefore no divergence, which is the distinction
         §48A.13 demands between an assumption changing and data arriving.
         """
-        dec = build(day)
+        dec = build(day, accepts_approach)
         doc = dec.as_dict()
         doc["gate_digest"] = gate_digest(dec.gates)
 
@@ -278,8 +293,9 @@ class DecisionLog:
             )
         return doc
 
-    def approve(self, by: str, note: str = "", day: str | None = None) -> dict[str, Any]:
-        prev = self.current(day)
+    def approve(self, by: str, note: str = "", day: str | None = None,
+                accepts_approach: bool = False) -> dict[str, Any]:
+        prev = self.current(day, accepts_approach)
         nxt = json.loads(json.dumps(prev))
         version = (self._entries[-1]["route_version"] + 1) if self._entries else 1
         nxt["route_version"] = version

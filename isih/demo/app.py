@@ -18,7 +18,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import data, decision_service
+from . import data, decision_service, workflow_service
 
 STATIC = Path(__file__).parent / "static"
 
@@ -33,6 +33,30 @@ class ApprovalRequest(BaseModel):
 
     by: str = Field(min_length=1, max_length=120)
     note: str | None = Field(default=None, max_length=500)
+    day: str | None = None
+
+
+class WorkflowAction(BaseModel):
+    """One step of the §4 passage workflow.
+
+    A single loosely-typed body rather than a dozen endpoints: the workflow
+    module already validates every transition and refuses out-of-order steps,
+    so duplicating that as thirteen request schemas would put the ordering
+    rules in two places where they could disagree.
+    """
+
+    name: str | None = Field(default=None, max_length=120)
+    destination: str | None = Field(default=None, max_length=120)
+    depart_day: str | None = None
+    destination_policy: str | None = None
+    cargo_tonnes: int | None = Field(default=None, ge=0, le=100000)
+    latest_arrival: str | None = None
+    notes: str | None = Field(default=None, max_length=500)
+    source: str | None = None
+    label: str | None = Field(default=None, max_length=80)
+    why: str | None = Field(default=None, max_length=500)
+    reason: str | None = Field(default=None, max_length=500)
+    what: str | None = Field(default=None, max_length=200)
     day: str | None = None
 
 
@@ -123,10 +147,47 @@ def protected():
 
 @app.get("/api/decision")
 def decision(day: str | None = None):
-    """Current decision: gates, health, binding reasons, alternatives."""
+    """Current decision: gates, health, binding reasons, alternatives.
+
+    The mission's destination policy is read from the workflow rather than
+    passed in, because it is a property of the voyage under way and not of
+    the request. It changes the logistics gate on 23 of the 31 days.
+    """
     if day is not None and day not in data.dates():
         raise HTTPException(404, f"{day} is outside the demo window")
-    return decision_service.LOG.current(day)
+    return decision_service.LOG.current(day, workflow_service.accepts_approach())
+
+
+# --------------------------------------------------------------------------
+# The §4 passage workflow. ECDIS has exactly two modes — route planning and
+# route monitoring — so the front half of §4 is planning and the back half is
+# monitoring, which preserves the sailor learning curve §2.2 asks for rather
+# than inventing a new idiom.
+# --------------------------------------------------------------------------
+
+@app.get("/api/workflow")
+def workflow_state():
+    return workflow_service.state()
+
+
+@app.get("/api/waypoints")
+def waypoints():
+    """The legs and their ETAs — §4's waypoint + ETA definition step."""
+    return workflow_service.waypoints()
+
+
+@app.post("/api/workflow/{action}")
+def workflow_action(action: str, body: WorkflowAction):
+    """Advance the workflow. Out-of-order steps are refused with a reason."""
+    try:
+        return workflow_service.act(action, body.model_dump(exclude_none=True))
+    except workflow_service.UnknownAction as exc:
+        raise HTTPException(404, str(exc))
+    except workflow_service.WorkflowError as exc:
+        # 409: the request was well-formed but the workflow is not in a state
+        # that allows it. §4's ordering is the requirement, so this is a
+        # meaningful refusal rather than a bad request.
+        raise HTTPException(409, str(exc))
 
 
 @app.post("/api/decision/approve")
@@ -138,7 +199,13 @@ def approve(body: ApprovalRequest):
     """
     if not body.by.strip():
         raise HTTPException(400, "an approval must record who gave it")
-    return decision_service.LOG.approve(by=body.by.strip(), note=body.note or "", day=body.day)
+    # The mission's destination policy has to reach BOTH the read path and
+    # the approve path, or an APPROACH_OK voyage would be approved against a
+    # station-required evaluation and report a divergence that never happened.
+    return decision_service.LOG.approve(
+        by=body.by.strip(), note=body.note or "", day=body.day,
+        accepts_approach=workflow_service.accepts_approach(),
+    )
 
 
 @app.get("/api/decisions")
