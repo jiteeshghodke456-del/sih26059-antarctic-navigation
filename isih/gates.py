@@ -29,6 +29,26 @@ from decision import Evidence, GateResult, GateState
 # Where an UNKNOWN gate's evidence would have to come from. Naming the
 # specific dataset turns "we didn't do it" into a costed roadmap item, and
 # stops UNKNOWN from becoming a shrug.
+# How close to the working limit counts as MARGINAL, in concentration points.
+#
+# This was 5 for no reason at all — a number that felt about right, which is
+# exactly the kind of invented threshold §48A.3 and §47 forbid. It is now
+# derived from the product's own uncertainty: the CDR ships
+# `cdr_seaice_conc_stdev`, its per-pixel estimated standard deviation, and
+# across the 70-90% band that brackets our 80% working limit its median value
+# is 7.4 points (mean 8.0, p90 11.7), measured on the December 2019 archive.
+#
+# So MARGINAL means "within one standard deviation of the limit, where the
+# standard deviation is the one the data provider publishes". Note the
+# direction of the correction: the invented band was NARROWER than the
+# instrument's own uncertainty, which would have reported a comfortable PASS
+# for routes the retrieval cannot actually distinguish from the limit.
+MARGINAL_BAND_PCT = 7.4
+MARGINAL_BAND_BASIS = (
+    "one median standard deviation of the NOAA/NSIDC CDR retrieval across the "
+    "70-90% concentration band (cdr_seaice_conc_stdev, December 2019 archive)"
+)
+
 BLOCKED_ON = {
     "chart": "IHO ENC / GEBCO bathymetry loaded into the meshiphi mesh",
     "weather": "ERA5 or CMEMS wind, wave and visibility fields over the corridor",
@@ -149,11 +169,12 @@ def ice_gate(
             f"Ice on the route reaches {worst_ice_pct:.0f}%, above the "
             f"{ice_limit_pct:.0f}% working limit"
         )
-    elif margin <= 5:
+    elif margin <= MARGINAL_BAND_PCT:
         pts = "point" if round(margin) == 1 else "points"
         state, reason = GateState.MARGINAL, (
             f"Ice reaches {worst_ice_pct:.0f}%, within {margin:.0f} {pts} of the "
-            f"{ice_limit_pct:.0f}% working limit"
+            f"{ice_limit_pct:.0f}% working limit — inside the retrieval's own "
+            f"uncertainty, so the margin is not measurable"
         )
     else:
         pts = "point" if round(margin) == 1 else "points"

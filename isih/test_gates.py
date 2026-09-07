@@ -62,9 +62,26 @@ def test_chart_gate_passes_once_bathymetry_is_loaded():
 
 def test_ice_gate_boundaries():
     assert G.ice_gate(50.0, 80.0).state is GateState.PASS
-    assert G.ice_gate(77.0, 80.0).state is GateState.MARGINAL   # within 5 points
+    assert G.ice_gate(77.0, 80.0).state is GateState.MARGINAL
     assert G.ice_gate(92.0, 80.0).state is GateState.FAIL
     assert G.ice_gate(None, 80.0).state is GateState.UNKNOWN
+
+
+def test_the_marginal_band_is_the_retrievals_own_uncertainty():
+    """The band was 5 points for no reason. It is now one median standard
+    deviation of the CDR's own published per-pixel uncertainty across the
+    70-90% band — 7.4 points, measured. A threshold in a safety-adjacent
+    system has to come from somewhere."""
+    assert G.MARGINAL_BAND_PCT == 7.4
+    assert "standard deviation" in G.MARGINAL_BAND_BASIS
+    assert "cdr_seaice_conc_stdev" in G.MARGINAL_BAND_BASIS
+
+    # Either side of the band, on a 80% limit.
+    assert G.ice_gate(73.0, 80.0).state is GateState.MARGINAL   # 7.0 points
+    assert G.ice_gate(72.0, 80.0).state is GateState.PASS       # 8.0 points
+
+    # And the reason says WHY it is marginal, not merely that it is.
+    assert "not measurable" in G.ice_gate(73.0, 80.0).reason
 
 
 def test_ice_gate_keeps_the_assumed_limit_caveat_attached():

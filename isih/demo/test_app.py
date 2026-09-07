@@ -231,10 +231,20 @@ def test_the_preview_reports_the_arrival_day_not_just_the_departure(client):
 
 def test_the_preview_shows_corridor_b_failing_its_own_ice_limit(client):
     """The resolution-mismatch finding, surfaced BEFORE the master chooses:
-    corridor B's worst sampled ice is 91% against its own 55% limit."""
+    corridor B's worst sampled ice is 91% against its own 55% limit.
+
+    Corridor A reads MARGINAL, not PASS. Its worst ice is 74% against an 80%
+    limit — a 6-point margin, which is inside the CDR's own median retrieval
+    uncertainty of 7.4 points at that concentration. The margin exists on
+    paper and is not measurable in the data, and the gate says so. Widening
+    the band from an invented 5 points to the measured 7.4 made our own
+    planned corridor less comfortable, which is the direction an honest
+    correction goes.
+    """
     _reset(client)
     rows = {c["label"]: c for c in client.get("/api/preview?day=2019-12-01").json()["corridors"]}
-    assert rows["A"]["ice_gate"] == "PASS"
+    assert rows["A"]["ice_gate"] == "MARGINAL"
+    assert "not measurable" in rows["A"]["ice_reason"]
     assert rows["B"]["ice_gate"] == "FAIL"
     assert rows["C"]["solved"] is False
 
