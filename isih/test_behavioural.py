@@ -330,8 +330,16 @@ def test_10_replay_is_labelled_everywhere_it_is_shown(client):
     assert dm["mode"] == "HISTORICAL REPLAY"
     assert "not a live feed" in dm["means"].lower()
 
-    html = client.get("/").text
-    assert 'id="mode-badge"' in html and 'id="mode-text"' in html
+    for path in ("/legacy", "/"):
+        html = client.get(path).text
+        assert 'id="mode-badge"' in html and 'id="mode-text"' in html, path
+
+    # The bridge console runs a synthetic world, which is a different claim
+    # from replay and a more dangerous one to leave unlabelled: its fields move
+    # and look like observations. It must say so on the page itself, not only
+    # in the per-panel provenance dots.
+    bridge = client.get("/").text
+    assert "SYNTHETIC ENVIRONMENT" in bridge
 
     dec = client.get("/api/decision").json()
     assert dec["data_mode"] == "HISTORICAL REPLAY"

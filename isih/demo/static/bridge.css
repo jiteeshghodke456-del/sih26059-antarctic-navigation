@@ -215,6 +215,7 @@ input[type="text"], input[type="number"], select {
   color: var(--ink-2);
 }
 .mode-badge[data-mode="monitoring"] { color: var(--valid); border-color: var(--valid); }
+#mode-badge { color: var(--area); border-color: var(--area); cursor: help; }
 
 .clock { font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; }
 .clock b { font-size: 14px; }

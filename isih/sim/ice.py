@@ -105,7 +105,18 @@ class IceField:
         # specialist reads a non-monotonic edge instantly.
         miz_weight = np.exp(-((south - MIZ_WIDTH_DEG * 0.5) / (MIZ_WIDTH_DEG * 0.9)) ** 2)
         tex = np.tanh(0.75 * self.texture.value(lon, lat, t))
-        c = c + 0.13 * miz_weight * tex
+        # MULTIPLICATIVE, not additive. Added texture is non-zero north of the
+        # edge too, so it painted fingers of ice into open water - on the chart
+        # they read as a comb of spikes reaching north, which is the single most
+        # obviously synthetic thing a sea-ice field can do. Multiplying leaves
+        # open water open because zero times anything is still zero.
+        c = c * (1.0 + 0.20 * miz_weight * tex)
+
+        # A narrow diffuse skirt of floes and bands just outside the edge. Real,
+        # and it keeps the edge from looking like a drawn line - but it decays
+        # over well under a degree, unlike the texture that used to leak north.
+        skirt = np.where(south < 0.0, 0.11 * np.exp(south / 0.55), 0.0)
+        c = c + skirt * np.clip(0.5 + 0.5 * tex, 0.0, 1.0)
 
         # Coastal polynyas: katabatic winds hold open water against the coast.
         # Real, and operationally important - it is why a ship can sometimes get

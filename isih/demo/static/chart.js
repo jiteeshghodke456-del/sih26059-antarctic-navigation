@@ -226,7 +226,7 @@ export function drawGraticule(ctx, chart, colour, labelColour) {
   for (let la = lat0; la <= Math.max(latT, latB); la += step) {
     const [, y] = chart.px(la, chart.centre.lon);
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(chart.w, y); ctx.stroke();
-    ctx.fillText(fmtLat(la), 3, y - 2);
+    ctx.fillText(fmtLat(la), 6, y - 3);
   }
   const lon0 = Math.ceil(Math.min(lonL, lonR) / step) * step;
   for (let lo = lon0; lo <= Math.max(lonL, lonR); lo += step) {
