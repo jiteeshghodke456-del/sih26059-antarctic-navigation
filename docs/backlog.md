@@ -180,7 +180,7 @@ system claims to support.
 
 - [minor][pitch] **Two demo numbers in circulation do not match today's measurement.** "43/43 tests" and "boots in 3.1 s" are quoted in drafts; measured 2026-09-07 in the sandbox: **55 tests pass** (24 demo + 23 iceberg drift + 8 protected areas) and warm-up is **3.5-3.8 s** across four runs. Re-measure on the laptop before either number goes on a slide; `docs/PPT_CONTENT.md` uses the measured values.
 
-## Open — futuristic scopes (roadmap only, docs/_drafts/research.md §"ROADMAP")
+## Open — futuristic scopes (roadmap only, docs/ppt_source/research.md §"ROADMAP")
 
 - [minor][roadmap] §26 local LLM for natural interaction — framing authored fresh this session, no prior research; needs a model/runtime choice and confirmation it doesn't reopen ADR-015.
 - [minor][roadmap] §25 "Baymax Mode" captain-health wearable monitoring — no wearable, data source, or health model evaluated at all; unresearched, not just unbuilt.
@@ -188,18 +188,18 @@ system claims to support.
 - [minor][roadmap] §14 onboard sensor integration — no sensor protocol, hardware, or data contract scoped; MODE=vessel is the architectural attachment point but nothing beyond that.
 - [minor][roadmap] §21 learning from historical incidents — besetting case studies exist as research (NAVIGATION_RESEARCH.md §7.3) but no incident database or learning component exists; NCPOR expedition reports never reviewed for an Indian-vessel incident.
 
-## Open — market / startup case (raised 2026-09-07, evidence in docs/_drafts/market.md §10)
+## Open — market / startup case (raised 2026-09-07, evidence in docs/ppt_source/market.md §10)
 
-- [major][market] **NCPOR's charter day rate and awarded contract value are unknown**, so every rupee/dollar figure in the money plan is assumption-dependent. Only the *ratio* is sourced: the tender's own formula makes one lost ship-day ≈ 1% of the season's hire. Ask NCPOR, or find an awarded-tender disclosure — docs/_drafts/market.md §7.2.
-- [major][market] **"N = 3 saved ship-days" is the pricing anchor and is entirely unproven** — and our own stale-data experiment came back at 0.03 days on the one date tested (docs/TRUE_CLAIMS.md §3). The multi-date route-regret sweep is the experiment that either validates or kills this pricing model — docs/_drafts/market.md §7.2.
-- [major][market] **Single-market concentration is unmitigated**: if NCPOR declines, Stage 2 has no substitute customer. Named as the plan's biggest single point of failure with no answer — docs/_drafts/market.md §9.
-- [minor][market] **What ice information NCPOR uses today, and from whom, is unknown.** The charter requires "ice-information receiving equipment" (tender §11) but the source feeding it was never established. Directly determines whether we are filling a gap or displacing an incumbent — docs/_drafts/market.md §2.1.
-- [minor][market] **No list price exists for any polar ice service** (IcySea and all peers are "contact sales"), so the USD 20k/vessel-year figure is extrapolated from mid-latitude weather-routing trade press, not from the polar market — docs/_drafts/market.md §1.4.
-- [minor][market] **The IAATO split between Peninsula-only and deeper-ice operators is an assumption (10–15 hulls)**, and it is one of the three inputs to the serviceable-fleet count. No source gives it — docs/_drafts/market.md §4.3.
-- [minor][market] **Maitri II's ₹2,000 crore / Jan 2029 figures rest on secondary sources** (IAS coaching summaries of press reporting); the primary Finance Ministry approval document was not located — docs/_drafts/market.md §3.4.
-- [minor][market] **PRV has no contract, no announced cost and no delivery date** — MoU (June 2025) plus "design preparatory activities" only. Do not let a slide imply otherwise, and never conflate it with the ₹839.55 cr Ocean Research Vessel (16 Jul 2024, Deep Ocean Mission) — docs/_drafts/market.md §2.2.
-- [minor][market] **Insurer/P&I buyer is assessed as weak and parked**: sources show underwriters manage polar exposure by warranty and exclusion, not by buying analytics, and Southern Ocean loss frequency (~2 incidents/yr, ASOC) is too thin to price on. Revisit only with loss evidence — docs/_drafts/market.md §4.4.
-- [minor][market] **Arctic transfer is ROADMAP, not capability.** India's 2027 NSR pilot cargo vessel is the sourced hook, but our model is validated on Antarctic data only and a different ice regime needs retraining and revalidation — docs/_drafts/market.md §4.5.
+- [major][market] **NCPOR's charter day rate and awarded contract value are unknown**, so every rupee/dollar figure in the money plan is assumption-dependent. Only the *ratio* is sourced: the tender's own formula makes one lost ship-day ≈ 1% of the season's hire. Ask NCPOR, or find an awarded-tender disclosure — docs/ppt_source/market.md §7.2.
+- [major][market] **"N = 3 saved ship-days" is the pricing anchor and is entirely unproven** — and our own stale-data experiment came back at 0.03 days on the one date tested (docs/TRUE_CLAIMS.md §3). The multi-date route-regret sweep is the experiment that either validates or kills this pricing model — docs/ppt_source/market.md §7.2.
+- [major][market] **Single-market concentration is unmitigated**: if NCPOR declines, Stage 2 has no substitute customer. Named as the plan's biggest single point of failure with no answer — docs/ppt_source/market.md §9.
+- [minor][market] **What ice information NCPOR uses today, and from whom, is unknown.** The charter requires "ice-information receiving equipment" (tender §11) but the source feeding it was never established. Directly determines whether we are filling a gap or displacing an incumbent — docs/ppt_source/market.md §2.1.
+- [minor][market] **No list price exists for any polar ice service** (IcySea and all peers are "contact sales"), so the USD 20k/vessel-year figure is extrapolated from mid-latitude weather-routing trade press, not from the polar market — docs/ppt_source/market.md §1.4.
+- [minor][market] **The IAATO split between Peninsula-only and deeper-ice operators is an assumption (10–15 hulls)**, and it is one of the three inputs to the serviceable-fleet count. No source gives it — docs/ppt_source/market.md §4.3.
+- [minor][market] **Maitri II's ₹2,000 crore / Jan 2029 figures rest on secondary sources** (IAS coaching summaries of press reporting); the primary Finance Ministry approval document was not located — docs/ppt_source/market.md §3.4.
+- [minor][market] **PRV has no contract, no announced cost and no delivery date** — MoU (June 2025) plus "design preparatory activities" only. Do not let a slide imply otherwise, and never conflate it with the ₹839.55 cr Ocean Research Vessel (16 Jul 2024, Deep Ocean Mission) — docs/ppt_source/market.md §2.2.
+- [minor][market] **Insurer/P&I buyer is assessed as weak and parked**: sources show underwriters manage polar exposure by warranty and exclusion, not by buying analytics, and Southern Ocean loss frequency (~2 incidents/yr, ASOC) is too thin to price on. Revisit only with loss evidence — docs/ppt_source/market.md §4.4.
+- [minor][market] **Arctic transfer is ROADMAP, not capability.** India's 2027 NSR pilot cargo vessel is the sourced hook, but our model is validated on Antarctic data only and a different ice regime needs retraining and revalidation — docs/ppt_source/market.md §4.5.
 
 ## Open — research matrix completion (raised 2026-09-07, evidence in docs/research/RESEARCH_MATRIX.md)
 
