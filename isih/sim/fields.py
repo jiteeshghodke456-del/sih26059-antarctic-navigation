@@ -152,7 +152,11 @@ class Atmosphere:
         if sic is not None:
             # Attenuation in pack ice. Steep, and effectively total above ~60%.
             hs = hs * (1.0 - smoothstep(0.10, 0.60, np.asarray(sic, dtype=float)))
-        tp = 3.86 * np.sqrt(np.maximum(hs, 0.05))
+        # Pierson-Moskowitz relates peak period to significant height as
+        # Tp ~ 5.0 sqrt(Hs), not 3.86 - the lower constant came from a
+        # half-remembered fetch-limited form and made every sea too short and
+        # therefore too steep, which is exactly what a mariner reads as wrong.
+        tp = 5.0 * np.sqrt(np.maximum(hs, 0.05))
         # Direction the waves come FROM, i.e. upwind.
         drc = (np.degrees(np.arctan2(-u, -v)) + 360.0) % 360.0
         return hs, tp, drc

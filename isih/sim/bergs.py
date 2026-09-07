@@ -31,6 +31,8 @@ import numpy as np
 
 from models.iceberg.drift import iceberg_velocity, relative_wind_forcing
 
+from .hashing import integers, normal, uniform
+
 USNIC_MIN_AXIS_M = 18_520.0        # 10 nautical miles
 STEP_HOURS = 6.0
 UNCERTAINTY_KM_PER_DAY = 13.0      # Lagrangian separation, Antarctic, on record
@@ -59,20 +61,20 @@ class BergField:
                  horizon_days: float = 30.0):
         self.atm = atmosphere
         self.ocean = ocean
-        rng = np.random.default_rng(seed * 31 + 977)
+        s = seed * 31 + 977
 
         n_src = len(_SOURCES)
-        src_idx = rng.integers(0, n_src, size=n_bergs)
-        lon0 = np.array([_SOURCES[i][0] for i in src_idx]) + rng.normal(0, 3.4, n_bergs)
-        lat0 = np.array([_SOURCES[i][1] for i in src_idx]) + rng.normal(0, 1.3, n_bergs)
+        src_idx = integers(s, "src", 0, n_src, n_bergs)
+        lon0 = np.array([_SOURCES[i][0] for i in src_idx]) + 3.4 * normal(s, "lon", n_bergs)
+        lat0 = np.array([_SOURCES[i][1] for i in src_idx]) + 1.3 * normal(s, "lat", n_bergs)
         self.source = [_SOURCES[i][2] for i in src_idx]
 
         # Major axis: log-normal, so a few giants and many small ones - which is
         # the real size distribution and the reason the catalogue misses most.
-        axis = np.exp(rng.normal(np.log(9_000.0), 1.05, n_bergs))
+        axis = np.exp(np.log(9_000.0) + 1.05 * normal(s, "axis", n_bergs))
         axis = np.clip(axis, 700.0, 95_000.0)
         self.length_m = axis
-        self.width_m = axis * rng.uniform(0.45, 0.85, n_bergs)
+        self.width_m = axis * (0.45 + 0.40 * uniform(s, "aspect", n_bergs))
         self.tracked = axis >= USNIC_MIN_AXIS_M
 
         # Names: catalogue letter-number for tracked bergs, else a local id.

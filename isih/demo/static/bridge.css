@@ -357,7 +357,7 @@ input[type="text"], input[type="number"], select {
 /* provenance dot — the ONLY marking that a feature is not real data.
    Declared once in JS, rendered here, explained only by its tooltip. */
 .pv { font-size: 9px; line-height: 1; letter-spacing: -1px; cursor: help; }
-.pv[data-pv="replay"]    { color: var(--degraded); }
+.pv[data-pv="synthetic"]    { color: var(--degraded); }
 .pv[data-pv="simulated"] { color: var(--area); }
 .pv[data-pv="real"]      { display: none; }
 

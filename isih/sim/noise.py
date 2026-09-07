@@ -27,6 +27,8 @@ from __future__ import annotations
 
 import numpy as np
 
+from .hashing import integers, uniform
+
 # A prime multiplier per stream so that two fields asking for the same seed do
 # not get identical phases. Deriving stream seeds by addition would make
 # neighbouring streams correlated.
@@ -51,12 +53,12 @@ class FourierField:
                  lon_scale: float = 60.0, lat_scale: float = 22.0,
                  alpha: float = 1.6, drift: float = 0.35,
                  normalize: str = "value"):
-        rng = np.random.default_rng(seed * 7919 + _STREAM[stream])
+        s = seed * 7919 + _STREAM[stream]
         # Wavenumbers: integer harmonics of the domain scale, so the field is
         # organised at the size of real synoptic systems rather than at pixel
         # scale. n=1 modes carry the most amplitude.
-        n = rng.integers(1, 6, size=n_modes)
-        m = rng.integers(1, 5, size=n_modes)
+        n = integers(s, "n", 1, 6, n_modes)
+        m = integers(s, "m", 1, 5, n_modes)
         self.kx = 2 * np.pi * n / lon_scale
         self.ky = 2 * np.pi * m / lat_scale
         k = np.hypot(self.kx, self.ky)
@@ -74,11 +76,12 @@ class FourierField:
             self.amp /= np.sqrt((gk ** 2).sum() / 2.0)
         else:
             self.amp /= np.sqrt((self.amp ** 2).sum() / 2.0)   # unit RMS value
-        self.phi = rng.uniform(0, 2 * np.pi, size=n_modes)
+        self.phi = 2 * np.pi * uniform(s, "phase", n_modes)
         # Eastward phase speed: Southern Ocean synoptic systems propagate east.
         # Scaling drift by 1/k makes long waves slower than short ones, which is
         # the right sense for Rossby-like propagation.
-        self.w = drift * (2 * np.pi) * rng.uniform(0.6, 1.4, size=n_modes) / np.maximum(k, 1e-6) * k.min()
+        jitter = 0.6 + 0.8 * uniform(s, "drift", n_modes)
+        self.w = drift * (2 * np.pi) * jitter / np.maximum(k, 1e-6) * k.min()
 
     def _phase(self, lon, lat, t):
         lon = np.asarray(lon, dtype=float)

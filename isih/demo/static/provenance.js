@@ -9,9 +9,16 @@
    master prompt's rule is only that simulated capability must never be
    presented as real - not that it must be shouted about.
 
-     real       no dot      measured or computed from real data
-     replay     one dot     real data, replayed or modelled forward
-     simulated  two dots    designed, demonstrated, not yet built            */
+     real        no dot      measured or computed from real data
+     synthetic   one dot     real physics, synthetic initial conditions -
+                             SIMULATED INPUT under section 27, never a forecast
+     simulated   two dots    designed, demonstrated, not yet built
+
+   The middle kind was briefly labelled "replay", which was wrong and worth
+   recording: replay implies real observations advanced to demo time, and there
+   is no real observation anywhere in the world model. The equations are real;
+   the state they run on is invented. Calling that replay would be the exact
+   class of overclaim the rest of this system exists to prevent.            */
 
 export const PROVENANCE = {
   // --- real: measured data or real computation -----------------------------
@@ -24,19 +31,19 @@ export const PROVENANCE = {
   'panel.fresh':      ['real', 'per-layer age computed against the clock'],
   'route.planned':    ['real', 'PolarRoute corridor'],
 
-  // --- replay: real physics or real data, advanced to demo time ------------
-  'chart.ice':        ['replay', 'sea-ice concentration field, modelled forward'],
-  'chart.bergs':      ['replay', 'iceberg drift, Wagner-Dell-Eisenman 2017 closed form'],
-  'chart.wind':       ['replay', 'geostrophic wind from the pressure field'],
-  'chart.wave':       ['replay', 'fetch-limited wave growth from the wind field'],
-  'chart.current':    ['replay', 'ACC frontal jets'],
-  'chart.ownship':    ['replay', 'position computed from the planned track, not a GNSS fix'],
-  'panel.ice':        ['replay', 'sea-ice concentration field'],
-  'panel.wx':         ['replay', 'wind, sea state and visibility over the corridor'],
-  'panel.bergs':      ['replay', 'tracked bergs and their predicted separation'],
-  'panel.ship':       ['replay', 'computed track position'],
-  'panel.timeline':   ['replay', 'hazard horizon from the forward field'],
-  'panel.alerts':     ['replay', 'raised by gate transitions and field events'],
+  // --- synthetic: real physics, invented initial state ---------------------
+  'chart.ice':        ['synthetic', 'sea-ice concentration field, modelled forward'],
+  'chart.bergs':      ['synthetic', 'iceberg drift, Wagner-Dell-Eisenman 2017 closed form'],
+  'chart.wind':       ['synthetic', 'geostrophic wind from the pressure field'],
+  'chart.wave':       ['synthetic', 'fetch-limited wave growth from the wind field'],
+  'chart.current':    ['synthetic', 'ACC frontal jets'],
+  'chart.ownship':    ['synthetic', 'position computed from the planned track, not a GNSS fix'],
+  'panel.ice':        ['synthetic', 'sea-ice concentration field'],
+  'panel.wx':         ['synthetic', 'wind, sea state and visibility over the corridor'],
+  'panel.bergs':      ['synthetic', 'tracked bergs and their predicted separation'],
+  'panel.ship':       ['synthetic', 'computed track position'],
+  'panel.timeline':   ['synthetic', 'hazard horizon from the forward field'],
+  'panel.alerts':     ['synthetic', 'raised by gate transitions and field events'],
 
   // --- simulated: demonstrated, not built ----------------------------------
   'chart.traffic':    ['simulated', 'AIS: no receiver is connected'],
@@ -49,7 +56,7 @@ export const PROVENANCE = {
   'panel.offline':    ['simulated', 'pack sync; sizes below are measured, the link is not'],
 };
 
-const GLYPH = { real: '', replay: '●', simulated: '●●' };
+const GLYPH = { real: '', synthetic: '●', simulated: '●●' };
 
 /** Returns a <span> carrying the dot, or null when the feature is real. */
 export function dot(key) {
@@ -61,7 +68,9 @@ export function dot(key) {
   s.className = 'pv';
   s.dataset.pv = kind;
   s.textContent = GLYPH[kind];
-  s.title = (kind === 'replay' ? 'Replayed / modelled — ' : 'Simulated — ') + why;
+  s.title = (kind === 'synthetic'
+    ? 'Synthetic environment (real physics, invented initial state) — '
+    : 'Simulated — ') + why;
   return s;
 }
 
