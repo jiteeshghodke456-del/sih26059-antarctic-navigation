@@ -169,7 +169,8 @@ system claims to support.
 
 ## Open — ISIH demo (`isih/demo/`, built 4 Sep 2026)
 
-- [high][demo] **Real-browser check not yet done.** Verified in the sandbox by 20 tests, live endpoint fetches and `node --check`; nobody has opened the page in a browser. Run it on the laptop before Sept 8 — see docs/ISIH_README.md "Running the demo".
+- [high][demo] **Real-browser visual check still pending.** On 7 Sep the page booted in the laptop browser through the published sandbox port: page, JS, CSS, summary, route and all 62 day fields returned 200, so JS boot and prefetch work. Nobody has yet confirmed the map, slider, QA toggle and tooltip look right — do that before Sept 8, see docs/ISIH_README.md "Running the demo".
+- [minor][demo] Browsers request `/favicon.ico` and the server logs a 404 right after page load — add `<link rel="icon" href="data:,">` to isih/demo/static/index.html so the terminal stays clean while a judge watches.
 - [high][demo] Live re-routing button (iteration 2): PolarRoute needs Python ≤ 3.11 in its own env (`prenv`, see isih/make_route_figure.py docstring); all 92 daily vessel meshes are already in isih/data/vessel_meshes, so a re-plan is a ~9 s Dijkstra per day — docs/superpowers/specs/2026-09-04-isih-mvp-design.md.
 - [high][demo] Model panel (iteration 3) is blocked on the trained checkpoint: `isih_prototype_lead*.pt` exists only in the Kaggle notebook output, not in the repo. Fetch it via the Kaggle CLI before adding any inference to the page; until then the page shows the measured numbers as text with caveats only.
 - [minor][demo] `.venv-demo/` created inside the sandbox links to the sandbox's /usr/bin/python3 — rebuild it on the laptop (`rm -rf .venv-demo` first). Pinned versions in isih/demo/requirements.txt were the ones the tests passed under.
