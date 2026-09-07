@@ -16,10 +16,23 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
 
-from . import data
+from . import data, decision_service
 
 STATIC = Path(__file__).parent / "static"
+
+
+class ApprovalRequest(BaseModel):
+    """Who approved, and optionally why.
+
+    `by` is required and not defaulted. Global rule 12 makes human approval
+    mandatory for operational route decisions, and an approval with no name
+    attached is not one.
+    """
+
+    by: str = Field(min_length=1, max_length=120)
+    note: str | None = Field(default=None, max_length=500)
 
 
 @asynccontextmanager
@@ -81,3 +94,53 @@ app.mount("/static", StaticFiles(directory=STATIC), name="static")
 def protected():
     """ASPA/ASMA constraint layer. Optional: absent extract degrades, not fails."""
     return data.protected()
+
+
+# --------------------------------------------------------------------------
+# The decision. Until now this service was six read-only GETs, so nothing in
+# the product could be approved, versioned or logged — §11, §12 and §48A.13
+# had no implementation at all.
+# --------------------------------------------------------------------------
+
+@app.get("/api/decision")
+def decision(day: str | None = None):
+    """Current decision: gates, health, binding reasons, alternatives."""
+    if day is not None and day not in data.dates():
+        raise HTTPException(404, f"{day} is outside the demo window")
+    return decision_service.LOG.current(day)
+
+
+@app.post("/api/decision/approve")
+def approve(body: ApprovalRequest):
+    """Master approves the route. Appends a version; never overwrites.
+
+    §4: "Do not silently replace an approved plan." The previous decision is
+    kept and referenced by `supersedes`, so the history stays reconstructable.
+    """
+    if not body.by.strip():
+        raise HTTPException(400, "an approval must record who gave it")
+    return decision_service.LOG.approve(by=body.by.strip(), note=body.note or "")
+
+
+@app.get("/api/decisions")
+def decisions():
+    """The decision log — what changed, who approved, when, why (§32)."""
+    return {"entries": decision_service.LOG.entries()}
+
+
+@app.get("/api/alternatives")
+def alternatives():
+    """A/B/C corridors, and the findings that came out of computing them."""
+    doc = decision_service.alternatives_doc()
+    if doc is None:
+        raise HTTPException(503, "alternatives not computed — run isih/alternatives.py")
+    return doc
+
+
+@app.get("/api/vessel-comparison")
+def vessel_comparison():
+    """Same ice, two real ships. Stage 05 behavioural test 1, as served data."""
+    doc = decision_service.vessel_comparison()
+    if doc is None:
+        raise HTTPException(503, "comparison not computed — run isih/alternatives.py")
+    return doc

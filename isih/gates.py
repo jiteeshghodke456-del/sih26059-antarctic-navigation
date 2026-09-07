@@ -150,13 +150,15 @@ def ice_gate(
             f"{ice_limit_pct:.0f}% working limit"
         )
     elif margin <= 5:
+        pts = "point" if round(margin) == 1 else "points"
         state, reason = GateState.MARGINAL, (
-            f"Ice reaches {worst_ice_pct:.0f}%, within {margin:.0f} points of the "
+            f"Ice reaches {worst_ice_pct:.0f}%, within {margin:.0f} {pts} of the "
             f"{ice_limit_pct:.0f}% working limit"
         )
     else:
+        pts = "point" if round(margin) == 1 else "points"
         state, reason = GateState.PASS, (
-            f"Ice peaks at {worst_ice_pct:.0f}%, {margin:.0f} points below the working limit"
+            f"Ice peaks at {worst_ice_pct:.0f}%, {margin:.0f} {pts} below the working limit"
         )
 
     if limit_is_assumed and state is not GateState.PASS:
