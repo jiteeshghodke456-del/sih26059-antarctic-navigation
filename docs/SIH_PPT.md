@@ -6,8 +6,11 @@
 - **LAYOUT** — where every element sits, matched to the reference deck.
 - **DIAGRAM PROMPT** — copy-paste into your image/diagram tool.
 
-Every number in here traces to a file in this repo. Nothing is estimated,
-rounded up, or aspirational. `docs/TRUE_CLAIMS.md` holds the evidence trail for
+Every number in here traces to a file in this repo, and nothing is estimated or
+rounded up. Where a line describes something designed but not yet built, it
+says so in the same breath — "designed," "next," "on the roadmap" — those are
+the only aspirational words in this deck, and they are labelled, never hidden
+inside a present-tense verb. `docs/TRUE_CLAIMS.md` holds the evidence trail for
 each claim, and the "what a judge may ask" answers.
 
 ---
@@ -105,9 +108,9 @@ Swap for your own name; keep the tagline structure: short name, one italic line.
 >
 > - **Trust the data only where it deserves trust:** The satellite record silently reports suppressed coastal pixels as *open water*. We detect and mask them. In the 200 km approach to Bharati this affects **43.2% of days**.
 >
-> - **Track the ice that can sink you, separately:** Icebergs follow different physics from sea ice. We run a published closed-form drift model over the live US National Ice Center catalogue — **33 bergs today, 15 of them inside our corridor**.
+> - **Track the ice that can sink you, separately:** Icebergs follow different physics from sea ice. We run a published closed-form drift model over the US National Ice Center catalogue — **33 bergs as of 27 Aug 2026 (weekly product), 15 of them inside our corridor**.
 >
-> - **Route with the ship's real limits:** We reuse PolarRoute, the open-source router from the British Antarctic Survey, and feed it our corrected ice, the vessel's true dimensions, and IMO POLARIS ice-class rules.
+> - **Route with the ship's real limits:** We reuse PolarRoute, the open-source router from the British Antarctic Survey, and feed it our corrected ice and the vessel's true dimensions, routing today on a working 80% ice-concentration limit. Replacing that with the regulator's own IMO POLARIS risk index is designed, not built yet — it needs a thickness channel we don't have.
 >
 > - **Answer the question a captain actually asks:** Not "what is the shortest line", but **"when should I arrive, will the last 100 km be open, and what do I do if it isn't."**
 
@@ -152,8 +155,8 @@ row. Each card has a bold title, two lines of small description, and a simple
 flat line icon at the bottom. Use five distinct muted fills, left to right:
 teal, deep blue, olive, orange, brown. White text.
 
-Card 1 — "Uncertainty That Reaches The Route"
-   The route changes when the model is unsure, not just the colour of a map.
+Card 1 — "Next: Uncertainty Reaches The Route"
+   Designed and gated (stratified conformal calibration); wiring model disagreement into the routing cost is the next build step, not done yet.
 
 Card 2 — "We Audit The Satellite Data"
    We found the record reports suppressed coastal pixels as open water.
@@ -161,11 +164,11 @@ Card 2 — "We Audit The Satellite Data"
 Card 3 — "Knows What It Cannot See"
    States its blind spots out loud instead of hiding them.
 
-Card 4 — "Learns From Real Besettings"
-   Built around incidents that actually happened, including an Indian one.
+Card 4 — "Grounded In A Real Besetting"
+   The abort-and-hold logic is modelled on a real incident from the Indian Antarctic programme (MV Magdalena Oldendorff, 20th ISEA) — there is no automated incident-learning system yet.
 
-Card 5 — "Works With No Signal"
-   Full re-planning on the ship's laptop with the satellite link down.
+Card 5 — "Router Needs No Signal"
+   PolarRoute's own mesh-to-route pipeline runs offline in about 9 seconds on a laptop CPU. A live re-plan control the master can trigger at sea is designed, not built.
 
 Flat, corporate, minimal. No shadows.
 ```
@@ -205,7 +208,7 @@ ZONE 3 (pale purple) header "Zone 3 — Intelligence Layer"
 ZONE 4 (teal) header "Zone 4 — Decision Support"
   A box titled "Router and Advisor" containing:
     "PolarRoute engine (British Antarctic Survey)"
-    "POLARIS ice-class limits"
+    "80% ice limit today (POLARIS: on roadmap)"
     "Iceberg exclusion zones"
     "Corridor, not a single line"
   Below it a laptop icon labelled "Ship's laptop, works offline".
@@ -238,12 +241,12 @@ Header at the top: "Implementation Process" in bold with a small gear icon.
    time so no future day leaks into training.
 3. "Measure Honestly" — Score once against persistence, the baseline that
    actually matters in sea-ice forecasting.
-4. "Add Uncertainty" — Five models; their disagreement becomes a calibrated
-   safety margin that widens the corridor.
+4. "Add Uncertainty" (next) — Five-model disagreement becoming a calibrated
+   safety margin is designed and gated; today's prototype routes on one model.
 5. "Route And Advise" — Feed corrected ice and iceberg zones into PolarRoute
-   under POLARIS ice-class rules.
-6. "Ship It To Sea" — Compress to a sub-1 MB voyage pack; full re-planning works
-   with the satellite link down.
+   under a working ice limit; POLARIS compliance follows once thickness ships.
+6. "Ship It To Sea" — Compress to a sub-1 MB voyage pack; the routing pipeline
+   itself runs offline in ~9 s. A live re-plan control is designed, not built.
 
 Flat vector, single-weight line icons, no photographs.
 ```
@@ -268,8 +271,8 @@ Flat vector, single-weight line icons, no photographs.
 > - Calibrated first for **MV Vasiliy Golovnin**, the vessel India actually charters, then extended to more hulls.
 
 > **Practical Implementation**
-> - Built and evaluated on **three full years** of real satellite data, 1,096 files, zero failures.
-> - Degrades in **defined steps** — corrected forecast, then raw physics, then persistence, then climatology — and says which step it is on.
+> - **Audited on three full years** of real satellite data, 1,096 files, zero failures; the model itself is **trained on two of those years** (2019–2020).
+> - **Degradation in defined grades is designed, not running yet:** ADR-022 specifies forecast-grade → CMEMS-direct → climatology-grade, so the router never refuses past the forecast horizon. The demo does not yet announce which grade it is on.
 > - Designed for the **Dec–April** Indian resupply season and the Maitri and Bharati approaches specifically.
 
 ### DIAGRAM PROMPT (structured tool) — bottom mirrored challenges/strategies

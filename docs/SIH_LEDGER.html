@@ -269,7 +269,8 @@ footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-siz
         <td><b>Using satellite, oceanographic and meteorological datasets</b></td>
         <td><span class="chip c-proven">Measured</span></td>
         <td><span class="num">1,096</span> real daily NOAA/NSIDC files, <span class="num">0</span> failures,
-          plus CMEMS GLORYS12. No synthetic data anywhere in the product.</td>
+          plus CMEMS GLORYS12. No synthetic observations anywhere &mdash; the router's ice
+          thickness and density are literature lookup tables, disclosed in ADR-013.</td>
       </tr>
     </tbody>
     <caption>Scope fidelity. The system deliberately does nothing the statement does not ask for.</caption>
@@ -354,7 +355,7 @@ footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-siz
       <tr><td><b>Ice truth</b></td><td>one source, presented as ground truth</td>
         <td>multi-source, <b>quality-controlled first</b>, disagreement widens caution</td></tr>
       <tr><td><b>Beyond the horizon</b></td><td>silent, or a confident line anyway</td>
-        <td><b>graded degradation</b>: forecast &rarr; CMEMS-direct &rarr; climatology corridor, re-optimised daily</td></tr>
+        <td><b>graded degradation</b>: forecast &rarr; CMEMS-direct &rarr; climatology corridor, re-optimised daily &mdash; <i>designed (ADR-022), not wired into the running system yet</i></td></tr>
       <tr><td><b>Connectivity</b></td><td>assumes a live backend</td>
         <td><b>offline-first, with a written 50 KB budget</b>; weights by USB at port</td></tr>
       <tr><td><b>Scope</b></td><td>&ldquo;Antarctica&rdquo;</td>
@@ -525,8 +526,9 @@ footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-siz
     <li><b>The ship re-corrects the whole ten-day packed forecast aboard</b> from one fresh corridor
       observation, roughly 5&ndash;15 KB. A packed third-party forecast is frozen at build time and cannot do
       this at any bandwidth.</li>
-    <li><b>The demo is unfakeable:</b> disconnect the network mid-presentation and keep re-planning. The demo
-      setup <i>is</i> the product.</li>
+    <li><b>The demo makes no network call to run:</b> every screen loads from committed local
+      files, so disconnecting the network changes nothing you would notice. A live, on-demand
+      re-plan control is designed (ADR-022) but not built, so we do not stage it as a trick.</li>
   </ul>
 </section>
 
@@ -626,7 +628,7 @@ footer{margin-top:70px;padding-top:22px;border-top:2px solid var(--ink);font-siz
       <tr><td class="n">3</td><td><b>No observational Antarctic drift product exists in our season</b> &mdash; OSI-405-d runs April to October only, and the resupply window is December to March</td><td><b>Undecided.</b> Either CMEMS modelled <code>siu</code>/<code>siv</code> at 1/12&deg;, or our own Sentinel-1 feature tracking. The ice-pressure layer cannot start until this is settled</td></tr>
       <tr><td class="n">4</td><td>The router plans a seventeen-day voyage on day-zero ice, as though the field holds still</td><td>Time-expanded graph: one mesh layer per forecast day. Designed, and the highest-value single change</td></tr>
       <tr><td class="n">5</td><td>POLARIS is not implemented; a flat 80% concentration cutoff stands in</td><td>Add a thickness output channel &mdash; POLARIS is indexed by ice <i>type</i>. Forced by the regulation, not scope creep</td></tr>
-      <tr><td class="n">6</td><td>Bharati sits inside ASMA No. 6, which India co-proposed, and we model no protected areas at all</td><td>Load the Treaty Secretariat shapefile through the <code>excluded_zones</code> hook the icebergs already use</td></tr>
+      <tr><td class="n">6</td><td><b>Resolved.</b> Bharati sits inside ASMA No. 6, which India co-proposed &mdash; treating every protected area as a no-go polygon would have refused to route to India's own station</td><td>Areas are now modelled by the legal regime that actually applies (ASPA: permit-gated entry; ASMA: no permit, operational conditions only). Of the corridor's 33 protected-area polygons, zero are marine &mdash; none restricts the ship's transit, only shore landings</td></tr>
       <tr><td class="n">7</td><td>The daily delta exceeds the 50 KB budget</td><td>Coarsen the open-ocean mesh or lengthen the refresh cadence. The budget itself does not move</td></tr>
       <tr><td class="n">8</td><td>The prototype&rsquo;s background is a reanalysis, so it may carry information a true forecast would not</td><td>Retrain with the background channel zeroed. Twenty minutes, and it either kills the objection or obliges us to disclose</td></tr>
       <tr><td class="n">9</td><td>The vessel&rsquo;s force limit is carried over from a different hull</td><td>Derive it from shaft power, using the method already published for SA Agulhas II</td></tr>

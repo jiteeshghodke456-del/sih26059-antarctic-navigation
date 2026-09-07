@@ -1,0 +1,148 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="Decision Gates" id="decisiongates">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t1" value="Evidence" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#0F1720;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="220" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="Nine decision gates (§12)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#0F1720;" vertex="1" parent="1">
+          <mxGeometry x="330" y="30" width="300" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" value="Derived state (§48A.13)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#0F1720;" vertex="1" parent="1">
+          <mxGeometry x="700" y="30" width="260" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s_ice" value="NOAA/NSIDC CDR&lt;br&gt;G02202 v6 · 25 km" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="240" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="s_mesh" value="meshiphi mesh&lt;br&gt;SIC · thickness · density" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="240" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="s_win" value="destination window&lt;br&gt;vessel-performance mesh" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="40" y="210" width="240" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="s_alt" value="alternatives.json&lt;br&gt;PolarRoute corridors" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="240" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="s_ves" value="vessel config&lt;br&gt;isih/ice_meshes.py" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="40" y="350" width="240" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="s_none" value="NO SOURCE HELD&lt;br&gt;weather · traffic · comms · live sensors" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="40" y="420" width="240" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="g_capability" value="&lt;b&gt;capability&lt;/b&gt; — UNKNOWN&lt;br&gt;&lt;font style='font-size:9px'&gt;Can this ship legally and physically operate here?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#f0f2f4;strokeColor=#9aa7b0;fontColor=#5C666E;dashed=1;dashPattern=4 3;" vertex="1" parent="1">
+          <mxGeometry x="330" y="70" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="g_chart" value="&lt;b&gt;chart&lt;/b&gt; — UNKNOWN&lt;br&gt;&lt;font style='font-size:9px'&gt;Is the route geographically understood well enough?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#f0f2f4;strokeColor=#9aa7b0;fontColor=#5C666E;dashed=1;dashPattern=4 3;" vertex="1" parent="1">
+          <mxGeometry x="330" y="132" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="g_ice" value="&lt;b&gt;ice&lt;/b&gt; — MARGINAL&lt;br&gt;&lt;font style='font-size:9px'&gt;Will expected ice exceed the ship's operating limit?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#5A4708;" vertex="1" parent="1">
+          <mxGeometry x="330" y="194" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="g_weather" value="&lt;b&gt;weather&lt;/b&gt; — UNKNOWN&lt;br&gt;&lt;font style='font-size:9px'&gt;Will wind, waves or visibility make the corridor unsafe?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#f0f2f4;strokeColor=#9aa7b0;fontColor=#5C666E;dashed=1;dashPattern=4 3;" vertex="1" parent="1">
+          <mxGeometry x="330" y="256" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="g_traffic" value="&lt;b&gt;traffic&lt;/b&gt; — UNKNOWN&lt;br&gt;&lt;font style='font-size:9px'&gt;Is there conflict with other vessels or operations?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#f0f2f4;strokeColor=#9aa7b0;fontColor=#5C666E;dashed=1;dashPattern=4 3;" vertex="1" parent="1">
+          <mxGeometry x="330" y="318" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="g_logistics" value="&lt;b&gt;logistics&lt;/b&gt; — PASS&lt;br&gt;&lt;font style='font-size:9px'&gt;Will this track still meet the station's operating window?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;" vertex="1" parent="1">
+          <mxGeometry x="330" y="380" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="g_communications" value="&lt;b&gt;communications&lt;/b&gt; — UNKNOWN&lt;br&gt;&lt;font style='font-size:9px'&gt;Can the ship get timely warnings and coordinate?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#f0f2f4;strokeColor=#9aa7b0;fontColor=#5C666E;dashed=1;dashPattern=4 3;" vertex="1" parent="1">
+          <mxGeometry x="330" y="442" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="g_contingency" value="&lt;b&gt;contingency&lt;/b&gt; — PASS&lt;br&gt;&lt;font style='font-size:9px'&gt;If the route closes ahead, where do we go?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;" vertex="1" parent="1">
+          <mxGeometry x="330" y="504" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="g_execution" value="&lt;b&gt;execution&lt;/b&gt; — UNKNOWN&lt;br&gt;&lt;font style='font-size:9px'&gt;Are observations still consistent with what we approved?&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#f0f2f4;strokeColor=#9aa7b0;fontColor=#5C666E;dashed=1;dashPattern=4 3;" vertex="1" parent="1">
+          <mxGeometry x="330" y="566" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="health" value="ROUTE HEALTH&lt;br&gt;worst gate state wins&lt;br&gt;&lt;font style='font-size:10px'&gt;VALID · DEGRADED · CRITICAL · INVALID&lt;/font&gt;" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#5C1F1D;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="700" y="250" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="digest" value="&lt;b&gt;gate_digest()&lt;/b&gt;&lt;br&gt;Identical evidence yields an identical digest, so re-evaluating raises no transition. This is what separates “an assumption changed” from “new data arrived”." style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#ffffff;strokeColor=#b0bcc4;fontColor=#46545F;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="700" y="370" width="240" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="master" value="Master&lt;br&gt;approves?" style="rhombus;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#f5d9e8;strokeColor=#b8559a;fontColor=#5C2049;" vertex="1" parent="1">
+          <mxGeometry x="720" y="500" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="log" value="Decision log&lt;br&gt;versions · supersedes&lt;br&gt;who · when · why" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=8;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#3B2A4A;" vertex="1" parent="1">
+          <mxGeometry x="700" y="630" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="diverge" value="&lt;b&gt;Divergence&lt;/b&gt;&lt;br&gt;If the digest moves after approval, the master is told WHICH gate flipped — e.g. “logistics: PASS to FAIL”. An approved plan is never silently replaced (§4)." style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#ffffff;strokeColor=#b0bcc4;fontColor=#46545F;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="700" y="730" width="240" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="key" value="&lt;b&gt;Why six gates are grey&lt;/b&gt;&lt;br&gt;A gate we cannot evaluate is NOT a pass — it caps health at DEGRADED. Reporting VALID while blind to the chart, the weather and the traffic picture is a false negative, and §48A.12 makes that the expensive error here. Grey is absence of measurement, not a hazard: colouring it red would claim we looked.&lt;br&gt;&lt;br&gt;Consequence: this prototype cannot certify any route as VALID, and says so." style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#ffffff;strokeColor=#b0bcc4;fontColor=#46545F;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="640" width="560" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="s_ice" target="g_ice">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="s_mesh" target="g_chart">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="s_win" target="g_logistics">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="s_alt" target="g_contingency">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="s_ves" target="g_capability">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;;dashed=1;dashPattern=4 3" edge="1" parent="1" source="s_none" target="g_weather">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;;dashed=1;dashPattern=4 3" edge="1" parent="1" source="s_none" target="g_traffic">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;;dashed=1;dashPattern=4 3" edge="1" parent="1" source="s_none" target="g_communications">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;;dashed=1;dashPattern=4 3" edge="1" parent="1" source="s_none" target="g_execution">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_capability" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_chart" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_ice" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_weather" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_traffic" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_logistics" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_communications" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_contingency" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="g_execution" target="health">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;;dashed=1;dashPattern=3 3" edge="1" parent="1" source="health" target="digest">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="health" target="master">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" value="named approval" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;" edge="1" parent="1" source="master" target="log">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7d8a93;endArrow=block;endFill=1;;dashed=1;dashPattern=3 3" edge="1" parent="1" source="log" target="diverge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

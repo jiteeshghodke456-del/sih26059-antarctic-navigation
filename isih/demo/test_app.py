@@ -103,9 +103,151 @@ def test_summary_declares_the_data_mode(client):
     assert "not a live feed" in dm["means"].lower()
 
 
-def test_page_shows_the_mode_badge_and_the_area_card(client):
-    """The labels have to be in the served HTML, not only in the API."""
+def test_page_shows_the_mode_badge_and_the_decision_panels(client):
+    """The labels have to be in the served HTML, not only in the API.
+
+    The protected-area card became a note under the chart when the page was
+    rebuilt as a bridge console; what must survive is that the page still
+    declares its data mode and still has somewhere to render every part of
+    the decision.
+    """
     html = client.get("/").text
     assert 'id="mode-badge"' in html
-    assert 'id="pa-card"' in html
+    assert 'id="pa-note"' in html
+    for element in ("health-state", "cov-bar", "gate-list", "alt-list",
+                    "risk-list", "log-list", "approve-btn", "vessel-test",
+                    "health-diverge"):
+        assert f'id="{element}"' in html, f"{element} missing from the page"
+
+
+def test_page_loads_no_external_resources(client):
+    """The page claims to run offline; a web font would quietly break that."""
+    html = client.get("/").text
+    for scheme in ("http://", "https://", "//fonts."):
+        # The xmlns on the inline <svg> is a namespace identifier, not a fetch.
+        offenders = [
+            line for line in html.splitlines()
+            if scheme in line and "xmlns" not in line
+        ]
+        assert not offenders, f"external reference in the page: {offenders[:2]}"
     assert 'id="pa-show"' in html
+
+
+# --------------------------------------------------------------------------
+# The §4 passage workflow. The ordering IS the requirement, so most of these
+# assert that a step is refused rather than that it works.
+# --------------------------------------------------------------------------
+
+def _reset(client):
+    client.post("/api/workflow/reset", json={})
+
+
+def test_the_workflow_starts_at_sign_in(client):
+    _reset(client)
+    d = client.get("/api/workflow").json()
+    assert d["stage"] == "sign_in"
+    assert d["step_number"] == 1 and d["step_count"] == 9
+    assert d["mode"] == "planning"
+
+
+def test_out_of_order_steps_are_refused_with_a_reason(client):
+    """409, not 400: the request is well-formed, the workflow simply is not in
+    a state that allows it. And the reason names the stage."""
+    _reset(client)
+    r = client.post("/api/workflow/approve", json={})
+    assert r.status_code == 409
+    assert "sign_in" in r.json()["detail"]
+
+    assert client.post("/api/workflow/mission", json={}).status_code == 409
+    assert client.post("/api/workflow/navigate", json={}).status_code == 409
+
+
+def test_an_unknown_action_is_a_404_not_a_silent_success(client):
+    _reset(client)
+    assert client.post("/api/workflow/teleport", json={}).status_code == 404
+
+
+def test_the_forward_path_walks_one_step_at_a_time(client):
+    _reset(client)
+    steps = [
+        ("sign-in", {"name": "Master A. Sharma"}, "command_center"),
+        ("new-voyage", {}, "voyage"),
+        ("voyage", {"destination": "Bharati", "depart_day": "2019-12-01"}, "mission"),
+        ("mission", {"destination_policy": "STATION_REQUIRED"}, "route"),
+        ("route", {"source": "solved"}, "waypoints"),
+        ("waypoints", {}, "review"),
+        ("approve", {}, "approved"),
+        ("navigate", {}, "active"),
+    ]
+    # sign-in lands on step 2 (command centre) and each action advances by
+    # exactly one — the gap that used to appear at VOYAGE is what this pins.
+    for i, (action, body, expect) in enumerate(steps, start=2):
+        r = client.post(f"/api/workflow/{action}", json=body)
+        assert r.status_code == 200, (action, r.json())
+        d = r.json()
+        assert d["stage"] == expect, (action, d["stage"])
+        assert d["step_number"] == i, (action, d["step_number"])
+    assert d["mode"] == "monitoring"
+
+
+def test_importing_a_passage_plan_is_refused_with_its_reason(client):
+    """Not silently unimplemented — it explains why we will not accept one."""
+    _reset(client)
+    client.post("/api/workflow/sign-in", json={"name": "OOW"})
+    client.post("/api/workflow/new-voyage", json={})
+    client.post("/api/workflow/voyage", json={"depart_day": "2019-12-01"})
+    client.post("/api/workflow/mission", json={})
+    r = client.post("/api/workflow/route", json={"source": "imported"})
+    assert r.status_code == 409
+    assert "unable to state them" in r.json()["detail"]
+
+
+def test_the_waypoint_list_is_the_real_route(client):
+    _reset(client)
+    w = client.get("/api/waypoints").json()
+    assert w["count"] == 41
+    assert w["waypoints"][0]["elapsed_days"] == 0.0
+    assert w["waypoints"][-1]["elapsed_days"] > 8.0
+    assert "Steaming time only" in w["note"]
+
+
+def test_the_preview_never_advances_the_workflow(client):
+    """Opening the what-if must not change the passage state."""
+    _reset(client)
+    before = client.get("/api/workflow").json()
+    client.get("/api/preview?day=2019-12-05")
+    assert client.get("/api/workflow").json() == before
+
+
+def test_the_preview_reports_the_arrival_day_not_just_the_departure(client):
+    """The operational question §5 asks: will the destination be open when we
+    get there? Departing 1 Dec arrives on an open day; 5 Dec does not."""
+    _reset(client)
+    a = client.get("/api/preview?day=2019-12-01").json()["corridors"][0]
+    b = client.get("/api/preview?day=2019-12-05").json()["corridors"][0]
+    assert a["arrival_day"] == "2019-12-09" and a["destination_on_arrival"] == "open"
+    assert b["arrival_day"] == "2019-12-13" and b["destination_on_arrival"] == "closed"
+
+
+def test_the_preview_shows_corridor_b_failing_its_own_ice_limit(client):
+    """The resolution-mismatch finding, surfaced BEFORE the master chooses:
+    corridor B's worst sampled ice is 91% against its own 55% limit.
+
+    Corridor A reads MARGINAL, not PASS. Its worst ice is 74% against an 80%
+    limit — a 6-point margin, which is inside the CDR's own median retrieval
+    uncertainty of 7.4 points at that concentration. The margin exists on
+    paper and is not measurable in the data, and the gate says so. Widening
+    the band from an invented 5 points to the measured 7.4 made our own
+    planned corridor less comfortable, which is the direction an honest
+    correction goes.
+    """
+    _reset(client)
+    rows = {c["label"]: c for c in client.get("/api/preview?day=2019-12-01").json()["corridors"]}
+    assert rows["A"]["ice_gate"] == "MARGINAL"
+    assert "not measurable" in rows["A"]["ice_reason"]
+    assert rows["B"]["ice_gate"] == "FAIL"
+    assert rows["C"]["solved"] is False
+
+
+def test_a_day_outside_the_window_is_refused(client):
+    assert client.get("/api/preview?day=1999-01-01").status_code == 404

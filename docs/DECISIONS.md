@@ -304,7 +304,7 @@ Also committed here: the **GBM→Wagner fallback trigger** is a frozen per-featu
 (training min/max ± 10 % of range) plus a p99-of-training-residual correction cap, serialised with
 the weights and unit-tested to fire — because an unspecified trigger silently never fires.
 
-**ADR-026 — Depth margin is conditional on bathymetric provenance.** GEBCO's TID grid is ingested
+**ADR-026 — Depth margin is conditional on bathymetric provenance.** *(Corrected 2026-09-07: this ADR was written in the present tense and is DESIGNED, not built. Grep for GEBCO, bathymetry or TID across isih/ and models/ returns zero hits, every mesh cell reports null elevation, and the vessel's min_depth constraint is therefore inert — see isih/gates.py::chart_gate, which returns UNKNOWN and says so.)* The design is that GEBCO's TID grid be ingested
 as a mesh layer; minimum under-keel clearance is 20 m in surveyed cells and max(50 m, 3 × draft) in
 **predicted** (unsurveyed) cells, with a "predicted bathymetry" overlay in the UI. *Considered:*
 treating GEBCO depth uniformly, as the router did. *Why:* much of the Antarctic corridor's GEBCO

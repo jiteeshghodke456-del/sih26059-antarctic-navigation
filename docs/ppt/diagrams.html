@@ -67,10 +67,10 @@ figcaption{font-size:.8rem;color:var(--muted);font-weight:600}
   <div class="cpb">
   <ul>
     <li><strong>Ice Forecast Correction:</strong> The <strong>AI</strong> learns to <strong>correct the official sea-ice forecast</strong>, beating the standard <strong>baseline</strong> by <strong>18.5% at 1 day</strong> and <strong>30.6% at 7 days</strong>.</li>
-    <li><strong>Iceberg Drift:</strong> A <strong>proven physics model</strong> predicts where each of <strong>33 live icebergs</strong> will drift, <strong>15 of them</strong> inside our <strong>shipping corridor</strong>.</li>
-    <li><strong>Safe Routing:</strong> The <strong>router</strong> plans the <strong>safest path</strong> on <strong>real satellite ice</strong>, stays out of <strong>protected areas</strong>, and <strong>re-plans</strong> as new data arrives.</li>
+    <li><strong>Iceberg Drift:</strong> A <strong>proven physics model</strong> computes the current <strong>drift velocity and regime</strong> for each of <strong>33 tracked icebergs</strong> (USNIC, 27 Aug 2026), <strong>15 of them</strong> inside our <strong>shipping corridor</strong>. Projecting a future track over time is designed, not built.</li>
+    <li><strong>Safe Routing:</strong> The <strong>router</strong> plans the <strong>safest path</strong> on <strong>real satellite ice</strong> and models <strong>Antarctic protected areas</strong> by the legal regime that applies to each &mdash; none currently restrict the ship's transit, only shore operations. Live re-planning is <strong>designed, not built</strong>.</li>
     <li><strong>Ashore and Aboard:</strong> Heavy work runs <strong>ashore</strong>; the ship gets one <strong>small daily update</strong> over <strong>Iridium</strong> and runs the <strong>full router</strong> on board with <strong>no internet</strong>.</li>
-    <li><strong>Captain Decides:</strong> The system <strong>advises</strong>, shows <strong>what changed and why</strong>, and names the <strong>fallback level</strong> it is using. The <strong>captain</strong> always makes the <strong>call</strong>.</li>
+    <li><strong>Captain Decides:</strong> The system <strong>advises</strong> and shows <strong>what changed and why</strong>. Naming which <strong>fallback grade</strong> it is using is designed (ADR-022), not built yet. The <strong>captain</strong> always makes the <strong>call</strong>.</li>
   </ul>
   </div>
 </div><div class="cp">
@@ -81,8 +81,8 @@ figcaption{font-size:.8rem;color:var(--muted);font-weight:600}
     <li><strong>Correct, Not Replace</strong> &mdash; The <strong>AI corrects</strong> the <strong>official forecast</strong>; if it fails, the <strong>forecast stands</strong>.</li>
     <li><strong>Coastal Blind Spot</strong> &mdash; Satellite data marks <strong>blocked coast</strong> as <strong>open water</strong>; we <strong>found it and fixed it</strong>.</li>
     <li><strong>Built for Iridium</strong> &mdash; A <strong>76 KB pack</strong> and a <strong>796-byte route</strong> fit the <strong>ship's link</strong>.</li>
-    <li><strong>Four Safety Nets</strong> &mdash; <strong>Four fallback levels</strong>, and the system <strong>announces</strong> which one it is <strong>using</strong>.</li>
-    <li><strong>Checks Itself Daily</strong> &mdash; Every day it scores <strong>yesterday's forecast</strong> against <strong>today's satellite image</strong>.</li>
+    <li><strong>Safety Grades, Designed</strong> &mdash; <strong>Three degradation grades are specified</strong> (ADR-022: forecast-grade &rarr; CMEMS-direct &rarr; climatology-grade); not wired into the demo yet.</li>
+    <li><strong>Self-Check Is Specified, Not Automated</strong> &mdash; Scoring yesterday's forecast against today's image is designed; only the <strong>daily CMEMS harvest</strong> actually runs on a schedule today.</li>
   </ul>
   </div>
 </div><figure class="shot">

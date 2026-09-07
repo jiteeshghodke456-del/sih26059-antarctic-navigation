@@ -24,9 +24,9 @@ Each of these has a file in this repository that produces the number.
 | 1.7 | **Four of the eight** days Bharati appeared reachable were data artifacts reading exactly 0.0% | same |
 | 1.8 | Masking those cells moves coastal ice **up** — 46.8% → 54.6% mean — i.e. the fix makes the router *more* cautious | `docs/ISIH_RESULTS.md` §2 |
 | 1.9 | Our iceberg drift model reproduces the published coefficient table and the paper's own 765 m critical length — **23/23 tests pass** | `models/iceberg/test_drift.py` |
-| 1.10 | **33 icebergs** tracked live; **15 of them inside our routing corridor**, including D15A at 3,037 km² beside Bharati's approach | `models/iceberg/regime_report.json` |
+| 1.10 | **33 icebergs** as of 27 Aug 2026 (USNIC weekly product); **15 of them inside our routing corridor**, including D15A at 3,037 km² beside Bharati's approach | `models/iceberg/regime_report.json` |
 | 1.11 | Route computed on real satellite ice with a real open-source router: **8.6 days steaming**, Cape Town → Bharati | `docs/ISIH_RESULTS.md` |
-| 1.12 | Built on **1,096 real daily satellite files, zero failures**. No synthetic data anywhere in the product | `docs/ISIH_RESULTS.md` |
+| 1.12 | Built on **1,096 real daily satellite files, zero failures**. No synthetic observations anywhere — the router's ice thickness and density are literature lookup tables, disclosed in ADR-013 | `docs/ISIH_RESULTS.md` |
 
 ---
 
@@ -50,9 +50,11 @@ more at the ice edge** than in thick pack — standard deviations from 2.8% to
 28.8% at low concentration (Ivanova et al. 2015). The ice edge is exactly where
 a ship makes its decisions.
 
-**What we do:** the route changes when the model is unsure. Model disagreement
-becomes a calibrated safety margin that widens the corridor, rather than a
-colour on a map.
+**What we do:** we name it as a known gap, not a shipped fix. The design is
+settled — model disagreement becomes a calibrated safety margin that widens
+the corridor, rather than a colour on a map — and gated by a written pass/fail
+test (§5). It is **designed, not wired into the router yet**: the prototype
+being demoed plans on a single model with no uncertainty band.
 
 > **Search result we could not disprove:** we found **no published study that
 > propagates sea-ice forecast uncertainty into a routing decision.** Stated as
@@ -76,9 +78,12 @@ mesh. Verified by reading the installed source: the route planner has no time
 dimension. A 17-day voyage is planned as though it will meet day-zero ice on
 day seventeen.
 
-**What we do:** a time-expanded graph — one ice layer per forecast day, so a
-lead-time forecast can actually change the route. **A static router structurally
-cannot consume a forecast**, which is why this matters more than it sounds.
+**What we do:** we name it as a known gap, not a shipped fix. The fix is
+specified — a time-expanded graph, one ice layer per forecast day, so a
+lead-time forecast could actually change the route — but it is **designed,
+not built** (§5); today's router still plans on the single frozen mesh above.
+**A static router structurally cannot consume a forecast**, which is exactly
+why this is the highest-priority item on the roadmap, not a footnote.
 
 ### 2.4 Sea state costs nothing in the current engine
 
@@ -135,9 +140,19 @@ disclose its own failures stops hunting for them.
   ice (19.6% vs 8.4%); only the maximum matters. Caption removed.
 
 - **Our background is a reanalysis, not a live forecast.** This is the sharpest
-  question we will be asked. Partial defence: if it contained the answer its own
-  error would be near zero, not 0.163 — worse than persistence at every horizon.
-  But we do not claim immunity. The clean test is written and not yet run.
+  question we will be asked, and we no longer offer the old defence — that if
+  GLORYS12 contained the answer its own error would be near zero rather than
+  0.163. That argument does not hold: 0.163 measures grid, algorithm and
+  ice-model mismatch between a 1/12° LIM field and a 25 km passive-microwave
+  CDR. It is bias, and bias is not evidence about the target. Channel 0 is the
+  background valid *at the target date* and channel 8 carries the background at
+  t, so the assimilated tendency is a linear combination the first convolution
+  can form. The flat raw-GLORYS12 error across lead (0.1630 → 0.1637) is the
+  fingerprint of a field that has seen the target, not a reassurance.
+  **So: this is an upper bound on forecast skill, not a measurement of it.** The
+  clean test is the no-background ablation, written and not yet run; production
+  corrects real CMEMS forecast cycles, of which one has been archived daily
+  since 31 Aug 2026.
 
 - **One physics detail is inferred, not verified.** The reference code for our
   iceberg model deflects icebergs to the right of the wind at every latitude,
@@ -226,10 +241,13 @@ consecutive days. It is the **open** days that are suspect — four of eight wer
 artifacts. If anything the true closure rate is higher."*
 
 **"Your model saw a reanalysis, not a forecast. Isn't that leakage?"**
-*"Partly defended: if it contained the answer its own error would be near zero,
-not 0.163 — worse than persistence at every horizon. But we don't claim
-immunity. The ablation that settles it is written and not yet run, and
-production corrects a real forecast where the question cannot arise."*
+*"You're right to push. We don't defend it with the raw-GLORYS12 error — that
+number is grid and ice-model mismatch, it's bias, and bias tells you nothing
+about whether the target leaked. Channel 0 is the reanalysis valid at the target
+date, so the assimilated tendency is available to the network. Treat our figure
+as an upper bound on forecast skill, not a measurement of it. The ablation that
+settles it is written and not yet run, and production corrects real CMEMS
+forecast cycles — we've been archiving one a day since 31 August."*
 
 **"Can it tell a captain about the ice that actually sinks ships?"**
 *"No, and we say so on the slide. A growler is five metres; the smallest berg

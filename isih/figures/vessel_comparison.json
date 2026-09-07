@@ -1,0 +1,374 @@
+{
+ "date": "2019-12-01",
+ "runs": {
+  "MV Vasiliy Golovnin": {
+   "objective": "traveltime",
+   "solved": true,
+   "track": [
+    [
+     -33.900000000000006,
+     18.400000000000006
+    ],
+    [
+     -35.0,
+     20.0
+    ],
+    [
+     -37.5,
+     22.5
+    ],
+    [
+     -40.0,
+     25.0
+    ],
+    [
+     -42.5,
+     27.5
+    ],
+    [
+     -45.0,
+     30.0
+    ],
+    [
+     -47.5,
+     32.5
+    ],
+    [
+     -50.0,
+     35.0
+    ],
+    [
+     -52.5,
+     37.5
+    ],
+    [
+     -55.0,
+     40.0
+    ],
+    [
+     -57.5,
+     42.5
+    ],
+    [
+     -60.0,
+     45.0
+    ],
+    [
+     -61.25,
+     46.25
+    ],
+    [
+     -61.25,
+     47.5
+    ],
+    [
+     -61.25,
+     48.75
+    ],
+    [
+     -61.25,
+     50.0
+    ],
+    [
+     -61.25,
+     51.25
+    ],
+    [
+     -61.25,
+     52.5
+    ],
+    [
+     -61.25,
+     53.75
+    ],
+    [
+     -61.25,
+     55.0
+    ],
+    [
+     -61.25,
+     56.25
+    ],
+    [
+     -61.25,
+     57.5
+    ],
+    [
+     -61.25,
+     58.75
+    ],
+    [
+     -61.25,
+     60.0
+    ],
+    [
+     -61.25,
+     61.25
+    ],
+    [
+     -61.25,
+     62.5
+    ],
+    [
+     -61.25,
+     63.75
+    ],
+    [
+     -61.67808256054025,
+     65.0
+    ],
+    [
+     -62.5,
+     67.5
+    ],
+    [
+     -65.0,
+     70.0
+    ],
+    [
+     -65.625,
+     70.625
+    ],
+    [
+     -65.625,
+     71.25
+    ],
+    [
+     -65.625,
+     71.875
+    ],
+    [
+     -65.625,
+     72.5
+    ],
+    [
+     -65.625,
+     73.125
+    ],
+    [
+     -66.25,
+     73.75
+    ],
+    [
+     -66.875,
+     74.375
+    ],
+    [
+     -67.5,
+     75.0
+    ],
+    [
+     -68.125,
+     75.625
+    ],
+    [
+     -68.75,
+     75.625
+    ],
+    [
+     -69.40683,
+     76.19533000000001
+    ]
+   ],
+   "traveltime_days": 8.576775694072595,
+   "fuel": 309.6960930101392,
+   "legs": 41,
+   "worst_ice_pct": 74.0,
+   "vessel": "MV Vasiliy Golovnin",
+   "config": {
+    "max_speed": 30.4,
+    "beam": 22.4,
+    "min_depth": 20,
+    "max_ice_conc": 80
+   }
+  },
+  "SA Agulhas II": {
+   "objective": "traveltime",
+   "solved": true,
+   "track": [
+    [
+     -33.900000000000006,
+     18.400000000000006
+    ],
+    [
+     -35.0,
+     20.0
+    ],
+    [
+     -37.5,
+     22.5
+    ],
+    [
+     -40.0,
+     25.0
+    ],
+    [
+     -42.5,
+     27.5
+    ],
+    [
+     -45.0,
+     30.0
+    ],
+    [
+     -47.5,
+     32.5
+    ],
+    [
+     -50.0,
+     35.0
+    ],
+    [
+     -52.5,
+     37.5
+    ],
+    [
+     -55.0,
+     40.0
+    ],
+    [
+     -57.5,
+     42.5
+    ],
+    [
+     -60.0,
+     45.0
+    ],
+    [
+     -61.25,
+     46.25
+    ],
+    [
+     -61.25,
+     47.5
+    ],
+    [
+     -61.25,
+     48.75
+    ],
+    [
+     -61.25,
+     50.0
+    ],
+    [
+     -61.25,
+     51.25
+    ],
+    [
+     -61.25,
+     52.5
+    ],
+    [
+     -61.25,
+     53.75
+    ],
+    [
+     -61.25,
+     55.0
+    ],
+    [
+     -61.25,
+     56.25
+    ],
+    [
+     -61.25,
+     57.5
+    ],
+    [
+     -61.25,
+     58.75
+    ],
+    [
+     -61.25,
+     60.0
+    ],
+    [
+     -61.25,
+     61.25
+    ],
+    [
+     -61.25,
+     62.5
+    ],
+    [
+     -61.25,
+     63.75
+    ],
+    [
+     -61.67808256054025,
+     65.0
+    ],
+    [
+     -62.5,
+     67.5
+    ],
+    [
+     -65.0,
+     70.0
+    ],
+    [
+     -65.625,
+     70.625
+    ],
+    [
+     -65.625,
+     71.25
+    ],
+    [
+     -65.625,
+     71.875
+    ],
+    [
+     -65.625,
+     72.5
+    ],
+    [
+     -65.625,
+     73.125
+    ],
+    [
+     -66.25,
+     73.75
+    ],
+    [
+     -66.875,
+     74.375
+    ],
+    [
+     -67.5,
+     75.0
+    ],
+    [
+     -68.125,
+     75.625
+    ],
+    [
+     -68.75,
+     75.625
+    ],
+    [
+     -69.40683,
+     76.19533000000001
+    ]
+   ],
+   "traveltime_days": 9.857641134026611,
+   "fuel": 282.0302939204829,
+   "legs": 41,
+   "worst_ice_pct": 74.0,
+   "vessel": "SA Agulhas II",
+   "config": {
+    "max_speed": 25.928,
+    "beam": 21.7,
+    "min_depth": 17,
+    "max_ice_conc": 80
+   }
+  }
+ },
+ "track_identical": true,
+ "eta_delta_days": 1.281,
+ "fuel_delta": -27.67,
+ "fuel_delta_pct": -8.9,
+ "verdict": "PARTIAL. Changing the ship changes the cost of the plan but not, on this day's ice, the corridor itself: both ships follow an identical 41-leg track, while the ETA moves by 1.28 days and fuel by roughly 9%. So the vessel model is load-bearing for ETA and fuel, and NOT yet demonstrated to be load-bearing for the track. The corridor does change when the ice constraint changes (41 legs at 80%, 51 at 55%), so the mechanism works \u2014 it is this pair of ships on this day that does not separate it.",
+ "do_not_claim": "Do not say 'different ships get different routes' on this evidence. Say 'the same route costs this ship 1.28 days more and 9% less fuel'.",
+ "note": "Both configs carry the same assumed 80% ice limit on purpose. No ice class indexes concentration, so giving the two ships different limits would manufacture the result the test exists to check. Only verified beam, service speed and draft differ \u2014 see docs/research/VESSEL_SPECIFICATIONS.md."
+}

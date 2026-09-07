@@ -1,3 +1,9 @@
+> **Superseded for demo day — see `docs/RUN_OF_SHOW.md`.**
+> This is the 31 Aug sprint plan. It describes a fuel-vs-safety toggle, an
+> iceberg hazard layer and offline re-planning that were never built, so
+> demoing from it promises three things the screen cannot do. Kept as the
+> record of what was planned and what the week actually delivered.
+
 # ISIH Demo Plan — Sept 8 Deadline
 
 Status: proposed 2026-08-31, awaiting team confirmation. 8 working days (Sept 1–8).

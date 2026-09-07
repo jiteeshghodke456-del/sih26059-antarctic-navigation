@@ -1,5 +1,13 @@
 # System Architecture — SIH26059 Antarctic Navigation Decision Support
 
+> **Read `ARCHITECTURE_DELTA.md` first.** As of 2026-09-07 this document no
+> longer describes the built system in three respects: it has no decision-engine
+> component (the layer the product now leads with), it specifies a React +
+> Leaflet UI where vanilla JS was built, and §2.4 promises `pack_built_at`,
+> `age_hours` and `valid_until` on every API response — none of which exist.
+> The delta document is the accurate one; this remains the standing design
+> record and its rejected-alternatives reasoning is still the deliverable.
+
 Status: **revision 2, 2026-08-31** — revised in response to `WEAKNESS_ANALYSIS.md`. Four
 alternatives were genuinely developed; one is chosen. Rejected alternatives and their reasons are
 retained below because the reasoning is the deliverable, not just the conclusion.
@@ -77,7 +85,7 @@ makes the 50 KB daily-delta target plausible rather than proven.
 This produces a concrete, testable engineering target rather than a vague "offline mode":
 
 > **Design target: the daily incremental sync must fit in 50 KB compressed; a full corridor
-> refresh in under 1 MB.** Both are enforced by a test in CI that fails the build if a generated
+> refresh in under 1 MB.** Both are **specified but NOT enforced** — there is no such CI job. The only workflow in .github/workflows is the CMEMS harvest. Corrected 2026-09-07: the previous wording claimed a test in CI that fails the build if a generated
 > pack exceeds budget (ADR-017).
 
 **And a pre-committed answer if the corridor mesh misses the target**, since it plausibly will:

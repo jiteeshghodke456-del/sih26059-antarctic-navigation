@@ -55,7 +55,45 @@ SOURCE_ROUTE = "PolarRoute 1.1.11 + meshiphi (British Antarctic Survey, MIT lice
 
 @lru_cache(maxsize=1)
 def window() -> dict:
-    return json.loads((FIG / "destination_window.json").read_text())
+    """The destination-window result, with no-data targets separated out.
+
+    `destination_window.json` computes `passable` as "the mesh gives this cell
+    a speed greater than zero". When a target lies OUTSIDE the routing mesh
+    there is no cell at all, so `sic_qa_on` is null and `passable` comes back
+    False — and a target that was never scored then reads as closed on every
+    single day. The file still carries one such row, "Maitri (Leningradskaya
+    coast)", left behind when Maitri was deliberately dropped as a target
+    (isih/destination_window.py:27 — it is ~100 km inland and its maritime
+    offload point is not sourced). All 31 of its days are null.
+
+    "100 % closed" and "never measured" are the same three characters on a
+    slide and opposite claims in a viva, so they are separated here rather
+    than trusted to a reader. Master prompt §48A.15: UNAVAILABLE is its own
+    state, distinct from a value.
+
+    Any future target that is never scored takes this path automatically.
+    """
+    doc = json.loads((FIG / "destination_window.json").read_text())
+
+    scored, unavailable = {}, {}
+    for name, summ in doc.get("summary", {}).items():
+        observed = [
+            row[name]["sic_qa_on"]
+            for row in doc.get("daily", [])
+            if name in row and row[name].get("sic_qa_on") is not None
+        ]
+        if observed:
+            scored[name] = summ
+        else:
+            unavailable[name] = {
+                "reason": "no mesh cell contains this point — never scored",
+                "days_with_data": 0,
+                "days_in_window": len(doc.get("daily", [])),
+            }
+
+    doc["summary"] = scored
+    doc["unavailable"] = unavailable
+    return doc
 
 
 def dates() -> list[str]:
@@ -162,6 +200,15 @@ def route() -> dict:
         "ice_date": window()["start"],
         "engine": SOURCE_ROUTE,
         "coords": [[round(float(lon), 3), round(float(lat), 3)] for lon, lat in coords],
+        # Cumulative days-since-departure at each waypoint. PolarRoute reports
+        # one arrival time per leg, so the departure point is prepended at
+        # zero to give one value per coordinate. This is what lets the day
+        # slider place the ship on its own track instead of only changing the
+        # ice underneath it — §5 asks the system to look further down the
+        # route, which needs to know where "down the route" currently is.
+        "traveltime_cumulative": [0.0] + [
+            round(float(t), 4) for t in (props.get("traveltime") or [])
+        ],
         "total_traveltime_days": float(props["total_traveltime"]),
         "n_legs": len(props.get("CellIndices", [])),
         # sampled from the satellite raster along each line, as in the figure
@@ -275,6 +322,7 @@ def summary() -> dict:
         "start": w["start"],
         "dates": dates(),
         "summary": w["summary"],
+        "unavailable": w.get("unavailable", {}),
         "daily": w["daily"],
         "note": w["note"],
         "stations": STATIONS,
@@ -306,6 +354,24 @@ DATA_MODE = {
         "to score against."
     ),
 }
+
+
+@lru_cache(maxsize=1)
+def coastline() -> dict:
+    """Natural Earth land and coastline, clipped to the corridor.
+
+    Same contract as protected(): read the committed extract, never the
+    source data, and degrade to an explicitly-unavailable structure rather
+    than raising. A missing basemap should not take down a demo.
+    """
+    path = FIG / "coastline.json"
+    if not path.exists():
+        return {"available": False,
+                "why": "run isih/coastline.py to build the extract",
+                "land": [], "coast": []}
+    doc = json.loads(path.read_text())
+    doc["available"] = True
+    return doc
 
 
 @lru_cache(maxsize=1)
