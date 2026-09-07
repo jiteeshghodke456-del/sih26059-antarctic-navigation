@@ -1,0 +1,1781 @@
+{
+ "source": "Antarctic Treaty Secretariat, apa_shape_2024.zip (edition 2024)",
+ "source_url": "https://documents.ats.aq/gis/apa_shape_2024.zip",
+ "legal_basis": "Protocol on Environmental Protection to the Antarctic Treaty, Annex V, Art. 3 (ASPA: entry by permit only) and Art. 4 (ASMA: no permit to enter; Management Plan governs activity)",
+ "crs_source": "EPSG:3031 (read from .prj)",
+ "geometry_note": "Drawn outlines simplified to 500 m (Ramer-Douglas-Peucker); rings spanning under 2000 m omitted from the drawing and counted in rings_omitted_for_display. Display only \u2014 station containment and the distances below are computed from the unsimplified register.",
+ "corridor": {
+  "lon_min": -5.0,
+  "lon_max": 85.0,
+  "lat_min": -80.0,
+  "lat_max": -48.0
+ },
+ "counts": {
+  "polygons": 33,
+  "aspa_polygons": 32,
+  "asma_polygons": 1,
+  "marine": 0
+ },
+ "transit_finding": "No protected area in this corridor is flagged marine, so none restricts the vessel's transit. They bind shore operations; ASPAs additionally require a permit to enter at all.",
+ "stations": {
+  "Bharati": {
+   "lat": -69.40683,
+   "lon": 76.19533,
+   "inside": [
+    {
+     "kind": "ASMA",
+     "number": "6",
+     "name": "Larsemann Hills, East Antarctica",
+     "proponent": "Australia, China, India, Romania, Russian Federati",
+     "instrument": "M 2 (2007)",
+     "marine": false,
+     "entry_regime": "management_plan",
+     "constraint": {
+      "applies_to": "shore_operations",
+      "effect": "management_plan",
+      "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+     },
+     "distance_km": 0.0
+    }
+   ],
+   "nearby": [
+    {
+     "kind": "ASPA",
+     "number": "174",
+     "name": "Stornes, Larsemann Hills, Princess Elizabeth Land",
+     "proponent": "Australia, China, India, Russia",
+     "instrument": "Measure 12",
+     "marine": false,
+     "entry_regime": "permit_required",
+     "constraint": {
+      "applies_to": "shore_operations",
+      "effect": "permit_required",
+      "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+     },
+     "distance_km": 1.9
+    },
+    {
+     "kind": "ASPA",
+     "number": "169",
+     "name": "Amanda Bay, Ingrid Christensen Coast, Princess Elizabeth Land, East Antarctica",
+     "proponent": "Australia, China",
+     "instrument": "Measure 3",
+     "marine": false,
+     "entry_regime": "permit_required",
+     "constraint": {
+      "applies_to": "shore_operations",
+      "effect": "permit_required",
+      "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+     },
+     "distance_km": 28.4
+    }
+   ]
+  },
+  "Maitri": {
+   "lat": -70.76444,
+   "lon": 11.73417,
+   "inside": [],
+   "nearby": [
+    {
+     "kind": "ASPA",
+     "number": "163",
+     "name": "Dakshin Gangotri Glacier, Dronning Maud Land",
+     "proponent": "India",
+     "instrument": "Measure 2",
+     "marine": false,
+     "entry_regime": "permit_required",
+     "constraint": {
+      "applies_to": "shore_operations",
+      "effect": "permit_required",
+      "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+     },
+     "distance_km": 4.7
+    }
+   ]
+  }
+ },
+ "areas": [
+  {
+   "kind": "ASMA",
+   "number": "6",
+   "name": "Larsemann Hills, East Antarctica",
+   "proponent": "Australia, China, India, Romania, Russian Federati",
+   "instrument": "M 2 (2007)",
+   "marine": false,
+   "entry_regime": "management_plan",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "management_plan",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 252.54,
+   "rings": [
+    [
+     [
+      75.975,
+      -69.375
+     ],
+     [
+      76.2389,
+      -69.3389
+     ],
+     [
+      76.3583,
+      -69.3444
+     ],
+     [
+      76.5139,
+      -69.3722
+     ],
+     [
+      76.5167,
+      -69.3889
+     ],
+     [
+      76.5056,
+      -69.4111
+     ],
+     [
+      76.4028,
+      -69.4194
+     ],
+     [
+      76.2986,
+      -69.4589
+     ],
+     [
+      76.0556,
+      -69.4778
+     ],
+     [
+      75.9333,
+      -69.4111
+     ],
+     [
+      75.975,
+      -69.375
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "101",
+   "name": "Taylor Rookery, Mac. Robertson Land",
+   "proponent": "Australia",
+   "instrument": "Rec. IV-1",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 0.2743,
+   "rings": [],
+   "rings_omitted_for_display": 1
+  },
+  {
+   "kind": "ASPA",
+   "number": "102",
+   "name": "Rookery Islands, Holme Bay, Mac. Robertson Land",
+   "proponent": "Australia",
+   "instrument": "Rec. IV-2",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 0.8527,
+   "rings": [],
+   "rings_omitted_for_display": 158
+  },
+  {
+   "kind": "ASPA",
+   "number": "142",
+   "name": "Svarthamaren, M\u00c3\u00bchlig-Hofmannfjella, Dronning Maud Land",
+   "proponent": "Norway",
+   "instrument": "Rec. XIV-5",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 7.6077,
+   "rings": [
+    [
+     [
+      5.1974,
+      -71.9201
+     ],
+     [
+      5.1303,
+      -71.9004
+     ],
+     [
+      5.157,
+      -71.8875
+     ],
+     [
+      5.2406,
+      -71.9298
+     ],
+     [
+      5.2679,
+      -71.9311
+     ],
+     [
+      5.2398,
+      -71.9367
+     ],
+     [
+      5.1974,
+      -71.9201
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "143",
+   "name": "Marine Plain, Mule Peninsula, Vestfold Hills, Princess Elizabeth Land",
+   "proponent": "Australia",
+   "instrument": "Rec. XIV-5",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 20.748,
+   "rings": [
+    [
+     [
+      78.1089,
+      -68.6466
+     ],
+     [
+      78.0687,
+      -68.6378
+     ],
+     [
+      78.084,
+      -68.6263
+     ],
+     [
+      78.05,
+      -68.625
+     ],
+     [
+      78.1578,
+      -68.6094
+     ],
+     [
+      78.2083,
+      -68.625
+     ],
+     [
+      78.2083,
+      -68.6523
+     ],
+     [
+      78.1447,
+      -68.6437
+     ],
+     [
+      78.1089,
+      -68.6466
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "163",
+   "name": "Dakshin Gangotri Glacier, Dronning Maud Land",
+   "proponent": "India",
+   "instrument": "Measure 2",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 4.5708,
+   "rings": [
+    [
+     [
+      11.5583,
+      -70.7583
+     ],
+     [
+      11.5583,
+      -70.7361
+     ],
+     [
+      11.6083,
+      -70.7361
+     ],
+     [
+      11.6083,
+      -70.7583
+     ],
+     [
+      11.5583,
+      -70.7583
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "164",
+   "name": "Murray Monolith, Mac.Robertson Land",
+   "proponent": "Australia",
+   "instrument": "Measure 2",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 4.9241,
+   "rings": [
+    [
+     [
+      66.8508,
+      -67.7769
+     ],
+     [
+      66.878,
+      -67.7861
+     ],
+     [
+      66.9,
+      -67.7772
+     ],
+     [
+      66.8975,
+      -67.8014
+     ],
+     [
+      66.8486,
+      -67.8008
+     ],
+     [
+      66.8508,
+      -67.7769
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "164",
+   "name": "Scullin Monolith, Mac.Robertson Land",
+   "proponent": "Australia",
+   "instrument": "Measure 2",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 5.3691,
+   "rings": [
+    [
+     [
+      66.7235,
+      -67.7798
+     ],
+     [
+      66.7436,
+      -67.7781
+     ],
+     [
+      66.7425,
+      -67.8017
+     ],
+     [
+      66.6739,
+      -67.8008
+     ],
+     [
+      66.675,
+      -67.7831
+     ],
+     [
+      66.7145,
+      -67.7903
+     ],
+     [
+      66.7235,
+      -67.7798
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "167",
+   "name": "Hawker Island, Vestfold Hills, Ingrid Christensen Coast, Princess Elizabeth Land, East Antarctica",
+   "proponent": "Australia",
+   "instrument": "Measure 1",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 2.2066,
+   "rings": [
+    [
+     [
+      77.8676,
+      -68.6434
+     ],
+     [
+      77.8515,
+      -68.6456
+     ],
+     [
+      77.8541,
+      -68.6366
+     ],
+     [
+      77.8354,
+      -68.6426
+     ],
+     [
+      77.8541,
+      -68.6254
+     ],
+     [
+      77.8772,
+      -68.6288
+     ],
+     [
+      77.8676,
+      -68.6434
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "168",
+   "name": "Mount Harding, Grove Mountains, East Antarctica",
+   "proponent": "China",
+   "instrument": "Measure 2",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 101.7036,
+   "rings": [
+    [
+     [
+      74.95,
+      -72.85
+     ],
+     [
+      75.1333,
+      -72.85
+     ],
+     [
+      75.1833,
+      -72.8667
+     ],
+     [
+      75.2,
+      -72.9167
+     ],
+     [
+      75.1667,
+      -72.95
+     ],
+     [
+      74.9,
+      -72.95
+     ],
+     [
+      74.8833,
+      -72.9167
+     ],
+     [
+      74.9,
+      -72.8833
+     ],
+     [
+      74.95,
+      -72.85
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "169",
+   "name": "Amanda Bay, Ingrid Christensen Coast, Princess Elizabeth Land, East Antarctica",
+   "proponent": "Australia, China",
+   "instrument": "Measure 3",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 17.1399,
+   "rings": [
+    [
+     [
+      76.7675,
+      -69.2462
+     ],
+     [
+      76.8918,
+      -69.2251
+     ],
+     [
+      76.8988,
+      -69.2716
+     ],
+     [
+      76.8206,
+      -69.2822
+     ],
+     [
+      76.7996,
+      -69.2538
+     ],
+     [
+      76.7675,
+      -69.2462
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "174",
+   "name": "Stornes, Larsemann Hills, Princess Elizabeth Land",
+   "proponent": "Australia, China, India, Russia",
+   "instrument": "Measure 12",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 21.3128,
+   "rings": [
+    [
+     [
+      76.056,
+      -69.4778
+     ],
+     [
+      76.0495,
+      -69.4732
+     ],
+     [
+      76.0747,
+      -69.4709
+     ],
+     [
+      76.0524,
+      -69.4641
+     ],
+     [
+      76.0758,
+      -69.4616
+     ],
+     [
+      76.0662,
+      -69.4585
+     ],
+     [
+      76.1068,
+      -69.4613
+     ],
+     [
+      76.1163,
+      -69.4499
+     ],
+     [
+      76.0465,
+      -69.4402
+     ],
+     [
+      76.0192,
+      -69.4448
+     ],
+     [
+      75.9811,
+      -69.4312
+     ],
+     [
+      76.0334,
+      -69.4336
+     ],
+     [
+      76.0367,
+      -69.4229
+     ],
+     [
+      76.0501,
+      -69.4339
+     ],
+     [
+      76.0522,
+      -69.4063
+     ],
+     [
+      76.0712,
+      -69.4022
+     ],
+     [
+      76.0737,
+      -69.414
+     ],
+     [
+      76.0822,
+      -69.3963
+     ],
+     [
+      76.1244,
+      -69.4015
+     ],
+     [
+      76.1233,
+      -69.3916
+     ],
+     [
+      76.1469,
+      -69.399
+     ],
+     [
+      76.1438,
+      -69.4227
+     ],
+     [
+      76.0939,
+      -69.4386
+     ],
+     [
+      76.1406,
+      -69.4486
+     ],
+     [
+      76.056,
+      -69.4778
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "141",
+   "name": "Yukidori Valley, Langhovde, Lutzow-Holm Bay",
+   "proponent": "Japan",
+   "instrument": "Rec. XIV-5",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 5.219,
+   "rings": [
+    [
+     [
+      39.8,
+      -69.2333
+     ],
+     [
+      39.8,
+      -69.25
+     ],
+     [
+      39.7153,
+      -69.2428
+     ],
+     [
+      39.7334,
+      -69.2333
+     ],
+     [
+      39.8,
+      -69.2333
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  },
+  {
+   "kind": "ASPA",
+   "number": "179",
+   "name": "Parts of Western S\u00f8r Rondane Mountains, Dronning Maud Land, East Antarctica",
+   "proponent": "Belgium",
+   "instrument": "M 18 (2023)",
+   "marine": false,
+   "entry_regime": "permit_required",
+   "constraint": {
+    "applies_to": "shore_operations",
+    "effect": "permit_required",
+    "note": "Terrestrial area: does not restrict the ship's track. Binds landing, small-boat, helicopter and personnel activity."
+   },
+   "area_km2": 35871.0,
+   "rings": [
+    [
+     [
+      23.0558,
+      -72.0178
+     ],
+     [
+      22.9708,
+      -72.0186
+     ],
+     [
+      22.9775,
+      -71.9739
+     ],
+     [
+      23.015,
+      -71.9736
+     ],
+     [
+      23.0108,
+      -71.9931
+     ],
+     [
+      23.0281,
+      -72.0039
+     ],
+     [
+      23.0558,
+      -72.0036
+     ],
+     [
+      23.0558,
+      -72.0178
+     ]
+    ]
+   ],
+   "rings_omitted_for_display": 0
+  }
+ ]
+}
