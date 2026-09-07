@@ -11,7 +11,8 @@ explicitly as blockers, not glossed over.
 
 ## 1. Sea ice concentration
 
-### 1.1 NSIDC Sea Ice Index v4 (NOAA@NSIDC) — VERIFIED LIVE, NO AUTH
+### 1.1 NOAA/NSIDC Sea Ice Concentration CDR G02202 v6 — VERIFIED LIVE, NO AUTH
+*(Heading corrected 2026-09-07. This section previously read "NSIDC Sea Ice Index v4", which is a different product — the Sea Ice Index is an extent/area index. What is on disk and what the model trains on is the gridded CDR G02202 v6, 25 km, 1096 daily files.)*
 - **Provider**: National Snow and Ice Data Center (NASA-funded), NOAA
 - **Access**: `https://noaadata.apps.nsidc.org/NOAA/G02135/south/daily/data/S_seaice_extent_daily_v4.0.csv` — plain HTTP, **no login**.
 - **Confirmed live**: `curl` returned real rows through **2026-08-29**, each pointing at the source AMSR2 granule, e.g.:

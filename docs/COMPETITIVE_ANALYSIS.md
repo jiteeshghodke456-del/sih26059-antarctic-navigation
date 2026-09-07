@@ -96,3 +96,55 @@ Given only the one-sentence PS, every competent team converges on roughly:
 - Whether NCPOR's own NPDC/MET-Data/Live-Access-Server portals or "Research Vessel Movements" tooling already provide ice-forecast or route-planning capability that would overlap this PS — unconfirmed, needs manual portal review or a direct question to NCPOR. Logged in `docs/backlog.md`.
 - Whether Sofar Ocean Southern Ocean buoy data (or equivalent in-situ wave/wind data) is actually accessible to us for this project — confirmed to exist in the operational region, access/licensing not checked.
 - DTU Space's specific Antarctic product catalogue was not confirmed in this pass; only the broader CryoSat-2 Antarctic freeboard/thickness literature was verified.
+
+---
+
+# The operational incumbents, and why they were missing from this file
+
+*Added 2026-09-07.* An audit found this document evaluated the **research**
+rivals seriously — IceNet, ANTSIC-UNet, CMEMS, IDRIFTNET, USNIC/BYU — and left
+out every **product** a domain judge would name first. IcySea, PolarView,
+Polarstern MapViewer and the ECDIS vendors sat in `docs/ppt_source/market.md`,
+a marketing draft, rather than here. That is the wrong place for them: a
+competitor you only discuss in a pitch document is a competitor you have not
+actually analysed.
+
+## The products
+
+| Product | What it does | Where it is better than us | What it leaves |
+|---|---|---|---|
+| **IcySea** (Drift+Noise, AWI spin-off, ~7 staff) | Near-real-time ice imagery and drift forecast to the bridge, Iridium-tested, delivery within ~1 h of satellite recording, offline browser cache, click-a-point-to-forecast-drift. Customers include **RV Polarstern and RSV Nuyina** | Everything about delivery. They have solved low-bandwidth polar distribution, which we have only designed. They are a real product on real ships; we are a prototype | It answers *"what does the ice look like"*. It does not answer *"can this named ship reach this named station on this date"* — which is the gap we occupy |
+| **PolarView** (University of Bremen lineage) | AMSR2 sea-ice concentration, publicly served, the same product Laura Bassi's dashboard consumes | Free, established, trusted, and the source many operators already open first | A data service, not a decision-support tool. No vessel model, no route, no approval |
+| **Polarstern MapViewer** (AWI) | Institutional multi-layer viewer aboard an icebreaker, backed by a documented data-logistics team with SLA-like onboarding (mission data <10 min, new permanent product ~4 weeks) | Layer breadth we cannot approach, because it rests on institutional data infrastructure and staff, not on UI | Internal to one operator's fleet. Not a product anyone else can adopt |
+| **ECDIS vendors** (Furuno, Kongsberg, Wärtsilä/Transas, NAVTOR, ChartWorld) | Type-approved bridge systems meeting MSC.232(82), carriage-mandated under SOLAS V/19.2.10 | Type approval, which we will never have as a prototype, and the bridge itself — they own the screen | Ice-aware, vessel-specific, destination-reachability decision support is not what they sell. We are a layer that would have to live beside them, not replace them |
+| **StormGeo** (~13,000 vessels) | Commercial voyage optimisation with 24/7 human route analysts | Mature, genuinely multi-objective at scale, commercially proven | A different market: global commercial shipping on subscription, no Antarctic resupply specialisation. Their human-in-the-loop fallback is evidence that full automation is not trusted at the edges — which is the posture we argue for too |
+
+## The failure analysis this file did not have
+
+The audit's sharpest finding was that **no competitor failure analysis existed
+anywhere in the repository** — zero hits for "shut down", "discontinued",
+"failed because", "lessons from". A competitive analysis with no failures in it
+is a survivorship-biased list.
+
+What can honestly be said, which is less than a full post-mortem:
+
+- **ISRO's own SCATSAT-1 Antarctic sea-ice product stopped in May 2019 while
+  the satellite kept operating until February 2021.** The product was
+  discontinued nearly two years before the platform failed. And the VEDAS polar
+  GeoServer, which served those daily Antarctic layers in EPSG:3031, carries
+  **nothing after March 2021** — it was never continued onto EOS-06. This is the
+  clearest documented case available to us of a capable polar data service
+  lapsing, and the cause looks like continuity of funding and ownership rather
+  than any technical failure. It is the failure mode most likely to kill *this*
+  project too, and it argues for our reuse-first posture: PolarRoute, the CDR
+  and the ATS register all outlive us.
+- **IceNet's published validation is Arctic**, and its operational Antarctic
+  support exists in source code rather than in a second peer-reviewed paper.
+  That is a scope limitation rather than a failure, and it should be described
+  as one.
+- We have **never tested IcySea** and will not claim it is worse. Our claim is
+  adjacent, not superior.
+
+**Still open:** a genuine post-mortem of a discontinued polar navigation or ice
+service — why it ended, who paid for it, what replaced it. Filed in
+`docs/backlog.md`. Writing one would be worth more than another feature.
