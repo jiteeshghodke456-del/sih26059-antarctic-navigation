@@ -33,10 +33,22 @@ from .noise import FourierField, smoothstep
 # sustained 15 m/s wind therefore moves the edge ~52 km, which is about half a
 # degree of latitude - the right order for a synoptic event.
 FREE_DRIFT_FRACTION = 0.021
-MIZ_WIDTH_DEG = 3.4          # marginal ice zone width in latitude
-PACK_MAX = 0.95              # concentration deep in the pack
+MIZ_WIDTH_DEG = 4.2          # marginal ice zone width in latitude
+# Pack concentration is not constant through the season. Summer melt and
+# divergence disperse it, which is precisely why a resupply window exists at
+# all: in early December the pack is close, by February it has opened. Holding
+# this fixed at 0.95 produced an unbroken barrier across every longitude at
+# 68.4 S, i.e. a coast no ship could ever reach - which is not the Antarctic
+# anyone actually sails to.
+PACK_MAX_DEC = 0.93          # concentration deep in the pack, early December
+PACK_MELT_PER_DAY = 0.0034   # summer dispersal
 EDGE_DEC = -63.5             # climatological edge, early December, 20-80E
 EDGE_RETREAT_PER_DAY = 0.030  # deg latitude per day through the summer
+# The voyage epoch is placed mid-season rather than at the season's start, so
+# t=0 is a day the ship can actually sail. Departing EARLIER than the epoch
+# walks back into the closed part of December, which is the point: the operator
+# can find the day the window opens instead of being handed it.
+SEASON_OFFSET_DAYS = 17.0
 
 
 class IceField:
@@ -50,7 +62,7 @@ class IceField:
     def edge_lat(self, lon, t):
         """Latitude of the 15% concentration contour."""
         lon = np.asarray(lon, dtype=float)
-        base = EDGE_DEC - EDGE_RETREAT_PER_DAY * float(t)
+        base = EDGE_DEC - EDGE_RETREAT_PER_DAY * (float(t) + SEASON_OFFSET_DAYS)
         # The edge is not a circle: it is steered by bathymetry and by the
         # standing wave pattern of the ACC. Both are fixed features, so this
         # term is evaluated at a FIXED time. Letting it drift made the edge
@@ -80,7 +92,8 @@ class IceField:
 
         # South of the edge concentration rises across the MIZ to the pack value.
         south = edge - lat                       # positive when south of the edge
-        c = PACK_MAX * smoothstep(0.0, MIZ_WIDTH_DEG, south)
+        pack_max = max(0.62, PACK_MAX_DEC - PACK_MELT_PER_DAY * (float(t) + SEASON_OFFSET_DAYS))
+        c = pack_max * smoothstep(0.0, MIZ_WIDTH_DEG, south)
 
         # Texture: floes and leads. Strongest in the MIZ, where the ice really
         # is broken, and weak deep in the pack where it is not.
@@ -98,9 +111,11 @@ class IceField:
         # Real, and operationally important - it is why a ship can sometimes get
         # close in when the pack offshore looks impassable. Narrow, and only
         # where there is ice to open.
-        coast_band = np.exp(-((lat + 69.6) / 0.75) ** 2)
+        # Wider than a point feature: the Prydz Bay coastal lead system is the
+        # route in, and a polynya narrower than the ship's approach is useless.
+        coast_band = np.exp(-((lat + 69.5) / 1.25) ** 2)
         opening = np.clip(0.5 + 0.5 * np.tanh(self.texture.value(lon * 1.7, lat, t * 0.5)), 0.0, 1.0)
-        c = c - 0.5 * coast_band * opening * c
+        c = c - 0.62 * coast_band * opening * c
 
         return np.clip(c, 0.0, 1.0)
 

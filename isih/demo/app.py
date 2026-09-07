@@ -19,6 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from . import data, decision_service, workflow_service
+from .bridge_api import router as bridge_router
 
 STATIC = Path(__file__).parent / "static"
 
@@ -141,6 +142,14 @@ def day(d: str, qa: str = "on"):
     return data.day_field(d, qa == "on")
 
 
+@app.get("/bridge", include_in_schema=False)
+def bridge():
+    """The new bridge console. Served alongside the original page while the
+    old one is still the default, so neither breaks the other."""
+    return FileResponse(STATIC / "bridge.html")
+
+
+app.include_router(bridge_router)
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
