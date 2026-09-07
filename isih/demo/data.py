@@ -281,4 +281,71 @@ def summary() -> dict:
         "bounds": BOUNDS,
         "sources": {"ice": SOURCE_ICE, "route": SOURCE_ROUTE},
         "results": RESULTS,
+        "data_mode": DATA_MODE,
+    }
+
+
+# --- Data mode -------------------------------------------------------------
+# Master prompt §27 and §48A.15: the system must distinguish LIVE DATA from
+# HISTORICAL REPLAY from SIMULATED INPUT, and must never present replay as
+# live. This demo replays real satellite observations from December 2019.
+# Every one of those bytes is real — but it is not now, and a judge glancing
+# at a moving ice map is entitled to assume it is. So the app says so, in
+# words, on screen, rather than relying on the date label being noticed.
+DATA_MODE = {
+    "mode": "HISTORICAL REPLAY",
+    "window": "1–31 December 2019",
+    "means": (
+        "Real satellite observations from a past season, replayed. "
+        "Not a live feed and not simulated data."
+    ),
+    "live_capable": (
+        "The same pipeline ingests the live CMEMS forecast — a daily harvest "
+        "has been running since 31 Aug 2026 (7 consecutive cycles archived). "
+        "December 2019 is used here because it is a season with ground truth "
+        "to score against."
+    ),
+}
+
+
+@lru_cache(maxsize=1)
+def protected() -> dict:
+    """Antarctic Treaty Secretariat protected areas for the corridor.
+
+    Reads the committed extract, never the shapefile — the running app has no
+    geospatial dependency, so there is nothing new that can fail live.
+    Returns an empty, explicitly-labelled structure if the extract is absent
+    rather than raising: a missing optional layer should not take down a
+    demo whose whole point is graceful degradation.
+    """
+    path = FIG / "protected_areas.json"
+    if not path.exists():
+        return {"available": False, "reason": f"{path.name} not generated",
+                "areas": [], "stations": {}}
+
+    doc = json.loads(path.read_text())
+
+    # Only the areas that fall inside the demo map's own viewport can be
+    # drawn; the rest are still reported in the counts so the panel does not
+    # quietly under-state what is in the corridor.
+    drawable = []
+    for a in doc.get("areas", []):
+        rings = [
+            r for r in a.get("rings", [])
+            if any(BOUNDS["lon_min"] <= p[0] <= BOUNDS["lon_max"]
+                   and BOUNDS["lat_min"] <= p[1] <= BOUNDS["lat_max"] for p in r)
+        ]
+        if rings:
+            drawable.append({**a, "rings": rings})
+
+    return {
+        "available": True,
+        "source": doc.get("source"),
+        "legal_basis": doc.get("legal_basis"),
+        "geometry_note": doc.get("geometry_note"),
+        "counts": doc.get("counts", {}),
+        "transit_finding": doc.get("transit_finding"),
+        "stations": doc.get("stations", {}),
+        "drawn": len(drawable),
+        "areas": drawable,
     }

@@ -78,9 +78,35 @@
     if (text !== undefined) { n.textContent = text; }
     return n;
   }
+  function drawProtected() {
+    // Drawn first, so it sits beneath the route and the stations. A legal
+    // constraint layer should be legible without ever competing with the
+    // navigation picture — master prompt §2.2 and §48A.27.
+    if (!S.protected || !S.protected.available || !S.paShow) { return; }
+    S.protected.areas.forEach(function (a) {
+      var isAsma = a.kind === 'ASMA';
+      a.rings.forEach(function (ring) {
+        var d = ring.map(function (c, i) {
+          var q = px(c[0], c[1]);
+          return (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1);
+        }).join(' ') + ' Z';
+        svg.appendChild(el('path', {
+          d: d,
+          fill: isAsma ? '#7B4BA8' : '#A8434B',
+          'fill-opacity': 0.13,
+          stroke: isAsma ? '#7B4BA8' : '#A8434B',
+          'stroke-width': 1.3,
+          'stroke-dasharray': isAsma ? '5 3' : '',
+          'vector-effect': 'non-scaling-stroke'
+        }));
+      });
+    });
+  }
+
   function drawVectors() {
     while (svg.firstChild) { svg.removeChild(svg.firstChild); }
     if (!S.route || !S.summary) { return; }
+    drawProtected();
     var st = {}; S.summary.stations.forEach(function (s) { st[s.role] = s; });
     var a = px(st.start.lon, st.start.lat), b = px(st.destination.lon, st.destination.lat);
 
@@ -105,6 +131,57 @@
     marker(st.start, 4, 'start');
     marker(st.destination, 4, 'end');
     marker(st.approach, -8, 'end');
+  }
+
+  // ---------- protected areas ----------
+  function regimeWords(a) {
+    return a.entry_regime === 'permit_required'
+      ? 'entry by permit only (Annex V Art. 3)'
+      : 'no permit to enter; management plan governs activity (Annex V Art. 4)';
+  }
+
+  function renderProtected() {
+    var pa = S.protected;
+    if (!pa || !pa.available) {
+      $('pa-finding').textContent = 'Protected-area extract not generated — layer unavailable.';
+      $('pa-src').textContent = 'Run isih/protected_areas.py to build it.';
+      return;
+    }
+    $('pa-finding').textContent = pa.transit_finding;
+
+    var host = $('pa-stations');
+    host.innerHTML = '';
+    Object.keys(pa.stations).forEach(function (name) {
+      var ctx = pa.stations[name];
+      if (!ctx.inside.length && !ctx.nearby.length) { return; }
+      var box = document.createElement('div');
+      box.className = 'pa-st';
+      var h = document.createElement('div');
+      h.className = 'pa-st-name'; h.textContent = name;
+      box.appendChild(h);
+
+      function row(a, kind) {
+        var r = document.createElement('div');
+        r.className = 'pa-row';
+        var chip = document.createElement('span');
+        chip.className = 'pa-chip ' + (kind === 'inside' ? 'inside' : 'near');
+        chip.textContent = kind === 'inside' ? 'inside' : a.distance_km + ' km';
+        var txt = document.createElement('span');
+        txt.innerHTML = '<b>' + a.kind + ' ' + a.number + '</b> ' + a.name +
+          '<br><span class="pa-regime">' + regimeWords(a) + '</span>';
+        r.appendChild(chip); r.appendChild(txt);
+        return r;
+      }
+      ctx.inside.forEach(function (a) { box.appendChild(row(a, 'inside')); });
+      ctx.nearby.slice(0, 2).forEach(function (a) { box.appendChild(row(a, 'near')); });
+      host.appendChild(box);
+    });
+
+    var c = pa.counts;
+    $('pa-src').textContent =
+      c.polygons + ' polygons in the corridor (' + c.aspa_polygons + ' ASPA, ' +
+      c.asma_polygons + ' ASMA, ' + c.marine + ' marine); ' + pa.drawn +
+      ' fall inside this map. Source: ' + pa.source;
   }
 
   // ---------- day + status ----------
@@ -190,8 +267,20 @@
 
   // ---------- boot ----------
   function boot() {
-    Promise.all([getJSON('/api/summary'), getJSON('/api/route')]).then(function (res) {
-      S.summary = res[0]; S.route = res[1]; B = S.summary.bounds;
+    S.paShow = true;
+    Promise.all([
+      getJSON('/api/summary'),
+      getJSON('/api/route'),
+      getJSON('/api/protected').catch(function () { return { available: false }; })
+    ]).then(function (res) {
+      S.summary = res[0]; S.route = res[1]; S.protected = res[2]; B = S.summary.bounds;
+
+      // Say what kind of data this is, before anything else is read.
+      var dm = S.summary.data_mode;
+      if (dm) {
+        $('mode-text').textContent = dm.mode + ' · ' + dm.window;
+        $('mode-badge').title = dm.means + ' ' + dm.live_capable;
+      }
 
       var sm = S.summary.summary['Bharati'], ap = S.summary.summary['Bharati approach (100 km N)'];
       $('t-closed').textContent = sm.days_closed; $('t-obs').textContent = sm.days_observed;
@@ -216,6 +305,9 @@
       });
       $('day').max = S.summary.dates.length - 1;
       $('day').addEventListener('input', function (e) { setDay(parseInt(e.target.value, 10)); });
+      $('pa-show').addEventListener('change', function (e) {
+        S.paShow = e.target.checked; drawVectors();
+      });
       $('qa-on').addEventListener('click', function () { setQA('on'); });
       $('qa-off').addEventListener('click', function () { setQA('off'); });
       document.addEventListener('keydown', function (e) {
@@ -228,6 +320,7 @@
       R.do_not_claim.forEach(function (c) { var li = document.createElement('li'); li.textContent = c; $('noclaims').appendChild(li); });
       $('claims-src').textContent = 'Source: ' + R.source;
 
+      renderProtected();
       sizeCanvas(); drawVectors(); setDay(0);
 
       // warm every day in both modes so the slider never waits on the network

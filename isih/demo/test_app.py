@@ -67,3 +67,45 @@ def test_day_outside_window_is_a_clean_404(client):
 
 def test_bad_qa_value_is_a_clean_400(client):
     assert client.get("/api/day/2019-12-01?qa=maybe").status_code == 400
+
+
+def test_protected_areas_endpoint_carries_the_regime(client):
+    """The constraint layer must expose the legal gate, not just geometry."""
+    r = client.get("/api/protected")
+    assert r.status_code == 200
+    pa = r.json()
+    assert pa["available"] is True
+    assert pa["counts"]["polygons"] == 33
+    # The finding that matters: nothing here restricts transit.
+    assert pa["counts"]["marine"] == 0
+    assert "none restricts the vessel" in pa["transit_finding"]
+    assert "Annex V" in pa["legal_basis"]
+
+
+def test_bharati_is_reported_inside_asma_6(client):
+    """A judge will check this one, because India co-proposed the area."""
+    ctx = client.get("/api/protected").json()["stations"]["Bharati"]
+    inside = [(a["kind"], a["number"]) for a in ctx["inside"]]
+    assert ("ASMA", "6") in inside
+    asma6 = next(a for a in ctx["inside"] if a["number"] == "6")
+    # ASMA entry needs no permit — getting this backwards would tell the
+    # captain he may not go where he is entitled to go.
+    assert asma6["entry_regime"] == "management_plan"
+    assert ctx["nearby"][0]["number"] == "174"
+    assert ctx["nearby"][0]["entry_regime"] == "permit_required"
+
+
+def test_summary_declares_the_data_mode(client):
+    """§27: replay must never be presentable as live."""
+    dm = client.get("/api/summary").json()["data_mode"]
+    assert dm["mode"] == "HISTORICAL REPLAY"
+    assert "2019" in dm["window"]
+    assert "not a live feed" in dm["means"].lower()
+
+
+def test_page_shows_the_mode_badge_and_the_area_card(client):
+    """The labels have to be in the served HTML, not only in the API."""
+    html = client.get("/").text
+    assert 'id="mode-badge"' in html
+    assert 'id="pa-card"' in html
+    assert 'id="pa-show"' in html

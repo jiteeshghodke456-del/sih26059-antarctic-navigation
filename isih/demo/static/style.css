@@ -137,3 +137,40 @@ details[open] summary .eyebrow::after { content: " ▾"; }
 .claims ul { margin: 0; padding-left: 18px; line-height: 1.5; }
 
 .foot { padding: 14px 28px 26px; }
+
+/* --- data mode + protected areas ---------------------------------------- */
+.head-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+
+/* The mode badge is deliberately the warmest colour on the page. A judge
+   must not be able to look at a moving ice map and assume it is live. */
+.mode {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #FDF1E3; color: var(--caution);
+  border: 1px solid #F0D6B4; border-radius: 4px;
+  padding: 3px 9px; font-size: 11px; font-weight: 750;
+  letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap;
+}
+.mode-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--caution); flex: none;
+}
+
+.pa-toggle { display: inline-flex; align-items: center; gap: 5px; margin-right: 12px; cursor: pointer; }
+.pa-toggle input { accent-color: var(--accent); }
+
+.pa-finding {
+  font-size: 12.5px; line-height: 1.45; color: var(--ink);
+  background: #EEF5F8; border-left: 3px solid var(--accent);
+  padding: 7px 9px; border-radius: 0 4px 4px 0; margin-bottom: 9px;
+}
+.pa-st { border-top: 1px solid var(--rule); padding: 7px 0; }
+.pa-st:first-of-type { border-top: 0; }
+.pa-st-name { font-weight: 700; font-size: 12.5px; }
+.pa-row { display: flex; gap: 7px; align-items: baseline; padding: 2px 0; font-size: 12px; }
+.pa-chip {
+  font-size: 10px; font-weight: 750; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 1px 6px; border-radius: 3px; flex: none;
+}
+.pa-chip.inside { background: #FBE9E7; color: var(--closed); }
+.pa-chip.near { background: #EEF2F5; color: var(--ink-2); }
+.pa-regime { color: var(--ink-2); font-size: 11.5px; }

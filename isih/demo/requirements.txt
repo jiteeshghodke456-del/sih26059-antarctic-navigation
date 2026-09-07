@@ -12,6 +12,12 @@ pyproj==3.7.2
 # daily-ice request fails with "backend not available".
 h5netcdf==1.8.1
 h5py==3.16.0
+# Build/test only — reads the Antarctic Treaty Secretariat shapefile in
+# isih/protected_areas.py. The demo itself never touches it: the corridor
+# extract is committed as isih/figures/protected_areas.json, so the running
+# app has no shapefile dependency and nothing new can fail in front of a judge.
+pyshp==2.3.1
+
 # tests
 pytest==9.1.1
 httpx==0.28.1

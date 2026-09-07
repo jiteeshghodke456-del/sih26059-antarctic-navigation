@@ -15,12 +15,17 @@ docs/v1_tiers.drawio, so that v1.drawio is one page like the original.
 
 Re-run after editing NODES/EDGES; do not hand-edit the XML.
 """
+from pathlib import Path
 from xml.sax.saxutils import escape
 
-BASE_DIR = ('/home/jiteesh/sih/SIH26059-antarctic-navigation/.claude/worktrees/'
-            'foamy-seeking-allen/docs/')
-OUT = BASE_DIR + 'v1.drawio'
-OUT_TIERS = BASE_DIR + 'v1_tiers.drawio'
+# Derived from this file's location, never hardcoded. This was an absolute
+# path into one particular worktree, so running the generator from any other
+# checkout silently rewrote a different repo's diagrams and left the local
+# ones stale — the same class of failure as the stale route_map.png in
+# docs/backlog.md.
+BASE_DIR = Path(__file__).resolve().parents[1] / "docs"
+OUT = str(BASE_DIR / "v1.drawio")
+OUT_TIERS = str(BASE_DIR / "v1_tiers.drawio")
 
 BASE = "rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;"
 S = {
@@ -174,7 +179,9 @@ TIERS = [
     ("s2", "note", "CMEMS sea-ice forecast", 330, 165, 245, 54),
     ("s3", "note", "USNIC iceberg positions", 590, 165, 245, 54),
     ("s4", "note", "ERA5 / GFS wind and waves", 850, 165, 245, 54),
-    ("s5", "note", "ASPA / ASMA protected areas<br>(static, ships once)", 1110, 165, 245, 54),
+    ("s5", "note", "ASPA / ASMA protected areas<br>"
+     f"{SM}Treaty Secretariat register &#8212; isih/protected_areas.py{E}",
+     1110, 165, 245, 54),
     ("s6", "note", "IBCSO / GEBCO bathymetry<br>(static, ships once)", 1370, 165, 245, 54),
     ("p1", "proc", "Quality control<br>isih/ice_quality.py", 70, 270, 290, 64),
     ("p2", "proc", "Train the U-Net<br>(GPU &#8212; never at sea)", 390, 270, 290, 64),
