@@ -92,7 +92,7 @@ COST → DATA REQUIREMENTS → ANTARCTIC RELEVANCE → RECOMMENDATION.
 | **Capability** | Earth-system foundation model. **Verified by file listing**, the repository contains exactly these checkpoints: `aurora-0.1-finetuned`, `aurora-0.25-pretrained`, `-12h-pretrained`, `-finetuned`, `-small-pretrained`, `-v1.5`, `-v1.5-ensemble`, **`aurora-0.25-wave`**, **`aurora-0.4-air-pollution`** |
 | **Evidence** | **There is no sea-ice checkpoint in the repository.** Tags cover atmospheric dynamics, atmospheric chemistry, ocean waves, tropical-cyclone tracking |
 | **Why it is interesting** | Its documented job — causal 6-hourly rollouts of surface wind and temperature — is precisely what our U-Net lacks, and it runs without fine-tuning |
-| **Limitations** | Polar-region skill not separately evidenced (`UNVERIFIED`). Parameter count and ERA5 training window, specifically whether 2020 is inside it, `UNVERIFIED` (settle in the paper) — this matters because our test slice would then be in its training data. 16 GB Turing has no native bf16; fp16/fp32 tolerance `UNVERIFIED` |
+| **Limitations** | **VERIFIED: 1.3 billion parameters, and its ERA5 pretraining slice spans 1979–2020 inclusive** (arXiv 2405.13063; 2021 onward was held out). **Our test year therefore sits inside Aurora's training window** — a generalisation contamination that must be disclosed or designed around by testing on a post-cutoff year. Also verified: no Aurora variant outputs sea-ice concentration; sea ice appears only as unbuilt future work. Polar-region skill not separately evidenced. 16 GB Turing has no native bf16; fp16/fp32 tolerance `UNVERIFIED` |
 | **License** | MIT — the cleanest of the nine |
 | **Antarctic relevance** | Indirect but real: forcing supplier, and `aurora-0.25-wave` is relevant to the Cape Town crossing, the roughest ocean on Earth |
 | **Recommendation** | **BENCHMARK-ONLY.** Benchmark as a forcing supplier **against free operational NWP**, and adopt only on evidence. See §2 — this is the decision that matters |
@@ -104,7 +104,7 @@ COST → DATA REQUIREMENTS → ANTARCTIC RELEVANCE → RECOMMENDATION.
 | **Evidence** | README states verbatim: *"This repository is a reproduction of the original Pangu-Weather paper."* **17 downloads total.** Original is Huawei Cloud, *Nature* 2023 |
 | **Limitations** | Unverifiable weights. A third-party reproduction gives no auditable skill claim |
 | **Supply chain** | Install instructions pull from `http://mirrors.onescience.ai:3141` with `--trusted-host` — **plain HTTP**. For a deployment aimed at a government research programme this is on its own a sufficient objection |
-| **License** | apache-2.0 *on the reproduction*. If the original weights are non-commercial (`UNVERIFIED` — check Huawei's licence), an Apache-2.0 label here is either a relicensing they cannot perform or a from-scratch retrain of unknown quality. Either reading argues against use |
+| **License** | apache-2.0 *on the reproduction*. **VERIFIED: the original Huawei weights are CC BY-NC-SA 4.0, and the official README states "The commercial use of these models is forbidden."** An Apache-2.0 label on a reproduction of non-commercial weights is therefore either a relicensing they cannot perform or a from-scratch retrain of unknown quality. Both readings argue against use |
 | **Recommendation** | **REJECT.** A citable Pangu means the original, at which point licence may bind — and Aurora already fills the role under MIT |
 
 ### 1.9 `OneScience-Group/SatMAE` — REJECT
@@ -148,12 +148,18 @@ Define the leak precisely: **an input channel valid at t+lead whose generation
 used observations from the interval (t, t+lead]**.
 
 - **Reanalysis valid at t+lead is a leak.** This is our known GLORYS12 issue.
-- **It would be a *worse* leak for temperature.** In ERA5 and MERRA-2, sea ice
-  is not forecast — it is **prescribed from satellite SIC as the lower boundary
-  condition** (`UNVERIFIED`, being checked against ECMWF and NASA GMAO
-  documentation). Two-metre temperature over the marginal ice zone is
-  therefore close to a deterministic function of the *observed* ice at that
-  date, given the large ice/water thermal contrast.
+- **It would be a *worse* leak for temperature. VERIFIED 2026-09-07.** In ERA5
+  and MERRA-2, sea ice is not forecast — it is **prescribed as the lower
+  boundary condition**. ECMWF's own ERA5 SST/SIC report (ERA Report Series 26,
+  Hirahara et al. 2016) states SST and SIC "are given as the lower boundary
+  condition", and names the source as **OSI-SAF** — reprocessed for Jan 1979
+  to Aug 2007, operational from **1 September 2007**. (Note: OSTIA is ERA5's
+  paired *SST* product for the later period; it is not the SIC source, though
+  its own ice field also derives from OSI-SAF.) MERRA-2 is likewise prescribed:
+  a CMIP-based product before 1982, Reynolds et al. (2007) from Jan 1982 to
+  Mar 2006, and OSTIA from Apr 2006. Two-metre temperature over the marginal
+  ice zone is therefore close to a deterministic function of the *observed*
+  ice at that date, given the ice/water thermal contrast.
 - **Therefore: adding "ERA5 wind and temperature at t+lead", exactly as
   `docs/ISIH_RESULTS.md` currently recommends, would add a second leak and
   make our results less defensible, not more.** Corrected below.
@@ -183,10 +189,19 @@ Gates in order, each cheap enough to abandon:
 
 ### 2.3 The physics upgrade worth more than any foundation model
 
-Do not feed raw wind — feed the **wind-advected first guess**. Free-drift ice
-moves at roughly 2% of the 10 m wind speed, deflected left of the wind in the
-Southern Hemisphere (Nansen rule; coefficient and turning angle `UNVERIFIED`
-pending Thorndike & Colony). Semi-Lagrangian advection of SIC(t) by that
+Do not feed raw wind — feed the **wind-advected first guess**. Under free
+drift, ice moves at roughly **2% of the near-surface (10 m) wind speed,
+turned 20–40° to the left of the wind in the Southern Hemisphere**.
+
+**Cite this correctly — an earlier draft of this document did not.** That
+2% / 20–40° figure is **Nansen's own (1902)** result from the *Fram*
+expedition, and refers to *near-surface* wind. **Thorndike & Colony (1982) is
+the wrong citation for it**: their regression uses *geostrophic* wind and
+gives materially smaller values, roughly 0.8–1.1% with a 5–18° turning angle —
+which are the numbers behind NSIDC's Polar Pathfinder constants. Quoting the
+Nansen magnitude against the Thorndike & Colony reference would be wrong on
+both the source and the wind level. (Both sets are reproduced in Brunette,
+Tremblay & Newton, *The Cryosphere* 16, 533–557, 2022.) Semi-Lagrangian advection of SIC(t) by that
 drift over [t, t+lead] is simultaneously **a stronger baseline our model must
 beat**, a better input channel than raw wind because it encodes physics the
 CNN would otherwise infer from ~1,000 days, and the way ice navigators
@@ -224,15 +239,36 @@ Why the absence is structurally unsurprising:
    not apply, and a ~2 M-parameter CNN saturates the available information.
    **This is an information-theoretic argument, not a compute-budget one** —
    and it is the argument to make.
-5. **Benchmarks.** No sea-ice task in the major EO or weather benchmarks
-   (`UNVERIFIED` for WeatherBench2's exact list), so no incentive.
+5. **Benchmarks.** **VERIFIED:** WeatherBench2 scores exactly eight headline
+   variables — Z500, T850, Q700, 850 hPa wind, T2M, WS10, MSLP and 24 h
+   precipitation. Sea ice appears nowhere as a scored task. No benchmark, no
+   incentive.
 
-**Prior art we must cite, currently `UNVERIFIED` and being checked:**
-**IceNet** (Andersson et al., *Nature Communications* 2021, British Antarctic
-Survey) — reported as a U-Net at 25 km. If confirmed, this is the strongest
-possible support for our architecture: the field's own choice for this target
-was a small purpose-built U-Net, not a foundation model. Also to check:
-SICNet, SIPN South (Antarctic community forecast exercise), AI4Arctic/AutoICE.
+**Prior art, VERIFIED 2026-09-07 — and it is the strongest support our
+architecture has.**
+
+**IceNet** (Andersson, Hosking, Pérez-Ortiz et al., *Nature Communications*
+12:5124, 2021; British Antarctic Survey with the Alan Turing Institute and
+UCL) is **an ensemble of U-Nets on a 25 km EASE2 grid**, pretrained on 2,220
+years of CMIP6 (1850–2100) plus satellite observations from 1979–2011. The
+field's own answer to this target was a small purpose-built U-Net at exactly
+our resolution — not a foundation model.
+
+Two precisions that must travel with the citation. IceNet's 2021 paper
+forecasts **monthly** means up to six months ahead and is **Arctic-only**; the
+later operational `icenet` package adds daily forecasts to two weeks and
+Antarctic support (evidenced in `icenet-sipn-south`, not in a second paper).
+And its native output is a per-pixel **Sea Ice Probability, P(SIC > 15%)** —
+so it is not a direct regression of continuous SIC the way ours is.
+
+Also verified: **SIPN South** is a real Antarctic community intercomparison of
+**seasonal (Dec–Feb)** forecasts, running since 2017 under YOPP-SH.
+**AI4Arctic/AutoICE** is a genuine labelled Sentinel-1 EW + AMSR2 + ERA5 +
+ice-chart dataset, but covers **only the Canadian and Greenlandic Arctic**.
+**WeatherBench2** scores exactly eight headline variables and **sea ice is not
+among them.** For the Antarctic SAR gap, say *"no published equivalent
+found"* — never *"none exists"*, which is a negative that cannot be closed by
+search.
 
 ---
 
