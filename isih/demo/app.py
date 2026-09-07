@@ -40,9 +40,27 @@ class ApprovalRequest(BaseModel):
 async def lifespan(_app: FastAPI):
     missing = data.preflight()
     if missing:
+        # The commonest cause is not a missing download. isih/data is a
+        # symlink, and in a worktree checkout it can point at a sibling
+        # worktree that has since been removed — so the archive disappears
+        # during an ordinary tidy-up rather than through anything the
+        # operator did to this directory. Name that, or the message sends
+        # someone to re-download 1096 files they already have.
+        link = data.NSIDC.parent
+        hint = ""
+        try:
+            if link.is_symlink() or not link.exists():
+                hint = (f" Note: {link} is a symlink to "
+                        f"{link.resolve(strict=False)}, which is "
+                        f"{'present' if link.exists() else 'MISSING'}. "
+                        f"If that path is another git worktree, the archive "
+                        f"goes away when the worktree is removed.")
+        except OSError:
+            pass
         raise RuntimeError(
-            f"Refusing to start: no NOAA/NSIDC file on disk for {missing}. "
-            f"Run isih/download_nsidc.py for those dates first.")
+            f"Refusing to start: no NOAA/NSIDC file on disk for {missing}."
+            f"{hint} Run isih/download_nsidc.py for those dates if the "
+            f"archive is genuinely absent.")
     t0 = time.time()
     for d in data.dates():
         data.day_field(d, True)
