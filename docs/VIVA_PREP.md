@@ -270,6 +270,76 @@ They're already scheduled — not aspirations.
 
 ---
 
+## When the system is wrong — which way, and why it matters
+
+**Q: What happens when your system is wrong? Which error is worse?**
+
+They are not symmetric, and we designed around the asymmetry rather than around
+accuracy.
+
+A **false negative** is calling an impassable cell passable — we route the ship
+into ice it cannot handle. In the Southern Ocean the consequence is besetting or
+hull damage, with no port of refuge, no nearby salvage and a search-and-rescue
+response measured in days. The nearest comparable case on a voyage serving the
+Indian programme, MV *Magdalena Oldendorff* in 2002, was beset near
+Novolazarevskaya for roughly five and a half months.
+
+A **false positive** is calling a passable cell impassable — the ship takes a
+detour it did not need. The cost is hours of steaming, fuel, and charter time
+that is expensive but recoverable.
+
+So the errors differ by orders of magnitude in consequence, and a system tuned
+for accuracy would trade them one-for-one. We deliberately do not.
+
+**The proof that this is a design principle and not a slogan is in our own
+numbers.** When we found the CDR was reporting suppressed coastal pixels as
+0.0 % ice and masked them, the coast got *heavier*: 46.8 % → 54.6 % on 1 Dec
+2019, 62.5 % → 65.4 % on 10 Dec (`docs/ISIH_RESULTS.md` §2). The fix moved the
+system toward more false positives and fewer false negatives, and it made our
+own headline result worse — four of the eight days Bharati looked reachable
+turned out to be that artifact. We shipped the more cautious reading anyway.
+That is the direction a safety system must fail in.
+
+**What we do not have, and will say so:** we have not measured a false-positive
+or false-negative *rate* against ground truth. The 80 % ice limit those errors
+are defined against is a working stand-in — it comes from no ice class and no
+POLARIS row, and `isih/ice_meshes.py` labels it as such in the code. Measuring
+the rates needs a passability ground truth we do not have; the honest interim
+is to be transparently conservative and to say which number is invented.
+
+---
+
+## Selling it, deploying it, and who pays
+
+**Q: How would this actually be deployed and sold?**
+
+**Deployment** is split by where the resources are, not by preference. The GPU
+work — training, ensemble inference, pack building — runs ashore at NCPOR. The
+ship carries a CPU-only laptop. Model weights, about 60 MB, never cross the
+satellite link; they load from a USB stick at Cape Town before departure, which
+is a supported path rather than a degraded one for a vessel that sails once a
+season. What crosses the link is a nightly voyage pack of changed cells only,
+targeted under 1 MB (ADR-023). Full detail in `docs/PPT_CONTENT.md` §6.
+
+**The pilot path** is NCPOR and the charter operator on the *Golovnin*, because
+that is where the credibility already is: the corridor, the vessel and the
+season are the ones we built against. From there the same product serves other
+national Antarctic programmes running similar-class hulls into similar coastal
+approaches — the problem is shared, the ship class is shared, and COMNAP is a
+small, well-connected buyer community.
+
+**What is actually sold** is a per-voyage decision pack subscription, not a
+box on the bridge. The system does not replace ECDIS and is not a navigation
+product; it sits beside it as decision support. That distinction is also what
+keeps the regulatory burden proportionate.
+
+**Say the hard part out loud:** this is a small, slow, relationship-driven
+institutional market with very few buyers, and if NCPOR declines there is no
+substitute customer for the second stage. It is in our backlog as the plan's
+single biggest point of failure, with no answer yet.
+
+---
+
 ## The 30-second version
 
 > Antarctic ships need to know where ice will be and where icebergs will drift.
