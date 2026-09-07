@@ -103,9 +103,31 @@ def test_summary_declares_the_data_mode(client):
     assert "not a live feed" in dm["means"].lower()
 
 
-def test_page_shows_the_mode_badge_and_the_area_card(client):
-    """The labels have to be in the served HTML, not only in the API."""
+def test_page_shows_the_mode_badge_and_the_decision_panels(client):
+    """The labels have to be in the served HTML, not only in the API.
+
+    The protected-area card became a note under the chart when the page was
+    rebuilt as a bridge console; what must survive is that the page still
+    declares its data mode and still has somewhere to render every part of
+    the decision.
+    """
     html = client.get("/").text
     assert 'id="mode-badge"' in html
-    assert 'id="pa-card"' in html
+    assert 'id="pa-note"' in html
+    for element in ("health-state", "cov-bar", "gate-list", "alt-list",
+                    "risk-list", "log-list", "approve-btn", "vessel-test",
+                    "health-diverge"):
+        assert f'id="{element}"' in html, f"{element} missing from the page"
+
+
+def test_page_loads_no_external_resources(client):
+    """The page claims to run offline; a web font would quietly break that."""
+    html = client.get("/").text
+    for scheme in ("http://", "https://", "//fonts."):
+        # The xmlns on the inline <svg> is a namespace identifier, not a fetch.
+        offenders = [
+            line for line in html.splitlines()
+            if scheme in line and "xmlns" not in line
+        ]
+        assert not offenders, f"external reference in the page: {offenders[:2]}"
     assert 'id="pa-show"' in html

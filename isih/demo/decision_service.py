@@ -31,6 +31,7 @@ from decision import (                              # noqa: E402
     Decision,
     Evidence,
     GateState,
+    gate_digest,
     health_from_gates,
     utc_now,
 )
@@ -214,27 +215,81 @@ def build(day: str | None = None) -> Decision:
 class DecisionLog:
     """Route versions and approvals for one session.
 
-    Approving does not mutate a decision in place: it appends a new version
-    that supersedes the previous one, so the history §4 requires is intact.
+    The evaluation is per-day and always fresh; the log holds what a human
+    approved. Keeping them apart is what lets the system answer the question
+    §48A.13 actually asks — has a meaningful assumption changed since the
+    plan was approved? — rather than merely "is there new data".
+
+    Approving never mutates a decision in place. It appends a version that
+    supersedes the previous one, because §4 forbids silently replacing an
+    approved plan.
     """
 
     def __init__(self) -> None:
         self._entries: list[dict[str, Any]] = []
 
-    def current(self, day: str | None = None) -> dict[str, Any]:
-        if not self._entries:
-            self._entries.append(build(day).as_dict())
-        return self._entries[-1]
+    def _last_approved(self) -> dict[str, Any] | None:
+        for e in reversed(self._entries):
+            if e["approval"]["approved"]:
+                return e
+        return None
 
-    def approve(self, by: str, note: str = "") -> dict[str, Any]:
-        prev = self.current()
+    def current(self, day: str | None = None) -> dict[str, Any]:
+        """Evaluate for `day`, and say how it stands against the approval.
+
+        Re-evaluating on identical evidence produces an identical gate
+        digest and therefore no divergence, which is the distinction
+        §48A.13 demands between an assumption changing and data arriving.
+        """
+        dec = build(day)
+        doc = dec.as_dict()
+        doc["gate_digest"] = gate_digest(dec.gates)
+
+        approved = self._last_approved()
+        if approved is None:
+            doc["approved_version"] = None
+            doc["diverges_from_approval"] = False
+            doc["divergence"] = None
+            return doc
+
+        doc["approved_version"] = {
+            "decision_id": approved["decision_id"],
+            "route_version": approved["route_version"],
+            "health": approved["health"],
+            "by": approved["approval"]["by"],
+            "at": approved["approval"]["at"],
+            "day": approved["environmental_state"].get("ice_date"),
+        }
+        same = approved.get("gate_digest") == doc["gate_digest"]
+        doc["diverges_from_approval"] = not same
+        if same:
+            doc["divergence"] = None
+        else:
+            was = {g["gate"]: g["state"] for g in approved["gates"]}
+            now = {g["gate"]: g["state"] for g in doc["gates"]}
+            flipped = [
+                f"{k}: {was[k]} to {now[k]}" for k in now
+                if was.get(k) != now[k]
+            ]
+            doc["divergence"] = (
+                "The evidence has moved since this plan was approved on "
+                f"{approved['environmental_state'].get('ice_date')} — "
+                + ("; ".join(flipped) if flipped else "gate reasons changed")
+            )
+        return doc
+
+    def approve(self, by: str, note: str = "", day: str | None = None) -> dict[str, Any]:
+        prev = self.current(day)
         nxt = json.loads(json.dumps(prev))
-        nxt["route_version"] = prev["route_version"] + 1
-        nxt["decision_id"] = f"{prev['decision_id']}-v{nxt['route_version']}"
-        nxt["supersedes"] = prev["decision_id"]
+        version = (self._entries[-1]["route_version"] + 1) if self._entries else 1
+        nxt["route_version"] = version
+        nxt["decision_id"] = f"{prev['decision_id']}-v{version}"
+        nxt["supersedes"] = self._entries[-1]["decision_id"] if self._entries else None
         nxt["time"] = utc_now()
         nxt["approval"] = {"approved": True, "by": by, "at": utc_now(),
                            "note": note or None}
+        nxt["diverges_from_approval"] = False
+        nxt["divergence"] = None
         self._entries.append(nxt)
         return nxt
 
@@ -249,6 +304,7 @@ class DecisionLog:
                 "top_reasons": e.get("top_reasons", []),
                 "approval": e["approval"],
                 "supersedes": e.get("supersedes"),
+                "day": e["environmental_state"].get("ice_date"),
             }
             for e in reversed(self._entries)
         ]

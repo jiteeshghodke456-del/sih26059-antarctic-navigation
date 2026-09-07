@@ -33,6 +33,7 @@ class ApprovalRequest(BaseModel):
 
     by: str = Field(min_length=1, max_length=120)
     note: str | None = Field(default=None, max_length=500)
+    day: str | None = None
 
 
 @asynccontextmanager
@@ -119,7 +120,7 @@ def approve(body: ApprovalRequest):
     """
     if not body.by.strip():
         raise HTTPException(400, "an approval must record who gave it")
-    return decision_service.LOG.approve(by=body.by.strip(), note=body.note or "")
+    return decision_service.LOG.approve(by=body.by.strip(), note=body.note or "", day=body.day)
 
 
 @app.get("/api/decisions")
