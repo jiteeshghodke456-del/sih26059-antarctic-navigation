@@ -35,6 +35,7 @@ async def lifespan(_app: FastAPI):
         data.day_field(d, False)
     data.route()
     data.cells()
+    data.protected()
     print(f"[demo] {len(data.dates())} days x 2 QA modes warmed in "
           f"{time.time() - t0:.1f}s — ready", flush=True)
     yield
@@ -74,3 +75,9 @@ def day(d: str, qa: str = "on"):
 
 
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
+
+
+@app.get("/api/protected")
+def protected():
+    """ASPA/ASMA constraint layer. Optional: absent extract degrades, not fails."""
+    return data.protected()
