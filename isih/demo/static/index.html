@@ -17,13 +17,44 @@
       &nbsp;|&nbsp; December 2019 resupply window</p>
   </div>
   <div class="badges">
+    <span class="badge wf" id="wf-mode">ROUTE PLANNING</span>
     <span class="badge mode" id="mode-badge"><b id="mode-text">—</b></span>
     <span class="badge offline">Runs offline. No map tiles, no fonts, no internet.</span>
   </div>
 </header>
 
+<!-- Who is on watch. Identity, not access control — an approval has to be
+     attributable to a person, and that is the whole purpose of this screen. -->
+<section class="signin" id="signin-screen">
+  <div class="signin-card">
+    <h2>Who is on watch</h2>
+    <p class="note">Every approval has to be attributable to a person. This
+      records who is on watch; it is identity, not access control, and there is
+      no user store behind it.</p>
+    <div class="approw">
+      <input id="signin-name" type="text" placeholder="Name and rank" autocomplete="off">
+      <button id="signin-btn" data-primary data-action="sign-in">Take the watch</button>
+    </div>
+    <p class="approve-state" id="signin-state"></p>
+  </div>
+</section>
+
+<!-- Where we are in the passage workflow (§4). -->
+<nav class="passage" id="passage-bar" hidden>
+  <div class="passage-now">
+    <span class="hlabel">Step <b id="wf-step">—</b> of <b id="wf-count">9</b></span>
+    <strong id="wf-title">—</strong>
+    <span class="muted small" id="wf-asks"></span>
+  </div>
+  <ol class="passage-steps" id="wf-steps"></ol>
+  <div class="passage-who">
+    <span id="wf-watch" class="muted small"></span>
+    <button id="wf-cc" class="linkish" data-action="command-center">Command centre</button>
+  </div>
+</nav>
+
 <!-- The hero: route health, and how much of the decision we can actually see. -->
-<section class="health" id="health-band">
+<section class="health" id="health-band" hidden>
   <div class="health-state">
     <span class="hlabel">Route health</span>
     <strong id="health-state">—</strong>
@@ -70,6 +101,7 @@
         <span class="hlabel">Day</span>
         <strong id="day-label">—</strong>
         <span class="muted" id="day-count"></span>
+        <span class="day-role" id="day-role"></span>
       </div>
       <input type="range" id="day" min="0" value="0" step="1" aria-label="day of the window">
       <div id="strip" class="strip"></div>
@@ -89,7 +121,9 @@
     <p class="src pa-note" id="pa-note"></p>
   </section>
 
-  <div class="subgrid">
+  <section class="panel stage" id="stage-panel" hidden></section>
+
+  <div class="subgrid" id="assessment-subgrid" hidden>
     <section class="panel">
       <div class="phead">
         <h2>Four kinds of risk</h2>
@@ -107,7 +141,7 @@
     </section>
   </div>
 
-  <section class="panel">
+  <section class="panel" id="log-panel" hidden>
     <div class="phead">
       <h2>Decision log</h2>
       <p class="src">What changed, who approved it, when.</p>
@@ -120,7 +154,14 @@
   <!-- ============ right rail ============ -->
   <div class="rail">
 
-    <section class="panel">
+    <section class="panel" id="rail-voyage" hidden>
+      <div class="phead"><h2>Voyage so far</h2></div>
+      <dl class="kv" id="voyage-facts"></dl>
+      <p class="note">Filled in as the passage plan is built. Nothing here is
+        assessed until the route has been reviewed.</p>
+    </section>
+
+    <section class="panel" id="rail-ship" hidden>
       <div class="phead"><h2>Own ship</h2></div>
       <dl class="kv" id="own-ship">
         <dt>Position</dt><dd id="v-pos">—</dd>
@@ -144,7 +185,7 @@
         certificated figure.</p>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="rail-gates" hidden>
       <div class="phead">
         <h2>Decision gates</h2>
         <p class="src">Nine gates, §12. A gate we cannot evaluate is not a pass.</p>
@@ -152,7 +193,7 @@
       <ul class="gates" id="gate-list"></ul>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="rail-alts" hidden>
       <div class="phead">
         <h2>Alternative corridors</h2>
         <p class="src" id="alt-src">—</p>
@@ -160,7 +201,7 @@
       <ul class="alts" id="alt-list"></ul>
     </section>
 
-    <section class="panel approve">
+    <section class="panel approve" id="rail-approve" hidden>
       <div class="phead"><h2>Master's approval</h2></div>
       <p class="note">A route is not approved until a named person approves it. Approving
         adds a version; it never overwrites the previous plan.</p>
@@ -171,7 +212,7 @@
       <p class="approve-state" id="approve-state">Not approved.</p>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="rail-fresh" hidden>
       <div class="phead"><h2>Where the numbers come from</h2></div>
       <dl class="kv" id="freshness"></dl>
       <p class="src" id="f-route">—</p>
@@ -216,5 +257,6 @@
 </main>
 
 <script src="/static/app.js"></script>
+<script src="/static/workflow.js"></script>
 </body>
 </html>

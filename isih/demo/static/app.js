@@ -9,7 +9,18 @@
   'use strict';
 
   var S = { summary: null, route: null, decision: null, dayIdx: 0, qa: 'on',
-            cache: new Map(), field: null, paShow: true };
+            cache: new Map(), field: null, paShow: true,
+            // departIdx is the slider index the voyage departs on. Elapsed
+            // time is measured from it, not from the start of the window —
+            // otherwise a voyage departing on the 5th shows the ship already
+            // at sea on the 1st.
+            departIdx: 0, showAssessment: true, lastDigest: null };
+
+  // Which vector layers may draw. The workflow gates these per stage so a
+  // route cannot appear before it has been solved, and the ship cannot appear
+  // before the voyage is under way.
+  var Layers = { route: true, straightLine: true, stations: true,
+                 protectedAreas: true, ship: true, waypoints: false };
   var $ = function (id) { return document.getElementById(id); };
 
   // ---------- errors are shown, never swallowed ----------
@@ -154,19 +165,32 @@
   function drawVectors() {
     while (svg.firstChild) { svg.removeChild(svg.firstChild); }
     if (!S.route || !S.summary) { return; }
-    drawProtected();
+    if (Layers.protectedAreas) { drawProtected(); } else { paMarked = 0; }
     var st = {}; S.summary.stations.forEach(function (s) { st[s.role] = s; });
     var a = px(st.start.lon, st.start.lat), b = px(st.destination.lon, st.destination.lat);
 
     // straight line — why routing is needed at all, not a competing method
-    svg.appendChild(el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1],
-      stroke: '#C97B1E', 'stroke-width': 1.6, 'stroke-dasharray': '6 5', opacity: 0.9 }));
+    if (Layers.straightLine) {
+      svg.appendChild(el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1],
+        stroke: '#C97B1E', 'stroke-width': 1.6, 'stroke-dasharray': '6 5', opacity: 0.9 }));
+    }
 
-    var d = S.route.coords.map(function (c, i) {
-      var p = px(c[0], c[1]); return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
-    }).join(' ');
-    svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#FFFFFF', 'stroke-width': 5.5, 'stroke-linejoin': 'round', opacity: 0.85 }));
-    svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#0E7A4A', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
+    if (Layers.route) {
+      var d = S.route.coords.map(function (c, i) {
+        var p = px(c[0], c[1]); return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
+      }).join(' ');
+      svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#FFFFFF', 'stroke-width': 5.5, 'stroke-linejoin': 'round', opacity: 0.85 }));
+      svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#0E7A4A', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
+
+      if (Layers.waypoints) {
+        S.route.coords.forEach(function (c, i) {
+          if (i % 5 && i !== S.route.coords.length - 1) { return; }
+          var q = px(c[0], c[1]);
+          svg.appendChild(el('circle', { cx: q[0].toFixed(1), cy: q[1].toFixed(1), r: 2.6,
+            fill: '#FFFFFF', stroke: '#0E7A4A', 'stroke-width': 1.4 }));
+        });
+      }
+    }
 
     function marker(s, dy, anchor) {
       var p = px(s.lon, s.lat);
@@ -177,9 +201,11 @@
         'text-anchor': anchor, 'font-size': hollow ? 10 : 12, 'font-weight': hollow ? 500 : 700,
         fill: '#12303D', 'paint-order': 'stroke', stroke: '#FFFFFF', 'stroke-width': 3 }, label));
     }
-    marker(st.start, 4, 'start');
-    marker(st.destination, 4, 'end');
-    marker(st.approach, -8, 'end');
+    if (Layers.stations) {
+      marker(st.start, 4, 'start');
+      marker(st.destination, 4, 'end');
+      marker(st.approach, -8, 'end');
+    }
     drawShip();
 
     updatePaNote();
@@ -205,6 +231,7 @@
   // index maps to a position by interpolating between the two waypoints that
   // bracket it. This is a computed position, not a fix, and the card says so.
   function shipAt(elapsedDays) {
+    if (elapsedDays < 0) { return null; }        // has not sailed yet
     var r = S.route;
     if (!r || !r.traveltime_cumulative || r.traveltime_cumulative.length < 2) { return null; }
     var t = r.traveltime_cumulative, c = r.coords;
@@ -237,28 +264,45 @@
   function fmtPos(lat, lon) {
     function part(v, pos, neg) {
       var d = Math.abs(v), deg = Math.floor(d), min = (d - deg) * 60;
-      return deg + '\u00b0' + min.toFixed(1) + "'" + (v >= 0 ? pos : neg);
+      // Round the minutes FIRST, then carry. Formatting 59.98' as "60.0'"
+      // produces 54°60.0'S, which is not a position — and it is exactly the
+      // kind of thing a mariner spots before anything else on the screen.
+      min = Math.round(min * 10) / 10;
+      if (min >= 60) { min -= 60; deg += 1; }
+      var mm = min.toFixed(1);
+      if (min < 10) { mm = '0' + mm; }
+      return deg + '\u00b0' + mm + "'" + (v >= 0 ? pos : neg);
     }
     return part(lat, 'N', 'S') + ' ' + part(lon, 'E', 'W');
   }
 
   function renderOwnShip(idx) {
-    var s = shipAt(idx);
-    if (!s) { return; }
+    var s = shipAt(idx - S.departIdx);
+    if (!s) {
+      txt('v-pos', 'not yet departed');
+      txt('v-cogsog', '—'); txt('v-wp', '—'); txt('v-xte', '—');
+      txt('v-state', S.decision ? S.decision.health : '—');
+      return;
+    }
     txt('v-pos', fmtPos(s.lat, s.lon));
     txt('v-cogsog', s.arrived ? 'alongside'
       : Math.round(s.cog) + '\u00b0 / ' + s.sog.toFixed(1) + ' kn');
     txt('v-wp', s.arrived ? 'arrived'
       : s.leg + ' of ' + (S.route.coords.length - 1));
     var total = S.route.total_traveltime_days;
-    var eta = new Date(Date.UTC(2019, 11, 1) + total * 86400000);
+    // ETA is departure + transit, not window-start + transit. Hardcoding the
+    // first of the month put the arrival in the wrong place for every voyage
+    // that did not depart on day one.
+    var departISO = S.summary.dates[S.departIdx];
+    var eta = new Date(Date.parse(departISO + 'T00:00:00Z') + total * 86400000);
     txt('v-eta', eta.getUTCDate() + ' Dec 2019 (day ' + total.toFixed(2) + ')');
     txt('v-xte', '0.0 nm \u2014 on the planned track by construction');
     txt('v-state', S.decision ? S.decision.health : '\u2014');
   }
 
   function drawShip() {
-    var s = shipAt(S.dayIdx);
+    if (!Layers.ship) { return; }
+    var s = shipAt(S.dayIdx - S.departIdx);
     if (!s) { return; }
     var p = px(s.lon, s.lat);
     // A heading triangle, which is what a bridge display uses — a dot would
@@ -421,7 +465,16 @@
   }
 
   function renderDecision(dec) {
+    // Re-rendering nine gates and three corridors on every slider tick is
+    // wasted work; nothing below changes unless the gates, the standing
+    // approval or the divergence do.
+    var digest = [dec.gate_digest,
+                  dec.approved_version && dec.approved_version.route_version,
+                  dec.diverges_from_approval].join('|');
+    var unchanged = digest === S.lastDigest;
+    S.lastDigest = digest;
     S.decision = dec;
+    if (unchanged) { renderOwnShip(S.dayIdx); return; }
     renderHealth(dec);
     renderGates(dec);
     renderAlternatives(dec);
@@ -542,7 +595,7 @@
       txt('f-ice', f.source + ' · ' + f.n_known.toLocaleString() + ' cells' +
         (f.qa ? ', ' + f.n_unknown.toLocaleString() + ' marked unknown by QA'
               : ', ' + f.n_exact_zero.toLocaleString() + ' read exactly 0 %'));
-      if (S.booted) { loadDecision(S.summary.dates[idx]); }
+      if (S.booted && S.showAssessment) { loadDecision(S.summary.dates[idx]); }
     }).catch(function (e) { fail(e.message); });
   }
 
@@ -613,7 +666,8 @@
       $('qa-on').addEventListener('click', function () { setQA('on'); });
       $('qa-off').addEventListener('click', function () { setQA('off'); });
       document.addEventListener('keydown', function (e) {
-        if (e.target.tagName === 'INPUT' && e.target.type === 'text') { return; }
+        var t = e.target.tagName;
+        if (t === 'INPUT' || t === 'SELECT' || t === 'TEXTAREA') { return; }
         if (e.key === 'ArrowRight') { setDay(Math.min(S.dayIdx + 1, S.summary.dates.length - 1)); }
         if (e.key === 'ArrowLeft')  { setDay(Math.max(S.dayIdx - 1, 0)); }
       });
@@ -661,6 +715,29 @@
       (function next() { var j = q.shift(); if (!j) { return; } loadField(j[0], j[1]).then(next, next); })();
     }).catch(function (e) { fail(e.message); });
   }
+
+  // The console's public surface. workflow.js drives the chart through this
+  // and never touches S, so there is exactly one owner of console state.
+  window.ISIH = window.ISIH || {};
+  window.ISIH.console = {
+    setDay: setDay,
+    currentDate: function () { return S.summary ? S.summary.dates[S.dayIdx] : null; },
+    dates: function () { return S.summary ? S.summary.dates : []; },
+    dayIndexOf: function (iso) { return S.summary ? S.summary.dates.indexOf(iso) : -1; },
+    setDepartIndex: function (i) {
+      S.departIdx = Math.max(0, i | 0);
+      renderOwnShip(S.dayIdx); drawVectors();
+    },
+    setLayers: function (partial) {
+      Object.keys(partial || {}).forEach(function (k) { Layers[k] = !!partial[k]; });
+      drawVectors();
+    },
+    setShowAssessment: function (on) { S.showAssessment = !!on; },
+    setDayLabel: function (text) { txt('day-role', text || ''); },
+    loadDecision: function (day) { return loadDecision(day); },
+    decision: function () { return S.decision; },
+    h: { txt: txt, elDiv: elDiv, fmtPos: fmtPos, longDate: longDate }
+  };
 
   new ResizeObserver(function () { sizeCanvas(); drawVectors(); drawIce(S.field); }).observe(wrap);
   boot();

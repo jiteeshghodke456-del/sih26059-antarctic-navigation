@@ -38,6 +38,12 @@
 
 * { box-sizing: border-box; }
 
+/* The UA's [hidden] rule loses to any author rule that sets display, and
+   several here do (.health is a grid, .passage a flex, .grid a grid). Without
+   this the workflow's gating silently does nothing and the whole console
+   shows behind the sign-in screen. */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   background: var(--deck);
@@ -345,3 +351,107 @@ summary:focus-visible, [tabindex]:focus-visible {
   border-left: 3px solid var(--degraded); padding-left: 9px;
 }
 .vt-warn { margin-top: 7px; font-size: 11.5px; color: var(--critical); }
+
+/* ---------------- the §4 passage workflow ---------------- */
+
+/* Sign-in. Full screen because there is nothing worth looking at before
+   somebody is on watch, and because an approval must be attributable. */
+.signin {
+  min-height: 78vh; display: grid; place-items: center; padding: 24px;
+}
+.signin-card {
+  background: var(--panel); border: 1px solid var(--rule); border-radius: 2px;
+  padding: 26px 28px; max-width: 470px; width: 100%;
+}
+.signin-card h2 { font-size: 18px; margin-bottom: 8px; }
+.signin-card .approw { margin-top: 14px; }
+
+/* Where we are in the passage. Nine marks, not a progress percentage —
+   the steps are named things a mariner does, not a loading bar. */
+.passage {
+  display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center;
+  justify-content: space-between;
+  padding: 9px 20px; background: var(--panel);
+  border-bottom: 1px solid var(--rule);
+}
+.passage-now { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.passage-now .hlabel { margin: 0; }
+.passage-now strong { font-size: 14.5px; }
+.passage-steps {
+  display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; flex: 1;
+  min-width: 160px; max-width: 320px;
+}
+.passage-steps li {
+  flex: 1; height: 5px; border-radius: 1px;
+  background: var(--unknown-bg); border: 1px solid var(--rule);
+}
+.passage-steps li.done { background: var(--sea); border-color: var(--sea); }
+.passage-steps li.now  { background: var(--degraded); border-color: var(--degraded); }
+.passage-who { display: flex; align-items: center; gap: 12px; }
+
+.badge.wf { border-color: #9fb3c4; background: #eef3f7; color: #1d4e6b; font-weight: 650; }
+
+.linkish {
+  font: inherit; font-size: 12.5px; background: none; border: 0; padding: 0;
+  color: var(--sea); text-decoration: underline; cursor: pointer;
+}
+
+/* The stage panel sits under the chart: chart above, "what do I do now"
+   below, facts to the right. The eye never has to hunt. */
+.panel.stage { border-left: 3px solid var(--sea); }
+.panel.stage .field {
+  display: grid; grid-template-columns: 150px 1fr; gap: 8px 12px;
+  align-items: center; margin-bottom: 8px;
+}
+.panel.stage .field label { font-size: 12.5px; color: var(--ink-2); }
+.panel.stage input[type="text"],
+.panel.stage input[type="number"],
+.panel.stage select {
+  font: inherit; font-size: 12.5px; padding: 6px 9px; width: 100%;
+  border: 1px solid var(--rule); border-radius: 2px;
+  background: var(--panel); color: var(--ink);
+}
+.panel.stage .approw button {
+  font: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 16px;
+  cursor: pointer; background: var(--sea); color: #fff;
+  border: 1px solid var(--sea); border-radius: 2px; white-space: nowrap;
+}
+
+/* A choice with its consequence attached. The consequence is the point:
+   mission policy changes route health on 23 of 31 days. */
+.choice {
+  display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
+  padding: 9px 0; border-top: 1px solid var(--rule-soft);
+}
+.choice.static { cursor: default; }
+.choice.disabled { opacity: 0.55; }
+.choice input { margin-top: 3px; }
+.choice b { display: block; font-size: 12.5px; }
+.choice-why { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+
+.wp-scroll { max-height: 260px; overflow-y: auto; border: 1px solid var(--rule-soft); }
+.wp-scroll .vt th { position: sticky; top: 0; background: var(--panel); }
+
+.day-role {
+  font-size: 11px; color: var(--sea); border: 1px solid #b8cbd8;
+  background: #eef3f7; border-radius: 2px; padding: 1px 7px;
+}
+
+/* Magenta again, and still only for "the plan is not safe as approved". */
+.headsup {
+  display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+  border-left: 3px solid var(--critical); padding: 8px 0 8px 10px;
+  margin-bottom: 10px; font-size: 12.5px;
+}
+.headsup b { color: var(--critical); }
+
+.preview { margin: 10px 0; }
+.choices3 { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.choices3 button {
+  font: inherit; font-size: 12.5px; font-weight: 600; padding: 7px 15px;
+  cursor: pointer; border-radius: 2px;
+  background: var(--panel); color: var(--ink); border: 1px solid var(--rule);
+}
+.choices3 button[data-primary] {
+  background: var(--sea); color: #fff; border-color: var(--sea);
+}
