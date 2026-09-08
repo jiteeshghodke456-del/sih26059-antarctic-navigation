@@ -65,8 +65,31 @@ class BergField:
 
         n_src = len(_SOURCES)
         src_idx = integers(s, "src", 0, n_src, n_bergs)
-        lon0 = np.array([_SOURCES[i][0] for i in src_idx]) + 3.4 * normal(s, "lon", n_bergs)
-        lat0 = np.array([_SOURCES[i][1] for i in src_idx]) + 1.3 * normal(s, "lat", n_bergs)
+        lon0 = np.array([_SOURCES[i][0] for i in src_idx]) + 5.5 * normal(s, "lon", n_bergs)
+        lat0 = np.array([_SOURCES[i][1] for i in src_idx]) + 1.4 * normal(s, "lat", n_bergs)
+
+        # Seeding every berg at its calving shelf put all 26 against the coast
+        # between 73 S and 64 S, with none north of 60 S - so the chart showed a
+        # line of bergs along the bottom and none anywhere near the corridor the
+        # ship actually sails. Real bergs leave the coast: the Weddell and East
+        # Antarctic outflows carry them north past 55 S and into the shipping
+        # lanes, which is the entire reason a berg is a navigational hazard
+        # rather than a coastal curiosity.
+        #
+        # So roughly half are given an along-drift head start - as if they
+        # calved earlier in the season and have been travelling since. The
+        # amount is drawn per berg, not applied uniformly, so the population
+        # spreads across the corridor instead of forming a second line.
+        age = uniform(s, "age", n_bergs)
+        drifted = age > 0.45
+        head_start = np.where(drifted, 2.0 + 9.0 * age, 0.0)     # degrees north
+        lat0 = lat0 + head_start
+        # Carried east with the ACC while drifting north.
+        lon0 = lon0 + np.where(drifted, 3.0 + 11.0 * uniform(s, "east", n_bergs), 0.0)
+        # Keep the population inside the charted domain. A berg drawn off the
+        # edge is not a hazard anyone can act on.
+        lon0 = np.clip(lon0, 11.0, 85.0)
+        lat0 = np.clip(lat0, -73.5, -52.0)
         self.source = [_SOURCES[i][2] for i in src_idx]
 
         # Major axis: log-normal, so a few giants and many small ones - which is

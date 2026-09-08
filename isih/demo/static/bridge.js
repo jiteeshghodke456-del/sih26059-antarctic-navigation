@@ -327,11 +327,31 @@ function drawTrack(c, ch, legs, colour, width, dash) {
   c.setLineDash([]);
 }
 
+/* Wind and current are marine fields. Drawing them across Antarctica and the
+   Cape is the kind of error a mariner spots before anything else on the chart,
+   so every vector is tested against the coastline rings first. Ray casting over
+   ~400 points and 16 rings costs nothing at this scale. */
+function pointInRing(lon, lat, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+    if ((yi > lat) !== (yj > lat) &&
+        lon < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+function overLand(lon, lat) {
+  if (!S.coast || !S.coast.land) return false;
+  for (const ring of S.coast.land) if (pointInRing(lon, lat, ring)) return true;
+  return false;
+}
+
 function drawBarbs(c, ch, items, colour, scale, arrow) {
   c.strokeStyle = colour; c.lineWidth = 1;
   for (const it of items) {
     const sp = Math.hypot(it.u, it.v);
     if (sp < 0.05) continue;
+    if (overLand(it.lon, it.lat)) continue;
     const [x, y] = ch.px(it.lat, it.lon);
     const L = Math.min(22, sp * scale);
     const ux = it.u / sp, uy = -it.v / sp;      // screen y is inverted
@@ -470,6 +490,11 @@ function renderRail() {
   const cov = el('div', 'covbar');
   gl.forEach(g => { const i = el('i'); i.dataset.s = g.s; cov.appendChild(i); });
   band.appendChild(cov);
+  // Why the state is what it is. Without this the operator reads DEGRADED as a
+  // fault rather than as the system declining to certify what it cannot see.
+  const unk = gl.filter(g => g.s === 'UNKNOWN').length;
+  band.appendChild(el('div', 'rule',
+    `${gl.length - unk} of ${gl.length} gates have data · UNKNOWN never passes, and caps health at DEGRADED`));
   rail.appendChild(band);
 
   // alerts
@@ -949,13 +974,16 @@ function secondary(foot, label, fn) {
 /* ---------- refresh -------------------------------------------------------- */
 
 let busy = false;
-async function refresh() {
+async function refresh(fast = false) {
   if (busy) return;
   busy = true;
+  // Playback asks for a coarser field: the chart draws it as cells, and at
+  // playback speed nobody is reading individual cells anyway.
+  const nx = fast ? 96 : 176, ny = fast ? 80 : 150;
   try {
     const [st, fld, bg, tf, wn, al, tl] = await Promise.all([
       api(`/api/v2/state?t=${S.t}`),
-      api(`/api/v2/field?t=${S.t}&var=sic&nx=176&ny=150`),
+      api(`/api/v2/field?t=${S.t}&var=sic&nx=${nx}&ny=${ny}`),
       api(`/api/v2/bergs?t=${S.t}`),
       api(`/api/v2/traffic?t=${S.t}`),
       api(`/api/v2/warnings?t=${S.t}`),
@@ -1010,18 +1038,50 @@ async function boot() {
   slider.addEventListener('change', () => { S.t = Number(slider.value) / 24; refresh(); });
   $('t-back').addEventListener('click', () => { slider.value = String(Math.max(0, Number(slider.value) - 6)); slider.dispatchEvent(new Event('change')); });
   $('t-fwd').addEventListener('click', () => { slider.value = String(Math.min(Number(slider.max), Number(slider.value) + 6)); slider.dispatchEvent(new Event('change')); });
-  $('t-play').addEventListener('click', () => {
-    S.playing = !S.playing;
-    $('t-play').textContent = S.playing ? '❚❚' : '▶';
-    const tick = async () => {
+  // Playback. The first version stalled: every tick did a full refresh - seven
+  // API calls and a 176x150 field, well over a second - while the `busy` guard
+  // silently dropped the overlapping ticks, so the clock crawled and the button
+  // looked dead. Playback now runs a single self-scheduling loop that awaits
+  // its own frame and asks for a coarse field, and the static layers are left
+  // alone because they do not change with time.
+  let playTimer = null;
+  const stopPlay = () => {
+    S.playing = false;
+    if (playTimer) { clearTimeout(playTimer); playTimer = null; }
+    $('t-play').textContent = '\u25B6';
+    $('t-play').title = 'Play';
+  };
+  $('t-play').addEventListener('click', async () => {
+    if (S.playing) { stopPlay(); refresh(); return; }
+    S.playing = true;
+    $('t-play').textContent = '\u275A\u275A';
+    $('t-play').title = 'Pause';
+    const step = async () => {
       if (!S.playing) return;
-      slider.value = String((Number(slider.value) + 3) % Number(slider.max));
-      S.t = Number(slider.value) / 24;
-      await refresh();
-      setTimeout(tick, 420);
+      const next = (Number(slider.value) + 6) % (Number(slider.max) + 1);
+      slider.value = String(next);
+      S.t = next / 24;
+      try {
+        await refresh(true);
+      } catch (e) {
+        console.error(e); stopPlay(); return;
+      }
+      if (S.playing) playTimer = setTimeout(step, 120);
     };
-    tick();
+    step();
   });
+  // The timebar is a child of .chartwrap, and the chart's own pointerdown
+  // handler calls setPointerCapture to start a pan. That captured the pointer
+  // away from these controls, which is why the play button appeared dead: the
+  // click landed, the handler ran, and the chart then swallowed the rest of the
+  // interaction. Stop chart-panning events at the timebar itself.
+  const timebar = document.querySelector('.timebar');
+  for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'wheel']) {
+    timebar.addEventListener(ev, e => e.stopPropagation());
+  }
+  // Dragging the slider pauses playback - but only a real drag, not the click
+  // that started it.
+  slider.addEventListener('pointerdown', () => { if (S.playing) stopPlay(); });
 
   // sign-in
   $('signin-form').addEventListener('submit', async e => {
