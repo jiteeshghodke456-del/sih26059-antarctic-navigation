@@ -44,6 +44,8 @@ export const PROVENANCE = {
   'panel.bergs':      ['synthetic', 'tracked bergs and their predicted separation'],
   'panel.ship':       ['synthetic', 'computed track position'],
   'panel.timeline':   ['synthetic', 'hazard horizon from the forward field'],
+  'chart.rio':        ['synthetic', 'POLARIS band under a declared stage and an assumed class'],
+  'panel.rio':        ['synthetic', 'POLARIS band — not the IMO RIO, and not a number'],
   'panel.alerts':     ['synthetic', 'raised by gate transitions and field events'],
 
   // --- simulated: demonstrated, not built ----------------------------------

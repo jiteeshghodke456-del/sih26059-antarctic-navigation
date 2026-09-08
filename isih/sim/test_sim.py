@@ -326,3 +326,48 @@ def test_grounded_bergs_carry_no_drift_vector():
         assert b["drift_dir_deg"] is None
         assert b["drift_kn"] == 0.0
         assert b["grounded_since_day"] is not None
+
+
+# --- POLARIS: a band, never a number ---------------------------------------
+
+def test_polaris_reproduces_the_published_worked_example():
+    """The research file computes one regime by hand from Table 1.3: 9/10
+    medium first-year plus 1/10 thick first-year. If this module does not
+    reproduce those four numbers exactly, the table was typed wrong."""
+    from isih import polaris
+    partials = {"Med FY": 9, "Thick FY": 1}
+    assert polaris.rio_exact(partials, "PC4") == 19
+    assert polaris.rio_exact(partials, "PC5") == 9
+    assert polaris.rio_exact(partials, "PC6") == -1
+    assert polaris.rio_exact(partials, "PC7") == -11
+    assert polaris.tier(19, "PC4") == polaris.NORMAL
+    assert polaris.tier(-1, "PC6") == polaris.ELEVATED
+    assert polaris.tier(-11, "PC7") == polaris.SPECIAL
+
+
+def test_table_1_1_columns_differ_and_bounds_are_half_open():
+    """Polar Classes have a middle band; Finnish-Swedish equivalents do not, so
+    for them every negative RIO is already special consideration. Collapsing the
+    two columns is the commonest way to misread this table."""
+    from isih import polaris
+    assert polaris.tier(0, "PC6") == polaris.NORMAL
+    assert polaris.tier(-10, "PC6") == polaris.ELEVATED
+    assert polaris.tier(-11, "PC6") == polaris.SPECIAL
+    assert polaris.tier(-1, "IA") == polaris.SPECIAL       # no elevated band
+    assert polaris.tier(0, "IA") == polaris.NORMAL
+
+
+def test_polaris_is_reported_as_a_band_that_can_flip():
+    """The finding is not a value, it is whether the candidate rows agree. The
+    open crossing must be stable; heavy ice must flip."""
+    from isih import polaris
+    assert polaris.band(0.06, "Med FY")["state"] == "stable-normal"
+    heavy = polaris.band(0.90, "Med FY")
+    assert heavy["state"] == "flips"
+    assert heavy["rio_hi"] - heavy["rio_lo"] > 20, "the spread IS the finding"
+
+
+def test_ice_free_column_is_three_for_every_class():
+    from isih import polaris
+    for cls in polaris.CLASSES:
+        assert polaris.RIV[cls]["Ice-free"] == 3

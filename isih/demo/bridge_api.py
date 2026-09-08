@@ -11,6 +11,7 @@ import numpy as np
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from isih import polaris
 from isih.sim.world import BHARATI, BOX, CAPE_TOWN, MAITRI, PROGRESS
 
 from .voyage import EPOCH_LABEL, HOLD_POINT, Plan, VoyageService
@@ -131,6 +132,57 @@ def critical_limit(depart_day: float = 0.0, destination: str = "BHARATI"):
     goal = {"BHARATI": BHARATI, "MAITRI": MAITRI, "HOLD": HOLD_POINT}[destination]
     VOY.router._cache.clear()
     return VOY.router.critical_ice_limit(CAPE_TOWN, goal, depart_day)
+
+
+@router.get("/rio")
+def rio(stage: str | None = None, cls_hi: str = "PC4", cls_lo: str = "IA",
+        destination: str = "BHARATI", objective: str = "time",
+        ice_limit: float = 0.80, depart_day: float = 0.0, t: float = 0.0):
+    """POLARIS band along the current route.
+
+    Returns nothing computed until a stage of development is DECLARED. There is
+    no default on purpose: this system observes concentration, not stage, and a
+    default stage would be an invented observation dressed as an input."""
+    meta = {
+        "stages": list(polaris.STAGES),
+        "classes": list(polaris.CLASSES),
+        "table": "MSC.1/Circ.1519 Table 1.3",
+        "issued": "2016-06-06",
+        "form": "single-stage reduction — not the IMO RIO",
+        "class_is_assumed": True,
+        "not_scored": ["compression", "ridging", "glacial ice"],
+        "validation": "Antarctic: none published; IMO review overdue",
+        "why_a_band": ("no POLARIS row exists for this hull's notation; the "
+                       "plausible rows span about 40 RIO points"),
+    }
+    if stage is None or stage not in polaris.STAGES:
+        return {"declared": False, **meta}
+    if stage not in polaris.RIV[cls_hi]:
+        raise HTTPException(422, f"unknown stage {stage!r}")
+    if cls_hi not in polaris.CLASSES or cls_lo not in polaris.CLASSES:
+        raise HTTPException(422, "unknown ice class")
+
+    r = VOY.solve(destination, objective, ice_limit, depart_day)
+    legs = r["legs"] if r else []
+    doc = polaris.along(legs, stage, cls_lo, cls_hi) if legs else None
+
+    ship = VOY.own_ship(t)
+    at_ship = None
+    if ship:
+        s = VOY.world.sample(ship["lat"], ship["lon"], t)
+        at_ship = {"sic": round(float(np.asarray(s["sic"])), 3),
+                   **polaris.band(float(np.asarray(s["sic"])), stage, cls_lo, cls_hi)}
+
+    # Where the band crosses a tier, expressed in the ice gate's own unit, so
+    # the officer can act on it with the control he already has.
+    edges = {}
+    for cls in (cls_hi, cls_lo):
+        for pct in range(5, 100, 5):
+            if polaris.tier(polaris.rio_single_stage(pct / 100, stage, cls), cls) != polaris.NORMAL:
+                edges[cls] = pct
+                break
+    return {"declared": True, **meta, "along": doc, "at_ship": at_ship,
+            "tier_edges": edges}
 
 
 @router.get("/state")

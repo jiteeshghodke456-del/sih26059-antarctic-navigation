@@ -42,6 +42,7 @@ const S = {
   playing: false,
   selBerg: null,
   hoverAlt: null,
+  rio: { stage: '', lo: 'IA', hi: 'PC4', data: null },
 };
 
 const STAGES = ['sign_in', 'command_center', 'voyage', 'mission', 'route',
@@ -194,6 +195,35 @@ function setupChart() {
     }
     c.setLineDash([]);
   });
+
+  /* POLARIS band as a ribbon offset beside the route, not a field wash.
+
+     A per-cell RIO field would re-colour the ice layer's own information and
+     contradict the time-aware legs, and the research is explicit that the panel
+     comes first. Amber because amber is already this console's colour of
+     ASSUMPTION - the synthetic dot and the MARGINAL gates - which is exactly
+     what an unresolved ice class is. Deliberately not magenta (the route owns
+     it) and not red: an advisory resting on a class nobody has certified must
+     not look like an alarm. */
+  chart.addLayer('rio', 48, (c, ch) => {
+    const d = S.rio.data;
+    if (!d || !d.declared || !d.along) return;
+    c.lineWidth = 3;
+    for (const leg of d.along.legs) {
+      if (leg.state === 'stable-normal') continue;
+      const nx = d.along.legs[Math.min(leg.i + 1, d.along.legs.length - 1)];
+      if (!nx || nx.i === leg.i) continue;
+      const [x1, y1] = ch.px(leg.lat, leg.lon);
+      const [x2, y2] = ch.px(nx.lat, nx.lon);
+      const a = Math.atan2(y2 - y1, x2 - x1) - Math.PI / 2;   // offset to port
+      const ox = Math.cos(a) * 6, oy = Math.sin(a) * 6;
+      c.strokeStyle = css('--degraded');
+      c.globalAlpha = 0.9;
+      c.setLineDash(leg.state === 'flips' ? [4, 3] : []);
+      c.beginPath(); c.moveTo(x1 + ox, y1 + oy); c.lineTo(x2 + ox, y2 + oy); c.stroke();
+    }
+    c.setLineDash([]); c.globalAlpha = 1;
+  }, false);
 
   chart.addLayer('route', 50, (c, ch) => {
     const alt = S.hoverAlt;
@@ -485,6 +515,7 @@ const TOOLS = [
   ['ownship', 'SHP', 'chart.ownship'],
   ['traffic', 'AIS', 'chart.traffic'],
   ['warnings', 'WRN', 'chart.warnings'],
+  ['rio', 'RIO', 'chart.rio'],
   ['areas', 'ASPA', 'chart.areas'],
   ['coast', 'LND', 'chart.coast'],
   ['graticule', 'GRD', 'chart.graticule'],
@@ -732,6 +763,44 @@ function renderRail() {
     const lab = el('div', 'ramp-lab');
     lab.appendChild(el('span', null, '0%')); lab.appendChild(el('span', null, '50%')); lab.appendChild(el('span', null, '100%'));
     b.appendChild(lab);
+  }));
+
+  // POLARIS - a second opinion from a different framework, deliberately not
+  // wired into the nine gates: one assumption must not move the state twice.
+  rail.appendChild(panel('POLARIS', 'panel.rio', b => {
+    const d = S.rio.data;
+    const f = el('div', 'field');
+    f.appendChild(el('label', null, 'STAGE OF DEVELOPMENT (declared)'));
+    const sel = el('select');
+    const none = el('option', null, '— not declared —'); none.value = ''; sel.appendChild(none);
+    for (const s of (d ? d.stages : [])) { const o = el('option', null, s); o.value = s; sel.appendChild(o); }
+    sel.value = S.rio.stage;
+    sel.addEventListener('change', async () => {
+      S.rio.stage = sel.value;
+      await loadRio(); renderRail(); chart.toggle('rio', !!S.rio.stage); chart.render();
+    });
+    f.appendChild(sel); b.appendChild(f);
+
+    if (!d || !d.declared) {
+      kv(b, [['CLASS', 'PC4 … IA (assumed)'],
+             ['INPUT', 'concentration — POLARIS wants stage'],
+             ['STATUS', 'declare a stage to compute']]);
+      return;
+    }
+    const rows = [['CLASS (assumed)', d.classes ? d.classes.join(' … ') : 'PC4 … IA'],
+                  ['FORM', 'single-stage · not IMO RIO'],
+                  ['TABLE', 'MSC.1/Circ.1519 T1.3 · ' + d.issued]];
+    if (d.at_ship) rows.push(['AT SHIP',
+      `${Math.round(d.at_ship.sic * 100)}% → ${d.at_ship.rio_lo} … ${d.at_ship.rio_hi}`]);
+    if (d.along && d.along.worst) rows.push(['WORST ON TRACK',
+      `${Math.round(d.along.worst.sic * 100)}% → ${d.along.worst.rio_lo} … ${d.along.worst.rio_hi}`]);
+    if (d.along) rows.push(['TRACK',
+      `${Math.round(d.along.stable_frac * 100)}% stable · ${100 - Math.round(d.along.stable_frac * 100)}% flips`]);
+    for (const [cls, pct] of Object.entries(d.tier_edges || {}))
+      rows.push(['TIER EDGE', `${cls}: caution from ${pct}%`]);
+    rows.push(['NOT SCORED', (d.not_scored || []).join(' · ')]);
+    rows.push(['VALIDATION', d.validation]);
+    kv(b, rows);
   }));
 
   // weather in the corridor
@@ -1155,6 +1224,14 @@ function secondary(foot, label, fn) {
 
 /* ---------- refresh -------------------------------------------------------- */
 
+async function loadRio() {
+  const q = S.rio.stage ? `&stage=${encodeURIComponent(S.rio.stage)}` : '';
+  try {
+    S.rio.data = await api(`/api/v2/rio?t=${S.t}&destination=${S.destination}` +
+      `&objective=${S.objective}&ice_limit=${S.iceLimit}&depart_day=${S.depart}${q}`);
+  } catch (e) { console.error(e); }
+}
+
 let busy = false;
 async function refresh(fast = false) {
   if (busy) return;
@@ -1174,6 +1251,7 @@ async function refresh(fast = false) {
     ]);
     S.state = st; S.field = fld; S.bergs = bg.items; S.traffic = tf.items;
     S.warnings = wn.items; S.alerts = al.items; S.timeline = tl.rows;
+    await loadRio();
     if (chart.isOn('wind') || chart.isOn('current')) {
       const v = chart.isOn('wind') ? 'wind' : 'current';
       S.vectors = await api(`/api/v2/vectors?t=${S.t}&var=${v}`);
