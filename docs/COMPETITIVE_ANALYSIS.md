@@ -155,7 +155,7 @@ service — why it ended, who paid for it, what replaced it. Filed in
 
 Reinstated from the master prompt, where a `# COMPETITIVE / OPERATIONAL
 BENCHMARK` section (line 5070) was **lost in compression** — only §30's weaker
-bullet list survived (`docs/MASTER_AUDIT.md` §A.4). The lost version is
+bullet list survived (`audit/MASTER_AUDIT.md` §A.4). The lost version is
 materially more rigorous, because it refuses the question "what software already
 exists?" and replaces it with twelve questions about what that software actually
 *does for a decision*.

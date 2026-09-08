@@ -1,7 +1,7 @@
 # Quality gate — the definition of done
 
 These requirements existed in the master prompt and were **lost when it was
-compressed into the six-stage bundle** (`docs/MASTER_AUDIT.md` §A.4). They are
+compressed into the six-stage bundle** (`MASTER_AUDIT.md` §A.4). They are
 reinstated here as a checklist rather than prose, because a requirement that
 lives only in a document is exactly what got dropped last time.
 

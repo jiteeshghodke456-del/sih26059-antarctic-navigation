@@ -222,7 +222,7 @@ recognise rather than as an apology.
 ## 7A. MARPOL and the Antarctic Special Area
 
 Reinstated here because **MARPOL was named in the master prompt and lost when it
-was compressed** (`docs/MASTER_AUDIT.md` §A.4). Worth stating precisely: the
+was compressed** (`../audit/MASTER_AUDIT.md` §A.4). Worth stating precisely: the
 requirement went missing from the *prompt*, not from the project — the heavy
 fuel oil ban was already researched and recorded in `docs/backlog.md` and
 `docs/ppt_source/research.md`. What was missing was its place in the standards

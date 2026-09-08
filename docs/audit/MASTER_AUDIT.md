@@ -131,9 +131,9 @@ requirement that lives only in a document is what got lost in the first place:
 | Lost item | Reinstated as |
 |---|---|
 | §49 operating rule | The callout at the head of this audit |
-| CORE TECHNICAL MILESTONE | `docs/QUALITY_GATE.md` §1 — the 13-stage pipeline as a checklist with per-stage status |
-| IMPLEMENTATION QUALITY GATE | `docs/QUALITY_GATE.md` §2 — the 10 questions, applied per feature in the PR template |
-| FINAL IMPLEMENTATION DISCIPLINE | `docs/QUALITY_GATE.md` §3 — scope-creep litmus test |
+| CORE TECHNICAL MILESTONE | `QUALITY_GATE.md` §1 — the 13-stage pipeline as a checklist with per-stage status |
+| IMPLEMENTATION QUALITY GATE | `QUALITY_GATE.md` §2 — the 10 questions, applied per feature in the PR template |
+| FINAL IMPLEMENTATION DISCIPLINE | `QUALITY_GATE.md` §3 — scope-creep litmus test |
 | MARPOL | `docs/research/STANDARDS_ALIGNMENT.md` — Annex I/IV/V and the Antarctic Special Area |
 | Competitive benchmark | `docs/COMPETITIVE_ANALYSIS.md` — the 12 questions asked of each competitor |
 | Navigation data quality | Chart-confidence indicator in the UI; CATZOC line in `docs/backlog.md` |

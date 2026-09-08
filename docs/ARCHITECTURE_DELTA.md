@@ -211,7 +211,7 @@ the page never loads an external resource.
 | No POLARIS RIO published | `research/POLARIS_APPLICABILITY.md` |
 | Horizons stated explicitly | `research/FORECAST_HORIZONS.md` |
 | Protected areas by legal regime, not as no-go | `isih/protected_areas.py` — ASMA entry needs no permit |
-| Forcing at `t`, not `t+lead` | `MODEL_REUSE_MATRIX.md` §2.1 |
+| Forcing at `t`, not `t+lead` | `research/MODEL_REUSE_MATRIX.md` §2.1 |
 
 ---
 

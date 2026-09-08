@@ -1,7 +1,7 @@
 # Corrections register
 
 The bridge between the audit and the build. Every finding in
-`docs/MASTER_AUDIT.md` that forces a change appears here as one checkable line.
+`MASTER_AUDIT.md` that forces a change appears here as one checkable line.
 A finding that does not become a line has not been acted on; a build change with
 no line is scope creep.
 
@@ -11,7 +11,7 @@ Status: **DONE** (in this branch) · **OPEN** (filed, not built) · **BLOCKED**.
 
 | # | Finding | Correction | Status |
 |---|---|---|---|
-| 1 | Deck: "replaced the 80 % threshold with POLARIS". Code says `"max_ice_conc": 80`; our own research says no RIO can be computed for this hull | Remove the claim; replace with the POLARIS *applicability* finding, which is stronger | **DONE** — `docs/SIH_PPT_V2.md` |
+| 1 | Deck: "replaced the 80 % threshold with POLARIS". Code says `"max_ice_conc": 80`; our own research says no RIO can be computed for this hull | Remove the claim; replace with the POLARIS *applicability* finding, which is stronger | **DONE** — `SIH_PPT_V2.md` |
 | 2 | Deck: "predicts the drift of **live** icebergs" — never fed real forcing, wired to nothing, no error ever measured | Claim only what is built: drift physics + CPA against the ship's future track, error unmeasured | **DONE** |
 | 3 | Deck: "re-plans automatically as new data arrives" — no such control existed, and daily re-planning measured *slower* | Removed. The new console has a time-aware search; the measured null result is reported | **DONE** |
 | 4 | Deck: "1,096 files … harvested automatically every day, zero failures" merges two pipelines; the daily cron has ~7 files and failed once | Split into the two true statements | **DONE** |
@@ -26,9 +26,9 @@ Status: **DONE** (in this branch) · **OPEN** (filed, not built) · **BLOCKED**.
 
 | # | Finding | Correction | Status |
 |---|---|---|---|
-| 11 | §49, the semantic-lossless operating instruction, was lost in compression — the safeguard that would have caught the other losses | Reinstated at the head of the audit and in `docs/QUALITY_GATE.md` | **DONE** |
+| 11 | §49, the semantic-lossless operating instruction, was lost in compression — the safeguard that would have caught the other losses | Reinstated at the head of the audit and in `QUALITY_GATE.md` | **DONE** |
 | 12 | CORE TECHNICAL MILESTONE and the 10-point IMPLEMENTATION QUALITY GATE were lost | Reinstated as a checklist with per-stage status, applied to what exists | **DONE** — the iceberg row fails it |
-| 13 | MARPOL was named in the master prompt and lost | Reinstated with the one place it touches this software | **DONE** — `STANDARDS_ALIGNMENT.md` §7A |
+| 13 | MARPOL was named in the master prompt and lost | Reinstated with the one place it touches this software | **DONE** — `../research/STANDARDS_ALIGNMENT.md` §7A |
 | 14 | The 12-question competitive benchmark was lost; only §30's weaker version survived | Reinstated and applied to five competitors | **DONE** — `COMPETITIVE_ANALYSIS.md` |
 | 15 | World-model fields were labelled "replay"; they contain no real observation | Relabelled **synthetic** — §27's SIMULATED INPUT — with a tooltip saying so | **DONE** |
 | 16 | The bridge console had per-panel provenance but no global data-mode declaration | SYNTHETIC ENVIRONMENT badge; behavioural test 10 now covers both consoles | **DONE** |

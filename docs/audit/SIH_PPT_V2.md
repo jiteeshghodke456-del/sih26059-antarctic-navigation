@@ -1,7 +1,7 @@
 # SIH 2026 · PS-26059 — corrected six-slide deck
 
 Replaces the submitted deck, which contradicts this repository in eight places
-(`docs/MASTER_AUDIT.md` §D.4, corrections 1–8). **Every claim below is traceable
+(`MASTER_AUDIT.md` §D.4, corrections 1–8). **Every claim below is traceable
 to a file in this repo.** Tags: **[M]** measured here · **[S]** sourced ·
 **[D]** derived · **[T]** target, not achieved.
 
