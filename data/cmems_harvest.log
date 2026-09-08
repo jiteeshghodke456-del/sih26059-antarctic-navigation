@@ -113,3 +113,17 @@ INFO - 2026-09-07T17:46:32Z - Total size of the download: 40.65 MB.
 cmems_siconc_2026-09-07.nc: 42.62 MB -> 5.25 MB (8.1x smaller, int16 packed)
 2026-09-07T17:46:33+00:00 compressed cmems_siconc_2026-09-07.nc
 2026-09-07T20:38:41+00:00 already have cmems_siconc_2026-09-07.nc, skipping
+2026-09-08T16:43:05+00:00 harvesting cycle 2026-09-08
+INFO - 2026-09-08T16:43:09Z - Selected dataset version: "202406"
+INFO - 2026-09-08T16:43:09Z - Selected dataset part: "default"
+WARNING - 2026-09-08T16:43:09Z - Some of your subset selection [2026-09-08 00:00:00+00:00, 2026-09-18 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-09-17 00:00:00+00:00]
+INFO - 2026-09-08T16:43:17Z - Total size of the download: 40.65 MB.
+{
+  "file_size": "40.65 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-09-08T16:43:18+00:00 saved cmems_siconc_2026-09-08.nc
+cmems_siconc_2026-09-08.nc: 42.62 MB -> 5.25 MB (8.1x smaller, int16 packed)
+2026-09-08T16:43:19+00:00 compressed cmems_siconc_2026-09-08.nc
