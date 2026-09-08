@@ -16,6 +16,26 @@ Every number in this document carries a tag:
 **Sourced** (external citation) · **Derived** (computed from other numbers) ·
 **Target** (specified, not achieved) · **Hypothesis** (untested).
 
+## Contents
+
+**Specification vs reality** — [A](#a-lost-requirements-from-the-original-master-prompt) Lost requirements from the original master prompt · [B](#b-broken-partial-requirements) Broken / partial requirements · [C](#c-referenced-document-findings) Referenced-document findings · [D](#d-current-repository-reality) Current repository reality
+
+**Problem, users, market gap** — [E](#e-exact-problem) Exact problem · [F](#f-root-cause-why-the-gap-exists) Root cause — why the gap exists · [G](#g-user-mapping) User mapping · [H](#h-underserved-segment) Underserved segment · [I](#i-user-journey) User journey · [J](#j-pain-point-prioritisation) Pain-point prioritisation · [K](#k-existing-solutions) Existing solutions · [L](#l-data-backed-gaps) Data-backed gaps · [M](#m-why-now) Why now
+
+**Innovation and MVP** — [N](#n-solution-in-one-sentence) Solution in one sentence · [O](#o-core-innovation) Core innovation · [P](#p-unique-selling-points) Unique selling points · [Q](#q-killer-feature) Killer feature · [R](#r-hyper-specific-mvp) Hyper-specific MVP
+
+**Technical verdicts** — [S](#s-architecture-verdict) Architecture verdict · [T](#t-tech-stack-verdict) Tech-stack verdict · [U](#u-connectivity-verdict) Connectivity verdict · [V](#v-data-source-verdict) Data-source verdict · [W](#w-aiml-verdict) AI/ML verdict · [X](#x-routing-and-decision-support-verdict) Routing and decision-support verdict
+
+**Survivability, regulation, proof** — [Y](#y-industry-survivability) Industry survivability · [Z](#z-regulatory-and-operational-constraints) Regulatory and operational constraints · [AA](#aa-experimental-validation-plan) Experimental validation plan · [AB](#ab-v1-current) V1 → current · [AC](#ac-measured-impact) Measured impact
+
+**Limits, scale, cost, deployment** — [AD](#ad-limitations-classified) Limitations, classified · [AE](#ae-scalability) Scalability · [AF](#af-feasibility) Feasibility · [AG](#ag-cost) Cost · [AH](#ah-deployment) Deployment
+
+**Roadmap and business** — [AI](#ai-post-hackathon-roadmap) Post-hackathon roadmap · [AJ](#aj-startup-path) Startup path · [AK](#ak-market-entry-strategy) Market-entry strategy · [AL](#al-revenue-model) Revenue model · [AM](#am-future-scope) Future scope · [AN](#an-competitive-comparison) Competitive comparison
+
+**Judge's view** — [AO](#ao-sih-judge-score) SIH judge score · [AP](#ap-biggest-strengths) Biggest strengths · [AQ](#aq-biggest-weaknesses) Biggest weaknesses · [AR](#ar-biggest-judge-attack-points) Biggest judge attack points · [AS](#as-what-makes-it-memorable) What makes it memorable · [AT](#at-new-ppt-blueprint) New PPT blueprint
+
+Ends with a blunt [FINAL VERDICT](#final-verdict).
+
 ---
 
 ## A. Lost requirements from the original master prompt
@@ -1025,13 +1045,37 @@ Airtime *pricing* for this vessel is unknown — **and unusually, it is obtainab
 
 **This roadmap does not end with "future scope."** It ends with a renewal decision by a named customer against a written report, and every stage has an exit condition that can fail.
 
-## AJ. Startup path · AK. Market entry · AL. Revenue
+## AJ. Startup path
 
 **The wedge is in the customer's own tender.** NCPOR's charter tender is public: one vessel, `100 ± 30 days`, **financial bid = day rate × 100 days**, operating box 66–70°S / 80°E–06°E — *our corridor, written by the customer*. It contains an ice-failure clause: if ice makes overboard discharge unsafe, cargo goes by boat and barge *"provided the conditions of the coast permit such discharge."* **The contract anticipates ice stopping the discharge and has no clause for when the fallback is also blocked.** And **§11 requires the vessel to carry "ice-information receiving equipment"** — India buys the receiver and owns nothing on the other end of it. That is not a need invented for a pitch; it is a line item in a live government tender. Our measurement lands on the clause: Bharati closed 23 of 31, first closure **2 December — the second day of the month**.
 
 **Stages.** (1) *Research tool* → no revenue; exit is **one named person inside NCPOR using an output to answer a question they actually had — a use, not a demo**. (2) *Operational pilot* → season service contract via GeM; exit is a completed season with a written verification report and a renewal. (3) *Multi-programme* → gated on whether that report is good enough to show a foreigner.
 
+---
+
+## AK. Market-entry strategy
+
+**Entry follows credibility, not market size.** Publish the paper trail first —
+`WEAKNESS_ANALYSIS.md`, `TRUE_CLAIMS.md`, the withdrawn 17.4-day figure, the null
+result, this audit. In a scientific-institution market, a team that documents its
+own failures is buying trust with the only currency that works there, and it
+costs nothing. Then go through the door that is already open: NCPOR has a sea-ice
+research group, a National Polar Data Centre and an annual expedition. **Nobody
+in this market buys from a cold email.** Then attach to a purchase that already
+exists — the charter tender, which already requires ice-information equipment
+with nothing Indian behind it, and Maitri II on a January 2029 deadline. Be in
+the polar research vessel design conversation **while it is still a design**.
+Only then go abroad, with one verified season behind us.
+
+**What we will not do:** try to displace a national ice service; sell satellite
+data; or pitch insurers before we have loss evidence. All three look attractive
+on a slide and are dead in the field.
+
 **Procurement mechanics favour a student team** — the single most practical fact here. A DPIIT-recognised startup on GeM is exempt from prior-turnover, prior-experience and EMD requirements under GFR Rule 173(i). **The normal reason a two-year-old company cannot bid is waived by rule. It is a form, not a fight.**
+
+---
+
+## AL. Revenue model
 
 **The pricing ceiling is institutional and cuts both ways.** INCOIS — same ministry — has given away ship-route advisories since 2013. *Against us:* we cannot charge Indian mariners for an advisory the ministry already provides free, so any deck showing Indian per-vessel subscription revenue is wrong. *For us:* **an Antarctic ice extension to a national forecasting service is not a new idea to sell; it is an existing programme to extend.**
 
@@ -1121,13 +1165,23 @@ Scored as a hostile judge who has read the code, not the slides.
 
 **What would make judges remember us:** *"Six of our nine safety questions are grey. Grey means we did not measure, and a gate we cannot evaluate is never a pass. Here is the dataset each one needs."* No other team will say that, and it is the sentence that makes the rest believable.
 
-## AP. Strengths · AQ. Weaknesses · AR. Attack points
+## AP. Biggest strengths
 
 **Strengths.** UNKNOWN as a first-class state, enforced in code. A data-quality finding in the incumbent satellite product, measured across the whole archive and corrected in the safe direction. The destination-window reframing — 23/31 against 0/31 — which relocates the problem from the ocean to the last 100 km. Reuse of BAS's own router rather than a home-grown one. A decision record that is versioned, attributed and names the assumption that changed. Research documents that argue against the project.
 
-**Weaknesses.** No proven saved ship-day. No user has ever used it. The ice limit is invented and reachability has a cliff on it. Fuel figures use another hull's polynomial. The model is untuned, single-seed, trained on QA-contaminated coastal data, with a leak of unknown magnitude in its headline. Attribution is unverified. The plan of record does not survive a restart. **And the submitted deck contradicts the repository in eight places.**
+---
 
-**Attack points, with the honest answer to each.**
+## AQ. Biggest weaknesses
+
+No proven saved ship-day. No user has ever used it. The ice limit is invented and reachability has a cliff on it. Fuel figures use another hull's polynomial. The model is untuned, single-seed, trained on QA-contaminated coastal data, with a leak of unknown magnitude in its headline. Attribution is unverified. The plan of record does not survive a restart. **And the submitted deck contradicts the repository in eight places.**
+
+---
+
+## AR. Biggest judge attack points
+
+Each with the honest answer, because every one of them is already written down
+in our own documents — which is the point.
+
 | Attack | Answer |
 |---|---|
 | "POLARIS — show the RIO" | We publish none. No row exists for this hull; guessing spans 40 RIO points. **The deck was wrong and is corrected.** |
