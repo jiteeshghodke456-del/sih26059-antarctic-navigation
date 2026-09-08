@@ -155,3 +155,47 @@ def test_health_changes_across_the_voyage(page):
         seen.append(page.text_content(".health .state").strip())
     assert len(set(seen)) >= 2, f"health never changed across the voyage: {seen}"
     assert "VALID" in seen, f"health never reaches VALID: {seen}"
+
+
+def test_zooming_out_and_panning_cannot_lose_the_chart(page):
+    """The bug that would have ended a demo.
+
+    Thirty ordinary wheel-out ticks collapsed the whole domain into a speck on a
+    blank canvas, because the zoom floor was a hardcoded scale of 20 with no
+    relationship to the data extent. One ordinary drag at that zoom then moved
+    the centre from 56 S to 88 N - pole to pole - because the pan converts
+    pixels to degrees by dividing by the scale, and nothing bounded the result.
+    The cursor then read 391 E, which is not a place. There was no reset, and
+    the only recovery was a reload, which discards the entire voyage.
+    """
+    page.goto(BASE + "/", wait_until="networkidle")
+    page.fill("#signin-name", "Zoom test")
+    page.click("#signin-form button[data-primary]")
+    page.wait_for_timeout(2000)
+    page.evaluate("document.getElementById('stage-scrim').hidden = true")
+
+    box = page.locator("#chartwrap").bounding_box()
+    cx, cy = box["x"] + box["width"] / 2, box["y"] + box["height"] / 2
+    page.mouse.move(cx, cy)
+    for _ in range(30):
+        page.mouse.wheel(0, 260)
+    page.wait_for_timeout(500)
+
+    page.mouse.move(cx, cy)
+    page.mouse.down()
+    page.mouse.move(cx + 300, cy + 150, steps=10)
+    page.mouse.up()
+    page.wait_for_timeout(500)
+
+    rng = page.text_content("#hud-range")
+    assert "N " not in rng and "'N" not in rng, f"centre left the southern hemisphere: {rng}"
+    page.mouse.move(cx + 40, cy + 40)
+    page.wait_for_timeout(250)
+    cursor = page.text_content("#hud-cursor")
+    lon_deg = int(cursor.split("°")[1].strip().split()[-1][:3]) if "°" in cursor else 0
+    assert lon_deg <= 180, f"impossible longitude on screen: {cursor}"
+
+    # and HOME must actually bring it back
+    page.click("#t-home")
+    page.wait_for_timeout(700)
+    assert "S" in page.text_content("#hud-range")

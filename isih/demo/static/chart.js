@@ -45,7 +45,12 @@ export function bearing(lat1, lon1, lat2, lon2) {
 /** Position degrees -> "69 24.3'S" the way a bridge writes it.
     Round first, then carry: 54.99972 must print 55 00.0'S, not 54 60.0'S. */
 export function fmtLat(v) { return dm(Math.abs(v), v < 0 ? 'S' : 'N', 2); }
-export function fmtLon(v) { return dm(Math.abs(v), v < 0 ? 'W' : 'E', 3); }
+export function fmtLon(v) {
+  // Normalise before formatting: the readout once showed 391 46.5'E, which is
+  // not a place. Formatting is the last line of defence, so it holds it.
+  v = ((v + 180) % 360 + 360) % 360 - 180;
+  return dm(Math.abs(v), v < 0 ? 'W' : 'E', 3);
+}
 function dm(a, hemi, pad) {
   let d = Math.floor(a);
   let m = (a - d) * 60;
@@ -80,14 +85,49 @@ export class Chart {
     this.octx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
   }
 
-  /** Fit a lat/lon box, leaving a margin fraction. */
+  /** Fit a lat/lon box, leaving a margin fraction. Remembers the box so the
+      view can be bounded against it and returned to it. */
   fit(latMin, latMax, lonMin, lonMax, margin = 0.04) {
+    this.home = { latMin, latMax, lonMin, lonMax, margin };
     const x0 = mercX(lonMin), x1 = mercX(lonMax);
     const y0 = mercY(latMin), y1 = mercY(latMax);
     const sx = (this.w * (1 - 2 * margin)) / Math.abs(x1 - x0);
     const sy = (this.h * (1 - 2 * margin)) / Math.abs(y1 - y0);
     this.scale = Math.min(sx, sy);
+    // Never allow zooming further out than "the whole working area fits".
+    // Without this the scale clamped to a hardcoded 20, which put ~2,378
+    // degrees of longitude across the canvas: the entire 76-degree domain
+    // collapsed into a speck in one corner and the chart went blank.
+    this.minScale = this.scale * 0.55;
     this.centre = { lat: invMercY((y0 + y1) / 2), lon: invMercX((x0 + x1) / 2) };
+  }
+
+  /** Back to the working extent. One errant scroll should never cost a session. */
+  home_() {
+    if (!this.home) return;
+    const h = this.home;
+    this.fit(h.latMin, h.latMax, h.lonMin, h.lonMax, h.margin);
+    this.render();
+    if (this.onmove) this.onmove();
+  }
+
+  /** Keep the centre inside the working area, generously padded.
+
+      The pan handler converts pixels to degrees by dividing by `scale`, and at
+      a tiny scale that division explodes: one ordinary 300 px drag moved the
+      centre from 56 S to 88 N - pole to pole - and the cursor readout then
+      showed longitudes like 391 E because nothing ever normalised them. */
+  _clampCentre() {
+    const h = this.home;
+    if (!h) return;
+    const padLat = (h.latMax - h.latMin) * 0.5;
+    const padLon = (h.lonMax - h.lonMin) * 0.5;
+    this.centre.lat = Math.max(h.latMin - padLat,
+                      Math.min(h.latMax + padLat, this.centre.lat));
+    this.centre.lon = Math.max(h.lonMin - padLon,
+                      Math.min(h.lonMax + padLon, this.centre.lon));
+    // Normalise anyway, so no arithmetic path can ever print 391 E.
+    this.centre.lon = ((this.centre.lon + 180) % 360 + 360) % 360 - 180;
   }
 
   /* ---- transforms ---- */
@@ -164,6 +204,7 @@ export class Chart {
           lon: invMercX(mercX(this._drag.c.lon) - dx),
           lat: invMercY(mercY(this._drag.c.lat) + dy),
         };
+        this._clampCentre();
         this.render();
         if (this.onmove) this.onmove();
       } else if (this.onhover) {
@@ -183,13 +224,15 @@ export class Chart {
       const mx = e.clientX - r.left, my = e.clientY - r.top;
       const before = this.ll(mx, my);
       const k = Math.exp(-e.deltaY * 0.0013);
-      this.scale = Math.max(20, Math.min(90000, this.scale * k));
+      const lo = this.minScale || 20;
+      this.scale = Math.max(lo, Math.min(90000, this.scale * k));
       const after = this.ll(mx, my);
       // keep the point under the cursor fixed
       this.centre = {
         lat: invMercY(mercY(this.centre.lat) + (mercY(before[0]) - mercY(after[0]))),
         lon: invMercX(mercX(this.centre.lon) + (mercX(before[1]) - mercX(after[1]))),
       };
+      this._clampCentre();
       this.render();
       if (this.onmove) this.onmove();
     }, { passive: false });

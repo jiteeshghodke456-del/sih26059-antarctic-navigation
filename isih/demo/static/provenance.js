@@ -24,6 +24,7 @@ export const PROVENANCE = {
   // --- real: measured data or real computation -----------------------------
   'chart.coast':      ['real', 'Natural Earth 1:50m, public domain'],
   'chart.areas':      ['real', 'ATS protected-area register (ASPA/ASMA)'],
+  'chart.graticule':  ['real', 'computed lat/lon grid — no source to cite'],
   'panel.health':     ['real', 'derived from the nine decision gates'],
   'panel.gates':      ['real', 'evaluated from the evidence actually held'],
   'panel.alts':       ['real', 'PolarRoute 1.1.11 + meshiphi 2.3.1, solved offline'],

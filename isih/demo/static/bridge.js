@@ -96,6 +96,7 @@ function hex(h) {
 /* ---------- chart --------------------------------------------------------- */
 
 let chart;
+let updateRange = () => {};
 
 function setupChart() {
   chart = new Chart($('chart'), $('overlay'));
@@ -287,7 +288,18 @@ function setupChart() {
     c.beginPath(); c.moveTo(x, y); c.lineTo(x2, y2); c.stroke();
   });
 
-  chart.onmove = () => {};
+  updateRange = () => {
+    // #hud-range was dead markup - declared in the page, never written. It now
+    // carries what a chart's corner should: the centre and the span in view.
+    const el2 = document.getElementById('hud-range');
+    if (!el2) return;
+    const [latT, lonL] = chart.ll(0, 0);
+    const [latB, lonR] = chart.ll(chart.w, chart.h);
+    const spanNm = distNm(latT, lonL, latT, lonR);
+    el2.textContent = `CTR ${fmtLat(chart.centre.lat)} ${fmtLon(chart.centre.lon)}  ·  ${spanNm < 100 ? spanNm.toFixed(1) : Math.round(spanNm)} nm across`;
+  };
+  chart.onmove = updateRange;
+  updateRange();
   chart.onhover = (la, lo, px, py) => {
     const tip = $('tooltip');
     if (la === null) { tip.hidden = true; return; }
@@ -385,7 +397,7 @@ const TOOLS = [
   ['warnings', 'WRN', 'chart.warnings'],
   ['areas', 'ASPA', 'chart.areas'],
   ['coast', 'LND', 'chart.coast'],
-  ['graticule', 'GRD', 'chart.coast'],
+  ['graticule', 'GRD', 'chart.graticule'],
 ];
 
 function buildToolRail() {
@@ -402,7 +414,10 @@ function buildToolRail() {
       chart.toggle(id, on);
       b.classList.toggle('on', on);
       if (on && (id === 'wind' || id === 'current')) {
+        // One vector slot: turning one on turns the other off. Say so, rather
+        // than letting the operator believe both are drawn.
         chart.toggle(id === 'wind' ? 'current' : 'wind', false);
+        toast(id === 'wind' ? 'WIND on · CURRENT off' : 'CURRENT on · WIND off');
         buildToolRail();
         S.vectors = await api(`/api/v2/vectors?t=${S.t}&var=${id}`);
         chart.render();
@@ -1110,6 +1125,8 @@ async function boot() {
     renderClock();
   });
   slider.addEventListener('change', () => { S.t = Number(slider.value) / 24; refresh(); });
+  const homeBtn = $('t-home');
+  if (homeBtn) homeBtn.addEventListener('click', () => { chart.home_(); updateRange(); });
   $('t-back').addEventListener('click', () => { slider.value = String(Math.max(0, Number(slider.value) - 6)); slider.dispatchEvent(new Event('change')); });
   $('t-fwd').addEventListener('click', () => { slider.value = String(Math.min(Number(slider.max), Number(slider.value) + 6)); slider.dispatchEvent(new Event('change')); });
   // Playback. The first version stalled: every tick did a full refresh - seven
