@@ -135,3 +135,23 @@ def test_console_never_reaches_outside_itself(page):
 
 def test_no_javascript_errors_anywhere_in_the_run(page):
     assert page._isih_errors == [], page._isih_errors
+
+
+def test_health_changes_across_the_voyage(page):
+    """Health must be a state, not a fixed light.
+
+    It sat on DEGRADED from Cape Town to Bharati because two gates were
+    hardcoded UNKNOWN. The rule - a gate with no data never passes - was right;
+    a permanent amber was not evidence of it, it was a stuck light that taught
+    the operator nothing. The gates now have inputs, so the voyage reads VALID
+    in open water and degrades as the ship works into the ice and out of
+    geostationary cover.
+    """
+    seen = []
+    for h in (0, 60, 132, 168):
+        page.eval_on_selector(
+            "#t-slider", f"e => {{ e.value = '{h}'; e.dispatchEvent(new Event('change')); }}")
+        page.wait_for_timeout(2600)
+        seen.append(page.text_content(".health .state").strip())
+    assert len(set(seen)) >= 2, f"health never changed across the voyage: {seen}"
+    assert "VALID" in seen, f"health never reaches VALID: {seen}"

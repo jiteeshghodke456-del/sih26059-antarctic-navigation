@@ -247,3 +247,49 @@ class Ocean:
             sic = np.asarray(sic, dtype=float)
             base = base * (1.0 - smoothstep(0.0, 0.30, sic)) + (-1.8) * smoothstep(0.0, 0.30, sic)
         return np.maximum(base, -1.9)
+
+
+class Seabed:
+    """Depth and under-keel clearance.
+
+    The chart gate was hardcoded UNKNOWN because no bathymetry existed, which
+    left it amber from Cape Town to Bharati - a stuck light rather than
+    evidence. This gives it something to evaluate.
+
+    The shape is the real one for this sector and it is what makes the gate
+    interesting: abyssal plain at 4-5 km, a steep continental slope, and a
+    shallow shelf that in Prydz Bay runs 200-500 m and carries the banks a
+    loaded ship actually has to think about. Under-keel clearance only becomes
+    a question in the last 200 km, which is exactly where the rest of this
+    product says the decision lives.
+    """
+
+    ABYSSAL_M = 4700.0
+    SHELF_M = 420.0
+    SLOPE_CENTRE = -64.5      # deg, mid-slope
+    SLOPE_WIDTH = 2.2
+
+    def __init__(self, seed: int):
+        self.rough = FourierField(seed, "sst", n_modes=14, lon_scale=26.0,
+                                  lat_scale=11.0, alpha=1.3, drift=0.0)
+
+    def depth_m(self, lon, lat):
+        lat = np.asarray(lat, dtype=float)
+        lon = np.asarray(lon, dtype=float)
+        # smoothstep rises with latitude, and latitude rises northward, so
+        # this is already 0 on the southern shelf and 1 over the northern
+        # abyssal plain. Inverting it - the reflex - put 4,700 m under Bharati
+        # and 330 m in the open ocean.
+        offshore = smoothstep(self.SLOPE_CENTRE - self.SLOPE_WIDTH,
+                              self.SLOPE_CENTRE + self.SLOPE_WIDTH, lat)
+        d = self.SHELF_M + (self.ABYSSAL_M - self.SHELF_M) * offshore
+        # Banks and troughs on the shelf, where they matter.
+        shelf_w = 1.0 - offshore
+        d = d * (1.0 + 0.55 * shelf_w * np.tanh(self.rough.value(lon, lat, 0.0)))
+        # A hard floor: nothing navigable is shallower than this in the model.
+        return np.maximum(d, 28.0)
+
+    def ukc_m(self, lon, lat, draft_m=9.0, squat_m=0.6, tide_m=0.0):
+        """Under-keel clearance. Draft 9.0 m is this hull's verified figure;
+        squat is a working allowance, not a certificated number."""
+        return self.depth_m(lon, lat) - draft_m - squat_m + tide_m

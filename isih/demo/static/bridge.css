@@ -15,18 +15,21 @@
 
 /* ---------- palettes ---------------------------------------------------- */
 
-:root,
 :root[data-palette="night"] {
-  --bg:        #05070b;
-  --chrome:    #0b0f16;
-  --panel:     #0e141d;
-  --panel-2:   #131b26;
-  --rule:      #1e2937;
-  --rule-soft: #161f2b;
+  /* Lifted off near-black. The original ground was #05070b with #5b6a79
+     tertiary ink, which is correct for a darkened bridge at 0300 and unreadable
+     anywhere else - including in a demo room with the lights on. Every ground
+     and every ink is a step brighter here; the hierarchy is unchanged. */
+  --bg:        #0d1219;
+  --chrome:    #151c26;
+  --panel:     #1a2330;
+  --panel-2:   #212c3b;
+  --rule:      #33465c;
+  --rule-soft: #26333f;
 
-  --ink:       #ccd6e0;
-  --ink-2:     #8b9bab;
-  --ink-3:     #5b6a79;
+  --ink:       #e8eff6;
+  --ink-2:     #adbdcd;
+  --ink-3:     #8194a6;
 
   /* S-52 chart grounds */
   --sea-deep:  #0a1622;
@@ -57,16 +60,17 @@
   color-scheme: dark;
 }
 
+:root,
 :root[data-palette="dusk"] {
-  --bg:        #10161d;
-  --chrome:    #171f28;
-  --panel:     #1b242f;
-  --panel-2:   #212c39;
-  --rule:      #33414f;
-  --rule-soft: #29343f;
-  --ink:       #dde5ec;
-  --ink-2:     #9dacba;
-  --ink-3:     #6d7d8b;
+  --bg:        #18212b;
+  --chrome:    #212c38;
+  --panel:     #27333f;
+  --panel-2:   #2f3d4b;
+  --rule:      #44586c;
+  --rule-soft: #35434f;
+  --ink:       #f0f5f9;
+  --ink-2:     #bccbd8;
+  --ink-3:     #93a5b4;
   --sea-deep:  #16293a;
   --sea-mid:   #1b3346;
   --sea-shal:  #234158;

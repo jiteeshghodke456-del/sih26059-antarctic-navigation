@@ -142,7 +142,7 @@ def state(t: float = 0.0):
         s = VOY.world.sample(ship["lat"], ship["lon"], t)
         cond = {k: round(float(np.asarray(s[k])), 2) for k in
                 ("sic", "wind_kn", "wind_dir", "hs", "tp", "vis_nm", "sst",
-                 "air", "mslp", "cur_kn")}
+                 "air", "mslp", "cur_kn", "depth_m", "ukc_m")}
     return {
         "t": t,
         "mode": "monitoring" if (plan and plan.approved_by) else "planning",

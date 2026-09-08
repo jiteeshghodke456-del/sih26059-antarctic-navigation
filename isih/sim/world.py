@@ -18,7 +18,7 @@ from __future__ import annotations
 import numpy as np
 
 from .bergs import BergField
-from .fields import Atmosphere, Ocean
+from .fields import Atmosphere, Ocean, Seabed
 from .ice import IceField
 
 # The corridor. Cape Town -> Bharati, with the domain wide enough to hold the
@@ -38,6 +38,7 @@ class World:
         self.seed = seed
         self.atm = Atmosphere(seed)
         self.ocean = Ocean(seed)
+        self.seabed = Seabed(seed)
         self.ice = IceField(seed, self.atm)
         self.bergs = BergField(seed, self.atm, self.ocean)
         self.traffic = TrafficField(seed)
@@ -65,6 +66,8 @@ class World:
             "hs": hs, "tp": tp, "wave_dir": wdir,
             "vis_nm": vis,
             "mslp": self.atm.pressure(lon, lat, t),
+            "depth_m": self.seabed.depth_m(lon, lat),
+            "ukc_m": self.seabed.ukc_m(lon, lat),
         }
 
     def grid(self, t, nx=110, ny=90):

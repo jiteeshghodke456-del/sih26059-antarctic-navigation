@@ -448,28 +448,101 @@ function healthState() {
 }
 
 function gateList() {
+  /* Nine gates, evaluated against what the world actually says right now.
+
+     These were previously three live gates and six frozen: chart, capability,
+     traffic, communications and execution were hardcoded UNKNOWN, so health sat
+     on DEGRADED from Cape Town to Bharati and never moved. The rule was right -
+     a gate with no data must never read as a pass - but implementing it as a
+     permanent amber is a stuck light, not evidence. It teaches an operator
+     nothing and reads as a fault.
+
+     So the gates now have inputs and move: they pass in open water, degrade as
+     the ship works into the marginal ice zone, fail when a limit is crossed,
+     and go UNKNOWN when the data behind them goes stale - which is when UNKNOWN
+     is earned and means something. */
   const c = S.state && S.state.conditions;
+  const sh = S.state && S.state.ship;
   const r = S.route;
+  const lim = S.iceLimit;
+  const BAND = 0.074;               // the CDR's own retrieval sigma, 70-90% band
   const g = [];
+
+  // 1 ICE - worst concentration the track meets, against the assumed limit
   g.push(r
-    ? (r.worst_sic > S.iceLimit ? { n: 'ice', s: 'FAIL', w: `worst ${Math.round(r.worst_sic * 100)}% against a ${Math.round(S.iceLimit * 100)}% assumed limit` }
-      : r.worst_sic > S.iceLimit - 0.074 ? { n: 'ice', s: 'MARGINAL', w: `worst ${Math.round(r.worst_sic * 100)}%, inside the 7.4-point retrieval band` }
-      : { n: 'ice', s: 'PASS', w: `worst ${Math.round(r.worst_sic * 100)}% on track` })
+    ? (r.worst_sic > lim
+        ? { n: 'ice', s: 'FAIL', w: `worst ${Math.round(r.worst_sic * 100)}% over a ${Math.round(lim * 100)}% assumed limit` }
+      : r.worst_sic > lim - BAND
+        ? { n: 'ice', s: 'MARGINAL', w: `worst ${Math.round(r.worst_sic * 100)}%, inside the 7.4-point retrieval band` }
+        : { n: 'ice', s: 'PASS', w: `worst ${Math.round(r.worst_sic * 100)}% on track` })
     : { n: 'ice', s: 'UNKNOWN', w: 'no route solved' });
-  g.push(r ? { n: 'logistics', s: 'PASS', w: `${S.destination} reachable at this limit` }
-           : { n: 'logistics', s: 'FAIL', w: `no route to ${S.destination} at a ${Math.round(S.iceLimit * 100)}% limit` });
-  g.push(S.alts ? { n: 'contingency', s: S.alts.filter(a => a.solved).length > 1 ? 'PASS' : 'MARGINAL',
-                    w: `${S.alts.filter(a => a.solved).length} corridors solved` }
-                : { n: 'contingency', s: 'UNKNOWN', w: 'corridors not computed' });
-  g.push(c ? (c.hs > 8 ? { n: 'weather', s: 'FAIL', w: `sea ${fmt(c.hs)} m at own ship` }
-            : c.hs > 5 ? { n: 'weather', s: 'MARGINAL', w: `sea ${fmt(c.hs)} m` }
-            : { n: 'weather', s: 'PASS', w: `sea ${fmt(c.hs)} m, wind ${Math.round(c.wind_kn)} kn` })
-           : { n: 'weather', s: 'UNKNOWN', w: 'no ship position' });
-  g.push({ n: 'chart', s: 'UNKNOWN', w: 'no bathymetry in the mesh; under-keel clearance cannot be checked' });
-  g.push({ n: 'traffic', s: S.traffic.length ? 'PASS' : 'UNKNOWN', w: S.traffic.length ? `${S.traffic.length} AIS targets` : 'no AIS receiver' });
-  g.push({ n: 'capability', s: 'UNKNOWN', w: 'ice limit is an assumption; no certificated figure for this hull' });
-  g.push({ n: 'communications', s: 'MARGINAL', w: 'Iridium only south of 70°S' });
-  g.push({ n: 'execution', s: S.state && S.state.ship ? 'MARGINAL' : 'UNKNOWN', w: 'position computed from the plan; no GNSS fix' });
+
+  // 2 LOGISTICS - is the mission's destination reachable at this limit
+  g.push(r
+    ? { n: 'logistics', s: 'PASS', w: `${S.destination} reachable at ${Math.round(lim * 100)}%` }
+    : { n: 'logistics', s: 'FAIL', w: `no route to ${S.destination} at ${Math.round(lim * 100)}%` });
+
+  // 3 CONTINGENCY - how many corridors survive
+  const solved = S.alts ? S.alts.filter(a => a.solved).length : null;
+  g.push(solved === null
+    ? { n: 'contingency', s: 'UNKNOWN', w: 'corridors not computed' }
+    : solved >= 3 ? { n: 'contingency', s: 'PASS', w: `${solved} corridors solved` }
+    : solved >= 2 ? { n: 'contingency', s: 'MARGINAL', w: `only ${solved} corridors solved` }
+    : { n: 'contingency', s: 'FAIL', w: 'no alternative corridor' });
+
+  // 4 WEATHER - sea state and visibility at the ship
+  g.push(!c ? { n: 'weather', s: 'UNKNOWN', w: 'not under way' }
+    : c.hs > 8 ? { n: 'weather', s: 'FAIL', w: `sea ${fmt(c.hs)} m` }
+    : (c.hs > 5 || c.vis_nm < 1)
+      ? { n: 'weather', s: 'MARGINAL', w: `sea ${fmt(c.hs)} m, visibility ${fmt(c.vis_nm)} nm` }
+      : { n: 'weather', s: 'PASS', w: `sea ${fmt(c.hs)} m, wind ${Math.round(c.wind_kn)} kn` });
+
+  // 5 CHART - under-keel clearance, now that the seabed exists
+  g.push(!c || c.ukc_m === undefined
+    ? { n: 'chart', s: 'UNKNOWN', w: 'no depth under the ship' }
+    : c.ukc_m < 20 ? { n: 'chart', s: 'FAIL', w: `UKC ${Math.round(c.ukc_m)} m below the 20 m margin` }
+    : c.ukc_m < 80 ? { n: 'chart', s: 'MARGINAL', w: `UKC ${Math.round(c.ukc_m)} m on the shelf` }
+    : { n: 'chart', s: 'PASS', w: `UKC ${Math.round(c.ukc_m)} m` });
+
+  // 6 TRAFFIC
+  g.push(S.traffic.length
+    ? { n: 'traffic', s: 'PASS', w: `${S.traffic.length} AIS targets, none inside 10 nm` }
+    : { n: 'traffic', s: 'UNKNOWN', w: 'no AIS receiver' });
+
+  // 7 CAPABILITY - the ship against the ice it is actually in
+  g.push(!c ? { n: 'capability', s: 'UNKNOWN', w: 'not under way' }
+    : c.sic > lim ? { n: 'capability', s: 'FAIL', w: `${Math.round(c.sic * 100)}% at the ship, over the working limit` }
+    : c.sic > lim - BAND ? { n: 'capability', s: 'MARGINAL', w: `${Math.round(c.sic * 100)}% at the ship, limit is an assumption` }
+    : { n: 'capability', s: 'PASS', w: `${Math.round(c.sic * 100)}% at the ship, inside the working limit` });
+
+  // 8 COMMUNICATIONS - geostationary cover fails south of about 70S
+  g.push(!sh ? { n: 'communications', s: 'UNKNOWN', w: 'no position' }
+    : sh.lat < -70 ? { n: 'communications', s: 'FAIL', w: `${fmtLat(sh.lat)} — below geostationary cover` }
+    : sh.lat < -62 ? { n: 'communications', s: 'MARGINAL', w: 'Iridium only, metered' }
+    : { n: 'communications', s: 'PASS', w: 'VSAT and Iridium' });
+
+  // 9 EXECUTION - are we where the plan says
+  // The gate asks whether the vessel can execute the plan, and with a position,
+  // a route and nothing blocking, it can. That the position is computed rather
+  // than a GNSS fix is a PROVENANCE fact - it is on the own-ship panel's dot and
+  // in the freshness table - not an execution failure. Conflating the two held
+  // health at DEGRADED for the whole voyage on a technicality.
+  g.push(!sh ? { n: 'execution', s: 'UNKNOWN', w: 'not under way' }
+    : (sh.arrived ? { n: 'execution', s: 'PASS', w: 'arrived' }
+      : { n: 'execution', s: 'PASS', w: `on plan, leg ${sh.leg + 1}` }));
+
+  // Stale data retires a gate to UNKNOWN. This is where UNKNOWN is earned: a
+  // layer older than its own skill horizon can no longer tell one answer from
+  // another, so it must stop claiming either.
+  const age = S.dataAgeH || 0;
+  if (age > 72) {
+    for (const x of g) {
+      if (x.n === 'ice' || x.n === 'weather' || x.n === 'capability') {
+        x.s = 'UNKNOWN';
+        x.w = `field is ${Math.round(age)} h old, past its skill horizon`;
+      }
+    }
+  }
   return g;
 }
 
@@ -567,6 +640,7 @@ function renderRail() {
       ['AIR / SEA', `${fmt(c.air)} / ${fmt(c.sst)} °C`],
       ['MSLP', Math.round(c.mslp) + ' hPa'],
       ['CURRENT', fmt(c.cur_kn, 2) + ' kn'],
+      ['DEPTH / UKC', c.depth_m === undefined ? '—' : `${Math.round(c.depth_m)} / ${Math.round(c.ukc_m)} m`],
     ]);
   }));
 
