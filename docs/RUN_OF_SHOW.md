@@ -192,3 +192,31 @@ adds one. Do **not** claim offline re-planning — there is no re-plan button.
 - "Maitri closed 31 of 31." That was a no-data artifact and is gone.
 - "12 harvest runs, all green." 13 runs; the first failed at the Copernicus login.
 - Any POLARIS number for this vessel.
+
+The four below were missing from this list until the master audit found them in
+the submitted deck. The list itself had a hole, which is worth saying out loud:
+the deck did not drift away from a disciplined repository, it drifted through a
+gap in the discipline.
+
+- **"It re-plans automatically as new data arrives."** The published router has
+  no time dimension, and `route_regret.py` measured daily re-planning as
+  *slower* than one global solve. The new bridge console has a time-aware
+  search; say which one you are showing.
+- **"1,096 files harvested automatically every day with zero failures."** Two
+  different pipelines. 1,096 is a one-time NSIDC archive; the daily CMEMS cron
+  has about seven files and failed once.
+- **"42.6 MB to 5.0 MB, 8.4x."** No run produced that. Production logs cluster
+  at 8.2-8.3x and 5.1-5.2 MB.
+- **"A full data pack is 76 KB."** That is an 824-cell sample box. The full
+  corridor mesh is *estimated* 0.5-1 MB and has never been measured. What HAS
+  been measured is the new daily pack: 7.8 KB gzipped.
+
+Two more, for the new console:
+
+- **"Live"** still applies, and now has a second form: do not call the bridge
+  console's environment a forecast or an observation. It is **real physics on
+  synthetic initial conditions**, the page says so, and the 2019 replay console
+  at `/legacy` is where the real satellite observations are.
+- **"Our model produced this route."** No model output is on either screen. If
+  you ever show model output on December 2019 dates, note that those dates are
+  inside the model's own training slice.

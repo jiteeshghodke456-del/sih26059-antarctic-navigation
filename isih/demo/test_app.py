@@ -17,8 +17,18 @@ def client():
         yield c
 
 
-def test_index_is_the_page(client):
+def test_index_is_the_bridge_console(client):
     r = client.get("/")
+    assert r.status_code == 200
+    assert "/static/bridge.js" in r.text and 'id="chart"' in r.text
+
+
+def test_legacy_console_is_still_served(client):
+    """The 2019 replay console is kept rather than deleted. It is the only
+    thing in the repository that renders real satellite observations, and the
+    new console renders a synthetic world - losing it would remove the
+    strongest evidence the project has."""
+    r = client.get("/legacy")
     assert r.status_code == 200
     assert "Bharati" in r.text and "/static/app.js" in r.text
 
@@ -111,7 +121,7 @@ def test_page_shows_the_mode_badge_and_the_decision_panels(client):
     declares its data mode and still has somewhere to render every part of
     the decision.
     """
-    html = client.get("/").text
+    html = client.get("/legacy").text
     assert 'id="mode-badge"' in html
     assert 'id="pa-note"' in html
     for element in ("health-state", "cov-bar", "gate-list", "alt-list",
@@ -122,7 +132,7 @@ def test_page_shows_the_mode_badge_and_the_decision_panels(client):
 
 def test_page_loads_no_external_resources(client):
     """The page claims to run offline; a web font would quietly break that."""
-    html = client.get("/").text
+    html = client.get("/legacy").text + client.get("/").text
     for scheme in ("http://", "https://", "//fonts."):
         # The xmlns on the inline <svg> is a namespace identifier, not a fetch.
         offenders = [

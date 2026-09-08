@@ -19,6 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from . import data, decision_service, workflow_service
+from .bridge_api import router as bridge_router
 
 STATIC = Path(__file__).parent / "static"
 
@@ -102,6 +103,17 @@ app = FastAPI(title="SIH26059 — ISIH demo", lifespan=lifespan)
 
 @app.get("/", include_in_schema=False)
 def index():
+    """The bridge console. This is the product.
+
+    The earlier single-page console is still served at /legacy: it renders the
+    December 2019 NSIDC replay, which is a different and still-useful thing to
+    be able to show, and deleting working evidence to make room for newer
+    evidence is not an upgrade."""
+    return FileResponse(STATIC / "bridge.html")
+
+
+@app.get("/legacy", include_in_schema=False)
+def legacy():
     return FileResponse(STATIC / "index.html")
 
 
@@ -141,6 +153,14 @@ def day(d: str, qa: str = "on"):
     return data.day_field(d, qa == "on")
 
 
+@app.get("/bridge", include_in_schema=False)
+def bridge():
+    """The new bridge console. Served alongside the original page while the
+    old one is still the default, so neither breaks the other."""
+    return FileResponse(STATIC / "bridge.html")
+
+
+app.include_router(bridge_router)
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
