@@ -188,15 +188,43 @@ class BergField:
         return lo, la
 
     def at(self, t):
-        """Every berg at time t, as a list of dicts ready for the API."""
+        """Every berg at time t, as a list of dicts ready for the API.
+
+        `drift_kn` used to be `hypot(uc, vc)` - the SURFACE CURRENT speed, not
+        the iceberg's. The berg velocity closure was never called here at all,
+        so for the wind-sensitive population the number under-reported the
+        berg's own motion, and there was no direction of any kind. Both are
+        fixed: velocity now comes from the same WDE17 call that integrates the
+        tracks, and the 24-hour displacement is read off the track itself.
+        """
         lo, la = self._interp(t)
         aground = self.ground_t <= float(t)
         uc, vc = self.ocean.current(lo, la, t)
         uw, vw = self.atm.wind(lo, la, t)
+        ui, vi = iceberg_velocity(uc, vc, uw, vw, la, self.length_m, self.width_m)
         r = relative_wind_forcing(np.hypot(uw, vw), np.hypot(uc, vc),
                                   la, self.length_m, self.width_m)
+
+        # Where it will be in 24 h, taken from the integrated track rather than
+        # extrapolated from the instantaneous velocity - so the arrow the chart
+        # draws is the first segment of the same forecast the cone belongs to,
+        # not a second, slightly different prediction sitting next to it.
+        lo24, la24 = self._interp(min(t + 1.0, self.times[-1]))
+
         out = []
         for i in range(len(lo)):
+            speed_kn = float(np.hypot(ui[i], vi[i])) * 1.94384
+            course = (np.degrees(np.arctan2(float(ui[i]), float(vi[i]))) + 360.0) % 360.0
+            if aground[i]:
+                d24 = None
+            else:
+                dlat = float(la24[i] - la[i])
+                dlon = float(lo24[i] - lo[i]) * np.cos(np.radians(float(la[i])))
+                d24 = {
+                    "lat": round(float(la24[i]), 4),
+                    "lon": round(float(lo24[i]), 4),
+                    "nm": round(float(np.hypot(dlat, dlon)) * 60.0, 1),
+                }
             out.append({
                 "id": self.name[i],
                 "lat": round(float(la[i]), 4),
@@ -206,8 +234,12 @@ class BergField:
                 "area_km2": round(float(self.length_m[i] * self.width_m[i]) / 1e6, 1),
                 "tracked": bool(self.tracked[i]),
                 "grounded": bool(aground[i]),
+                "grounded_since_day": (None if not aground[i]
+                                       else round(float(self.ground_t[i]), 2)),
                 "source": self.source[i],
-                "drift_kn": round(float(np.hypot(uc[i], vc[i])) * 1.94384, 2),
+                "drift_kn": 0.0 if aground[i] else round(speed_kn, 2),
+                "drift_dir_deg": None if aground[i] else round(course, 1),
+                "d24": d24,
                 "wind_share": round(float(r[i]), 3),
                 "regime": "current-driven" if r[i] < 0.15 else "wind-sensitive",
             })

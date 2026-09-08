@@ -298,3 +298,31 @@ def test_land_mask_knows_the_continents():
     assert bool(on_land(25.0, -30.0)[0]), "southern Africa"
     assert not bool(on_land(45.0, -50.0)[0]), "open Southern Ocean"
     assert not bool(on_land(60.0, -60.0)[0]), "open ocean"
+
+
+def test_berg_drift_is_the_berg_not_the_current():
+    """`drift_kn` used to be hypot(current), because `at()` never called the
+    velocity closure at all. For a wind-sensitive berg that under-reports the
+    berg's own motion, and there was no direction of any kind to draw."""
+    w = World(20261207)
+    bergs = w.bergs.at(6.0)
+    moving = [b for b in bergs if not b["grounded"]]
+    assert moving, "expect bergs under way"
+    for b in moving:
+        assert b["drift_dir_deg"] is not None
+        assert 0.0 <= b["drift_dir_deg"] < 360.0
+        assert 0.0 <= b["drift_kn"] < 3.0
+        assert b["d24"] is not None and b["d24"]["nm"] >= 0.0
+
+
+def test_grounded_bergs_carry_no_drift_vector():
+    """A drift arrow on a grounded berg would be a lie about the one thing the
+    arrow claims."""
+    w = World(20261207)
+    aground = [b for b in w.bergs.at(24.0) if b["grounded"]]
+    assert aground, "expect some bergs aground by day 24"
+    for b in aground:
+        assert b["d24"] is None
+        assert b["drift_dir_deg"] is None
+        assert b["drift_kn"] == 0.0
+        assert b["grounded_since_day"] is not None

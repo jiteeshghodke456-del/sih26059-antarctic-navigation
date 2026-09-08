@@ -210,22 +210,50 @@ function setupChart() {
   });
 
   chart.addLayer('bergs', 60, (c, ch) => {
+    // How far across the view we are looking, in nm - decides how many drift
+    // vectors can be drawn before 26 of them become clutter.
+    const [latT, lonL] = ch.ll(0, 0);
+    const [, lonR] = ch.ll(ch.w, ch.h);
+    const spanNm = distNm(latT, lonL, latT, lonR);
+
     for (const b of S.bergs) {
       const [x, y] = ch.px(b.lat, b.lon);
       const r = Math.max(2.5, Math.min(9, Math.sqrt(b.area_km2) / 3));
-      c.fillStyle = css('--berg');
-      c.globalAlpha = b.tracked ? 1 : 0.45;
-      c.beginPath();
-      c.moveTo(x, y - r); c.lineTo(x + r, y); c.lineTo(x, y + r); c.lineTo(x - r, y);
-      c.closePath(); c.fill();
-      c.globalAlpha = 1;
+
+      if (b.grounded) {
+        // Aground: hollow, with a baseline under it. No vector, no cone - a
+        // grounded berg is not going anywhere, and an arrow on one would be a
+        // lie about the single thing the arrow claims.
+        c.strokeStyle = css('--berg');
+        c.lineWidth = 1.2;
+        c.globalAlpha = b.tracked ? 1 : 0.5;
+        c.beginPath();
+        c.moveTo(x, y - r); c.lineTo(x + r, y); c.lineTo(x, y + r); c.lineTo(x - r, y);
+        c.closePath(); c.stroke();
+        c.beginPath(); c.moveTo(x - r, y + r + 2); c.lineTo(x + r, y + r + 2); c.stroke();
+        c.globalAlpha = 1;
+      } else {
+        c.fillStyle = css('--berg');
+        c.globalAlpha = b.tracked ? 1 : 0.45;
+        c.beginPath();
+        c.moveTo(x, y - r); c.lineTo(x + r, y); c.lineTo(x, y + r); c.lineTo(x - r, y);
+        c.closePath(); c.fill();
+        c.globalAlpha = 1;
+        // Vectors for catalogue-tracked bergs always; for the rest only once
+        // the officer has zoomed in far enough that they will not collide.
+        if (b.d24 && (b.tracked || spanNm < 1200)) drawBergVector(c, ch, b, x, y, r);
+      }
+
       if (b.tracked) {
         c.fillStyle = css('--ink-2');
-        c.font = '9px ui-monospace, monospace';
-        c.fillText(b.id, x + r + 2, y + 3);
+        c.font = '10px ui-monospace, monospace';
+        c.fillText(b.id, x + r + 3, y + 3);
       }
     }
-    // selected berg: projected track and its growing uncertainty
+
+    // The selected berg gets the full forecast: track plus the growing
+    // uncertainty. Drawing this for all 26 would be unreadable, and the vector
+    // and the cone answer different questions.
     if (S.selBerg && S.selBerg.forecast) {
       c.strokeStyle = css('--berg'); c.lineWidth = 1.4;
       c.beginPath();
@@ -312,8 +340,13 @@ function setupChart() {
       tip.innerHTML = '';
       tip.appendChild(el('b', null, near.id + (near.tracked ? '' : ' (untracked)')));
       const dl = el('dl');
-      const rows = [['area', near.area_km2 + ' km²'], ['drift', near.drift_kn + ' kn'],
-                    ['regime', near.regime], ['source', near.source]];
+      const rows = near.grounded
+        ? [['area', near.area_km2 + ' km²'], ['state', 'AGROUND'],
+           ['since', 'D+' + near.grounded_since_day], ['source', near.source]]
+        : [['area', near.area_km2 + ' km²'],
+           ['drift', near.drift_kn + ' kn  ' + fmt(near.drift_dir_deg, 0) + '°'],
+           ['24 h run', near.d24 ? near.d24.nm + ' nm' : '—'],
+           ['regime', near.regime], ['source', near.source]];
       if (near.cpa) rows.push(['CPA', near.cpa.sep_nm + ' nm @ ' + near.cpa.hours + ' h']);
       for (const [k, v] of rows) { dl.appendChild(el('dt', null, k)); dl.appendChild(el('dd', null, String(v))); }
       tip.appendChild(dl);
@@ -325,6 +358,63 @@ function setupChart() {
     }
   };
   window.addEventListener('resize', () => { chart.resize(); chart.render(); });
+}
+
+/* Iceberg drift vector, IcySea's idiom.
+
+   The arrow is the berg's 24-hour DISPLACEMENT, drawn as a chord from the berg
+   to where the integrated track puts it tomorrow - not an instantaneous
+   velocity. The officer's question is "where will it be when I am abeam", and a
+   chord answers that directly while a speed does not. It is also the first
+   segment of the same forecast the uncertainty cone belongs to, so the two
+   agree instead of being two slightly different predictions side by side.
+
+   Dashed means wind-sensitive: that berg's track is only as good as the wind
+   forecast. Wagner-Dell-Eisenman's own conclusion is that big tabular bergs go
+   with the current, so the distinction is the model's, not a decoration. */
+function drawBergVector(c, ch, b, x, y, r) {
+  const [x2, y2] = ch.px(b.d24.lat, b.d24.lon);
+  const dx = x2 - x, dy = y2 - y;
+  const len = Math.hypot(dx, dy);
+  c.strokeStyle = css('--berg');
+  c.globalAlpha = b.tracked ? 0.95 : 0.5;
+  c.lineWidth = 1.5;
+  c.setLineDash(b.regime === 'wind-sensitive' ? [3, 2] : []);
+
+  if (len < r + 13) {
+    // At corridor zoom a 24 h run is a few nautical miles - sub-pixel. Drawing
+    // the true chord there would render nothing, so this falls back to a
+    // fixed-length direction arrow: it still answers "which way", and it
+    // deliberately carries no speed, because at this zoom no length could.
+    const a = Math.atan2(dy, dx) || 0;
+    const x2f = x + Math.cos(a) * (r + 14), y2f = y + Math.sin(a) * (r + 14);
+    c.beginPath();
+    c.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+    c.lineTo(x2f, y2f);
+    c.stroke();
+    c.setLineDash([]);
+    c.beginPath();
+    c.moveTo(x2f, y2f);
+    c.lineTo(x2f - 4.5 * Math.cos(a - 0.45), y2f - 4.5 * Math.sin(a - 0.45));
+    c.moveTo(x2f, y2f);
+    c.lineTo(x2f - 4.5 * Math.cos(a + 0.45), y2f - 4.5 * Math.sin(a + 0.45));
+    c.stroke();
+  } else {
+    const a = Math.atan2(dy, dx);
+    c.beginPath();
+    c.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+    c.lineTo(x2, y2);
+    c.stroke();
+    c.setLineDash([]);
+    c.beginPath();
+    c.moveTo(x2, y2);
+    c.lineTo(x2 - 5 * Math.cos(a - 0.4), y2 - 5 * Math.sin(a - 0.4));
+    c.moveTo(x2, y2);
+    c.lineTo(x2 - 5 * Math.cos(a + 0.4), y2 - 5 * Math.sin(a + 0.4));
+    c.stroke();
+  }
+  c.setLineDash([]);
+  c.globalAlpha = 1;
 }
 
 function drawTrack(c, ch, legs, colour, width, dash) {
@@ -674,18 +764,21 @@ function renderRail() {
   // icebergs
   rail.appendChild(panel('Icebergs', 'panel.bergs', b => {
     const tracked = S.bergs.filter(x => x.tracked).length;
+    const aground = S.bergs.filter(x => x.grounded).length;
     kv(b, [['IN VIEW', S.bergs.length], ['CATALOGUE-TRACKED', tracked],
-           ['BELOW 18.5 km', S.bergs.length - tracked]]);
-    const close = S.bergs.filter(x => x.cpa).slice(0, 4);
+           ['BELOW 18.5 km', S.bergs.length - tracked], ['AGROUND', aground]]);
+    const close = S.bergs.filter(x => x.cpa).slice(0, 5);
     if (close.length) {
       const tbl = el('table', 'tbl');
-      tbl.innerHTML = '<tr><th>ID</th><th>CPA</th><th>@h</th><th>±</th></tr>';
+      tbl.innerHTML = '<tr><th>ID</th><th>DRIFT</th><th>24h</th><th>CPA</th><th>@h</th></tr>';
       for (const x of close) {
         const tr = el('tr');
-        tr.appendChild(el('td', null, x.id));
+        tr.appendChild(el('td', null, x.id + (x.grounded ? ' G' : '')));
+        tr.appendChild(el('td', 'n', x.grounded ? 'aground'
+          : `${x.drift_kn} ${fmt(x.drift_dir_deg, 0)}°`));
+        tr.appendChild(el('td', 'n', x.d24 ? x.d24.nm : '—'));
         tr.appendChild(el('td', 'n', x.cpa.sep_nm));
         tr.appendChild(el('td', 'n', x.cpa.hours));
-        tr.appendChild(el('td', 'n', x.cpa.radius_nm));
         tr.style.cursor = 'pointer';
         tr.addEventListener('click', async () => {
           const idx = S.bergs.indexOf(x);
