@@ -31,6 +31,7 @@ import numpy as np
 
 from models.iceberg.drift import iceberg_velocity, relative_wind_forcing
 
+from .geo_mask import on_land
 from .hashing import integers, normal, uniform
 
 USNIC_MIN_AXIS_M = 18_520.0        # 10 nautical miles
@@ -40,12 +41,17 @@ MAX_PROJECTION_H = 72.0            # beyond this the model is not defensible
 
 # Iceberg sources in this sector: the Amery Ice Shelf / Prydz Bay outflow, the
 # Fimbul and Riiser-Larsen shelves to the west, and the West Ice Shelf.
+# Seed points sit offshore of each calving front rather than on it. A berg
+# spawned against the coast is pushed back into it by the coastal current and
+# grounds on its first step - nine of twenty-six never moved at all. These are
+# the outflow positions a berg reaches within a day or two of calving, which is
+# where a tracked berg is actually first seen.
 _SOURCES = (
-    (73.5, -68.6, "Amery / Prydz Bay"),
-    (81.5, -66.8, "West Ice Shelf"),
-    (34.0, -69.5, "Fimbul Ice Shelf"),
-    (20.5, -70.4, "Riiser-Larsen"),
-    (57.0, -67.2, "Mawson coast"),
+    (73.5, -67.4, "Amery / Prydz Bay"),
+    (81.5, -65.6, "West Ice Shelf"),
+    (34.0, -68.2, "Fimbul Ice Shelf"),
+    (20.5, -69.0, "Riiser-Larsen"),
+    (57.0, -65.9, "Mawson coast"),
 )
 
 
@@ -90,6 +96,30 @@ class BergField:
         # edge is not a hazard anyone can act on.
         lon0 = np.clip(lon0, 11.0, 85.0)
         lat0 = np.clip(lat0, -73.5, -52.0)
+
+        # ...and then off the land. Clamping to the domain's bounding BOX is not
+        # the same question as being at sea, and answering the easy one put
+        # seven of these on Antarctica. Bergs that landed ashore are nudged
+        # north in steps until they float; anything still stuck after that is
+        # moved to open water at its own longitude.
+        # Being off the land is not enough: a berg spawned a few km from the
+        # coast is pushed straight back into it by the coastal current and
+        # grounds on the first step, which put 11 of 26 aground before the
+        # voyage began. Require open water for a margin north of the spawn too,
+        # so the population starts where bergs actually float.
+        MARGIN_DEG = 0.55
+        def blocked(lo, la):
+            return (on_land(lo, la) | on_land(lo, la + MARGIN_DEG)
+                    | on_land(lo, la - MARGIN_DEG * 0.5))
+        ashore = blocked(lon0, lat0)
+        for _ in range(24):
+            if not ashore.any():
+                break
+            lat0 = np.where(ashore, lat0 + 0.4, lat0)
+            lat0 = np.clip(lat0, -73.5, -50.0)
+            ashore = blocked(lon0, lat0)
+        if ashore.any():
+            lat0 = np.where(ashore, -57.0, lat0)
         self.source = [_SOURCES[i][2] for i in src_idx]
 
         # Major axis: log-normal, so a few giants and many small ones - which is
@@ -118,6 +148,12 @@ class BergField:
         lat = np.zeros((n_t, len(lon0)))
         lon[0], lat[0] = lon0, lat0
         dt = STEP_HOURS * 3600.0
+        grounded = np.zeros(len(lon0), dtype=bool)
+        # WHEN each berg grounded, not merely whether it ever does. Reporting
+        # the final flag at every time made a berg that grounds on day 20 read
+        # as aground on day 1, while its position was still changing - an
+        # inconsistency a test caught immediately.
+        ground_t = np.full(len(lon0), np.inf)
         for k in range(1, n_t):
             t = self.times[k - 1]
             la, lo = lat[k - 1], lon[k - 1]
@@ -125,8 +161,21 @@ class BergField:
             uw, vw = self.atm.wind(lo, la, t)
             ui, vi = iceberg_velocity(uc, vc, uw, vw, la, self.length_m, self.width_m)
             # metres -> degrees, with the cos(lat) correction on longitude
-            lat[k] = la + (vi * dt) / 111_320.0
-            lon[k] = lo + (ui * dt) / (111_320.0 * np.maximum(np.cos(np.radians(la)), 0.05))
+            nlat = la + (vi * dt) / 111_320.0
+            nlon = lo + (ui * dt) / (111_320.0 * np.maximum(np.cos(np.radians(la)), 0.05))
+
+            # Grounding. A berg whose next step would put it ashore stops where
+            # it is and stays there. This is not a workaround for the land mask:
+            # grounded icebergs are real, they are why a bay can stay blocked
+            # for a whole season, and a berg that walks up a beach is the single
+            # most obviously wrong thing this chart could draw.
+            hits = on_land(nlon, nlat)
+            newly = hits & ~grounded
+            ground_t = np.where(newly, self.times[k], ground_t)
+            grounded |= hits
+            lat[k] = np.where(grounded, lat[k - 1], nlat)
+            lon[k] = np.where(grounded, lon[k - 1], nlon)
+        self.ground_t = ground_t
         return lon, lat
 
     def _interp(self, t):
@@ -141,6 +190,7 @@ class BergField:
     def at(self, t):
         """Every berg at time t, as a list of dicts ready for the API."""
         lo, la = self._interp(t)
+        aground = self.ground_t <= float(t)
         uc, vc = self.ocean.current(lo, la, t)
         uw, vw = self.atm.wind(lo, la, t)
         r = relative_wind_forcing(np.hypot(uw, vw), np.hypot(uc, vc),
@@ -155,6 +205,7 @@ class BergField:
                 "width_m": int(self.width_m[i]),
                 "area_km2": round(float(self.length_m[i] * self.width_m[i]) / 1e6, 1),
                 "tracked": bool(self.tracked[i]),
+                "grounded": bool(aground[i]),
                 "source": self.source[i],
                 "drift_kn": round(float(np.hypot(uc[i], vc[i])) * 1.94384, 2),
                 "wind_share": round(float(r[i]), 3),

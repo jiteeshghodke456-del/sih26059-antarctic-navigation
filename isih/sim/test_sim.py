@@ -12,6 +12,7 @@ import pytest
 from isih.sim.fields import Atmosphere, Ocean, coriolis
 from isih.sim.ice import IceField
 from isih.sim.bergs import BergField, USNIC_MIN_AXIS_M, MAX_PROJECTION_H
+from isih.sim.geo_mask import on_land
 from isih.sim.world import World, BOX
 
 
@@ -244,3 +245,56 @@ def test_grid_is_fast_enough_to_serve(w):
     t0 = time.time()
     w.grid(7.0)
     assert time.time() - t0 < 0.5
+
+
+# --- land: the tests that should have existed ------------------------------
+
+def test_no_iceberg_is_ever_on_land():
+    """Seven of twenty-six bergs were sitting on Antarctica, and the fix before
+    this one clamped them into the domain's bounding BOX - which is a different
+    question and moved some of them further ashore. Nothing caught it because
+    nothing asked. This asks, across seeds and across the whole horizon."""
+    for seed in (20261207, 7, 99):
+        w = World(seed)
+        for t in (0.0, 1.0, 5.0, 12.0, 20.0, 30.0):
+            ashore = [b["id"] for b in w.bergs.at(t)
+                      if bool(on_land(b["lon"], b["lat"])[0])]
+            assert not ashore, f"seed {seed} t={t}: {ashore} on land"
+
+
+def test_grounded_bergs_stop_and_stay_stopped():
+    """A grounded berg is a real thing - it is why a bay stays blocked - but it
+    must not creep, and it must not un-ground."""
+    w = World(20261207)
+    early = {b["id"]: b for b in w.bergs.at(6.0) if b["grounded"]}
+    late = {b["id"]: b for b in w.bergs.at(24.0)}
+    assert early, "expect some bergs aground near the coast"
+    for bid, b in early.items():
+        assert late[bid]["grounded"], f"{bid} un-grounded"
+        assert abs(late[bid]["lat"] - b["lat"]) < 1e-6
+        assert abs(late[bid]["lon"] - b["lon"]) < 1e-6
+
+
+def test_the_route_never_crosses_land():
+    """The lattice had no land mask: 302 of its 5,250 nodes are ashore and the
+    published Bharati track had a leg on the continent. Ice made the interior
+    expensive, which hid it - expensive is not impossible."""
+    from isih.sim.router import Router, VesselModel
+    from isih.sim.world import BHARATI, CAPE_TOWN
+    w = World(20261207)
+    r = Router(w, VesselModel())
+    assert r.land.sum() > 0, "a land mask that masks nothing is not a mask"
+    for depart in (0.0, 6.0):
+        res = r.solve(CAPE_TOWN, BHARATI, depart, "time")
+        if res is None:
+            continue
+        ashore = [(l["lat"], l["lon"]) for l in res["legs"]
+                  if bool(on_land(l["lon"], l["lat"])[0])]
+        assert not ashore, f"depart {depart}: legs on land {ashore[:3]}"
+
+
+def test_land_mask_knows_the_continents():
+    assert bool(on_land(20.0, -71.5)[0]), "Antarctica"
+    assert bool(on_land(25.0, -30.0)[0]), "southern Africa"
+    assert not bool(on_land(45.0, -50.0)[0]), "open Southern Ocean"
+    assert not bool(on_land(60.0, -60.0)[0]), "open ocean"

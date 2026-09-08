@@ -35,6 +35,8 @@ import math
 
 import numpy as np
 
+from .geo_mask import on_land
+
 R_EARTH_KM = 6371.0
 
 
@@ -115,6 +117,15 @@ class Router:
         self.ny, self.nx = len(self.lats), len(self.lons)
         self._cache = {}
 
+        # The lattice had no land mask, so the search was free to route across
+        # the continent: 302 of these 5,250 nodes are ashore, and the published
+        # Bharati track had a leg on land at 69.5 S 76.9 E. Ice made most of the
+        # continent expensive, which hid it - expensive is not the same as
+        # impossible, and a route over a glacier is the one mistake that ends a
+        # demo.
+        LO, LA = np.meshgrid(self.lons, self.lats)
+        self.land = on_land(LO, LA)
+
     def _conditions(self, t_slot):
         """Fields on the router lattice at a quantised time. Quantising to
         6-hour slots keeps the number of world evaluations small while still
@@ -166,6 +177,8 @@ class Router:
                 nj, ni = j + dj, i + di
                 if not (0 <= nj < self.ny and 0 <= ni < self.nx) or seen[nj, ni]:
                     continue
+                if self.land[nj, ni]:
+                    continue                      # ships do not cross land
                 s_n = float(sic[nj, ni])
                 if s_n > vessel.ice_limit:
                     continue                      # hard constraint, never priced
