@@ -322,3 +322,4 @@ INFO - 2026-09-21T18:14:58Z - Total size of the download: 40.65 MB.
 2026-09-21T18:14:58+00:00 saved cmems_siconc_2026-09-21.nc
 cmems_siconc_2026-09-21.nc: 42.62 MB -> 5.25 MB (8.1x smaller, int16 packed)
 2026-09-21T18:14:59+00:00 compressed cmems_siconc_2026-09-21.nc
+2026-09-21T21:07:47+00:00 already have cmems_siconc_2026-09-21.nc, skipping
