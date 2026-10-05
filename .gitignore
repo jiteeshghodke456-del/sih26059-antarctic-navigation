@@ -2,6 +2,12 @@
 # NSIDC alone is ~350 KB/day; three years is ~380 MB. Anyone can re-fetch it
 # with `python isih/download_nsidc.py`, so the repo stays clonable.
 isih/data/
+# ...and the symlink form. A trailing slash does not match a symlink, so the
+# line above left `isih/data` showing as untracked forever. Worth a comment
+# rather than a silent fix: that symlink currently points into a SIBLING GIT
+# WORKTREE, so removing that worktree deletes the demo's 400 MB satellite
+# archive with no obvious cause. Correction 10 in docs/CORRECTIONS.md.
+isih/data
 *.part
 
 # Trained weights: committed deliberately and selectively, not by accident.
@@ -17,3 +23,22 @@ venv/
 
 # OS
 .DS_Store
+
+# Local-only: diagram generation prompts, deliberately not pushed.
+docs/DIAGRAM_PROMPTS.md
+
+# staged for review before deletion — see the reorg commit
+_quarantine/
+
+# ISIH demo virtualenv (rebuild: see isih/demo/requirements.txt)
+.venv-demo/
+
+# MLflow local tracking store — regenerable from isih/mlflow_backfill.py
+# (backfilled runs) plus whatever future local training runs log. Binary
+# run data, not source; see docs/MLFLOW_SETUP.md.
+mlruns/
+mlartifacts/
+
+# agent skills installed by `npx skills` — bodies are reproducible from skills-lock.json
+.agents/
+.claude/skills/

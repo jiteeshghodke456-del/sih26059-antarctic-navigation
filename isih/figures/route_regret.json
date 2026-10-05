@@ -1,0 +1,67 @@
+{
+  "experiment": "route regret: what it costs to sail on stale ice",
+  "vessel": "MV Vasiliy Golovnin",
+  "vessel_config": {
+    "vessel_type": "SDA",
+    "max_speed": 30.4,
+    "unit": "km/hr",
+    "beam": 22.4,
+    "hull_type": "slender",
+    "force_limit": 96634.5,
+    "max_ice_conc": 80,
+    "min_depth": 20,
+    "max_wave": 3.0,
+    "neighbour_splitting": true
+  },
+  "depart": "2019-12-01",
+  "route": "Cape Town -> Bharati",
+  "ice_source": "NSIDC CDR daily, observed",
+  "step_km": 25.0,
+  "max_wait_days": 5,
+  "arms": {
+    "STATIC": "plan once on departure ice, sail blind (today's practice)",
+    "STATIC-noQA": "same, but trusting QA-suspect cells as open water",
+    "DAILY": "fresh observed chart every morning, no forecast"
+  },
+  "results": [
+    {
+      "planner": "STATIC",
+      "depart": "2019-12-01",
+      "planned_days": 8.575855896701563,
+      "actual_days": 8.61,
+      "regret_days": 0.03,
+      "blocked_hours": 0.0,
+      "max_sic_encountered": 54.3,
+      "mean_sic_encountered": 5.9,
+      "distance_km": 5813.3,
+      "completed": true,
+      "note": ""
+    },
+    {
+      "planner": "STATIC-noQA",
+      "depart": "2019-12-01",
+      "planned_days": 8.575855896701563,
+      "actual_days": 8.58,
+      "regret_days": 0.0,
+      "blocked_hours": 0.0,
+      "max_sic_encountered": 54.3,
+      "mean_sic_encountered": 5.1,
+      "distance_km": 5813.3,
+      "completed": true,
+      "note": ""
+    },
+    {
+      "planner": "DAILY",
+      "depart": "2019-12-01",
+      "planned_days": null,
+      "actual_days": 9.0,
+      "regret_days": null,
+      "blocked_hours": 9.6,
+      "max_sic_encountered": 54.3,
+      "mean_sic_encountered": 6.4,
+      "distance_km": 5823.3,
+      "completed": true,
+      "note": "arrived after 9 daily re-plans"
+    }
+  ]
+}

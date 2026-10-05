@@ -60,7 +60,7 @@ def build_embed_cell() -> str:
 NOTEBOOK_INTRO = """# ISIH Prototype — Sea-Ice Bias-Correction Model
 
 **This trains the Sept 8 ISIH prototype, not the December production model.**
-See `isih/README.md` in the repo for the difference.
+See `docs/ISIH_README.md` in the repo for the difference.
 
 What this does: learns to correct the GLORYS12 ocean-reanalysis sea-ice field
 toward what satellites actually observed (NOAA/NSIDC CDR).
@@ -224,7 +224,8 @@ def main() -> int:
         md(
             "## 7. The experiment: skill at several forecast horizons\n\n"
             "**Why a lead time exists at all.** Measured on real NSIDC data, predicting "
-            "*today* from yesterday's observation scores RMSE 0.0359 — better than any "
+            "*today* from yesterday's observation scores RMSE 0.0359 (full-year 2020, "
+            "all seasons — not the melt-season test slice) — better than any "
             "model correcting a background field. Same-day correction is not a real "
             "task; persistence already solves it for free.\n\n"
             "The operational question is what the ice will be *days* ahead, where "

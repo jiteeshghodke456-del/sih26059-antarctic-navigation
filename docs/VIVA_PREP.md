@@ -111,10 +111,16 @@ Our design: the heavy work (gathering data, training, computing routes) happens
 on land. Then everything the ship needs is squeezed into one small file — under
 1 KB for a route — sent over the slow link, or carried aboard on a USB stick.
 
-**The ship then re-plans routes entirely offline, in about 9 seconds.**
+**The routing pipeline itself needs no network at all** — mesh, vessel model,
+Dijkstra and smoothing run in about 9 seconds on a laptop CPU, a measured
+benchmark of the reused PolarRoute engine.
 
-In the demo: unplug the network, keep planning. That's not a trick — that's how
-it's designed to work at sea.
+We do not stage a live "unplug the network" demo: there is no on-demand
+re-plan control wired into the app yet, so nothing would visibly happen if a
+judge asked for it. What is true and demoable today is narrower and still
+real — the running app makes no network call at all; every screen loads from
+files already on disk. Wiring a captain-triggered re-plan onto that 9-second
+pipeline is designed, not built.
 
 ## Prototype vs. Product — be precise about this
 
@@ -158,10 +164,20 @@ inflated.
 **Q: Isn't yesterday's satellite image already a good forecast?**
 **Yes — and this nearly caught us out.** We measured it: predicting today from
 yesterday scores 0.0359 error, better than our first model's 0.1051. So we
-changed the task. Persistence decays fast — 0.0359 at 1 day, 0.0610 at 3, 0.0893
-at 7 — so we forecast *days ahead*, where it stops being competitive, and we
-score persistence at the same range so the comparison is fair. We found this by
-testing it, before a judge could.
+changed the task: we forecast *days ahead*, where persistence stops being
+competitive, and we score persistence at the same range so the comparison is
+fair. We found this by testing it, before a judge could.
+
+**Quote only the test-set numbers in the table in `ISIH_RESULTS.md`** — model
+0.0968 against persistence 0.1395 at 7 days. There is a second, older set of
+persistence figures (0.0359 at 1 day, 0.0610 at 3, 0.0893 at 7) measured over
+**full-year 2020, all seasons**; it is in `isih/features.py`'s docstring and it
+is not the held-out test slice. Reciting 0.0893 beside the model's 0.0968 makes
+it look as though persistence wins at 7 days. It does not — the two numbers are
+from different periods and must never be spoken in the same breath. The test
+slice is the austral melt season, the last 15% of 2019–2020, where the ice is
+moving fastest, persistence is weakest, and the operational question actually
+lives.
 
 **Q: Would a simple average correction do as well as your neural network?**
 We test exactly that — a per-pixel average bias map and a constant offset, both
@@ -191,10 +207,26 @@ Tracking databases only cover icebergs above about 10 nautical miles. The small
 rather state that than imply we've solved iceberg safety.
 
 **Q: Why only project drift 72 hours?**
-Because beyond that, honest error bars get so large (100+ km) the danger zone
-would block the entire route — technically correct, practically useless. We cap
-it at 72 hours and refresh daily from new observations. Past that we show last
-known positions, labelled as observations, not predictions.
+**Say first that we do not project drift at all yet.** `models/iceberg/drift.py`
+computes an instantaneous drift *velocity* from the Wagner–Dell–Eisenman
+equations — there is no time integrator, so no berg has been stepped forward an
+hour, and no trajectory error has been measured. What we have run on the real
+USNIC catalogue is a regime check (wind-dominated vs current-dominated) under a
+declared sensitivity sweep, because we do not have wind and current at those
+positions and did not invent them.
+
+The 72-hour cap is the *design* limit for when projection is built: beyond it
+the honest error bars grow large enough that the danger zone would block the
+entire route — technically correct, practically useless. Note our own stated
+reason for that number has been corrected too: the cap is not supported by a
+measured 127–147 km error figure, because the paper that number comes from
+never states the rollout length behind it. The defensible reason is simpler —
+**no Antarctic tabular-berg error curve exists in the literature at any lead**,
+so 72 hours is where the evidence stops, not where a measured curve stops.
+
+Today the map shows last known positions, labelled as observations. That is
+honest and it is also one third of PS-26059 still on the roadmap. Do not let
+the question pass as though the capability exists.
 
 ## On routing
 
@@ -238,6 +270,76 @@ They're already scheduled — not aspirations.
 
 ---
 
+## When the system is wrong — which way, and why it matters
+
+**Q: What happens when your system is wrong? Which error is worse?**
+
+They are not symmetric, and we designed around the asymmetry rather than around
+accuracy.
+
+A **false negative** is calling an impassable cell passable — we route the ship
+into ice it cannot handle. In the Southern Ocean the consequence is besetting or
+hull damage, with no port of refuge, no nearby salvage and a search-and-rescue
+response measured in days. The nearest comparable case on a voyage serving the
+Indian programme, MV *Magdalena Oldendorff* in 2002, was beset near
+Novolazarevskaya for roughly five and a half months.
+
+A **false positive** is calling a passable cell impassable — the ship takes a
+detour it did not need. The cost is hours of steaming, fuel, and charter time
+that is expensive but recoverable.
+
+So the errors differ by orders of magnitude in consequence, and a system tuned
+for accuracy would trade them one-for-one. We deliberately do not.
+
+**The proof that this is a design principle and not a slogan is in our own
+numbers.** When we found the CDR was reporting suppressed coastal pixels as
+0.0 % ice and masked them, the coast got *heavier*: 46.8 % → 54.6 % on 1 Dec
+2019, 62.5 % → 65.4 % on 10 Dec (`docs/ISIH_RESULTS.md` §2). The fix moved the
+system toward more false positives and fewer false negatives, and it made our
+own headline result worse — four of the eight days Bharati looked reachable
+turned out to be that artifact. We shipped the more cautious reading anyway.
+That is the direction a safety system must fail in.
+
+**What we do not have, and will say so:** we have not measured a false-positive
+or false-negative *rate* against ground truth. The 80 % ice limit those errors
+are defined against is a working stand-in — it comes from no ice class and no
+POLARIS row, and `isih/ice_meshes.py` labels it as such in the code. Measuring
+the rates needs a passability ground truth we do not have; the honest interim
+is to be transparently conservative and to say which number is invented.
+
+---
+
+## Selling it, deploying it, and who pays
+
+**Q: How would this actually be deployed and sold?**
+
+**Deployment** is split by where the resources are, not by preference. The GPU
+work — training, ensemble inference, pack building — runs ashore at NCPOR. The
+ship carries a CPU-only laptop. Model weights, about 60 MB, never cross the
+satellite link; they load from a USB stick at Cape Town before departure, which
+is a supported path rather than a degraded one for a vessel that sails once a
+season. What crosses the link is a nightly voyage pack of changed cells only,
+targeted under 1 MB (ADR-023). Full detail in `docs/PPT_CONTENT.md` §6.
+
+**The pilot path** is NCPOR and the charter operator on the *Golovnin*, because
+that is where the credibility already is: the corridor, the vessel and the
+season are the ones we built against. From there the same product serves other
+national Antarctic programmes running similar-class hulls into similar coastal
+approaches — the problem is shared, the ship class is shared, and COMNAP is a
+small, well-connected buyer community.
+
+**What is actually sold** is a per-voyage decision pack subscription, not a
+box on the bridge. The system does not replace ECDIS and is not a navigation
+product; it sits beside it as decision support. That distinction is also what
+keeps the regulatory burden proportionate.
+
+**Say the hard part out loud:** this is a small, slow, relationship-driven
+institutional market with very few buyers, and if NCPOR declines there is no
+substitute customer for the second stage. It is in our backlog as the plan's
+single biggest point of failure, with no answer yet.
+
+---
+
 ## The 30-second version
 
 > Antarctic ships need to know where ice will be and where icebergs will drift.
@@ -245,8 +347,9 @@ They're already scheduled — not aspirations.
 > mistakes. We predict iceberg drift with real physics instead of guessing. We
 > feed both into the British Antarctic Survey's own routing engine, which we
 > extended to actually use uncertainty — something their version throws away.
-> And because the ship has almost no internet, everything runs offline on a
-> laptop on the bridge. Unplug the network and it still works.
+> And because the ship has almost no internet, the design keeps heavy compute
+> ashore and runs the router locally — a 9-second offline benchmark today,
+> with the on-demand control for a captain to trigger it still to be built.
 
 ## If you remember three things
 

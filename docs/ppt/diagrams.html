@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIH26059 Deck Kit</title>
+<style>
+:root{ --bg:#e9edf1; --card:#ffffff; --ink:#14202b; --muted:#5b6b7a;
+       --line:#c9d4de; --blue:#1F6FB2; --slide:#dbf3ff; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+     font-size:15px;line-height:1.6}
+.wrap{max-width:1340px;margin:0 auto;padding:28px 22px 90px}
+header{border-bottom:3px solid var(--blue);padding-bottom:18px;margin-bottom:8px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:1.9rem;margin:0 0 6px}
+header p{margin:0;color:var(--muted);max-width:70ch}
+h2{font-family:Georgia,serif;font-size:1.3rem;margin:0;padding:14px 0 10px;
+   border-bottom:2px solid var(--blue)}
+section{margin-top:40px;display:flex;flex-direction:column;gap:16px}
+.cp{background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.cph{display:flex;align-items:center;justify-content:space-between;gap:12px;
+     padding:9px 14px;background:#f2f6fa;border-bottom:1px solid var(--line)}
+.cpt{font-weight:600;font-size:.83rem;letter-spacing:.02em;color:var(--muted)}
+.btn{font:inherit;font-size:.78rem;font-weight:600;padding:5px 14px;cursor:pointer;
+     border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:4px}
+.btn:hover{filter:brightness(1.1)} .btn:active{transform:translateY(1px)}
+.btn.ok{background:#2E7D32;border-color:#2E7D32}
+.cpb{padding:14px 18px;font-family:Georgia,"Times New Roman",serif;font-size:15px}
+.cpb ul,.cpb ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:9px}
+.cpb p{margin:0 0 7px}
+figure.shot{margin:0;display:flex;flex-direction:column;gap:8px}
+figcaption{font-size:.8rem;color:var(--muted);font-weight:600}
+.frame{background:var(--slide);padding:32px;border-radius:4px;overflow-x:auto}
+.frame svg{width:100%;height:auto;display:block}
+.tip{background:#fff8e1;border:1px solid #e8c96a;border-radius:6px;padding:12px 16px;
+     font-size:.88rem;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>SIH26059 &mdash; deck kit</h1>
+  <p>Text and diagrams for all six slides, in the order you will build them.
+     <strong>Copy</strong> keeps the bold when you paste into PowerPoint. Every diagram
+     already sits on your slide background <strong>#dbf3ff</strong>, so screenshot inside
+     the blue and it will drop in invisibly.</p>
+  <div class="tip"><strong>Before you paste:</strong> fill in your Team ID and Team Name on
+     slide 1. Everything else is final &mdash; every number here is measured and traceable
+     to a file in the repository.</div>
+</header>
+<section><h2>Slide 1 &mdash; Title</h2><div class="cp">
+  <div class="cph"><span class="cpt">Title block</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+    <p><strong>Problem Statement ID &ndash;</strong> SIH26059</p>
+    <p><strong>Problem Statement Title &ndash;</strong> AI-Enabled Antarctic Sea-Ice,
+       Iceberg Trajectory, and Navigation Decision Support System</p>
+    <p><strong>Theme &ndash;</strong> Space Technology / Earth Observation</p>
+    <p><strong>PS Category &ndash;</strong> Software</p>
+    <p><strong>Team ID &ndash;</strong> &lt;your team ID&gt;</p>
+    <p><strong>Team Name &ndash;</strong> &lt;your team name&gt;</p>
+  </div>
+</div></section><section><h2>Slide 2 &mdash; Proposed Solution / Approach</h2><div class="cp">
+  <div class="cph"><span class="cpt">Proposed solution &mdash; five bullets</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Ice Forecast Correction:</strong> The <strong>AI</strong> learns to <strong>correct the official sea-ice forecast</strong>, beating the standard <strong>baseline</strong> by <strong>18.5% at 1 day</strong> and <strong>30.6% at 7 days</strong>.</li>
+    <li><strong>Iceberg Drift:</strong> A <strong>proven physics model</strong> computes the current <strong>drift velocity and regime</strong> for each of <strong>33 tracked icebergs</strong> (USNIC, 27 Aug 2026), <strong>15 of them</strong> inside our <strong>shipping corridor</strong>. Projecting a future track over time is designed, not built.</li>
+    <li><strong>Safe Routing:</strong> The <strong>router</strong> plans the <strong>safest path</strong> on <strong>real satellite ice</strong> and models <strong>Antarctic protected areas</strong> by the legal regime that applies to each &mdash; none currently restrict the ship's transit, only shore operations. Live re-planning is <strong>designed, not built</strong>.</li>
+    <li><strong>Ashore and Aboard:</strong> Heavy work runs <strong>ashore</strong>; the ship gets one <strong>small daily update</strong> over <strong>Iridium</strong> and runs the <strong>full router</strong> on board with <strong>no internet</strong>.</li>
+    <li><strong>Captain Decides:</strong> The system <strong>advises</strong> and shows <strong>what changed and why</strong>. Naming which <strong>fallback grade</strong> it is using is designed (ADR-022), not built yet. The <strong>captain</strong> always makes the <strong>call</strong>.</li>
+  </ul>
+  </div>
+</div><div class="cp">
+  <div class="cph"><span class="cpt">Innovation and uniqueness &mdash; five cards</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Correct, Not Replace</strong> &mdash; The <strong>AI corrects</strong> the <strong>official forecast</strong>; if it fails, the <strong>forecast stands</strong>.</li>
+    <li><strong>Coastal Blind Spot</strong> &mdash; Satellite data marks <strong>blocked coast</strong> as <strong>open water</strong>; we <strong>found it and fixed it</strong>.</li>
+    <li><strong>Built for Iridium</strong> &mdash; A <strong>76 KB pack</strong> and a <strong>796-byte route</strong> fit the <strong>ship's link</strong>.</li>
+    <li><strong>Safety Grades, Designed</strong> &mdash; <strong>Three degradation grades are specified</strong> (ADR-022: forecast-grade &rarr; CMEMS-direct &rarr; climatology-grade); not wired into the demo yet.</li>
+    <li><strong>Self-Check Is Specified, Not Automated</strong> &mdash; Scoring yesterday's forecast against today's image is designed; only the <strong>daily CMEMS harvest</strong> actually runs on a schedule today.</li>
+  </ul>
+  </div>
+</div><figure class="shot">
+  <figcaption>Diagram &mdash; End-to-end workflow. Screenshot inside the blue area only.</figcaption>
+  <div class="frame"><svg viewBox="0 0 1240 480" role="img" aria-label="End-to-end workflow: from captain's route to a safe-route recommendation" font-family="Georgia, 'Times New Roman', serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrowA" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#333333"/></marker></defs><line x1="174.0" y1="112.0" x2="208.0" y2="112.0" fill="none" stroke="#333333" stroke-width="1.5" marker-end="url(#arrowA)"/><line x1="336.0" y1="112.0" x2="370.0" y2="112.0" fill="none" stroke="#333333" stroke-width="1.5" marker-end="url(#arrowA)"/><line x1="498.0" y1="112.0" x2="532.0" y2="112.0" fill="none" stroke="#333333" stroke-width="1.5" marker-end="url(#arrowA)"/><line x1="660.0" y1="112.0" x2="694.0" y2="112.0" fill="none" stroke="#333333" stroke-width="1.5" marker-end="url(#arrowA)"/><line x1="822.0" y1="112.0" x2="856.0" y2="112.0" fill="none" stroke="#333333" stroke-width="1.5" marker-end="url(#arrowA)"/><line x1="984.0" y1="112.0" x2="1018.0" y2="112.0" fill="none" stroke="#333333" stroke-width="1.5" marker-end="url(#arrowA)"/><rect x="46.0" y="82.0" width="128.0" height="60.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="110.0" y="107.9" font-size="14" font-weight="400" fill="#111111" text-anchor="middle"><tspan x="110.0" dy="0">Captain</tspan><tspan x="110.0" dy="17.4">marks route</tspan></text><rect x="208.0" y="82.0" width="128.0" height="60.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="272.0" y="107.9" font-size="14" font-weight="400" fill="#111111" text-anchor="middle"><tspan x="272.0" dy="0">Read</tspan><tspan x="272.0" dy="17.4">voyage pack</tspan></text><rect x="370.0" y="82.0" width="128.0" height="60.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="434.0" y="107.9" font-size="14" font-weight="400" fill="#111111" text-anchor="middle"><tspan x="434.0" dy="0">Correct the</tspan><tspan x="434.0" dy="17.4">ice forecast</tspan></text><rect x="532.0" y="82.0" width="128.0" height="60.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="596.0" y="107.9" font-size="14" font-weight="400" fill="#111111" text-anchor="middle"><tspan x="596.0" dy="0">Predict</tspan><tspan x="596.0" dy="17.4">iceberg drift</tspan></text><rect x="694.0" y="82.0" width="128.0" height="60.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="758.0" y="107.9" font-size="14" font-weight="400" fill="#111111" text-anchor="middle"><tspan x="758.0" dy="0">Build</tspan><tspan x="758.0" dy="17.4">ice mesh</tspan></text><rect x="856.0" y="82.0" width="128.0" height="60.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="920.0" y="107.9" font-size="14" font-weight="400" fill="#111111" text-anchor="middle"><tspan x="920.0" dy="0">Compute</tspan><tspan x="920.0" dy="17.4">safe routes</tspan></text><polygon points="1084.0,58.0 1150.0,112.0 1084.0,166.0 1018.0,112.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5"/><text x="1084.0" y="107.9" font-size="14" font-weight="400" fill="#111111" text-anchor="middle"><tspan x="1084.0" dy="0">Route</tspan><tspan x="1084.0" dy="17.4">safe?</tspan></text><text x="272.0" y="170.3" font-size="13" font-weight="700" fill="#2E7D32" text-anchor="middle">NSIDC + CMEMS + USNIC</text><text x="434.0" y="170.3" font-size="13" font-weight="700" fill="#2E7D32" text-anchor="middle">Residual U-Net</text><text x="920.0" y="170.3" font-size="13" font-weight="700" fill="#2E7D32" text-anchor="middle">PolarRoute</text><path d="M 1084.0,166.0 L 1084.0,246.0 L 648.0,246.0" stroke="#333333" stroke-width="1.5" fill="none" marker-end="url(#arrowA)"/><text x="1098.0" y="192.3" font-size="13" font-weight="700" fill="#555555" text-anchor="start">No</text><rect x="472.0" y="217.0" width="176.0" height="58.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="560.0" y="250.6" font-size="14" font-weight="400" fill="#111111" text-anchor="middle">Advise a new route</text><path d="M 472.0,246.0 L 110.0,246.0 L 110.0,142.0" stroke="#333333" stroke-width="1.5" fill="none" marker-end="url(#arrowA)"/><path d="M 1150.0,112.0 L 1176.0,112.0 L 1176.0,316.0 L 742.0,316.0 L 742.0,355.0" stroke="#333333" stroke-width="1.5" fill="none" marker-end="url(#arrowA)"/><text x="1160.0" y="102.3" font-size="13" font-weight="700" fill="#555555" text-anchor="start">Yes</text><rect x="634.0" y="355.0" width="216.0" height="62.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="742.0" y="390.6" font-size="14" font-weight="400" fill="#111111" text-anchor="middle">Show route + 2 backups</text><line x1="850.0" y1="386.0" x2="896.0" y2="386.0" fill="none" stroke="#333333" stroke-width="1.5" marker-end="url(#arrowA)"/><rect x="896.0" y="355.0" width="192.0" height="62.0" fill="#1F6FB2" stroke="#1F6FB2" stroke-width="1.5" rx="18"/><text x="992.0" y="390.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">Captain decides</text></svg></div>
+</figure><figure class="shot">
+  <figcaption>Diagram &mdash; Innovation and uniqueness. Screenshot inside the blue area only.</figcaption>
+  <div class="frame"><svg viewBox="0 0 1130 300" role="img" aria-label="Five cards describing what makes this system innovative" font-family="Georgia, 'Times New Roman', serif" xmlns="http://www.w3.org/2000/svg"><rect x="23.0" y="44.0" width="196.0" height="216.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><rect x="29.0" y="44.0" width="184.0" height="10.0" fill="#E3EEF8"/><text x="121.0" y="83.7" font-size="15" font-weight="700" fill="#111111" text-anchor="middle"><tspan x="121.0" dy="0">Corrects,</tspan><tspan x="121.0" dy="18.6">Not Competes</tspan></text><text x="121.0" y="152.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="121.0" dy="0">Bias-corrects CMEMS</tspan><tspan x="121.0" dy="16.1">instead of replacing it</tspan></text><rect x="245.0" y="44.0" width="196.0" height="216.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><rect x="251.0" y="44.0" width="184.0" height="10.0" fill="#E4F2E8"/><text x="343.0" y="83.7" font-size="15" font-weight="700" fill="#111111" text-anchor="middle"><tspan x="343.0" dy="0">Works With</tspan><tspan x="343.0" dy="18.6">No Internet</tspan></text><text x="343.0" y="152.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="343.0" dy="0">Runs offline from</tspan><tspan x="343.0" dy="16.1">a voyage pack</tspan></text><rect x="467.0" y="44.0" width="196.0" height="216.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><rect x="473.0" y="44.0" width="184.0" height="10.0" fill="#EDE7F6"/><text x="565.0" y="83.7" font-size="15" font-weight="700" fill="#111111" text-anchor="middle"><tspan x="565.0" dy="0">Says When</tspan><tspan x="565.0" dy="18.6">It Is Wrong</tspan></text><text x="565.0" y="152.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="565.0" dy="0">Conformal bounds flag</tspan><tspan x="565.0" dy="16.1">low-confidence ice</tspan></text><rect x="689.0" y="44.0" width="196.0" height="216.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><rect x="695.0" y="44.0" width="184.0" height="10.0" fill="#DFF1EF"/><text x="787.0" y="83.7" font-size="15" font-weight="700" fill="#111111" text-anchor="middle"><tspan x="787.0" dy="0">Physics +</tspan><tspan x="787.0" dy="18.6">AI Together</tspan></text><text x="787.0" y="152.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="787.0" dy="0">Wagner drift physics</tspan><tspan x="787.0" dy="16.1">plus a learned residual</tspan></text><rect x="911.0" y="44.0" width="196.0" height="216.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><rect x="917.0" y="44.0" width="184.0" height="10.0" fill="#EADAD2"/><text x="1009.0" y="83.7" font-size="15" font-weight="700" fill="#111111" text-anchor="middle"><tspan x="1009.0" dy="0">Built For</tspan><tspan x="1009.0" dy="18.6">One Real Ship</tspan></text><text x="1009.0" y="152.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="1009.0" dy="0">One real ship,</tspan><tspan x="1009.0" dy="16.1">corridor and season</tspan></text></svg></div>
+</figure></section><section><h2>Slide 3 &mdash; Technical Approach</h2><div class="cp">
+  <div class="cph"><span class="cpt">Tech stack and the six implementation steps</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+    <p><strong>Tech Stack:</strong> <strong>Python, PyTorch, xarray, NetCDF</strong> for data and
+       AI; <strong>PolarRoute, meshiphi</strong> for routing; <strong>GitHub Actions, FastAPI,
+       MapLibre</strong> for automation, API and maps.</p>
+  <ol>
+    <li><strong>Harvest Satellite Data</strong> &mdash; A <strong>daily harvest</strong> on <strong>GitHub Actions</strong> pulls <strong>real satellite ice data</strong> automatically, because missed days can never be <strong>back-filled</strong>.</li>
+    <li><strong>Audit and Fix</strong> &mdash; We checked <strong>1,096 daily files</strong> with <strong>zero failures</strong>, found the <strong>coastal blind spot</strong>, and made the coast read <strong>heavier, not lighter</strong>.</li>
+    <li><strong>Train the Correction</strong> &mdash; <strong>PyTorch</strong> learns a <strong>correction</strong> to the <strong>official forecast</strong>; test data is split <strong>by date</strong> and scored <strong>exactly once</strong>.</li>
+    <li><strong>Track Icebergs</strong> &mdash; A <strong>published physics model</strong> drifts each <strong>iceberg</strong>; <strong>23 of 23 tests</strong> reproduce the paper's own numbers.</li>
+    <li><strong>Compute the Route</strong> &mdash; <strong>PolarRoute</strong> and <strong>meshiphi</strong> find the <strong>safest path</strong> on real ice: <strong>8.6 days steaming</strong>, Cape Town to Bharati.</li>
+    <li><strong>Pack and Ship Aboard</strong> &mdash; A <strong>full pack</strong> is <strong>76 KB compressed</strong> and the <strong>daily update</strong> is budgeted at <strong>50 KB</strong>, so it fits the <strong>ship's link</strong>.</li>
+  </ol>
+  </div>
+</div><figure class="shot">
+  <figcaption>Diagram &mdash; Technical approach &mdash; zoned architecture. Screenshot inside the blue area only.</figcaption>
+  <div class="frame"><svg viewBox="0 0 1250 680" role="img" aria-label="Technical architecture in four zones: data sources, ashore processing, the satellite link, and aboard the ship" font-family="Georgia, 'Times New Roman', serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrowB" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#333333"/></marker></defs><rect x="32.0" y="46.0" width="300.0" height="470.0" fill="#E3EEF8" stroke="#333333" stroke-width="1.5" rx="14"/><text x="182.0" y="81.6" font-size="17" font-weight="700" fill="#111111" text-anchor="middle">Data Sources</text><rect x="52.0" y="110.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="182.0" y="142.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">NSIDC satellite ice</text><rect x="52.0" y="220.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="182.0" y="252.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">CMEMS forecast</text><rect x="52.0" y="330.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="182.0" y="362.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">USNIC icebergs</text><rect x="52.0" y="440.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="182.0" y="472.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">ERA5 wind &amp; waves</text><rect x="354.0" y="46.0" width="300.0" height="470.0" fill="#E4F2E8" stroke="#333333" stroke-width="1.5" rx="14"/><text x="504.0" y="81.6" font-size="17" font-weight="700" fill="#111111" text-anchor="middle">Ashore — Processing</text><rect x="374.0" y="110.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="504.0" y="142.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">Quality control</text><rect x="374.0" y="220.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="504.0" y="252.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">Train the AI model</text><rect x="374.0" y="330.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="504.0" y="362.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">Correct the forecast</text><rect x="374.0" y="440.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="504.0" y="472.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">Build voyage pack</text><rect x="676.0" y="46.0" width="220.0" height="470.0" fill="#EDE7F6" stroke="#333333" stroke-width="1.5" rx="14"/><text x="786.0" y="81.6" font-size="17" font-weight="700" fill="#111111" text-anchor="middle">The Link</text><rect x="696.0" y="110.0" width="180.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="786.0" y="142.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">Iridium ~704 kbps</text><rect x="696.0" y="275.0" width="180.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="786.0" y="307.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">76 KB per day</text><rect x="696.0" y="440.0" width="180.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="786.0" y="464.1" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle"><tspan x="786.0" dy="0">Never: 60</tspan><tspan x="786.0" dy="16.7">MB weights</tspan></text><rect x="918.0" y="46.0" width="300.0" height="470.0" fill="#DFF1EF" stroke="#333333" stroke-width="1.5" rx="14"/><text x="1068.0" y="81.6" font-size="17" font-weight="700" fill="#111111" text-anchor="middle">Aboard — The Ship</text><rect x="938.0" y="110.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="1068.0" y="142.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">Voyage pack on disk</text><rect x="938.0" y="220.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="1068.0" y="252.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">PolarRoute runs locally</text><rect x="938.0" y="330.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="1068.0" y="362.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">Ship's own sensors</text><rect x="938.0" y="440.0" width="260.0" height="56.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="6"/><text x="1068.0" y="472.5" font-size="13.5" font-weight="400" fill="#111111" text-anchor="middle">Captain decides</text><line x1="336.0" y1="281.0" x2="350.0" y2="281.0" fill="none" stroke="#333333" stroke-width="2" marker-end="url(#arrowB)"/><line x1="658.0" y1="281.0" x2="672.0" y2="281.0" fill="none" stroke="#333333" stroke-width="2" marker-end="url(#arrowB)"/><line x1="900.0" y1="281.0" x2="914.0" y2="281.0" fill="none" stroke="#333333" stroke-width="2" marker-end="url(#arrowB)"/><rect x="32.0" y="550.0" width="1186.0" height="70.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><text x="58.0" y="581.0" font-size="15" font-weight="700" fill="#111111" text-anchor="start">Technology Stack</text><text x="58.0" y="604.5" font-size="13.5" font-weight="400" fill="#555555" text-anchor="start">Python · PyTorch · xarray · NetCDF · PolarRoute · meshiphi · FastAPI · MapLibre · GitHub Actions</text></svg></div>
+</figure><figure class="shot">
+  <figcaption>Diagram &mdash; Implementation process. Screenshot inside the blue area only.</figcaption>
+  <div class="frame"><svg viewBox="0 0 1100 340" role="img" aria-label="Six-step implementation process from data collection to advising the captain" font-family="Georgia, 'Times New Roman', serif" xmlns="http://www.w3.org/2000/svg"><line x1="100.0" y1="160.0" x2="1000.0" y2="160.0" fill="none" stroke="#333333" stroke-width="1.5"/><text x="100.0" y="105.0" font-size="15" font-weight="700" fill="#111111" text-anchor="middle">Collect Data</text><circle cx="100.0" cy="160.0" r="30.0" fill="#1F6FB2"/><text x="280.0" y="105.0" font-size="15" font-weight="700" fill="#111111" text-anchor="middle">Clean &amp; Check</text><circle cx="280.0" cy="160.0" r="30.0" fill="#1F6FB2"/><text x="460.0" y="105.0" font-size="15" font-weight="700" fill="#111111" text-anchor="middle">Train Model</text><circle cx="460.0" cy="160.0" r="30.0" fill="#1F6FB2"/><text x="640.0" y="105.0" font-size="15" font-weight="700" fill="#111111" text-anchor="middle">Build Mesh</text><circle cx="640.0" cy="160.0" r="30.0" fill="#1F6FB2"/><text x="820.0" y="105.0" font-size="15" font-weight="700" fill="#111111" text-anchor="middle">Compute Routes</text><circle cx="820.0" cy="160.0" r="30.0" fill="#1F6FB2"/><text x="1000.0" y="105.0" font-size="15" font-weight="700" fill="#111111" text-anchor="middle">Advise Captain</text><circle cx="1000.0" cy="160.0" r="30.0" fill="#1F6FB2"/><text x="100.0" y="165.3" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">1</text><text x="100.0" y="212.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="100.0" dy="0">NSIDC, CMEMS,</tspan><tspan x="100.0" dy="16.1">USNIC, ERA5</tspan></text><text x="280.0" y="165.3" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">2</text><text x="280.0" y="212.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="280.0" dy="0">Quality control</tspan><tspan x="280.0" dy="16.1">on every input</tspan></text><text x="460.0" y="165.3" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">3</text><text x="460.0" y="212.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="460.0" dy="0">Residual U-Net</tspan><tspan x="460.0" dy="16.1">bias correction</tspan></text><text x="640.0" y="165.3" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">4</text><text x="640.0" y="220.3" font-size="13" font-weight="400" fill="#555555" text-anchor="middle">PolarRoute mesh</text><text x="820.0" y="165.3" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">5</text><text x="820.0" y="212.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="820.0" dy="0">Safe path plus</tspan><tspan x="820.0" dy="16.1">two backups</tspan></text><text x="1000.0" y="165.3" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">6</text><text x="1000.0" y="212.2" font-size="13" font-weight="400" fill="#555555" text-anchor="middle"><tspan x="1000.0" dy="0">Final call stays</tspan><tspan x="1000.0" dy="16.1">with the captain</tspan></text></svg></div>
+</figure></section><section><h2>Slide 4 &mdash; Feasibility and Viability</h2><div class="cp">
+  <div class="cph"><span class="cpt">Feasibility</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Proven Model:</strong> Beats the standard <strong>baseline</strong> by <strong>18.5% at 1 day</strong> and <strong>30.6% at 7 days</strong> on <strong>real held-out satellite data</strong>.</li>
+    <li><strong>Real Pipeline:</strong> <strong>1,096 daily satellite files</strong> processed with <strong>zero failures</strong>, harvested <strong>automatically</strong> every day.</li>
+    <li><strong>Reused Engines:</strong> <strong>PolarRoute</strong> and <strong>meshiphi</strong> from the <strong>British Antarctic Survey</strong> already compute our <strong>8.6-day route</strong>.</li>
+  </ul>
+  </div>
+</div><div class="cp">
+  <div class="cph"><span class="cpt">Viability</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Fits the Link:</strong> A <strong>full data pack</strong> is <strong>76 KB</strong> and a <strong>route summary</strong> is <strong>796 bytes</strong>, well inside <strong>Iridium's 704 kbps</strong>.</li>
+    <li><strong>Small Archive:</strong> Compression cuts each <strong>daily file</strong> from <strong>42.6 MB to 5.0 MB</strong>, <strong>8.4x smaller</strong>.</li>
+    <li><strong>Open Source:</strong> Every tool in the <strong>stack</strong> is <strong>open source</strong> and the <strong>satellite data</strong> is <strong>public</strong>, with <strong>nothing to license</strong>.</li>
+  </ul>
+  </div>
+</div><div class="cp">
+  <div class="cph"><span class="cpt">Practical Implementation</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Runs Offline:</strong> The ship runs the <strong>full router locally</strong> with <strong>no internet</strong>; only a <strong>small daily update</strong> comes over <strong>Iridium</strong>.</li>
+    <li><strong>Fails Safe:</strong> The model outputs a <strong>correction</strong> to the <strong>official forecast</strong>, so if it fails the crew still has the <strong>official forecast</strong>, not <strong>nothing</strong>.</li>
+    <li><strong>Already Running:</strong> The <strong>daily data harvest</strong> started early and runs <strong>automatically</strong>, because missed days can never be <strong>back-filled</strong>.</li>
+  </ul>
+  </div>
+</div><div class="cp">
+  <div class="cph"><span class="cpt">Challenges &rarr; Strategies</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Connectivity:</strong> South of <strong>70 degrees South</strong> the only link is <strong>Iridium</strong>, about <strong>704 kbps at best</strong>. &nbsp;&rarr;&nbsp; Heavy work stays <strong>ashore</strong>; the ship gets one <strong>small daily update</strong> and runs the <strong>full router offline</strong>.</li>
+    <li><strong>Moving Ice:</strong> Ice can <strong>shift faster</strong> than any <strong>forecast</strong> can follow. &nbsp;&rarr;&nbsp; The system <strong>re-checks every day</strong> against the <strong>latest satellite image</strong> and <strong>re-plans</strong> the route.</li>
+    <li><strong>Blind Spots:</strong> Satellite data marks <strong>blocked coast</strong> as <strong>open water</strong> on <strong>43.2% of days</strong> in the <strong>approach to Bharati</strong>. &nbsp;&rarr;&nbsp; We <strong>flag</strong> those pixels so the coast reads <strong>heavier, not lighter</strong>, and the router turns <strong>more cautious</strong>, never less.</li>
+    <li><strong>Fuel Data:</strong> No <strong>fuel-burn figure</strong> exists yet for <strong>this exact hull</strong>. &nbsp;&rarr;&nbsp; We rank routes by <strong>steaming time</strong> and report fuel <strong>relatively or not at all</strong>.</li>
+    <li><strong>Small Ice:</strong> <strong>Growlers</strong>, small chunks of ice, are <strong>invisible from orbit</strong>. &nbsp;&rarr;&nbsp; We <strong>never claim</strong> to spot them; <strong>radar</strong> and the <strong>lookout</strong> own that job, and the system <strong>says so</strong>.</li>
+  </ul>
+  </div>
+</div><figure class="shot">
+  <figcaption>Diagram &mdash; Challenges vs strategies. Screenshot inside the blue area only.</figcaption>
+  <div class="frame"><svg viewBox="0 0 1150 560" role="img" aria-label="Five potential challenges and risks paired with five strategies for overcoming them" font-family="Georgia, 'Times New Roman', serif" xmlns="http://www.w3.org/2000/svg"><rect x="40.0" y="30.0" width="520.0" height="54.0" fill="#C62828" rx="8"/><text x="300.0" y="62.6" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle">Potential Challenges and Risks</text><rect x="590.0" y="30.0" width="520.0" height="54.0" fill="#2E7D32" rx="8"/><text x="850.0" y="62.6" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle">Strategies for Overcoming</text><rect x="40.0" y="110.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="84.0" cy="148.0" r="22.0" fill="#C62828"/><text x="84.0" y="152.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">01</text><text x="132.0" y="153.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="chal1"><tspan font-weight="700">Connectivity:</tspan> only Iridium south of 70&#176;S, ~704 kbps.</text><rect x="590.0" y="110.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="634.0" cy="148.0" r="22.0" fill="#2E7D32"/><text x="634.0" y="152.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">01</text><text x="682.0" y="153.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="strat1">Heavy work ashore; the ship routes offline.</text><rect x="40.0" y="198.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="84.0" cy="236.0" r="22.0" fill="#C62828"/><text x="84.0" y="240.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">02</text><text x="132.0" y="241.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="chal2"><tspan font-weight="700">Moving Ice:</tspan> ice shifts faster than a forecast follows.</text><rect x="590.0" y="198.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="634.0" cy="236.0" r="22.0" fill="#2E7D32"/><text x="634.0" y="240.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">02</text><text x="682.0" y="241.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="strat2">Re-checks daily against the latest satellite image.</text><rect x="40.0" y="286.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="84.0" cy="324.0" r="22.0" fill="#C62828"/><text x="84.0" y="328.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">03</text><text x="132.0" y="329.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="chal3"><tspan font-weight="700">Blind Spots:</tspan> blocked coast is reported as open water.</text><rect x="590.0" y="286.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="634.0" cy="324.0" r="22.0" fill="#2E7D32"/><text x="634.0" y="328.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">03</text><text x="682.0" y="329.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="strat3">We flag them, so the coast reads heavier, not lighter.</text><rect x="40.0" y="374.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="84.0" cy="412.0" r="22.0" fill="#C62828"/><text x="84.0" y="416.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">04</text><text x="132.0" y="417.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="chal4"><tspan font-weight="700">Fuel Data:</tspan> no fuel-burn figure yet for this hull.</text><rect x="590.0" y="374.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="634.0" cy="412.0" r="22.0" fill="#2E7D32"/><text x="634.0" y="416.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">04</text><text x="682.0" y="417.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="strat4">Rank routes by steaming time; no absolute fuel claim.</text><rect x="40.0" y="462.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="84.0" cy="500.0" r="22.0" fill="#C62828"/><text x="84.0" y="504.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">05</text><text x="132.0" y="505.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="chal5"><tspan font-weight="700">Small Ice:</tspan> growlers are invisible from orbit.</text><rect x="590.0" y="462.0" width="520.0" height="76.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><circle cx="634.0" cy="500.0" r="22.0" fill="#2E7D32"/><text x="634.0" y="504.9" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">05</text><text x="682.0" y="505.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="strat5">Radar and the lookout own that, and we say so.</text></svg></div>
+</figure></section><section><h2>Slide 5 &mdash; Impact and Benefits</h2><div class="cp">
+  <div class="cph"><span class="cpt">Who it helps &mdash; five audiences</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Ship's Crew:</strong> Sees <strong>where the ice will be</strong>, <strong>which icebergs</strong> are near, and <strong>why the route changed</strong>, with the <strong>captain</strong> always in command.</li>
+    <li><strong>NCPOR:</strong> Plans the <strong>Cape Town to Bharati</strong> resupply on <strong>real ice forecasts</strong> and knows in advance when the <strong>Bharati approach</strong> is <strong>closed</strong>.</li>
+    <li><strong>Scientists:</strong> <strong>Supplies and teams</strong> reach <strong>Bharati and Maitri</strong> on time, and our <strong>coastal data audit</strong> exposes a flaw in the <strong>satellite record</strong> they rely on.</li>
+    <li><strong>The Nation:</strong> India gets a <strong>home-built decision tool</strong> for its <strong>Antarctic programme</strong>, built on <strong>open data</strong> and <strong>open code</strong>.</li>
+    <li><strong>The Environment:</strong> The router stays inside the <strong>protected-area boundaries</strong> that <strong>India co-proposed</strong>, and <strong>safer routes</strong> cut the risk of <strong>grounding or spills</strong>.</li>
+  </ul>
+  </div>
+</div><div class="cp">
+  <div class="cph"><span class="cpt">Social, Economic, Environmental</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Social:</strong> <strong>Crew safety</strong> comes first: the system explains <strong>what changed and why</strong>, and never asks the <strong>captain</strong> to trust a <strong>black box</strong>.</li>
+    <li><strong>Economic:</strong> <strong>Fewer stuck days</strong> and <strong>smarter routes</strong> save costly <strong>ship time</strong> on a <strong>chartered vessel</strong>.</li>
+    <li><strong>Environmental:</strong> <strong>Cautious routing</strong> through heavy ice lowers the risk of <strong>hull damage</strong> and <strong>spills</strong> in <strong>Antarctic waters</strong>.</li>
+  </ul>
+  </div>
+</div><div class="cp">
+  <div class="cph"><span class="cpt">Closing line for the bottom of the slide</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+    <p>&ldquo;Honest forecasts ashore, clear advice aboard, and the captain always decides.&rdquo;</p>
+  </div>
+</div><figure class="shot">
+  <figcaption>Diagram &mdash; Impact hub. Screenshot inside the blue area only.</figcaption>
+  <div class="frame"><svg viewBox="0 0 950 600" role="img" aria-label="Who the system helps: crew, NCPOR, scientists, the nation, and the environment, around a central hub" font-family="Georgia, 'Times New Roman', serif" xmlns="http://www.w3.org/2000/svg"><line x1="475.0" y1="300.0" x2="475.0" y2="90.0" fill="none" stroke="#333333" stroke-width="1.5"/><line x1="475.0" y1="300.0" x2="760.3" y2="235.1" fill="none" stroke="#333333" stroke-width="1.5"/><line x1="475.0" y1="300.0" x2="651.3" y2="469.9" fill="none" stroke="#333333" stroke-width="1.5"/><line x1="475.0" y1="300.0" x2="298.7" y2="469.9" fill="none" stroke="#333333" stroke-width="1.5"/><line x1="475.0" y1="300.0" x2="189.7" y2="235.1" fill="none" stroke="#333333" stroke-width="1.5"/><rect x="369.0" y="56.0" width="212.0" height="68.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><text x="475.0" y="94.8" font-size="14.5" font-weight="700" fill="#111111" text-anchor="middle">Ship's Crew</text><rect x="654.3" y="201.1" width="212.0" height="68.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><text x="760.3" y="239.9" font-size="14.5" font-weight="700" fill="#111111" text-anchor="middle">NCPOR</text><rect x="545.3" y="435.9" width="212.0" height="68.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><text x="651.3" y="474.7" font-size="14.5" font-weight="700" fill="#111111" text-anchor="middle">Scientists</text><rect x="192.7" y="435.9" width="212.0" height="68.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><text x="298.7" y="474.7" font-size="14.5" font-weight="700" fill="#111111" text-anchor="middle">The Nation</text><rect x="83.7" y="201.1" width="212.0" height="68.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="8"/><text x="189.7" y="239.9" font-size="14.5" font-weight="700" fill="#111111" text-anchor="middle">The Environment</text><circle cx="475.0" cy="300.0" r="92.0" fill="#1F6FB2"/><text x="475.0" y="294.3" font-size="19" font-weight="700" fill="#FFFFFF" text-anchor="middle"><tspan x="475.0" dy="0">Who It</tspan><tspan x="475.0" dy="24">Helps</tspan></text></svg></div>
+</figure><figure class="shot">
+  <figcaption>Diagram &mdash; Benefits. Screenshot inside the blue area only.</figcaption>
+  <div class="frame"><svg viewBox="0 0 900 420" role="img" aria-label="Three benefit cards: social, economic, and environmental" font-family="Georgia, 'Times New Roman', serif" xmlns="http://www.w3.org/2000/svg"><rect x="30.0" y="20.0" width="840.0" height="108.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="10"/><rect x="30.0" y="20.0" width="210.0" height="108.0" fill="#E3EEF8" stroke="#333333" stroke-width="1.5" rx="10"/><rect x="226.0" y="20.0" width="16.0" height="108.0" fill="#E3EEF8"/><text x="135.0" y="79.6" font-size="17" font-weight="700" fill="#111111" text-anchor="middle">Social</text><text x="266.0" y="80.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="ben1">Crew safety first: the system explains what changed and why.</text><rect x="30.0" y="152.0" width="840.0" height="108.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="10"/><rect x="30.0" y="152.0" width="210.0" height="108.0" fill="#DFF1EF" stroke="#333333" stroke-width="1.5" rx="10"/><rect x="226.0" y="152.0" width="16.0" height="108.0" fill="#DFF1EF"/><text x="135.0" y="211.6" font-size="17" font-weight="700" fill="#111111" text-anchor="middle">Economic</text><text x="266.0" y="212.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="ben2">Fewer stuck days and smarter routes save costly ship time.</text><rect x="30.0" y="284.0" width="840.0" height="108.0" fill="#FFFFFF" stroke="#333333" stroke-width="1.5" rx="10"/><rect x="30.0" y="284.0" width="210.0" height="108.0" fill="#E4F2E8" stroke="#333333" stroke-width="1.5" rx="10"/><rect x="226.0" y="284.0" width="16.0" height="108.0" fill="#E4F2E8"/><text x="135.0" y="343.6" font-size="17" font-weight="700" fill="#111111" text-anchor="middle">Environmental</text><text x="266.0" y="344.0" font-size="15" font-weight="400" fill="#111111" text-anchor="start" id="ben3">Cautious routing lowers the risk of hull damage and spills.</text></svg></div>
+</figure></section><section><h2>Slide 6 &mdash; Research and References</h2><div class="cp">
+  <div class="cph"><span class="cpt">Field and Applied Research</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li><strong>Data Audit:</strong> We checked <strong>1,096 real daily satellite files</strong> and found the record reports <strong>blocked coastal pixels</strong> as <strong>open water</strong> on <strong>every day</strong>.</li>
+    <li><strong>Real Routes:</strong> We computed <strong>real routes</strong> on <strong>real satellite ice</strong> with the <strong>British Antarctic Survey's</strong> open-source router: <strong>8.6 days steaming</strong>, Cape Town to Bharati.</li>
+  </ul>
+  </div>
+</div><div class="cp">
+  <div class="cph"><span class="cpt">References</span>
+    <button class="btn" type="button">Copy</button></div>
+  <div class="cpb">
+  <ul>
+    <li>IMO Polar Code, Chapter 11</li>
+    <li>IMO POLARIS Guidance, MSC.1/Circ.1519</li>
+    <li>Canadian Coast Guard, &ldquo;Ice Navigation in Canadian Waters&rdquo;</li>
+    <li>Wagner, Dell and Eisenman (2017), Iceberg Drift</li>
+    <li>NOAA/NSIDC Sea-Ice Climate Data Record</li>
+    <li>Copernicus Marine Service</li>
+    <li>US National Ice Center Iceberg Database</li>
+    <li>British Antarctic Survey, PolarRoute</li>
+  </ul>
+  </div>
+</div></section>
+</div>
+<script>
+document.querySelectorAll('.btn').forEach(function(b){
+  b.addEventListener('click', function(){
+    var body = b.closest('.cp').querySelector('.cpb');
+    var r = document.createRange(); r.selectNodeContents(body);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    var done = false;
+    try { done = document.execCommand('copy'); } catch (e) { done = false; }
+    sel.removeAllRanges();
+    b.textContent = done ? 'Copied' : 'Select manually';
+    b.classList.toggle('ok', done);
+    setTimeout(function(){ b.textContent = 'Copy'; b.classList.remove('ok'); }, 1600);
+  });
+});
+</script>
+</body>
+</html>

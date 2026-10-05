@@ -37,13 +37,16 @@ def build_channels(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Assemble model inputs for forecasting SIC `lead` days ahead.
 
-    **Why a lead time exists at all.** Measured on real 2020 NSIDC data,
+    **Why a lead time exists at all.** Measured over full-year 2020, all
+    seasons — NOT the held-out test slice, whose persistence numbers are
+    higher because it falls in the melt season; see docs/ISIH_RESULTS.md and
+    never quote the two sets together —
     predicting *today* from yesterday's observation scores RMSE 0.0359 — far
     better than any model correcting a background field. Same-day correction is
     therefore not a real task: persistence already solves it, for free.
 
     The operational question is what the ice will be *days* ahead, where
-    persistence decays sharply (measured: 0.0359 at 1 day, 0.0610 at 3, 0.0893
+    persistence decays sharply (full-year 2020: 0.0359 at 1 day, 0.0610 at 3, 0.0893
     at 7). That is the task built here, and `evaluate_baselines` scores
     persistence at the same lead so the comparison stays honest.
 
@@ -129,7 +132,7 @@ def evaluate_baselines(
     results = {"raw_background": rmse(bg_test, y_test, m_test)}
 
     # Persistence: carry the last real observation forward to the target date.
-    # Measured at 0.0359 for same-day but decaying to 0.0893 by 7 days, so it
+    # Full-year 2020: 0.0359 same-day, decaying to 0.0893 by 7 days, so it
     # is a genuinely strong baseline at short lead and the one most likely to
     # embarrass a model that has not earned its place.
     results["persistence"] = rmse(obs_latest_test, y_test, m_test)

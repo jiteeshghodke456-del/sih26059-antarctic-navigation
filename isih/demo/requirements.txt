@@ -1,0 +1,23 @@
+# ISIH demo — exact versions from the environment the tests passed in (4 Sep 2026).
+#   uv venv .venv-demo --python 3.12          # 3.12–3.14 verified
+#   uv pip install --python .venv-demo/bin/python -r isih/demo/requirements.txt
+fastapi==0.141.1
+uvicorn==0.52.4
+starlette==1.6.0
+pydantic==2.13.5
+xarray==2026.7.0
+numpy==2.5.2
+pyproj==3.7.2
+# NetCDF backend. h5netcdf does not pull h5py itself; without h5py every
+# daily-ice request fails with "backend not available".
+h5netcdf==1.8.1
+h5py==3.16.0
+# Build/test only — reads the Antarctic Treaty Secretariat shapefile in
+# isih/protected_areas.py. The demo itself never touches it: the corridor
+# extract is committed as isih/figures/protected_areas.json, so the running
+# app has no shapefile dependency and nothing new can fail in front of a judge.
+pyshp==2.3.1
+
+# tests
+pytest==9.1.1
+httpx==0.28.1

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bharati Approach — ISIH bridge console</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div id="error" hidden></div>
+
+<header class="top">
+  <div class="ident">
+    <h1>Antarctic navigation decision support</h1>
+    <p class="sub">MV Vasiliy Golovnin (IMO 8723426) &nbsp;|&nbsp; Cape Town to Bharati
+      &nbsp;|&nbsp; December 2019 resupply window</p>
+  </div>
+  <div class="badges">
+    <span class="badge wf" id="wf-mode">ROUTE PLANNING</span>
+    <span class="badge mode" id="mode-badge"><b id="mode-text">—</b></span>
+    <span class="badge offline">Runs offline. No map tiles, no fonts, no internet.</span>
+  </div>
+</header>
+
+<!-- Who is on watch. Identity, not access control — an approval has to be
+     attributable to a person, and that is the whole purpose of this screen. -->
+<section class="signin" id="signin-screen">
+  <div class="signin-card">
+    <h2>Who is on watch</h2>
+    <p class="note">Every approval has to be attributable to a person. This
+      records who is on watch; it is identity, not access control, and there is
+      no user store behind it.</p>
+    <div class="approw">
+      <input id="signin-name" type="text" placeholder="Name and rank" autocomplete="off">
+      <button id="signin-btn" data-primary data-action="sign-in">Take the watch</button>
+    </div>
+    <p class="approve-state" id="signin-state"></p>
+  </div>
+</section>
+
+<!-- Where we are in the passage workflow (§4). -->
+<nav class="passage" id="passage-bar" hidden>
+  <div class="passage-now">
+    <span class="hlabel">Step <b id="wf-step">—</b> of <b id="wf-count">9</b></span>
+    <strong id="wf-title">—</strong>
+    <span class="muted small" id="wf-asks"></span>
+  </div>
+  <ol class="passage-steps" id="wf-steps"></ol>
+  <div class="passage-who">
+    <span id="wf-watch" class="muted small"></span>
+    <button id="wf-cc" class="linkish" data-action="command-center">Command centre</button>
+  </div>
+</nav>
+
+<!-- The hero: route health, and how much of the decision we can actually see. -->
+<section class="health" id="health-band" hidden>
+  <div class="health-state">
+    <span class="hlabel">Route health</span>
+    <strong id="health-state">—</strong>
+  </div>
+  <div class="health-why">
+    <p id="health-note">Reading the decision…</p>
+    <p class="health-binding" id="health-binding"></p>
+    <p class="health-diverge" id="health-diverge" hidden></p>
+  </div>
+  <div class="health-cov">
+    <span class="hlabel">Decision gates with data behind them</span>
+    <div class="covbar" id="cov-bar" aria-hidden="true"></div>
+    <strong id="cov-text">—</strong>
+  </div>
+</section>
+
+<main class="grid">
+
+  <div class="col-main">
+
+  <!-- ============ chart ============ -->
+  <section class="panel map-panel">
+    <div class="phead">
+      <h2>Satellite ice on <span id="route-date">—</span></h2>
+      <p class="src" id="f-ice">—</p>
+    </div>
+
+    <div class="legend">
+      <span class="lg"><i class="swatch ramp"></i>0&thinsp;% &ndash; 100&thinsp;% ice</span>
+      <span class="lg"><i class="swatch line-route"></i>planned route</span>
+      <span class="lg"><i class="swatch line-straight"></i>straight line</span>
+      <span class="lg"><i class="swatch box-unknown"></i>unknown (QA)</span>
+      <span class="lg"><i class="swatch land"></i>land</span>
+      <label class="lg pa"><input type="checkbox" id="pa-show" checked> protected areas</label>
+    </div>
+
+    <div id="map-wrap">
+      <canvas id="ice"></canvas>
+      <svg id="vec" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="tip" hidden></div>
+    </div>
+
+    <div class="daybar">
+      <div class="dayrow">
+        <span class="hlabel">Day</span>
+        <strong id="day-label">—</strong>
+        <span class="muted" id="day-count"></span>
+        <span class="day-role" id="day-role"></span>
+      </div>
+      <input type="range" id="day" min="0" value="0" step="1" aria-label="day of the window">
+      <div id="strip" class="strip"></div>
+      <p class="muted small">Green marks the days the station cell was open for this ship.
+        Arrow keys step day by day.</p>
+    </div>
+
+    <div class="qa">
+      <span class="hlabel">Read the satellite as</span>
+      <div class="seg">
+        <button id="qa-on" class="on">Quality-checked</button><button id="qa-off">Raw</button>
+      </div>
+      <p class="muted small">Quality-checked shows cells the product's own QA flag marks as
+        land-spillover or no-input as <b>unknown</b>, rather than as a value.</p>
+    </div>
+
+    <p class="src pa-note" id="pa-note"></p>
+  </section>
+
+  <section class="panel stage" id="stage-panel" hidden></section>
+
+  <div class="subgrid" id="assessment-subgrid" hidden>
+    <section class="panel">
+      <div class="phead">
+        <h2>Four kinds of risk</h2>
+        <p class="src">§48A.5 — never collapsed into one number.</p>
+      </div>
+      <ul class="risks" id="risk-list"></ul>
+    </section>
+
+    <section class="panel">
+      <div class="phead">
+        <h2>Does the ship change the route?</h2>
+        <p class="src">Same ice, same day, two real vessels. Tested, not asserted.</p>
+      </div>
+      <div id="vessel-test"><p class="note">Loading…</p></div>
+    </section>
+  </div>
+
+  <section class="panel" id="log-panel" hidden>
+    <div class="phead">
+      <h2>Decision log</h2>
+      <p class="src">What changed, who approved it, when.</p>
+    </div>
+    <ol class="log" id="log-list"></ol>
+  </section>
+
+  </div>
+
+  <!-- ============ right rail ============ -->
+  <div class="rail">
+
+    <section class="panel" id="rail-voyage" hidden>
+      <div class="phead"><h2>Voyage so far</h2></div>
+      <dl class="kv" id="voyage-facts"></dl>
+      <p class="note">Filled in as the passage plan is built. Nothing here is
+        assessed until the route has been reviewed.</p>
+    </section>
+
+    <section class="panel" id="rail-ship" hidden>
+      <div class="phead"><h2>Own ship</h2></div>
+      <dl class="kv" id="own-ship">
+        <dt>Position</dt><dd id="v-pos">—</dd>
+        <dt>COG / SOG</dt><dd id="v-cogsog">—</dd>
+        <dt>Next waypoint</dt><dd id="v-wp">—</dd>
+        <dt>ETA Bharati</dt><dd id="v-eta">—</dd>
+        <dt>Cross-track error</dt><dd id="v-xte">—</dd>
+        <dt>Operational state</dt><dd id="v-state">—</dd>
+      </dl>
+      <p class="note" id="ship-note">Position, course and speed are computed from the
+        planned track and its per-leg transit times — this is where the ship
+        <em>would</em> be, not a GPS fix. Cross-track error is therefore zero by
+        construction, not by good steering.</p>
+      <dl class="kv" style="margin-top:10px">
+        <dt>Ice limit assumed</dt><dd><b id="limit">—</b>&thinsp;% concentration</dd>
+        <dt>Ice class</dt><dd class="wrap" id="v-class">—</dd>
+        <dt>Polar Ship Category</dt><dd id="v-cat">—</dd>
+      </dl>
+      <p class="note">No ice class anywhere indexes ice <em>concentration</em> — every
+        framework indexes thickness or type. The limit above is our assumption, not a
+        certificated figure.</p>
+    </section>
+
+    <section class="panel" id="rail-gates" hidden>
+      <div class="phead">
+        <h2>Decision gates</h2>
+        <p class="src">Nine gates, §12. A gate we cannot evaluate is not a pass.</p>
+      </div>
+      <ul class="gates" id="gate-list"></ul>
+    </section>
+
+    <section class="panel" id="rail-alts" hidden>
+      <div class="phead">
+        <h2>Alternative corridors</h2>
+        <p class="src" id="alt-src">—</p>
+      </div>
+      <ul class="alts" id="alt-list"></ul>
+    </section>
+
+    <section class="panel approve" id="rail-approve" hidden>
+      <div class="phead"><h2>Master's approval</h2></div>
+      <p class="note">A route is not approved until a named person approves it. Approving
+        adds a version; it never overwrites the previous plan.</p>
+      <div class="approw">
+        <input id="approver" type="text" placeholder="Name and rank" autocomplete="off">
+        <button id="approve-btn">Approve route</button>
+      </div>
+      <p class="approve-state" id="approve-state">Not approved.</p>
+    </section>
+
+    <section class="panel" id="rail-fresh" hidden>
+      <div class="phead"><h2>Where the numbers come from</h2></div>
+      <dl class="kv" id="freshness"></dl>
+      <p class="src" id="f-route">—</p>
+    </section>
+
+  </div>
+
+
+  <!-- ============ the window finding ============ -->
+  <section class="panel wide">
+    <div class="phead"><h2>Over the whole window</h2></div>
+    <p class="finding">
+      <b id="t-closed">—</b> of <b id="t-obs">—</b> days the station cell was closed
+      (<b id="t-pct">—</b>). The approach 100&nbsp;km north was closed
+      <b id="t-app">—</b> days. The crossing is not the hard part; the last 100&nbsp;km is.
+    </p>
+    <div class="route-facts">
+      <dl class="kv">
+        <dt>Steaming time</dt><dd id="r-days">—</dd>
+        <dt>Heaviest ice on the route</dt><dd id="r-max">—</dd>
+        <dt>Ship's assumed limit</dt><dd id="r-limit">—</dd>
+        <dt>Straight line would meet</dt><dd id="r-straight">—</dd>
+        <dt>Legs</dt><dd id="r-legs">—</dd>
+      </dl>
+      <p class="note">Steaming time only — no waiting, no weather, no station operations.
+        PolarRoute's wave-resistance function is inert in this version, so every duration
+        here is a lower bound. <span id="route-engine"></span></p>
+    </div>
+  </section>
+
+  <section class="panel wide">
+    <details>
+      <summary>What this prototype can and cannot claim</summary>
+      <div class="claims">
+        <div><h3>Supported by a file in this repository</h3><ul id="claims"></ul></div>
+        <div><h3>Not supported — do not say these</h3><ul id="noclaims"></ul></div>
+      </div>
+      <p class="src" id="claims-src"></p>
+    </details>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+<script src="/static/workflow.js"></script>
+</body>
+</html>

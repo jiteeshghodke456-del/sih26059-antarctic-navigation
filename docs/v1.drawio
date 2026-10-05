@@ -1,0 +1,292 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="Decision workflow" id="navflow">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2420" pageHeight="1280" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="aIn" value="A" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;align=center;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="5" y="118" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="start" value="Start" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;align=center;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#5C1F1D;" vertex="1" parent="1">
+          <mxGeometry x="175" y="30" width="150" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="marks" value="Captain Marks Route in the Application" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="290" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="nlogin" value="Captain Logs in application" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="380" y="108" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="backend" value="Route is sent to the application's local processing and data is fetched as voyage pack" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="60" y="210" width="290" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="nnav" value="Navigation Decision Processing start" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="380" y="226" width="210" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="chk" value="AI model checks yesterdays ice movement forecast correctness" style="rhombus;whiteSpace=wrap;html=1;fontSize=12;align=center;fillColor=#e8b5d8;strokeColor=#a34e8c;fontColor=#4A1B3D;" vertex="1" parent="1">
+          <mxGeometry x="640" y="60" width="300" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="keep" value="Keep default Confidence in route suggestion" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="990" y="78" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lower" value="Lower Confidence and increase number of safe routes" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="990" y="178" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="notify" value="Notify system's degradation state to the captain" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="640" y="300" width="300" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="nqual" value="Check data quality and state before further processing." style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="990" y="306" width="270" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="tmesh" value="meshiphi" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="60" width="130" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="mesh" value="build vessel modelled ice mesh" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="110" width="170" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="trouter" value="PolarRoute" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="1530" y="60" width="130" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="router" value="Compute candidate routes" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="110" width="170" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="polaris" value="Is course's POLARIS ice concentration safe" style="rhombus;whiteSpace=wrap;html=1;fontSize=12;align=center;fillColor=#e8b5d8;strokeColor=#a34e8c;fontColor=#4A1B3D;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="310" width="240" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="recarto" value="Advise Captain to recartograph a new route" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="530" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="aOut" value="A" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;align=center;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="645" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hazards" value="Include additional hazards in suggested routes" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="1620" y="400" width="230" height="88" as="geometry" />
+        </mxCell>
+        <mxCell id="mode" value="Is this departure decision or have we already left port" style="rhombus;whiteSpace=wrap;html=1;fontSize=12;align=center;fillColor=#e8b5d8;strokeColor=#a34e8c;fontColor=#4A1B3D;" vertex="1" parent="1">
+          <mxGeometry x="1610" y="540" width="250" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="tau" value="Is new route better enough to suggest it?" style="rhombus;whiteSpace=wrap;html=1;fontSize=12;align=center;fillColor=#e8b5d8;strokeColor=#a34e8c;fontColor=#4A1B3D;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="770" width="230" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="keeporig" value="Keep the captains original route" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1000" width="230" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="drawrec" value="Draw recommended route and two backups for captain" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="1000" width="240" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="finalize" value="The Captain finalizes the sail route" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="1120" width="250" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="micro" value="Suggest microchanges along the route being followed, warn captain about weather states hidden dangers by low visibility and halt calls to take if situation calls" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="1910" y="700" width="280" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="insights" value="Give captain insights in navigational language along with calculations" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+          <mxGeometry x="1830" y="970" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="trouble" value="If trouble is foreseen suggest contacting nearest icebreaker, station and MRCC" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="2120" y="970" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="end" value="End" style="rounded=1;arcSize=40;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;align=center;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#5C1F1D;" vertex="1" parent="1">
+          <mxGeometry x="1880" y="1140" width="160" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="r1n" value="Taken by NSIDC satellite with SSMIS sensor" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="430" width="290" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r1a" value="Read Latest &amp;amp; historical ice concentration map" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="60" y="486" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r1b" value="Clean unreliable data/noise in satellite image" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="390" y="486" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r2n" value="CMEMS Sea-ice forecast" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="575" width="290" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r2a" value="Fetch weather model's Sea-ice forecast" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="60" y="631" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r2b" value="AI model corrects mistakes in the forecast" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="390" y="631" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r2c" value="Add callibrated safety margin for vessel" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="720" y="631" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r3n" value="USNIC Current iceberg positions" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="720" width="290" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r3a" value="Fetch current iceberg location near the course" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="60" y="776" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r3b" value="Predict Iceberg trajectory" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="390" y="776" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r4n" value="ERA/GFS wind + waves , GEBCO bathymetry" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="865" width="290" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r4a" value="Fetch Environment&amp;nbsp; and Hazards lying ahead" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="60" y="921" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r4b" value="Analyze weather forecast and hazards ahead" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="390" y="921" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r5n" value="modelled drift field" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1010" width="290" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r5a" value="Estimate ice pressure / compression risk" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1066" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="r5b" value="Flag dangerous ice-pressure convergence conditions" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+          <mxGeometry x="390" y="1066" width="290" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="start" target="marks">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="aIn" target="marks">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#82b366;" edge="1" parent="1" source="nlogin" target="marks">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="marks" target="backend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#82b366;" edge="1" parent="1" source="nnav" target="backend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="marks" target="chk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a7" value="YES" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="chk" target="keep">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a8" value="NO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="chk" target="lower">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="keep" target="notify">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="lower" target="notify">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#82b366;" edge="1" parent="1" source="nqual" target="notify">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="notify" target="mesh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#6c8ebf;" edge="1" parent="1" source="tmesh" target="mesh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#6c8ebf;" edge="1" parent="1" source="trouter" target="router">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="mesh" target="router">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="router" target="polaris">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a17" value="NO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="polaris" target="recarto">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="recarto" target="aOut">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a19" value="YES" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="polaris" target="hazards">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="hazards" target="mode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a21" value="Departure" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="mode" target="tau">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="mode" target="micro">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a23" value="NO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="tau" target="keeporig">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a24" value="YES" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="tau" target="drawrec">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="keeporig" target="finalize">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="drawrec" target="finalize">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a27" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="micro" target="insights">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="trouble" target="insights">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="insights" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="backend" target="r1a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#82b366;" edge="1" parent="1" source="r1n" target="r1a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r1a" target="r1b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r1b" target="mesh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="backend" target="r2a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#82b366;" edge="1" parent="1" source="r2n" target="r2a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r2a" target="r2b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r2b" target="r2c">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a38" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r2c" target="mesh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="backend" target="r3a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#82b366;" edge="1" parent="1" source="r3n" target="r3a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r3a" target="r3b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r3b" target="mesh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="backend" target="r4a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a44" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#82b366;" edge="1" parent="1" source="r4n" target="r4a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r4a" target="r4b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a46" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r4b" target="mesh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a47" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="backend" target="r5a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a48" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;dashPattern=3 3;endArrow=none;strokeColor=#82b366;" edge="1" parent="1" source="r5n" target="r5a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a49" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r5a" target="r5b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a50" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;" edge="1" parent="1" source="r5b" target="mesh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

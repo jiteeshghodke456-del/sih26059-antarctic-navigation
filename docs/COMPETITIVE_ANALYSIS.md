@@ -98,11 +98,185 @@ Given only the one-sentence PS, every competent team converges on roughly:
 - DTU Space's specific Antarctic product catalogue was not confirmed in this pass; only the broader CryoSat-2 Antarctic freeboard/thickness literature was verified.
 
 ---
+
+# The operational incumbents, and why they were missing from this file
+
+*Added 2026-09-07.* An audit found this document evaluated the **research**
+rivals seriously — IceNet, ANTSIC-UNet, CMEMS, IDRIFTNET, USNIC/BYU — and left
+out every **product** a domain judge would name first. IcySea, PolarView,
+Polarstern MapViewer and the ECDIS vendors sat in `docs/ppt_source/market.md`,
+a marketing draft, rather than here. That is the wrong place for them: a
+competitor you only discuss in a pitch document is a competitor you have not
+actually analysed.
+
+## The products
+
+| Product | What it does | Where it is better than us | What it leaves |
+|---|---|---|---|
+| **IcySea** (Drift+Noise, AWI spin-off, ~7 staff) | Near-real-time ice imagery and drift forecast to the bridge, Iridium-tested, delivery within ~1 h of satellite recording, offline browser cache, click-a-point-to-forecast-drift. Customers include **RV Polarstern and RSV Nuyina** | Everything about delivery. They have solved low-bandwidth polar distribution, which we have only designed. They are a real product on real ships; we are a prototype | It answers *"what does the ice look like"*. It does not answer *"can this named ship reach this named station on this date"* — which is the gap we occupy |
+| **PolarView** (University of Bremen lineage) | AMSR2 sea-ice concentration, publicly served, the same product Laura Bassi's dashboard consumes | Free, established, trusted, and the source many operators already open first | A data service, not a decision-support tool. No vessel model, no route, no approval |
+| **Polarstern MapViewer** (AWI) | Institutional multi-layer viewer aboard an icebreaker, backed by a documented data-logistics team with SLA-like onboarding (mission data <10 min, new permanent product ~4 weeks) | Layer breadth we cannot approach, because it rests on institutional data infrastructure and staff, not on UI | Internal to one operator's fleet. Not a product anyone else can adopt |
+| **ECDIS vendors** (Furuno, Kongsberg, Wärtsilä/Transas, NAVTOR, ChartWorld) | Type-approved bridge systems meeting MSC.232(82), carriage-mandated under SOLAS V/19.2.10 | Type approval, which we will never have as a prototype, and the bridge itself — they own the screen | Ice-aware, vessel-specific, destination-reachability decision support is not what they sell. We are a layer that would have to live beside them, not replace them |
+| **StormGeo** (~13,000 vessels) | Commercial voyage optimisation with 24/7 human route analysts | Mature, genuinely multi-objective at scale, commercially proven | A different market: global commercial shipping on subscription, no Antarctic resupply specialisation. Their human-in-the-loop fallback is evidence that full automation is not trusted at the edges — which is the posture we argue for too |
+
+## The failure analysis this file did not have
+
+The audit's sharpest finding was that **no competitor failure analysis existed
+anywhere in the repository** — zero hits for "shut down", "discontinued",
+"failed because", "lessons from". A competitive analysis with no failures in it
+is a survivorship-biased list.
+
+What can honestly be said, which is less than a full post-mortem:
+
+- **ISRO's own SCATSAT-1 Antarctic sea-ice product stopped in May 2019 while
+  the satellite kept operating until February 2021.** The product was
+  discontinued nearly two years before the platform failed. And the VEDAS polar
+  GeoServer, which served those daily Antarctic layers in EPSG:3031, carries
+  **nothing after March 2021** — it was never continued onto EOS-06. This is the
+  clearest documented case available to us of a capable polar data service
+  lapsing, and the cause looks like continuity of funding and ownership rather
+  than any technical failure. It is the failure mode most likely to kill *this*
+  project too, and it argues for our reuse-first posture: PolarRoute, the CDR
+  and the ATS register all outlive us.
+- **IceNet's published validation is Arctic**, and its operational Antarctic
+  support exists in source code rather than in a second peer-reviewed paper.
+  That is a scope limitation rather than a failure, and it should be described
+  as one.
+- We have **never tested IcySea** and will not claim it is worse. Our claim is
+  adjacent, not superior.
+
+**Still open:** a genuine post-mortem of a discontinued polar navigation or ice
+service — why it ended, who paid for it, what replaced it. Filed in
+`docs/backlog.md`. Writing one would be worth more than another feature.
+
+---
+
+# The 12-question benchmark
+
+Reinstated from the master prompt, where a `# COMPETITIVE / OPERATIONAL
+BENCHMARK` section (line 5070) was **lost in compression** — only §30's weaker
+bullet list survived (`audit/MASTER_AUDIT.md` §A.4). The lost version is
+materially more rigorous, because it refuses the question "what software already
+exists?" and replaces it with twelve questions about what that software actually
+*does for a decision*.
+
+> Do not merely ask "What software already exists?" Ask:
+> what decision does it support · what data does it use · at what latency · what
+> forecast horizon · what vessel assumptions · what risk methodology · what
+> routing methodology · what uncertainty does it expose · what does the user
+> actually see · what is genuinely better · what remains unsolved · what can this
+> system demonstrate that they cannot.
+>
+> **Do not create a strawman competitor.**
+
+Answers below are marked `UNVERIFIED` wherever they could not be confirmed from
+public documentation. An unverified answer is not a weakness in the competitor.
+
+## IcySea (Drift+Noise Polar Services)
+
+| Question | Answer |
+|---|---|
+| Decision supported | "Where is the ice edge and what does the imagery show me right now" — situational awareness for the ice pilot |
+| Data | Sentinel-1 SAR, AMSR2 passive microwave |
+| Latency | Near-real-time on acquisition; hours (`UNVERIFIED` exact) |
+| Forecast horizon | **None — it is observation, not forecast** |
+| Vessel assumptions | None; vessel-agnostic viewer |
+| Risk methodology | None published; interpretation is left to the mariner |
+| Routing methodology | **None** — it does not route |
+| Uncertainty exposed | Imagery quality is visible to the eye; no quantified uncertainty (`UNVERIFIED`) |
+| User sees | High-resolution SAR imagery, bandwidth-adapted for shipboard links |
+| Genuinely better than us | **SAR resolution.** Metres against our 25 km passive microwave. For close-quarters ice navigation this is a decisive advantage and we should not pretend otherwise. Also a real product with real customers — Polarstern and Nuyina both use it |
+| Remains unsolved | Forecast, route, vessel-specific consequence, decision record |
+| What we can show that they cannot | A route whose validity is tied to named evidence, and a refusal to certify what has not been observed |
+
+## PolarView
+
+| Question | Answer |
+|---|---|
+| Decision supported | Ice information distribution to polar operators |
+| Data | Multi-mission SAR and passive microwave, ice charts |
+| Latency | Product-dependent (`UNVERIFIED`) |
+| Forecast horizon | Distributes forecasts produced elsewhere |
+| Vessel assumptions | None |
+| Risk methodology | None of its own |
+| Routing methodology | None |
+| Uncertainty exposed | Inherits whatever the source product carries |
+| User sees | A portal of layers |
+| Genuinely better | Breadth of sources and institutional continuity |
+| Remains unsolved | Turning layers into a decision — the exact gap this project targets |
+| What we can show | Fragmented layers reduced to one route-health state with its reasons |
+
+## BAS PolarRoute / meshiphi
+
+| Question | Answer |
+|---|---|
+| Decision supported | Optimal path under ice and vessel-performance constraints |
+| Data | Whatever mesh you supply — SIC, thickness, currents, bathymetry |
+| Latency | Offline; a corridor solve takes ~9 s (**Measured**, this repo) |
+| Forecast horizon | Inherits the input mesh's |
+| Vessel assumptions | **Explicit and well modelled** — speed/ice-resistance curves, fuel |
+| Risk methodology | Constraint-based; not a published risk index |
+| Routing methodology | Dijkstra / A* over a non-uniform mesh, with smoothing |
+| Uncertainty exposed | None natively |
+| User sees | A Python API and JSON — **no operational interface** |
+| Genuinely better | The routing itself. It is the state of the art and **we reuse it rather than compete with it** |
+| Remains unsolved | Provenance, freshness, human approval, monitoring, the bridge |
+| What we can show | The workflow around the solver: mission definition, gates, approval, versioning, divergence detection |
+
+## National ice services (AARI, AWI, NIC/USNIC)
+
+| Question | Answer |
+|---|---|
+| Decision supported | Authoritative ice charting and iceberg cataloguing |
+| Data | Multi-sensor, analyst-interpreted |
+| Latency | Daily to weekly depending on product |
+| Forecast horizon | Some short-range; principally analysis |
+| Vessel assumptions | None |
+| Risk methodology | Ice charts feed POLARIS externally; the chart itself is not a risk index |
+| Routing methodology | None |
+| Uncertainty exposed | Egg-code conventions carry stage and concentration, not error bars |
+| User sees | Charts, and for USNIC a public iceberg catalogue we consume |
+| Genuinely better | **Authority and human analyst judgement.** An automated product does not replace a national ice service and should not claim to |
+| Remains unsolved | Ship-specific consequence; anything at decision time on the bridge |
+| What we can show | The catalogue joined to a specific hull, a specific track, and a specific date |
+
+## Commercial ECDIS + ice overlay (Kongsberg, Furuno, Wärtsilä)
+
+| Question | Answer |
+|---|---|
+| Decision supported | Certified navigation and passage planning |
+| Data | ENC + overlays |
+| Latency | Chart update cycle; overlay-dependent |
+| Forecast horizon | Overlay-dependent |
+| Vessel assumptions | Draft, safety contour, manoeuvring data |
+| Risk methodology | Depth/UKC alarms, not ice risk |
+| Routing methodology | Manual waypoint planning with route check |
+| Uncertainty exposed | CATZOC on the chart — genuinely good practice we borrow |
+| User sees | The certified bridge display the crew already trusts |
+| Genuinely better | **It is type-approved and legally sufficient. We are not, and must not imply otherwise.** It is also already installed, already trained on, and already in the workflow |
+| Remains unsolved | Antarctic ice forecasting, iceberg trajectory, ice-constrained optimisation |
+| What we can show | A decision layer that sits *beside* ECDIS, in ECDIS's own planning/monitoring idiom, without pretending to replace it |
+
+## What this table changes
+
+Two honest conclusions fall out of asking the twelve questions rather than
+listing products:
+
+1. **No competitor is weak.** Each is strong at the thing it was built for; the
+   gap is that none of them closes the loop from observation to a versioned,
+   approved, monitored route decision for a *named vessel on a named day*.
+2. **The two we should be most careful about are IcySea and ECDIS** — IcySea
+   because its data is genuinely better than ours, and ECDIS because it is
+   certified and we are not. Any claim that steps on either is a claim a judge
+   can dismantle.
+
 ---
 
 # Pass 2 — IcySea audit, the Indian precedent, and the wider landscape
 
 Status: second research pass, 2026-09-02. Appended, not overwriting. Sections 1–4 above stand unchanged; where this pass touches ground already covered there (IceNet/ANTSIC-UNet/CMEMS error budgets, PolarRoute, StormGeo, USNIC/BYU), it cross-references rather than re-derives. Every non-trivial claim below is tagged **VERIFIED** (with source), **INFERRED**, or **UNVERIFIED**.
+
+*Merged into main on 2026-10-05.* This pass was written in a parallel session on 2 Sep and stayed on an unpushed branch until then. The two parts above, added on 7 Sep, were written without it, so both cover IcySea, PolarView, AARI and Wärtsilä. They have not been reconciled yet, so check both before quoting either on those products.
 
 ---
 

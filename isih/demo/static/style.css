@@ -1,0 +1,518 @@
+/* ISIH bridge console.
+
+   Palette is taken from ECDIS day mode rather than invented: a cool grey
+   ground, chart blues, and magenta reserved for cautionary information. In
+   IHO S-52 magenta is the colour a watchkeeper is trained to read as "look
+   here", so it is used ONLY for a route that is not safe as approved, and
+   for nothing else on the page.
+
+   UNKNOWN is deliberately grey and hatched, never red. Colouring an
+   unevaluable gate as a hazard would claim we measured something. Grey says
+   we did not measure at all, which is the honest signal.
+
+   No web fonts. The page claims to run offline with no internet, and a font
+   request would quietly make that false. */
+
+:root {
+  --deck:      #e7ebef;
+  --panel:     #ffffff;
+  --ink:       #0f1720;
+  --ink-2:     #46545f;
+  --ink-3:     #6d7a85;
+  --rule:      #c2ccd4;
+  --rule-soft: #dee4e9;
+  --sea:       #1d4e6b;
+
+  --valid:     #1b7f4b;
+  --degraded:  #a8690c;
+  --critical:  #a81e7e;   /* S-52 cautionary magenta — reserved */
+  --unknown:   #78868f;
+
+  --valid-bg:    #e8f4ed;
+  --degraded-bg: #fbf1e0;
+  --critical-bg: #f8e9f3;
+  --unknown-bg:  #eef1f3;
+
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+/* The UA's [hidden] rule loses to any author rule that sets display, and
+   several here do (.health is a grid, .passage a flex, .grid a grid). Without
+   this the workflow's gating silently does nothing and the whole console
+   shows behind the sign-in screen. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--deck);
+  color: var(--ink);
+  font: 14px/1.5 var(--sans);
+  font-variant-numeric: tabular-nums;   /* readouts must not shift width */
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; font-weight: 650; letter-spacing: -0.01em; }
+p { margin: 0; }
+
+#error {
+  background: var(--critical); color: #fff; padding: 10px 16px; font-weight: 600;
+}
+
+/* ---------------- header ---------------- */
+
+.top {
+  display: flex; flex-wrap: wrap; gap: 12px 24px;
+  align-items: flex-start; justify-content: space-between;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--panel);
+}
+.top h1 { font-size: 19px; }
+.sub { color: var(--ink-2); font-size: 13px; margin-top: 3px; }
+
+.badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.badge {
+  font-size: 12px; padding: 4px 10px; border-radius: 2px;
+  border: 1px solid var(--rule); color: var(--ink-2); background: var(--deck);
+}
+.badge.mode { border-color: #d8a53c; background: #fdf4e0; color: #7a5407; }
+.badge.mode b { font-weight: 650; }
+.badge.offline { border-color: #a8c3b4; background: var(--valid-bg); color: #145c37; }
+
+/* ---------------- the hero: route health ---------------- */
+
+.health {
+  display: grid;
+  grid-template-columns: minmax(160px, 210px) 1fr minmax(220px, 300px);
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+  background: var(--panel);
+}
+.health > * { padding: 14px 20px; }
+.health > * + * { border-left: 1px solid var(--rule-soft); }
+
+.hlabel {
+  display: block; font-size: 11.5px; color: var(--ink-3);
+  letter-spacing: 0.02em; margin-bottom: 4px;
+}
+.health-state strong {
+  display: block; font-size: 27px; line-height: 1.05; font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.health-why p { font-size: 14px; }
+.health-binding { color: var(--ink-2); font-size: 12.5px; margin-top: 5px; }
+/* Divergence from the approved plan is the one thing on this page allowed to
+   use the cautionary magenta besides an INVALID route. */
+.health-diverge {
+  margin-top: 7px; font-size: 12.5px; font-weight: 600; color: var(--critical);
+  border-left: 3px solid var(--critical); padding-left: 9px;
+}
+
+/* State colouring applies to the whole band so it reads at a glance. */
+.health[data-health="VALID"]    { background: var(--valid-bg); }
+.health[data-health="VALID"]    .health-state strong { color: var(--valid); }
+.health[data-health="DEGRADED"] { background: var(--degraded-bg); }
+.health[data-health="DEGRADED"] .health-state strong { color: var(--degraded); }
+.health[data-health="CRITICAL"] { background: var(--critical-bg); }
+.health[data-health="CRITICAL"] .health-state strong { color: var(--critical); }
+.health[data-health="INVALID"]  { background: var(--critical); }
+.health[data-health="INVALID"]  .health-state strong,
+.health[data-health="INVALID"]  .health-why p,
+.health[data-health="INVALID"]  .hlabel { color: #fff; }
+
+.covbar {
+  display: flex; gap: 2px; margin: 2px 0 6px;
+}
+.covbar i {
+  flex: 1; height: 12px; background: var(--unknown-bg);
+  border: 1px solid var(--rule); border-radius: 1px;
+}
+.covbar i.has {
+  background: var(--sea); border-color: var(--sea);
+}
+.health-cov strong { font-size: 13px; font-weight: 600; }
+
+/* ---------------- layout ---------------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+  padding: 14px 20px 28px;
+  align-items: start;
+}
+.col-main { grid-column: span 8; display: grid; gap: 14px; align-content: start; }
+.rail     { grid-column: span 4; display: grid; gap: 14px; align-content: start; }
+.subgrid  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.panel.wide { grid-column: 1 / -1; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 13px 15px 15px;
+}
+.rail .panel { padding: 12px 14px 14px; }
+
+.phead { margin-bottom: 10px; }
+.phead h2 { font-size: 14.5px; }
+.src { font-size: 11.5px; color: var(--ink-3); margin-top: 3px; }
+.note { font-size: 12px; color: var(--ink-2); margin-top: 9px; }
+.muted { color: var(--ink-3); }
+.small { font-size: 11.5px; }
+.wrap { overflow-wrap: anywhere; }
+
+/* ---------------- chart ---------------- */
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 6px 16px;
+  font-size: 11.5px; color: var(--ink-2); margin-bottom: 8px;
+}
+.lg { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { width: 26px; height: 10px; display: inline-block; border-radius: 1px; }
+.swatch.ramp {
+  width: 76px;
+  background: linear-gradient(90deg, #e2ecf4, #c6dbef, #6baed6, #2171b5, #08306b);
+  border: 1px solid var(--rule);
+}
+.swatch.line-route    { height: 0; border-top: 2.5px solid #157347; }
+.swatch.line-straight { height: 0; border-top: 2.5px dashed #c97b1e; }
+.swatch.box-unknown   { height: 11px; width: 11px; border: 1.5px solid #c97b1e; }
+.swatch.land          { height: 11px; width: 16px; background: #e4e0d6; border: 1px solid #8a8574; }
+.lg.pa { cursor: pointer; }
+
+#map-wrap {
+  position: relative; width: 100%; aspect-ratio: 3 / 2;  /* replaced at runtime by the projection */
+  border: 1px solid var(--rule); border-radius: 2px; overflow: hidden;
+  background: #e2ecf4;                 /* sea — matches the ramp's zero stop */
+}
+#ice, #vec { position: absolute; inset: 0; width: 100%; height: 100%; }
+#tip {
+  position: absolute; transform: translate(10px, -50%);
+  background: var(--ink); color: #fff; font-size: 11.5px;
+  padding: 3px 7px; border-radius: 2px; pointer-events: none; white-space: nowrap;
+}
+
+.daybar { margin-top: 12px; }
+.dayrow { display: flex; align-items: baseline; gap: 10px; }
+.dayrow strong { font-size: 17px; }
+.dayrow .hlabel { margin: 0; }
+#day { width: 100%; margin: 6px 0 4px; accent-color: var(--sea); }
+
+.strip { display: flex; gap: 2px; }
+.strip .d {
+  flex: 1; height: 15px; border-radius: 1px; cursor: pointer;
+  border: 1px solid transparent;
+}
+.strip .d.open   { background: #a9d5bd; }
+.strip .d.closed { background: #eeb2b2; }
+.strip .d.sel    { outline: 2px solid var(--ink); outline-offset: 1px; }
+
+.qa { margin-top: 12px; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.seg button {
+  font: inherit; font-size: 12.5px; padding: 5px 13px; cursor: pointer;
+  background: var(--panel); color: var(--ink-2); border: 0;
+}
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button.on { background: var(--sea); color: #fff; font-weight: 600; }
+.pa-note { margin-top: 10px; }
+
+/* ---------------- key/value readouts ---------------- */
+
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; margin: 0; }
+.kv dt { color: var(--ink-2); font-size: 12.5px; }
+.kv dd { margin: 0; text-align: right; font-size: 12.5px; }
+.kv dd.wrap { text-align: left; }
+
+/* ---------------- gates ---------------- */
+
+.gates { list-style: none; margin: 0; padding: 0; }
+.gates li {
+  display: grid; grid-template-columns: 9px 1fr auto; gap: 9px;
+  align-items: start; padding: 7px 0;
+}
+.gates li + li { border-top: 1px solid var(--rule-soft); }
+.gates .dot {
+  width: 9px; height: 9px; border-radius: 50%; margin-top: 5px;
+  border: 1px solid var(--rule);
+}
+.gates .g-name { font-weight: 600; font-size: 12.5px; text-transform: capitalize; }
+.gates .g-why  { color: var(--ink-2); font-size: 11.5px; margin-top: 1px; }
+.gates .g-state {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.03em;
+  padding: 2px 6px; border-radius: 2px; white-space: nowrap;
+}
+
+.s-PASS     .dot { background: var(--valid);    border-color: var(--valid); }
+.s-PASS     .g-state { background: var(--valid-bg); color: var(--valid); }
+.s-MARGINAL .dot { background: var(--degraded); border-color: var(--degraded); }
+.s-MARGINAL .g-state { background: var(--degraded-bg); color: var(--degraded); }
+.s-FAIL     .dot { background: var(--critical); border-color: var(--critical); }
+.s-FAIL     .g-state { background: var(--critical-bg); color: var(--critical); }
+
+/* UNKNOWN reads as absence: hollow, hatched, grey. Never as a hazard. */
+.s-UNKNOWN  .dot {
+  background: repeating-linear-gradient(45deg,
+    var(--unknown) 0 2px, transparent 2px 4px);
+  border-color: var(--unknown);
+}
+.s-UNKNOWN .g-name, .s-UNKNOWN .g-why { color: var(--ink-3); }
+.s-UNKNOWN .g-state { background: var(--unknown-bg); color: var(--unknown); }
+
+/* ---------------- alternatives ---------------- */
+
+.alts { list-style: none; margin: 0; padding: 0; }
+.alts li { padding: 9px 0; }
+.alts li + li { border-top: 1px solid var(--rule-soft); }
+.alts .a-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.alts .a-label { font-weight: 650; font-size: 12.5px; }
+.alts .a-delta { font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.alts .a-sum  { font-size: 11.5px; color: var(--ink-2); margin-top: 2px; }
+.alts .a-why  { font-size: 11.5px; color: var(--ink-3); margin-top: 4px; }
+.alts li.unsolved .a-label { color: var(--critical); }
+
+/* ---------------- risks, log, approval ---------------- */
+
+.risks { list-style: none; margin: 0; padding: 0; }
+.risks li { padding: 8px 0; }
+.risks li + li { border-top: 1px solid var(--rule-soft); }
+.risks .r-name { font-weight: 650; font-size: 12.5px; }
+.risks .r-val  { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+
+.log { list-style: none; margin: 0; padding: 0; }
+.log li { padding: 8px 0; font-size: 12.5px; }
+.log li + li { border-top: 1px solid var(--rule-soft); }
+.log .l-top { display: flex; justify-content: space-between; gap: 10px; }
+.log .l-ver { font-weight: 650; }
+.log .l-meta { font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+.log .l-appr { color: var(--valid); font-weight: 600; }
+
+.approw { display: flex; gap: 8px; margin-top: 10px; }
+.approw input {
+  flex: 1; min-width: 0; font: inherit; font-size: 12.5px; padding: 6px 9px;
+  border: 1px solid var(--rule); border-radius: 2px; background: var(--panel); color: var(--ink);
+}
+.approw button {
+  font: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 14px; cursor: pointer;
+  background: var(--sea); color: #fff; border: 1px solid var(--sea); border-radius: 2px;
+}
+.approw button:disabled { background: var(--unknown); border-color: var(--unknown); cursor: not-allowed; }
+.approve-state { margin-top: 8px; font-size: 12.5px; color: var(--ink-2); }
+.approve-state.done { color: var(--valid); font-weight: 600; }
+.approve-state.err  { color: var(--critical); font-weight: 600; }
+
+/* ---------------- the finding ---------------- */
+
+.finding { font-size: 15px; line-height: 1.55; }
+.finding b { font-size: 19px; }
+.route-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 26px; margin-top: 12px; }
+.route-facts .note { margin-top: 0; }
+
+.claims { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 26px; margin-top: 10px; }
+.claims h3 { font-size: 12.5px; margin-bottom: 5px; }
+.claims ul { margin: 0; padding-left: 17px; font-size: 12.5px; color: var(--ink-2); }
+.claims li { margin-bottom: 4px; }
+details summary { cursor: pointer; font-weight: 650; font-size: 14.5px; }
+
+/* ---------------- focus, motion, responsive ---------------- */
+
+a:focus-visible, button:focus-visible, input:focus-visible,
+summary:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--sea); outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+@media (max-width: 1180px) {
+  .col-main, .rail { grid-column: 1 / -1; }
+}
+@media (max-width: 780px) {
+  .health { grid-template-columns: 1fr; }
+  .health > * + * { border-left: 0; border-top: 1px solid var(--rule-soft); }
+  .grid { padding: 12px; }
+  .subgrid { grid-template-columns: 1fr; }
+  .route-facts, .claims { grid-template-columns: 1fr; }
+}
+
+/* ---------------- the two-ship test ---------------- */
+
+.vt { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.vt th, .vt td { padding: 5px 6px; text-align: right; border-bottom: 1px solid var(--rule-soft); }
+.vt th:first-child, .vt td:first-child { text-align: left; }
+.vt thead th { color: var(--ink-3); font-size: 11.5px; font-weight: 600; }
+.vt tbody tr:last-child td { border-bottom: 0; }
+.vt .delta { color: var(--sea); font-weight: 600; }
+.vt-verdict {
+  margin-top: 9px; font-size: 12px; color: var(--ink-2);
+  border-left: 3px solid var(--degraded); padding-left: 9px;
+}
+.vt-warn { margin-top: 7px; font-size: 11.5px; color: var(--critical); }
+
+/* ---------------- the §4 passage workflow ---------------- */
+
+/* Sign-in. Full screen because there is nothing worth looking at before
+   somebody is on watch, and because an approval must be attributable. */
+.signin {
+  min-height: 78vh; display: grid; place-items: center; padding: 24px;
+}
+.signin-card {
+  background: var(--panel); border: 1px solid var(--rule); border-radius: 2px;
+  padding: 26px 28px; max-width: 470px; width: 100%;
+}
+.signin-card h2 { font-size: 18px; margin-bottom: 8px; }
+.signin-card .approw { margin-top: 14px; }
+
+/* Where we are in the passage. Nine marks, not a progress percentage —
+   the steps are named things a mariner does, not a loading bar. */
+.passage {
+  display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center;
+  justify-content: space-between;
+  padding: 9px 20px; background: var(--panel);
+  border-bottom: 1px solid var(--rule);
+}
+.passage-now { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.passage-now .hlabel { margin: 0; }
+.passage-now strong { font-size: 14.5px; }
+.passage-steps {
+  display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; flex: 1;
+  min-width: 160px; max-width: 320px;
+}
+.passage-steps li {
+  flex: 1; height: 5px; border-radius: 1px;
+  background: var(--unknown-bg); border: 1px solid var(--rule);
+}
+.passage-steps li.done { background: var(--sea); border-color: var(--sea); }
+.passage-steps li.now  { background: var(--degraded); border-color: var(--degraded); }
+.passage-who { display: flex; align-items: center; gap: 12px; }
+
+.badge.wf { border-color: #9fb3c4; background: #eef3f7; color: #1d4e6b; font-weight: 650; }
+
+.linkish {
+  font: inherit; font-size: 12.5px; background: none; border: 0; padding: 0;
+  color: var(--sea); text-decoration: underline; cursor: pointer;
+}
+
+/* The stage panel sits under the chart: chart above, "what do I do now"
+   below, facts to the right. The eye never has to hunt. */
+.panel.stage { border-left: 3px solid var(--sea); }
+.panel.stage .field {
+  display: grid; grid-template-columns: 150px 1fr; gap: 8px 12px;
+  align-items: center; margin-bottom: 8px;
+}
+.panel.stage .field label { font-size: 12.5px; color: var(--ink-2); }
+.panel.stage input[type="text"],
+.panel.stage input[type="number"],
+.panel.stage select {
+  font: inherit; font-size: 12.5px; padding: 6px 9px; width: 100%;
+  border: 1px solid var(--rule); border-radius: 2px;
+  background: var(--panel); color: var(--ink);
+}
+.panel.stage .approw button {
+  font: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 16px;
+  cursor: pointer; background: var(--sea); color: #fff;
+  border: 1px solid var(--sea); border-radius: 2px; white-space: nowrap;
+}
+
+/* A choice with its consequence attached. The consequence is the point:
+   mission policy changes route health on 23 of 31 days. */
+.choice {
+  display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
+  padding: 9px 0; border-top: 1px solid var(--rule-soft);
+}
+.choice.static { cursor: default; }
+.choice.disabled { opacity: 0.55; }
+.choice input { margin-top: 3px; }
+.choice b { display: block; font-size: 12.5px; }
+.choice-why { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+
+.wp-scroll { max-height: 260px; overflow-y: auto; border: 1px solid var(--rule-soft); }
+.wp-scroll .vt th { position: sticky; top: 0; background: var(--panel); }
+
+.day-role {
+  font-size: 11px; color: var(--sea); border: 1px solid #b8cbd8;
+  background: #eef3f7; border-radius: 2px; padding: 1px 7px;
+}
+
+/* Magenta again, and still only for "the plan is not safe as approved". */
+.headsup {
+  display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+  border-left: 3px solid var(--critical); padding: 8px 0 8px 10px;
+  margin-bottom: 10px; font-size: 12.5px;
+}
+.headsup b { color: var(--critical); }
+
+.preview { margin: 10px 0; }
+.choices3 { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.choices3 button {
+  font: inherit; font-size: 12.5px; font-weight: 600; padding: 7px 15px;
+  cursor: pointer; border-radius: 2px;
+  background: var(--panel); color: var(--ink); border: 1px solid var(--rule);
+}
+.choices3 button[data-primary] {
+  background: var(--sea); color: #fff; border-color: var(--sea);
+}
+
+/* Gate verdicts inside the what-if table reuse the gate palette exactly, so
+   a PASS in the preview reads the same as a PASS in the rail. */
+.vt .gcell { font-weight: 650; font-size: 11.5px; }
+.vt .gcell.s-PASS     { color: var(--valid); }
+.vt .gcell.s-MARGINAL { color: var(--degraded); }
+.vt .gcell.s-FAIL     { color: var(--critical); }
+.vt .gcell.s-UNKNOWN  { color: var(--unknown); }
+
+/* ---------------- future scope (§25 / §26) ---------------- */
+
+/* Simulation is stated in three places on that page — a badge, a bar, and a
+   chip on every panel — because §25 permits a simulation that looks
+   integrated and forbids one that reads as real. */
+.badge.sim { border-color: #b58bc4; background: #f7eefb; color: #6b2f80; font-weight: 650; }
+.chip.sim {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.03em; vertical-align: middle;
+  border: 1px solid #b58bc4; background: #f7eefb; color: #6b2f80;
+  border-radius: 2px; padding: 1px 6px; margin-left: 8px;
+}
+.simbar {
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline;
+  padding: 10px 20px; font-size: 12.5px;
+  background: #f7eefb; border-bottom: 1px solid #d9bde5; color: #4d2260;
+}
+.panel.sim-panel { border-left: 3px solid #b58bc4; }
+
+.vitals { display: flex; gap: 8px; flex-wrap: wrap; }
+.vital {
+  flex: 1; min-width: 128px; border: 1px solid var(--rule-soft);
+  border-radius: 2px; padding: 8px 10px;
+}
+.vital.warn { border-color: #d8a53c; background: #fdf9f0; }
+.vital-t { font-weight: 700; font-size: 13px; }
+.vital-grid {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; margin: 6px 0 4px;
+}
+.vk { font-size: 11px; color: var(--ink-3); }
+.vv { font-size: 11.5px; text-align: right; }
+.vital-load { font-size: 11px; color: var(--ink-2); }
+
+.suggests { list-style: none; margin: 0; padding: 0; }
+.suggests li { padding: 7px 0; }
+.suggests li + li { border-top: 1px solid var(--rule-soft); }
+.suggests b { display: block; font-size: 12.5px; }
+
+.asklist { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.askbtn {
+  font: inherit; font-size: 12px; padding: 5px 11px; cursor: pointer;
+  background: var(--panel); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 2px;
+}
+.chat { display: grid; gap: 7px; max-height: 300px; overflow-y: auto; }
+.bubble {
+  border-radius: 2px; padding: 8px 11px; font-size: 12.5px; max-width: 85%;
+}
+.bubble.you { background: var(--sea); color: #fff; justify-self: end; }
+.bubble.sys { background: var(--deck); border: 1px solid var(--rule-soft); }
+.bubble-src { display: block; margin-top: 5px; font-size: 10.5px; color: var(--ink-3); }
+.future-link { display: inline-block; margin-top: 12px; }
