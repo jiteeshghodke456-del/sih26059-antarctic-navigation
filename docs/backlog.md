@@ -269,3 +269,7 @@ what was filed rather than fixed.
 - [minor][sim] **UNVERIFIED physics constants to check before the finale** (design §14): front positions ±1.5° (Orsi 1995 / Sokolov-Rintoul 2009 tables), DJF zonal-mean MSLP, katabatic mean 7 m/s, polynya sites other than Cape Darnley, fast-ice widths, edge relaxation time τ_E = 3 d, MIZ fog frequency 20–40 %, swell 2.5–3.5 m, F_eff = 600 km duration proxy. An ERA5 DJF climatology for 8–88°E settles the atmospheric ones in one afternoon.
 - [minor][sim] **Forecast-uncertainty hook** (design §6, `World.perturbed(k, t_issue)`) is the cheapest honest path to the §48A.31 robust-routing gap already listed above; not in v1.
 - [minor][sim] **The world model is also the synthetic forcing layer** the `[major][ml]` forcing-layer line above asks for — same three consumers (SIC model, Wagner drift, route weather). Real NWP/ERA5 forcing must stay a separate, swappable source; never let the synthetic world be mistaken for it.
+
+## Open — repo hygiene (raised 2026-10-05)
+
+- [minor][git] **The main checkout was not checked for uncommitted edits during the 5 Oct push.** The permission classifier blocked listing it from a worktree session, and its docs folder changed on 29 Sep. Run `git status --short` in ~/sih/SIH26059-antarctic-navigation and commit anything real on a branch.
