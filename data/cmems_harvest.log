@@ -1027,3 +1027,18 @@ INFO - 2026-11-07T17:46:24Z - Total size of the download: 40.66 MB.
 cmems_siconc_2026-11-07.nc: 42.62 MB -> 4.72 MB (9.0x smaller, int16 packed)
 2026-11-07T17:46:25+00:00 compressed cmems_siconc_2026-11-07.nc
 2026-11-07T20:57:37+00:00 already have cmems_siconc_2026-11-07.nc, skipping
+2026-11-08T17:58:04+00:00 harvesting cycle 2026-11-08
+INFO - 2026-11-08T17:58:07Z - Selected dataset version: "202406"
+INFO - 2026-11-08T17:58:07Z - Selected dataset part: "default"
+WARNING - 2026-11-08T17:58:07Z - The dataset cmems_mod_glo_phy_anfc_0.083deg_P1D-m, version '202406', part 'default' is currently being updated. Data after 2026-11-17T00:00:00.000Z may not be up to date.
+WARNING - 2026-11-08T17:58:07Z - Some of your subset selection [2026-11-08 00:00:00+00:00, 2026-11-18 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-11-17 00:00:00+00:00]
+INFO - 2026-11-08T17:58:12Z - Total size of the download: 40.66 MB.
+{
+  "file_size": "40.66 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-08T17:58:12+00:00 saved cmems_siconc_2026-11-08.nc
+cmems_siconc_2026-11-08.nc: 42.62 MB -> 4.26 MB (10.0x smaller, int16 packed)
+2026-11-08T17:58:13+00:00 compressed cmems_siconc_2026-11-08.nc
