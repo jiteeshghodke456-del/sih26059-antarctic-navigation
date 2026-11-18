@@ -40,8 +40,32 @@ mkdir -p "$ARCHIVE_DIR"
 # was issued on that date is gone. A back-filled cycle is therefore not a
 # substitute for a cycle captured on the day.
 CYCLE_DATE="${CYCLE_DATE:-}"
-[ -n "$CYCLE_DATE" ] || CYCLE_DATE="$(date -u +%Y-%m-%d)"
+DATE_FROM_CLOCK=0
+if [ -z "$CYCLE_DATE" ]; then
+  DATE_FROM_CLOCK=1
+  # CMEMS guarantees the day's forecast only by 12:00 UTC, and GitHub often
+  # starts a scheduled run hours late. A run that starts after midnight UTC
+  # but before 12:00 still sees YESTERDAY's forecast on the server, so that is
+  # the cycle it must be filed under. Four cycles (2026-09-20, 10-11, 11-10,
+  # 11-17) were archived as stale copies of the previous day before this rule
+  # and the length check below existed. See data/cmems_forecast_archive/KNOWN_STALE.md.
+  if [ "$(date -u +%H)" -lt 12 ]; then
+    CYCLE_DATE="$(date -u -d 'yesterday' +%Y-%m-%d)"
+  else
+    CYCLE_DATE="$(date -u +%Y-%m-%d)"
+  fi
+fi
 OUT_FILE="cmems_siconc_${CYCLE_DATE}.nc"
+
+# A real cycle has this many daily steps: the cycle date plus nine forecast days.
+EXPECTED_DAYS="${EXPECTED_DAYS:-10}"
+
+# Tell the workflow which cycle this run was about and how it ended, so the
+# verify step checks the right file instead of guessing from the clock.
+report() {
+  [ -n "${GITHUB_OUTPUT:-}" ] || return 0
+  { echo "cycle=${CYCLE_DATE}"; echo "status=$1"; } >> "$GITHUB_OUTPUT"
+}
 
 # Everything this script says goes to the log file AND to stdout. Writing only
 # to the log made a silent no-op look identical to a good run in the Actions
@@ -50,6 +74,7 @@ say() { echo "$(date -u -Iseconds) $*" | tee -a "$LOG_FILE"; }
 
 if [ -f "$ARCHIVE_DIR/$OUT_FILE" ]; then
   say "already have ${OUT_FILE}, skipping"
+  report already_have
   exit 0
 fi
 
@@ -73,7 +98,26 @@ copernicusmarine subset \
   --output-filename "$OUT_FILE" \
   2>&1 | tee -a "$LOG_FILE"
 
-say "saved ${OUT_FILE}"
+# Check the file really is this cycle before keeping it. The request asks for
+# cycle date .. cycle date + 10 days. If the server still holds yesterday's
+# forecast the answer is one day short; if tomorrow's has already replaced it,
+# one day long. Either way the data is a different forecast under this cycle's
+# name, which is worse than a missing day, so drop it and let a later run retry.
+# A date typed in by hand (workflow_dispatch) is a deliberate back-fill and is
+# not checked.
+N_DAYS="$(python3 -c 'import sys, netCDF4; print(len(netCDF4.Dataset(sys.argv[1]).dimensions["time"]))' \
+          "$ARCHIVE_DIR/$OUT_FILE" 2>/dev/null || echo unknown)"
+if [ "$DATE_FROM_CLOCK" = 1 ] && [ "$N_DAYS" != unknown ] && [ "$N_DAYS" -ne "$EXPECTED_DAYS" ]; then
+  rm -f "$ARCHIVE_DIR/$OUT_FILE"
+  say "REJECTED ${OUT_FILE}: ${N_DAYS} daily steps, expected ${EXPECTED_DAYS}." \
+      "The server is not holding the ${CYCLE_DATE} forecast right now. Nothing saved; a later run will retry."
+  report not_published
+  exit 0
+fi
+[ "$N_DAYS" != unknown ] || say "WARNING could not count the time steps in ${OUT_FILE}; keeping it unchecked"
+
+say "saved ${OUT_FILE} (${N_DAYS} daily steps)"
+report saved
 
 # Compress before this ever reaches git. `copernicusmarine subset` writes
 # NetCDF with no compression at all (verified: zlib=False, complevel=0,

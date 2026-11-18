@@ -37,6 +37,11 @@ on:
   schedule:
     - cron: '23 12 * * *'   # primary    — first slot after the 12:00 UTC guarantee
     - cron: '23 17 * * *'   # safety net — no-op if the cycle already landed
+    # Late retry. GitHub usually starts this after midnight UTC; the script
+    # then files it under yesterday's cycle, which is still the forecast on
+    # the server until about 12:00. It only downloads if both runs above
+    # found the forecast not yet published.
+    - cron: '23 21 * * *'
   workflow_dispatch:
     inputs:
       cycle_date:
@@ -81,6 +86,7 @@ jobs:
         run: copernicusmarine login --force-overwrite
 
       - name: Harvest the forecast cycle
+        id: harvest
         env:
           CYCLE_DATE: ${{ inputs.cycle_date }}
         run: bash scripts/harvest_cmems.sh
@@ -88,11 +94,22 @@ jobs:
       # A green tick must mean data arrived. Before this step existed the
       # harvest wrote everything to a log file and printed nothing, so a
       # silent no-op looked identical to a good run.
+      # The cycle date comes from the harvest step, not from the clock here: a
+      # run that starts after midnight UTC is filed under yesterday's cycle.
       - name: Verify the cycle is on disk
+        env:
+          CYCLE: ${{ steps.harvest.outputs.cycle }}
+          STATUS: ${{ steps.harvest.outputs.status }}
         run: |
           set -euo pipefail
-          CYCLE="${{ inputs.cycle_date }}"
-          [ -n "$CYCLE" ] || CYCLE="$(date -u +%F)"
+          if [ "$STATUS" = "not_published" ]; then
+            echo "::warning::The ${CYCLE} forecast was not on the server yet. Nothing was saved; a later scheduled run will retry."
+            exit 0
+          fi
+          if [ -z "$CYCLE" ]; then
+            echo "::error::The harvest step reported no cycle date"
+            exit 1
+          fi
           F="data/cmems_forecast_archive/cmems_siconc_${CYCLE}.nc"
           if [ ! -f "$F" ]; then
             echo "::error::No archive file for ${CYCLE} — expected ${F}"
@@ -108,6 +125,9 @@ jobs:
           fi
 
       - name: Commit archive
+        env:
+          CYCLE: ${{ steps.harvest.outputs.cycle }}
+          STATUS: ${{ steps.harvest.outputs.status }}
         run: |
           set -euo pipefail
           git config user.name "cmems-harvest-bot"
@@ -117,7 +137,7 @@ jobs:
             echo "nothing new to commit — the cycle was already archived"
             exit 0
           fi
-          git commit -m "CMEMS harvest $(date -u +%F)"
+          git commit -m "CMEMS harvest ${CYCLE} (${STATUS})"
           # main can move between checkout and push, so rebase and retry
           # rather than failing the day's only attempt
           for attempt in 1 2 3; do
