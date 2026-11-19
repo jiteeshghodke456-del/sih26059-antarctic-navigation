@@ -18,9 +18,10 @@ bergy bits -- the classic hull-holing hazard -- are three and a half orders of
 magnitude below this floor and appear in no satellite product anywhere. This
 module cannot and must not be presented as growler warning.
 
-**It is a current snapshot, not a time series.** The CSV holds today's
-positions only. Building trajectories needs either the USNIC archive endpoint
-or the BYU/NIC consolidated database (1978-2025), which is a separate fetch.
+**The live CSV is a current snapshot, not a time series.** It holds this
+week's positions only. Trajectories come from the USNIC product archive, which
+keeps every weekly issue back to 2014-11-07: see fetch_usnic_archive. Nothing
+needs harvesting on a schedule; a missed week can always be fetched later.
 
 No synthetic bergs are ever generated. If the feed is unreachable the loader
 raises; it does not invent positions.
@@ -29,8 +30,10 @@ raises; it does not invent positions.
 from __future__ import annotations
 
 import io
+import re
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 import numpy as np
@@ -38,6 +41,14 @@ import pandas as pd
 
 USNIC_CSV_URL = "https://usicecenter.gov/File/DownloadCurrent?pId=134"
 USNIC_PRODUCT_PAGE = "https://usicecenter.gov/Products/AntarcIcebergs"
+USNIC_SITE = "https://usicecenter.gov"
+USNIC_ARCHIVE_SEARCH = USNIC_SITE + "/Products/DisplaySearchResults"
+
+# One archive hit: the download link and the publisher's own file name, which
+# carries the issue date. Anything not matching this exact shape is ignored, so
+# a file name out of the HTML can never point outside the archive folder.
+_ARCHIVE_LINK = re.compile(
+    r'href="(/File/DownloadArchive\?prd=\d+)"[^>]*>(AntarcticIcebergs_\d{8}\.csv)<')
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "icebergs"
 
@@ -73,6 +84,49 @@ def fetch_usnic(cache_dir: Path | None = None, timeout: int = 60,
         raise RuntimeError("USNIC returned an empty body")
     out.write_bytes(payload)
     return out
+
+
+def _archive_links(html: str) -> list[tuple[str, str]]:
+    """(file name, download URL) for every CSV issue in an archive result page."""
+    return [(name, USNIC_SITE + href) for href, name in _ARCHIVE_LINK.findall(html)]
+
+
+def fetch_usnic_archive(start: date, end: date, archive_dir: Path | None = None,
+                        timeout: int = 60) -> list[Path]:
+    """Download every weekly issue published between two dates. Returns new files.
+
+    Files keep USNIC's own names (AntarcticIcebergs_YYYYMMDD.csv, the issue
+    date) under data/icebergs/archive/. Issues already on disk are skipped.
+    Each download must parse with load_usnic before it is kept.
+    """
+    archive_dir = archive_dir or DATA_DIR / "archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    headers = {"User-Agent": "iceberg-archive-fetch/1.0"}
+
+    form = urlencode({"searchText": "IcebergProducts",
+                      "searchProduct": "Antarctic Icebergs CSV",
+                      "startDate": f"{start:%m/%d/%Y}",
+                      "endDate": f"{end:%m/%d/%Y}"}).encode()
+    with urlopen(Request(USNIC_ARCHIVE_SEARCH, data=form, headers=headers),
+                 timeout=timeout) as response:
+        links = _archive_links(response.read().decode("utf-8", "replace"))
+    if not links:
+        raise RuntimeError(f"USNIC archive listed no CSV issues for {start} to {end}")
+
+    saved = []
+    for name, url in sorted(links):
+        out = archive_dir / name
+        if out.exists():
+            continue
+        with urlopen(Request(url, headers=headers), timeout=timeout) as response:
+            out.write_bytes(response.read())
+        try:
+            load_usnic(out)
+        except Exception:
+            out.unlink()
+            raise
+        saved.append(out)
+    return saved
 
 
 def load_usnic(path: Path | str | None = None) -> pd.DataFrame:
@@ -148,3 +202,12 @@ def summarise(frame: pd.DataFrame) -> dict:
         "lat_range": [float(frame.lat.min()), float(frame.lat.max())],
         "lon_range": [float(frame.lon.min()), float(frame.lon.max())],
     }
+
+
+if __name__ == "__main__":
+    # python models/iceberg/catalogue.py 2026-08-20 2026-11-19
+    import sys
+
+    for path in fetch_usnic_archive(date.fromisoformat(sys.argv[1]),
+                                    date.fromisoformat(sys.argv[2])):
+        print("saved", path)
