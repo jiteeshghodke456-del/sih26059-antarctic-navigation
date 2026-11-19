@@ -66,6 +66,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Always the tip of main, not the commit the run was created on.
+          # "Re-run" on an old run otherwise checks out that old commit, and the
+          # push below then dies on a conflict in data/cmems_harvest.log (seen
+          # 2026-11-18, run 44203031592).
+          ref: main
           # full history so the push retry below can rebase when main has
           # moved (PR merges land during the day)
           fetch-depth: 0
@@ -83,7 +88,16 @@ jobs:
         env:
           COPERNICUSMARINE_SERVICE_USERNAME: ${{ secrets.CMEMS_USERNAME }}
           COPERNICUSMARINE_SERVICE_PASSWORD: ${{ secrets.CMEMS_PASSWORD }}
-        run: copernicusmarine login --force-overwrite
+        # The login server was unreachable once (2026-10-13) and failed the
+        # run outright, so try three times before giving up.
+        run: |
+          for attempt in 1 2 3; do
+            copernicusmarine login --force-overwrite && exit 0
+            echo "login failed on attempt ${attempt}"
+            sleep 30
+          done
+          echo "::error::could not log in to Copernicus Marine after 3 attempts"
+          exit 1
 
       - name: Harvest the forecast cycle
         id: harvest
