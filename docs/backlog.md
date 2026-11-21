@@ -93,6 +93,22 @@ One line per item: `[severity][area] what's wrong — pointer to full evidence`.
 - [minor][research] OTC-25595-MS compression quotes (§b.3) came from a search-engine rendering of the abstract, OnePetro itself returned 403 — confirm exact wording and authors before any slide use — see docs/ICE_HAZARDS.md §b.3.
 - [minor][research] **COMPETITIVE_ANALYSIS.md now holds two unreconciled passes on the same products.** Main's 7 Sep sections and the 2 Sep Pass 2 (§5–12, merged 5 Oct) both cover IcySea, PolarView, AARI and Wärtsilä. Merge them into one view and settle any disagreement before quoting either — see the merge note under the Pass 2 heading.
 
+## Open — tonight's build (2026-11-21)
+
+- [major][model] U-Net columns in realforecast_hindcast.json / resolution_study.json / ISIH_RESULTS pending — Kaggle re-run of the training notebook is queued (kernel notebookd39fdf7959 v6; the original's checkpoints were never in Kaggle's output store, and its training cell was saved as markdown, which is why batch runs produced nothing). When COMPLETE: `kaggle kernels output` the 4 .pt files into models/sic_correction/checkpoints/, write SHA256SUMS, rerun both scorers without --no-model.
+- [major][bergs] Drift model advects grounded bergs — add grounding detection (IBCSO depth vs keel draught estimate) before trusting any berg forecast; evidence isih/figures/berg_hindcast.json (persistence 0 km on 75/88 segments).
+- [minor][data] compress_netcdf.py has no int16 PACK_RANGE for uo/vo, so daily currents commit ~10 MB instead of ~4 — add `"uo": 3.0, "vo": 3.0`.
+- [minor][gates] Weather/chart/traffic gates wiring: weather gate (3.0 m VHM0 / Beaufort 8 thresholds, visibility unassessed) and traffic gate (UNKNOWN without feed; 2 nm FAIL / 5 nm MARGINAL) still to wire into isih/gates.py once the bathymetry work lands there.
+- [minor][ais] aisstream.io optional adapter unwritten (key saved outside repo); it is terrestrial-only (~40 nm from shore) and empty in the Southern Ocean — ship's receiver path (isih/ais_feed.py) is done.
+- [minor][features] F2 NEMO-native reader and F4 melt/freshwater estimate not started — see HANDOFF_TONIGHT §9.
+- [minor][site] antarticaprojectMoes not yet updated with AI ice toggle, berg tracks + uncertainty cones (use measured 4.35 km/day), waves, wind, depth (slices 3 and 10).
+- [minor][repo] De-hackathon rename requested 2026-11-21: strip SIH/ISIH branding from package name, docs and README; GitHub repo rename is the owner's call.
+- [minor][docs] Professor study doc + README rewrite (Haiku/Sonnet task) queued for end of build.
+
+## Open — pitch deck
+
+- [minor][pitch] Printed slide-badge numbers in `Antarctic Navigation Decision Support System (1).pdf` don't match physical page order — "FEASIBILITY AND VIABILITY" prints "5" but comes before "IMPACT AND BENEFITS," which prints "4." Fix in Canva before the deck goes in front of judges — see docs/PITCH_SCRIPT.md, final section.
+
 ## Open — demo honesty (recite these, do not claim otherwise)
 
 - [minor][pitch] Pack **signing** has no key-management story — it is theater until there is one. Say "signed and versioned" only alongside how keys are held.
