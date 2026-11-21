@@ -1,0 +1,27 @@
+{
+  "generated": "2026-11-21T17:51:17+00:00",
+  "cycle": "2026-11-21",
+  "start": [
+    -55.5,
+    45.0
+  ],
+  "goal": [
+    -69.4,
+    76.2
+  ],
+  "segment_note": "corridor segment south of 55S \u2014 the harvest box; no real wave/wind data exists north of it",
+  "approach_closed_at_ice_limit": true,
+  "closest_approach_km": 50.6,
+  "eta_days": 5.55,
+  "worst_ice": 0.723,
+  "worst_hs_m": 4.77,
+  "worst_wind_ms": 14.9,
+  "weather_gate": {
+    "state": "FAIL",
+    "reason": "waves 4.77 m exceed the assumed 3.0 m limit; wind 14.9 m/s in Beaufort 7 \u2014 limits are assumptions, not this hull's PWOM; visibility not assessed",
+    "unassessed": [
+      "visibility"
+    ]
+  },
+  "n_legs": 45
+}

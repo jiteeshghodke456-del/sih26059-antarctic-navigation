@@ -104,6 +104,9 @@ One line per item: `[severity][area] what's wrong — pointer to full evidence`.
 - [minor][site] antarticaprojectMoes not yet updated with AI ice toggle, berg tracks + uncertainty cones (use measured 4.35 km/day), waves, wind, depth (slices 3 and 10).
 - [minor][repo] De-hackathon rename requested 2026-11-21: strip SIH/ISIH branding from package name, docs and README; GitHub repo rename is the owner's call.
 - [minor][docs] Professor study doc + README rewrite (Haiku/Sonnet task) queued for end of build.
+- [major][demo] Day-0 Cape Town→Bharati route no longer solves: IBCSO puts the goal's snapped lattice point in 85% sim ice on day 0 (days 2–14 solve, 7.8–8.4 d). Demo shows "no route exists"; decide whether to move the headline to day 2 — see slice-7 notes.
+- [major][claims] isih/figures/routes.json route ends ON LAND per IBCSO (Bharati +91 m); chart gate now FAILs it and TRUE_CLAIMS' "8.6 days" rests on it — regenerate routes.json and re-derive the claim.
+- [minor][demo] demo decision_service still says "no bathymetry exists" and sim Seabed still feeds the depth/UKC panels — switch both to the IBCSO subset.
 
 ## Open — pitch deck
 

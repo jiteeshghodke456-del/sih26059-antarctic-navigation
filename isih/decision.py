@@ -126,6 +126,10 @@ class GateResult:
     # meaningful when state is FAIL and the failure is ahead of the ship;
     # this is what separates CRITICAL from INVALID.
     fails_in_hours: float | None = None
+    # Quantities this gate SHOULD assess but has no data for (e.g. visibility
+    # in the weather gate). Shown in the UI so a non-red gate cannot quietly
+    # imply it checked things it never saw.
+    unassessed: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         if self.gate not in GATES:

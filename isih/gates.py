@@ -323,19 +323,115 @@ def _unknown(gate: str) -> GateResult:
     )
 
 
-def weather_gate() -> GateResult:
-    """§12 weather gate.
+# Working limits for the weather gate. Both are ASSUMPTIONS, not vessel
+# documentation, and the gate's reasons say so: 3.0 m significant wave height
+# is the PolarRoute example config's max_wave value, and the wind limits are
+# the Beaufort 7/8 boundaries (13.9 / 17.2 m/s). The real numbers belong in
+# this hull's PWOM, which we do not hold (see capability gate).
+MAX_WAVE_M = 3.0
+WAVE_MARGINAL_BAND_M = 0.5
+WIND_FAIL_MS = 17.2    # Beaufort 8
+WIND_MARGINAL_MS = 13.9  # Beaufort 7
 
-    We hold CMEMS sea-ice thickness and drift, which are ice fields, not
-    weather. No wind, no waves, no visibility, so this cannot be evaluated.
-    Calling ice drift "weather" to fill the panel would be the sort of quiet
-    substitution §47 exists to forbid.
+
+def weather_gate(
+    worst_hs_m: float | None = None,
+    worst_wind_ms: float | None = None,
+    *,
+    provenance: str = "data/cmems_forecast_archive + data/ecmwf_wind",
+) -> GateResult:
+    """§12 weather gate, from real forecast waves and wind along the route
+    at arrival times (slice 6). With no data it stays UNKNOWN, as before.
+
+    Visibility is in no free dataset we hold, so it is listed in
+    `unassessed` and shown in the UI — a green-ish gate must not quietly
+    imply it checked fog.
     """
-    return _unknown("weather")
+    if worst_hs_m is None and worst_wind_ms is None:
+        return _unknown("weather")
+
+    parts, ev = [], []
+    state = GateState.PASS
+    if worst_hs_m is not None:
+        ev.append(Evidence("CMEMS wave forecast (VHM0 daily max)",
+                           f"worst significant wave height on route {worst_hs_m:.2f} m "
+                           f"against an assumed {MAX_WAVE_M} m limit",
+                           provenance))
+        if worst_hs_m > MAX_WAVE_M:
+            state = GateState.FAIL
+            parts.append(f"waves {worst_hs_m:.2f} m exceed the assumed "
+                         f"{MAX_WAVE_M} m limit")
+        elif worst_hs_m > MAX_WAVE_M - WAVE_MARGINAL_BAND_M:
+            state = GateState.MARGINAL
+            parts.append(f"waves {worst_hs_m:.2f} m within "
+                         f"{WAVE_MARGINAL_BAND_M} m of the assumed limit")
+        else:
+            parts.append(f"waves {worst_hs_m:.2f} m under the assumed "
+                         f"{MAX_WAVE_M} m limit")
+    if worst_wind_ms is not None:
+        ev.append(Evidence("ECMWF open-data IFS 10 m wind (CC BY 4.0)",
+                           f"worst wind on route {worst_wind_ms:.1f} m/s against "
+                           f"Beaufort 7/8 bands (assumptions)",
+                           provenance))
+        if worst_wind_ms >= WIND_FAIL_MS:
+            state = GateState.FAIL
+            parts.append(f"wind {worst_wind_ms:.1f} m/s at or above Beaufort 8")
+        elif worst_wind_ms >= WIND_MARGINAL_MS:
+            if state is not GateState.FAIL:
+                state = GateState.MARGINAL
+            parts.append(f"wind {worst_wind_ms:.1f} m/s in Beaufort 7")
+        else:
+            parts.append(f"wind {worst_wind_ms:.1f} m/s below Beaufort 7")
+    missing = [n for n, v in (("waves", worst_hs_m), ("wind", worst_wind_ms))
+               if v is None]
+    return GateResult(
+        gate="weather",
+        state=state,
+        reason="; ".join(parts) + " — limits are assumptions, not this hull's "
+               "PWOM; visibility not assessed"
+               + (f"; no data for {', '.join(missing)}" if missing else ""),
+        evidence=ev,
+        unassessed=["visibility"] + missing,
+    )
 
 
-def traffic_gate() -> GateResult:
-    return _unknown("traffic")
+# Traffic separation distances. ASSUMPTIONS, stated in the reason: 2 nm CPA
+# as the close-quarters line and 5 nm as the monitoring band — not COLREGS
+# figures, which prescribe conduct, not distances.
+TRAFFIC_FAIL_NM = 2.0
+TRAFFIC_MARGINAL_NM = 5.0
+
+
+def traffic_gate(
+    feed_live: bool = False,
+    nearest_target_nm: float | None = None,
+    n_targets: int = 0,
+    *,
+    provenance: str = "ship AIS receiver via isih/ais_feed.py",
+) -> GateResult:
+    """§12 traffic gate (slice 8). UNKNOWN with no live feed — shore AIS
+    networks are empty in the Southern Ocean, so without the ship's own
+    receiver there is genuinely no traffic picture, and saying PASS would be
+    inventing one."""
+    if not feed_live:
+        return _unknown("traffic")
+    ev = [Evidence("AIS feed", f"{n_targets} target(s) in the picture; nearest "
+                   + (f"{nearest_target_nm:.1f} nm from the next 24 h of track"
+                      if nearest_target_nm is not None else "none near track"),
+                   provenance)]
+    assumed = (f" — {TRAFFIC_FAIL_NM}/{TRAFFIC_MARGINAL_NM} nm bands are "
+               "assumptions, not COLREGS figures")
+    if nearest_target_nm is None or nearest_target_nm > TRAFFIC_MARGINAL_NM:
+        return GateResult("traffic", GateState.PASS,
+                          f"no target within {TRAFFIC_MARGINAL_NM} nm of the "
+                          f"next 24 h of track{assumed}", ev)
+    if nearest_target_nm > TRAFFIC_FAIL_NM:
+        return GateResult("traffic", GateState.MARGINAL,
+                          f"target {nearest_target_nm:.1f} nm from track, inside "
+                          f"the {TRAFFIC_MARGINAL_NM} nm monitoring band{assumed}", ev)
+    return GateResult("traffic", GateState.FAIL,
+                      f"target {nearest_target_nm:.1f} nm from track, inside the "
+                      f"{TRAFFIC_FAIL_NM} nm close-quarters line{assumed}", ev)
 
 
 def communications_gate() -> GateResult:
@@ -366,14 +462,19 @@ def evaluate_all(
     days_total: int | None = None,
     live_sensors: bool = False,
     leg_depths_m: list[float | None] | None = None,
+    worst_hs_m: float | None = None,
+    worst_wind_ms: float | None = None,
+    traffic_feed_live: bool = False,
+    nearest_target_nm: float | None = None,
+    n_targets: int = 0,
 ) -> list[GateResult]:
     """Evaluate all nine gates. Order follows §12."""
     return [
         capability_gate(vessel),
         chart_gate(mesh_config, vessel, leg_depths_m),
         ice_gate(worst_ice_pct, ice_limit_pct),
-        weather_gate(),
-        traffic_gate(),
+        weather_gate(worst_hs_m, worst_wind_ms),
+        traffic_gate(traffic_feed_live, nearest_target_nm, n_targets),
         logistics_gate(
             destination_open, destination, days_closed=days_closed, days_total=days_total
         ),

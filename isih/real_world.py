@@ -89,17 +89,34 @@ class RealWorld:
         beyond = (float(np.max(t)) if np.ndim(t) else t) > self.n_days - 1
 
         sic = self._interp(self._sic[day], self._lat, self._lon, lat, lon)
+        lat_a, lon_a = np.asarray(lat, float), np.asarray(lon, float)
+        inside = ((lat_a >= self._lat[0]) & (lat_a <= self._lat[-1])
+                  & (lon_a >= self._lon[0]) & (lon_a <= self._lon[-1]))
+
+        # Inside the box, a cell with no ice value (under-shelf, model land
+        # sliver) is UNKNOWN. Unknown is treated as impassable (sic 1.0) and
+        # counted — never as open water. Outside the box everything stays NaN.
+        unknown_ice = np.isnan(sic) & inside
+        sic = np.where(unknown_ice, 1.0, sic)
 
         out = {"sic": sic, "beyond_horizon": bool(beyond),
-               "day_index": day, "hs_filled_ice": 0}
+               "day_index": day, "hs_filled_ice": 0,
+               "sic_unknown_impassable": int(unknown_ice.sum())}
         if self._hs is not None:
             hs_day = min(day, self._hs.shape[0] - 1)
             hs = self._interp(self._hs[hs_day], self._wav_lat, self._wav_lon,
                               lat, lon)
-            fill = np.isnan(hs) & np.isfinite(sic) & (sic > ICE_DAMPS_WAVES_ABOVE)
+            fill = np.isnan(hs) & np.isfinite(sic) & (sic > ICE_DAMPS_WAVES_ABOVE) & inside
             hs = np.where(fill, 0.0, hs)
+            # Coastal slivers where the wave grid has no cell but the ocean is
+            # open: fill with the day's WORST wave in the box, so missing data
+            # can only over-cost a leg, never under-cost it. Counted.
+            coastal = np.isnan(hs) & inside & np.isfinite(sic) & ~unknown_ice
+            day_max = float(np.nanmax(self._hs[hs_day]))
+            hs = np.where(coastal, day_max, hs)
             out["hs"] = hs
             out["hs_filled_ice"] = int(fill.sum())
+            out["hs_filled_coastal_worstcase"] = int(coastal.sum())
         if self._wind is not None:
             h = float(np.clip(day * 24.0 + 12.0, self._wind_hours[0],
                               self._wind_hours[-1]))
