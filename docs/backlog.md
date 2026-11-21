@@ -354,3 +354,4 @@ what was filed rather than fixed.
 - [minor][ml] Time split has no embargo gap between train/val/test; adjacent-day correlation slightly flatters validation. Add a 7-day embargo at next retrain.
 - [minor][eval] ADR-027 calls for CRPS; scorer computes RMSE+IIEE only. No result carries a confidence interval yet.
 - [minor][nemo] NemoReader does no C-grid destaggering or grid-rotation of U/V; fine for scalar fields, wrong for vector use on native grids — document or fix before feeding real NEMO currents.
+- [minor][site] Verification layer cannot pair with full-res currents on one chart yet: full-res currents exist only for the latest cycle, which has no satellite truth — emit analysis currents for verifiable days (site agent note, 2026-11-21).
