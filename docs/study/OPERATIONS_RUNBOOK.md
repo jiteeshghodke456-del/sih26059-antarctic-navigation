@@ -24,6 +24,8 @@ Times marked **not recorded** have no measurement in the repository.
 
 **Snapshot.** Repository read between about 17:56 and 18:21 UTC on 2026-11-21. "In this pass" means the study pass that wrote this file.
 
+**Later commit.** `a274a64` (after the snapshot) adds the ECMWF wind and weekly USNIC steps to `.github/workflows/cmems-harvest.yml` and an SST harvest to `scripts/harvest_cmems.sh`. Sections 2.1, 2.2, 2.4, 2.5 and 2.8c below describe the snapshot and are out of date on the schedule and SST points. Check `git log` before relying on either.
+
 ## 1. Environment
 
 There is no root `pyproject.toml` or lockfile. The only requirements file is
