@@ -1,4 +1,4 @@
-"""Check every quantitative claim in SIH_PPT.md / TRUE_CLAIMS.md against source."""
+"""Check every quantitative claim in archive-hackathon/SIH_PPT.md / TRUE_CLAIMS.md against source."""
 import json
 from pathlib import Path
 
@@ -51,7 +51,7 @@ for token in ["+18.5%", "+30.6%", "1,929,601", "43.2%", "46.8%", "54.6%",
               "23 / 31", "8.58"]:
     (ok if token in res else bad).append(f"PROTOTYPE_RESULTS.md contains {token!r}")
 
-for f in ["docs/SIH_PPT.md", "docs/TRUE_CLAIMS.md",
+for f in ["docs/archive-hackathon/SIH_PPT.md", "docs/TRUE_CLAIMS.md",
           "models/iceberg/drift.py", "models/iceberg/catalogue.py"]:
     (ok if (R / f).exists() else bad).append(f"file exists: {f}")
 

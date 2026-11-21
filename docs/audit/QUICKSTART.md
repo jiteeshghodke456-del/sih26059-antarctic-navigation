@@ -56,7 +56,7 @@ moved it, alerts appear, and route health changes as a consequence.
 
 ## Do not say
 
-`docs/RUN_OF_SHOW.md` has the list. The four most recent additions are the ones
+`docs/archive-hackathon/RUN_OF_SHOW.md` has the list. The four most recent additions are the ones
 the submitted deck got wrong: automatic re-planning, "1,096 files every day",
 the compression ratio, and the 76 KB pack.
 

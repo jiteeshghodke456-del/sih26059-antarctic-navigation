@@ -8,7 +8,7 @@ number here has a file behind it. Where something is designed but not
 built, it says ROADMAP, in capitals, every time.
 
 Sources: `docs/ARCHITECTURE.md`, `docs/WEAKNESS_ANALYSIS.md`,
-`docs/TRUE_CLAIMS.md`, `docs/backlog.md`, `docs/DEMO_PLAN.md`,
+`docs/TRUE_CLAIMS.md`, `docs/backlog.md`, `docs/archive-hackathon/DEMO_PLAN.md`,
 `docs/PROTOTYPE_RESULTS.md`, `dakshin/protected_areas.py`.
 
 ---

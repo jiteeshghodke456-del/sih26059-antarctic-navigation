@@ -11,7 +11,7 @@ Status: **DONE** (in this branch) · **OPEN** (filed, not built) · **BLOCKED**.
 
 | # | Finding | Correction | Status |
 |---|---|---|---|
-| 1 | Deck: "replaced the 80 % threshold with POLARIS". Code says `"max_ice_conc": 80`; our own research says no RIO can be computed for this hull | Remove the claim; replace with the POLARIS *applicability* finding, which is stronger | **DONE** — `SIH_PPT_V2.md` |
+| 1 | Deck: "replaced the 80 % threshold with POLARIS". Code says `"max_ice_conc": 80`; our own research says no RIO can be computed for this hull | Remove the claim; replace with the POLARIS *applicability* finding, which is stronger | **DONE** — `../archive-hackathon/audit/SIH_PPT_V2.md` |
 | 2 | Deck: "predicts the drift of **live** icebergs" — never fed real forcing, wired to nothing, no error ever measured | Claim only what is built: drift physics + CPA against the ship's future track, error unmeasured | **DONE** |
 | 3 | Deck: "re-plans automatically as new data arrives" — no such control existed, and daily re-planning measured *slower* | Removed. The new console has a time-aware search; the measured null result is reported | **DONE** |
 | 4 | Deck: "1,096 files … harvested automatically every day, zero failures" merges two pipelines; the daily cron has ~7 files and failed once | Split into the two true statements | **DONE** |
@@ -19,7 +19,7 @@ Status: **DONE** (in this branch) · **OPEN** (filed, not built) · **BLOCKED**.
 | 6 | Deck: "a full data pack is 76 KB" — that is an 824-cell sample box; the full corridor is *estimated* 0.5–1 MB and unmeasured | Replaced with the **measured 7.8 KB daily pack** | **DONE** |
 | 7 | Deck states +18.5/+30.6 % without the repo's own leakage caveat | Caveat carried in the same eyeline as the number | **DONE** |
 | 8 | Deck: "8.6-day route" presented as a voyage duration | Labelled ideal steaming time | **DONE** |
-| 9 | The repo's own "Do not say" list missed corrections 3, 4, 5 and 6 | Extend the list; the guard rails had a hole, not just the deck | **DONE** — `docs/RUN_OF_SHOW.md` |
+| 9 | The repo's own "Do not say" list missed corrections 3, 4, 5 and 6 | Extend the list; the guard rails had a hole, not just the deck | **DONE** — `docs/archive-hackathon/RUN_OF_SHOW.md` |
 | 10 | `dakshin/data` is a symlink into a sibling git worktree; an ordinary tidy-up deletes the archive | Move the archive out of any worktree | **OPEN** — P0, one command, needs the user's disk layout |
 
 ## P1 — honesty and correctness of the system itself

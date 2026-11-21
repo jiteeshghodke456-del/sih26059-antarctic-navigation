@@ -10,9 +10,9 @@ these say so.
 |---|---|---|
 | 1 | **[MASTER_AUDIT.md](MASTER_AUDIT.md)** | **The audit.** All 46 sections A–AT — lost requirements, problem and users, USPs, technical verdicts, survivability, regulation, business, a hostile reviewer's score, a rebuilt deck blueprint, and a blunt final verdict. Start at §AO and the FINAL VERDICT if you only read two parts |
 | 2 | **[CORRECTIONS.md](CORRECTIONS.md)** | The short list. 39 findings turned into checkable changes — 26 done, 15 open. **This is what is still owed** |
-| 3 | **[SIH_PPT_V2.md](SIH_PPT_V2.md)** | The corrected six-slide deck. The submitted one contradicts the repository in eight places |
+| 3 | **[SIH_PPT_V2.md](../archive-hackathon/audit/SIH_PPT_V2.md) (archived)** | The corrected six-slide deck. The submitted one contradicts the repository in eight places |
 | 4 | **[QUALITY_GATE.md](QUALITY_GATE.md)** | Three requirements that were lost when the master prompt was compressed, reinstated as a checklist: the operating rule, the definition of done, and the 10-point pre-feature gate |
-| 5 | **[DEMO_SCRIPT.md](DEMO_SCRIPT.md)** | **The walkthrough.** Every control including the smallest button, what it does and why, the five competitor gaps we occupy, where it excels, and the ten attacks with their answers |
+| 5 | **[DEMO_SCRIPT.md](../archive-hackathon/audit/DEMO_SCRIPT.md) (archived)** | **The walkthrough.** Every control including the smallest button, what it does and why, the five competitor gaps we occupy, where it excels, and the ten attacks with their answers |
 | 6 | **[QUICKSTART.md](QUICKSTART.md)** | How to run the console |
 | 7 | **[WORLD_MODEL_DESIGN.md](WORLD_MODEL_DESIGN.md)** | Design for the synthetic environment, with the ice-edge climatology fitted from the real NSIDC archive |
 

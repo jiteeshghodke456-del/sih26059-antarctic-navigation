@@ -9,7 +9,7 @@ definition follows). Sources are at the end of each chapter, and now that
 you'll understand the concept first, they'll actually make sense when you
 open them.
 
-Read the chapter for your role first (see `TEAM_GUIDE.md` for who owns
+Read the chapter for your role first (see `archive-hackathon/TEAM_GUIDE.md` for who owns
 what), then skim the rest — every part of this system touches every other
 part.
 

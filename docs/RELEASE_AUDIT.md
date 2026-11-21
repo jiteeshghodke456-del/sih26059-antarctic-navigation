@@ -165,6 +165,6 @@ Six of nine gates are unevaluated, there is no live sensor feed, no bathymetry, 
 no measured iceberg trajectory. The honest framing is a decision-support prototype
 whose scaffolding is real and whose coverage is stated on the screen.
 
-The condition worth restating: **do not demo from `docs/DEMO_PLAN.md`**, which is
+The condition worth restating: **do not demo from `docs/archive-hackathon/DEMO_PLAN.md`**, which is
 the 31 August sprint plan and promises three capabilities that do not exist. Use
-`docs/RUN_OF_SHOW.md`.
+`docs/archive-hackathon/RUN_OF_SHOW.md`.

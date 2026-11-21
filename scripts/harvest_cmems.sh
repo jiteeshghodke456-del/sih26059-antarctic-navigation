@@ -13,7 +13,7 @@ set -euo pipefail
 # via `copernicusmarine.describe()` on 2026-08-31 (not guessed from docs).
 #
 # Requires: `copernicusmarine login` already run once on this machine
-# (see docs/TEAM_GUIDE.md) so credentials are cached locally.
+# (see docs/archive-hackathon/TEAM_GUIDE.md) so credentials are cached locally.
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ARCHIVE_DIR="${ARCHIVE_DIR:-$ROOT_DIR/data/cmems_forecast_archive}"

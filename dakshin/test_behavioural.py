@@ -302,7 +302,7 @@ def test_09_baselines_are_defensible_and_carry_their_period():
     results = (DOCS / "PROTOTYPE_RESULTS.md").read_text()
     assert "0.0570" in results and "0.1395" in results, "persistence numbers missing"
 
-    viva = (DOCS / "VIVA_PREP.md").read_text()
+    viva = (DOCS / "archive-hackathon" / "VIVA_PREP.md").read_text()
     if "0.0893" in viva:
         # The qualifier can legitimately wrap onto the following line, so
         # check a small context window rather than the single line the
