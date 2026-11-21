@@ -73,7 +73,7 @@ def fetch_usnic(cache_dir: Path | None = None, timeout: int = 60,
     if out.exists() and not refresh:
         return out
 
-    request = Request(USNIC_CSV_URL, headers={"User-Agent": "SIH26059/1.0"})
+    request = Request(USNIC_CSV_URL, headers={"User-Agent": "Dakshin/1.0"})
     with urlopen(request, timeout=timeout) as response:
         if response.status != 200:
             raise RuntimeError(

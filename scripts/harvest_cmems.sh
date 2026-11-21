@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# CMEMS daily forecast harvest — SIH26059
+# CMEMS daily forecast harvest — Dakshin
 #
 # Pulls today's corridor sea-ice forecast cycle (concentration, thickness,
 # drift velocity) from GLOBAL_ANALYSISFORECAST_PHY_001_024 and archives it

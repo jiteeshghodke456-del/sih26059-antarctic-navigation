@@ -1,4 +1,4 @@
-# DATASET.md — SIH26059 Antarctic Navigation Decision-Support Platform
+# DATASET.md — Dakshin Antarctic Navigation Decision-Support Platform
 
 Data-reality-check gate. All entries below were checked live from this sandbox on **2026-08-31**
 (both via WebFetch and via direct `curl` from the sandbox shell, to confirm the outbound HTTP

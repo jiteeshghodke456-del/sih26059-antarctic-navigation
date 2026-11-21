@@ -1,7 +1,7 @@
 # Foundation-model reuse decision matrix
 
 **Question this document answers:** nine open foundation models were named for
-evaluation as reusable building blocks for PS-26059. Which should we use,
+evaluation as reusable building blocks for Dakshin. Which should we use,
 adapt, benchmark, or reject — and why?
 
 **Method.** Every model card and file listing below was read directly from the
@@ -124,7 +124,7 @@ COST → DATA REQUIREMENTS → ANTARCTIC RELEVANCE → RECOMMENDATION.
 The interesting question is **not** "should a foundation model replace our
 U-Net". It clearly should not — see §3. The question is whether one should
 supply the **wind and temperature forcing our U-Net demonstrably lacks**:
-`docs/ISIH_RESULTS.md` names ERA5 wind and temperature as the top
+`docs/PROTOTYPE_RESULTS.md` names ERA5 wind and temperature as the top
 unimplemented improvement, and the model currently has 12 channels containing
 neither.
 
@@ -161,7 +161,7 @@ used observations from the interval (t, t+lead]**.
   ice zone is therefore close to a deterministic function of the *observed*
   ice at that date, given the ice/water thermal contrast.
 - **Therefore: adding "ERA5 wind and temperature at t+lead", exactly as
-  `docs/ISIH_RESULTS.md` currently recommends, would add a second leak and
+  `docs/PROTOTYPE_RESULTS.md` currently recommends, would add a second leak and
   make our results less defensible, not more.** Corrected below.
 - **A forecast rollout is categorically different.** Output at t+lead
   initialised from analyses at t−6 h and t is a deterministic function of
@@ -218,7 +218,7 @@ sea ice as a prescribed observational boundary rather than a prognostic
 variable, so there is nothing for such a model to have learned to forecast."*
 
 **Do not** claim the unbounded negative "no foundation model forecasts
-Antarctic sea ice". It is unverifiable and one counterexample from a judge
+Antarctic sea ice". It is unverifiable and one counterexample from a reviewer
 sinks it.
 
 Why the absence is structurally unsurprising:
@@ -294,7 +294,7 @@ search.
 
 | Change | Where | Status |
 |---|---|---|
-| ERA5 wind/temp **at t+lead** removed as a recommendation — it adds a leak | `docs/ISIH_RESULTS.md` | to fix |
+| ERA5 wind/temp **at t+lead** removed as a recommendation — it adds a leak | `docs/PROTOTYPE_RESULTS.md` | to fix |
 | Leak-free ablation (channel 0 = `background[t]`) is now the highest-value single experiment | `docs/backlog.md` | to file |
 | "We couldn't afford a foundation model" replaced by "the target is too small to need one" | pitch materials | to fix |
 | Stronger baseline needed: persistence + climatological tendency | `docs/backlog.md` | to file |

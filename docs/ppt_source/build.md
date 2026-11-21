@@ -1,4 +1,4 @@
-# Feasibility, Roadmap, Deployment, Strengths and Weaknesses — SIH26059
+# Feasibility, Roadmap, Deployment, Strengths and Weaknesses — Dakshin
 
 Draft working notes for the master prompt's §39/§40 deliverables (roadmap,
 deployment plan, strengths/weaknesses, industry survival). This is not the
@@ -9,7 +9,7 @@ built, it says ROADMAP, in capitals, every time.
 
 Sources: `docs/ARCHITECTURE.md`, `docs/WEAKNESS_ANALYSIS.md`,
 `docs/TRUE_CLAIMS.md`, `docs/backlog.md`, `docs/DEMO_PLAN.md`,
-`docs/ISIH_RESULTS.md`, `isih/protected_areas.py`.
+`docs/PROTOTYPE_RESULTS.md`, `dakshin/protected_areas.py`.
 
 ---
 
@@ -23,7 +23,7 @@ objections was resolved before Phase 2 ran: the model was re-aimed to
 bias-correct CMEMS instead of forecasting from scratch, the training
 product/window was fixed, and a GPU (Kaggle T4) was named. Phase 2 then
 ran, in reduced form, and produced the real numbers in
-`docs/ISIH_RESULTS.md`. So the roadmap below is not the original plan
+`docs/PROTOTYPE_RESULTS.md`. So the roadmap below is not the original plan
 re-typed — it is that plan checked against what actually happened.
 
 **One line of feasibility, stated plainly:** nothing left on this roadmap
@@ -43,7 +43,7 @@ it doesn't."
 |---|---|---|---|
 | **0 — Spine** | Repo, FastAPI + web shell, daily CMEMS forecast harvest cron | **DONE.** Harvest is 12/12 green, 7 consecutive days archived, fails loud on a bad bulletin rather than archiving a wrong one. | Nothing — this keeps running in the background for every later phase. |
 | **1 — Real routing on real data** | Real ice + bathymetry ingestion, QC pass, a real Cape Town → Bharati route from a real router | **MOSTLY DONE.** NSIDC satellite ice (1,096 real files, 0 failures) is ingested and quality-checked — the land-spillover bug (below) was found and fixed here. PolarRoute computes a real 8.6-day route on real observed ice. **GEBCO bathymetry is not yet downloaded** — depth and land constrain nothing in the route today. | GEBCO is a free download and a config wire-up, not new engineering — smallest remaining item on this list. |
-| **2 — The trained model** | A model that beats the operational baseline, evaluated once, honestly | **PROTOTYPE DONE.** Beats persistence at every horizon, 1–7 days, by +18.5% to +30.6% (`docs/ISIH_RESULTS.md`). Single model per horizon, 12 of the planned 19 channels (no ERA5 wind/temperature yet), ~2 years of training data, corridor-only. **Production version** — 5-member ensemble, conformal calibration, full 1993–2024 history, all 19 channels — is not built. | GPU time (each extra year of NSIDC history is a download, not new code) and running the calibration pass/fail gate the architecture already specifies. |
+| **2 — The trained model** | A model that beats the operational baseline, evaluated once, honestly | **PROTOTYPE DONE.** Beats persistence at every horizon, 1–7 days, by +18.5% to +30.6% (`docs/PROTOTYPE_RESULTS.md`). Single model per horizon, 12 of the planned 19 channels (no ERA5 wind/temperature yet), ~2 years of training data, corridor-only. **Production version** — 5-member ensemble, conformal calibration, full 1993–2024 history, all 19 channels — is not built. | GPU time (each extra year of NSIDC history is a download, not new code) and running the calibration pass/fail gate the architecture already specifies. |
 | **3 — Uncertainty and hazards** | Calibrated `SIC_upper` driving the route, iceberg exclusion, protected-area constraints | **PARTIALLY DONE.** Iceberg drift physics (Wagner-Dell-Eisenman 2017) is implemented and tested — 23/23 tests reproducing the paper's own coefficient table, run on the real live USNIC catalogue (33 bergs, 15 inside the corridor). Protected areas are modelled by legal regime today (§3 below). **Not yet done:** the iceberg polygons are not wired into PolarRoute's `excluded_zones` hook; the conformal uncertainty layer does not exist because it needs the Phase 2 ensemble first. | Phase 2's ensemble (uncertainty has nothing to calibrate against without it); wiring the already-computed berg polygons into the router's existing extension point. |
 | **4 — Offline tier** | Signed, versioned packs; shore/vessel mode split; staleness banner; climatology-mode floor | **DESIGNED, NOT BUILT.** What exists today is a single-tier local demo: FastAPI + canvas serving real cached satellite and route data, refusing to start if a day's satellite file is missing. That fail-loud habit is the right instinct for Phase 4, but the actual pack build/sign/delta-sync machinery, the `MODE=shore\|vessel` switch, and the climatology-mode floor are specified in `docs/ARCHITECTURE.md` §2 with real measured numbers (a representative mesh block compresses to 76 KB) but none of that code exists yet. | This is the next phase to build, not a research question — the design is the most fully worked-out part of the whole architecture. |
 
@@ -110,7 +110,7 @@ not be presented as if it does.
 
 ## 3. What is new today: protected areas modelled by legal regime
 
-`isih/protected_areas.py`, built against the Antarctic Treaty
+`dakshin/protected_areas.py`, built against the Antarctic Treaty
 Secretariat's own shapefile (`apa_shape_2024.zip`, 148 polygons, 33
 intersecting this corridor). The finding is more useful than "avoid the
 protected areas," because that instruction is wrong for this corridor:
@@ -144,7 +144,7 @@ because none exists here.
   temporal split (never random), scored on the test set exactly once, with
   every baseline fixed before training started. The advantage *grows* with
   lead time — the model matters most at the horizon a voyage is actually
-  planned over. `docs/ISIH_RESULTS.md`.
+  planned over. `docs/PROTOTYPE_RESULTS.md`.
 - **The real operational finding reframes the whole problem.** The ocean
   crossing is not where the difficulty is — Bharati's own cell was closed
   23 of 31 December 2019 days while the approach point 100 km north was
@@ -181,7 +181,7 @@ because none exists here.
   withdrawn when measurement contradicted it; a null result (static
   planning cost only 0.03 days versus daily replanning, on the one date
   tested) was reported instead of hidden. That paper trail is itself a
-  competitive asset in front of judges who check.
+  competitive asset in front of reviewers who check.
 
 ---
 
@@ -247,7 +247,7 @@ because none exists here.
 
 ## 6. Why these features still matter after the demo — industry survival
 
-A judge sees this once. An NCPOR operations officer, or a shipping
+A reviewer sees this once. An NCPOR operations officer, or a shipping
 company running the Cape Town corridor every summer, would use parts of
 this daily in year two — and other parts would go stale fast if nothing
 changes. Both halves are stated here on purpose.

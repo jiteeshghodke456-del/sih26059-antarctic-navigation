@@ -1,4 +1,4 @@
-# Competitive Analysis — SIH26059 (Antarctic Sea-Ice / Iceberg Trajectory / Navigation Decision Support)
+# Competitive Analysis — Dakshin (Antarctic Sea-Ice / Iceberg Trajectory / Navigation Decision Support)
 
 Status: initial research pass, 2026-08-31. Feeds architecture selection. Dense findings, not narrative — cite before you assume.
 
@@ -15,7 +15,7 @@ PS text (verbatim, all we were given): "Develop an AI/ML-enabled decision suppor
 - **SIH25XXX "FloatChat" — AI-powered conversational interface for ARGO ocean data discovery/visualization.** At least 4 independently-built public implementations found: [ARPANPATRA111/Float-Chat](https://github.com/ARPANPATRA111/Float-Chat) (RAG + local LLM + PostGIS, NL→SQL), [Aryanthakur7/FloatChat-AI-Assistant](https://github.com/Aryanthakur7/FloatChat-AI-Assistant) (LangChain/Pandas), [AdithyaSM31/FloatChat-AI](https://github.com/AdithyaSM31/FloatChat-AI) (Llama 3.3 70B via Groq, 12-language dashboard), [uranium24/float-chat-app](https://github.com/uranium24/float-chat-app) (3D globe UI). All converge on the same pattern: chatbot/RAG wrapper over a real dataset (ARGO NetCDF), with the "AI" being retrieval + NL-to-SQL translation, not a trained predictive model.
 - **SIH25039 "Integrated Platform for Crowdsourced Ocean Hazard Reporting and Social Media Analytics"** — also MoES/Disaster Management. Multiple teams ("Ocean Watch", "AquaSentra", team Snapby) built near-identical crowdsourcing + social-media-analytics dashboards.
 
-**Finding, framed as inference not citation** (no direct judge quote was found anywhere in the search — the medium.com critique piece on SIH judging surfaced general complaints about judge domain-expertise gaps and opaque scoring, not a specific "just a dashboard" quote): the FloatChat/Ocean-Hazard convergence — 4+ teams independently building the same chatbot-over-real-data wrapper for one PS — is direct evidence of what "obvious architecture" convergence looks like for an MoES data-access PS. The predictable failure mode for SIH26059 is the same shape: teams pull CMEMS/NIC data, put a map + chat/dashboard UI on top, and call the retrieval layer "AI," without a trained forecasting or trajectory model underneath. **Decision: any UI/dashboard layer must sit on top of a genuinely trained/fitted model (forecasting, drift, or routing optimization) — never let the demo's most visible surface (chat, map, dashboard) be the only "AI" component.**
+**Finding, framed as inference not citation** (no direct judge quote was found anywhere in the search — the medium.com critique piece on SIH judging surfaced general complaints about judge domain-expertise gaps and opaque scoring, not a specific "just a dashboard" quote): the FloatChat/Ocean-Hazard convergence — 4+ teams independently building the same chatbot-over-real-data wrapper for one PS — is direct evidence of what "obvious architecture" convergence looks like for an MoES data-access PS. The predictable failure mode for this problem is the same shape: teams pull CMEMS/NIC data, put a map + chat/dashboard UI on top, and call the retrieval layer "AI," without a trained forecasting or trajectory model underneath. **Decision: any UI/dashboard layer must sit on top of a genuinely trained/fitted model (forecasting, drift, or routing optimization) — never let the demo's most visible surface (chat, map, dashboard) be the only "AI" component.**
 
 ---
 
@@ -74,8 +74,8 @@ Given only the one-sentence PS, every competent team converges on roughly:
 - **Single-source ice truth.** The Alaska ice-chart paper found real, systematic disagreement between Copernicus and regional/ground observations. A team using CMEMS alone and presenting its numbers as ground truth is building on an acknowledged-biased source without saying so.
 - **Physics-free or ML-free trajectory modeling.** IDRIFTNET (2025 SOTA) is explicitly hybrid because pure statistical or pure physics both underperform. A team picking one is behind the literature by months, not years — genuinely beatable gap.
 - **Routing as static shortest-path.** Current research (quantum-annealing CQM paper, trans-Arctic feasibility paper) treats routing as multi-objective constrained optimization (fuel, time, ice risk, bathymetry) with the constraint surface itself uncertain (ice forecast has its own error bars) — not a fixed-cost grid search.
-- **No uncertainty propagation.** None of the "obvious" pieces above carry forecast uncertainty forward into the route decision. A 6-month-ahead ice concentration forecast has real, growing error; routing on the point forecast as if it were certain is a documented failure mode judges in ML-literate domains (MoES reviewers plausibly include NCPOR scientists) will catch immediately.
-- **Assumes always-on connectivity.** The dashboard-and-chat pattern assumes a live backend. On the actual operational vessel (Iridium-class links), that assumption is simply wrong for the real deployment context — a strong differentiator if we get it right, a credibility problem for competitors if a judge who knows the vessel's comms asks about it.
+- **No uncertainty propagation.** None of the "obvious" pieces above carry forecast uncertainty forward into the route decision. A 6-month-ahead ice concentration forecast has real, growing error; routing on the point forecast as if it were certain is a documented failure mode reviewers in ML-literate domains (MoES reviewers plausibly include NCPOR scientists) will catch immediately.
+- **Assumes always-on connectivity.** The dashboard-and-chat pattern assumes a live backend. On the actual operational vessel (Iridium-class links), that assumption is simply wrong for the real deployment context — a strong differentiator if we get it right, a credibility problem for competitors if a reviewer who knows the vessel's comms asks about it.
 - **No route corridor specificity.** Building for "Antarctica" in general when the real, sourced operational corridor is Cape Town–Bharati/Maitri in austral summer is over-scoping the problem in a way that dilutes fidelity everywhere instead of concentrating it where it matters.
 
 ---
@@ -103,7 +103,7 @@ Given only the one-sentence PS, every competent team converges on roughly:
 
 *Added 2026-09-07.* An audit found this document evaluated the **research**
 rivals seriously — IceNet, ANTSIC-UNet, CMEMS, IDRIFTNET, USNIC/BYU — and left
-out every **product** a domain judge would name first. IcySea, PolarView,
+out every **product** a domain reviewer would name first. IcySea, PolarView,
 Polarstern MapViewer and the ECDIS vendors sat in `docs/ppt_source/market.md`,
 a marketing draft, rather than here. That is the wrong place for them: a
 competitor you only discuss in a pitch document is a competitor you have not
@@ -267,7 +267,7 @@ listing products:
    approved, monitored route decision for a *named vessel on a named day*.
 2. **The two we should be most careful about are IcySea and ECDIS** — IcySea
    because its data is genuinely better than ours, and ECDIS because it is
-   certified and we are not. Any claim that steps on either is a claim a judge
+   certified and we are not. Any claim that steps on either is a claim a reviewer
    can dismantle.
 
 ---
@@ -342,8 +342,8 @@ The single most-cited feature, and the one with the thinnest public methodology.
 **Does IcySea do ROUTING (path optimisation)? — NO.**
 - **VERIFIED** ([arcticfocus.org interview with Drift+Noise](https://www.arcticfocus.org/stories/navigating-frozen-frontier-how-icysea-revolutionizes-polar-ice-navigation/)): "automatic route suggestions for ships through the ice based on ship and ice characteristics" is listed as **"an idea in development"** — i.e. explicitly not shipped.
 - Every self-description is situational-awareness language: "display near-real time ice relevant information", "strategic planning, risk assessment and monitoring, operational and navigational support and decision-making", "map-based application".
-- **Watch the trap:** the PONANT testimonial on driftnoise.com reads "Thanks to your outstanding app, **we performed** an efficient ice routeing to the pole." That is a *human navigator* routing with the app as an information display. It is not the app computing a route. If a judge quotes that line at us, this is the answer.
-- **Consequence:** the routing half of SIH26059 is genuinely open ground against the strongest commercial polar-ice app in the world. That is a defensible, verifiable claim.
+- **Watch the trap:** the PONANT testimonial on driftnoise.com reads "Thanks to your outstanding app, **we performed** an efficient ice routeing to the pole." That is a *human navigator* routing with the app as an information display. It is not the app computing a route. If a reviewer quotes that line at us, this is the answer.
+- **Consequence:** the routing half of Dakshin is genuinely open ground against the strongest commercial polar-ice app in the world. That is a defensible, verifiable claim.
 
 **Does IcySea handle ICEBERGS? — No documented capability.**
 - **VERIFIED by absence** across driftnoise.com, icysea.app, the CMEMS use case, the Eurisy case study, the UN OceanPrediction profile, and the Arctic Focus interview: **the word "iceberg" appears in none of them.** Every data layer named is sea ice (concentration, type, drift) or raw SAR.
@@ -369,7 +369,7 @@ Stated explicitly rather than papered over:
 
 ## 6. The direct Indian precedent — Mishra et al. 2021, Bharati ↔ Maitri
 
-The closest thing to a direct competitor for SIH26059, and previously unresearched in this repo.
+The closest thing to a direct competitor for Dakshin, and previously unresearched in this repo.
 
 **Citation (VERIFIED):** Mishra, P., Alok, S., Rajak, D.R., Beg, J.M., Bahuguna, I.M., Talati, I. (2021). *Investigating optimum ship route in the Antarctic in presence of sea ice and wind resistances – A case study between Bharati and Maitri.* **Polar Science 30, 100696.** [doi:10.1016/j.polar.2021.100696](https://doi.org/10.1016/j.polar.2021.100696). Affiliations: Space Applications Centre (ISRO), Ahmedabad + Pandit Deendayal Energy University. 19 citations as of this pass ([OpenAlex](https://api.openalex.org/works/doi:10.1016/j.polar.2021.100696)).
 
@@ -415,7 +415,7 @@ These are new; they do not duplicate the "NCPOR's own infrastructure" bullets in
 - **It does mention icebergs** — as objects a trained interpreter distinguishes in SAR backscatter, not as a tracked catalogue with drift prediction.
 - **The `ERA5 → blizzard footprint` detail is a real operational failure mode we should handle:** wind events contaminate SAR backscatter and make ice-type classification unreliable. Any automated SAR-based classifier we build inherits this problem and must either flag or correct for it. **VERIFIED as a stated problem by the operators themselves.**
 
-**7.2 The lineage goes back further.** **VERIFIED** (OpenAlex/Semantic Scholar author record for D. Ram Rajak): Rajak, D.R., Singh, R.K.K., Maheshwari, M., Jayaprasad, P., Oza, S.R., Beg, J., Sharma, R. — *Sea Ice Advisory using Earth Observation Data for Ship Routing during Antarctic Expedition* (2015, [doi:10.13140/rg.2.1.5073.8725](https://doi.org/10.13140/rg.2.1.5073.8725) — a ResearchGate-minted DOI, so likely a conference/technical paper rather than a journal article; **full text not retrieved, UNVERIFIED content**). Same SAC/ISRO group that later authored the 2021 Bharati–Maitri routing paper. **INFERRED:** SAC/ISRO has a continuous ~decade-long Antarctic ship-routing programme. Treat SAC/ISRO as a domain incumbent whose work will be known to MoES judges, not as absent.
+**7.2 The lineage goes back further.** **VERIFIED** (OpenAlex/Semantic Scholar author record for D. Ram Rajak): Rajak, D.R., Singh, R.K.K., Maheshwari, M., Jayaprasad, P., Oza, S.R., Beg, J., Sharma, R. — *Sea Ice Advisory using Earth Observation Data for Ship Routing during Antarctic Expedition* (2015, [doi:10.13140/rg.2.1.5073.8725](https://doi.org/10.13140/rg.2.1.5073.8725) — a ResearchGate-minted DOI, so likely a conference/technical paper rather than a journal article; **full text not retrieved, UNVERIFIED content**). Same SAC/ISRO group that later authored the 2021 Bharati–Maitri routing paper. **INFERRED:** SAC/ISRO has a continuous ~decade-long Antarctic ship-routing programme. Treat SAC/ISRO as a domain incumbent whose work will be known to MoES reviewers, not as absent.
 
 ---
 
@@ -520,7 +520,7 @@ CIS is the useful *product-design* reference: it is the only major ice service t
 
 **VERIFIED** ([IEEE JSTARS 2025, doi:10.1109/jstars.2025.3593948](https://doi.org/10.1109/jstars.2025.3593948), gold OA): *Satellite-Borne and Airborne Sea Ice Remote Sensing for Antarctic Applications in Safe Navigation between the Icebreaker and Research Station: A Case Study in Prydz Bay.* An integrated framework for safe path planning in **Prydz Bay, East Antarctica** — the same bay as **Bharati** — supporting the Chinese programme at Zhongshan Station. Extracts landfast sea ice, **icebergs**, and bare rock from large-scale satellite imagery plus surface smoothness; adds **UAV** data on landfast-ice melt and microtopography; feeds all of it into a **cost path analysis** to determine optimal routes across landfast ice.
 
-Why this matters: **a foreign national Antarctic programme published, in 2025, an icebreaker-to-station route-planning framework for the bay Bharati sits in, and it does include icebergs.** It is still a static, deterministic, snapshot cost-path method with no forecast, no ML, and no uncertainty — but it is more recent and more multi-source than Mishra et al. 2021, and a well-read judge could raise it. Know it exists.
+Why this matters: **a foreign national Antarctic programme published, in 2025, an icebreaker-to-station route-planning framework for the bay Bharati sits in, and it does include icebergs.** It is still a static, deterministic, snapshot cost-path method with no forecast, no ML, and no uncertainty — but it is more recent and more multi-source than Mishra et al. 2021, and a well-read reviewer could raise it. Know it exists.
 
 ### 9.9 Also relevant, for horizon-setting
 
@@ -553,7 +553,7 @@ Cross-referenced rows marked **[§2]** were established in the first pass and ar
 | **Mishra et al. 2021 (Bharati–Maitri)** | SAC/ISRO + PDEU (research) | **Yes** — Dijkstra, **min voyage time only** (VERIFIED via Tran et al. 2023 Tables 2/5) | **No** | **None** — static single-date ice (VERIFIED via Table 7) | **No** | **Yes** — the exact corridor | n/a — offline research code |
 | **Prydz Bay framework 2025** | Chinese Antarctic programme (research) | **Yes** — cost-path over landfast ice | **Yes** — iceberg distribution mapped | **None** — snapshot | No | **Yes** — Prydz Bay (Bharati's bay) | n/a |
 | **Schütz 2014 / Choi et al. 2015** | research | Yes | No | Ice-POM forecast (Choi) | **Yes** — scenario tree (Schütz); uncertain ice prediction model (Choi) | **No** — Arctic | n/a |
-| **THIS PROJECT (SIH26059)** | *target* | **Yes** — multi-objective, uncertainty-weighted | **Yes** — physics+ML residual drift forecast (§4.1) | ML SIC forecast, lead-time-resolved | **Yes** — forecast uncertainty carried into route cost (§4.3) | **Yes** — Cape Town→station + inter-station corridors | **Yes** — cached tiles + staleness/confidence decay (§4.5) |
+| **THIS PROJECT (Dakshin)** | *target* | **Yes** — multi-objective, uncertainty-weighted | **Yes** — physics+ML residual drift forecast (§4.1) | ML SIC forecast, lead-time-resolved | **Yes** — forecast uncertainty carried into route cost (§4.3) | **Yes** — Cape Town→station + inter-station corridors | **Yes** — cached tiles + staleness/confidence decay (§4.5) |
 
 ---
 
@@ -592,7 +592,7 @@ The specific, measurable things this project must beat. These are the numbers to
 The paper's own quantitative results are **UNVERIFIED** (full text unobtainable, §6). So the bar cannot be "beat their published number" until someone pulls the PDF. Instead:
 
 1. **Reimplement their method as our own baseline, on our own data.** Dijkstra over a grid, edge weight = traversal time, ship speed from **Riska (1997)** ice resistance + wind resistance, ice field from **NSIDC** SIC, held **static**. This is fully specified by the review's tabulation — we can build it without the paper. **Everything we claim must be measured against this baseline, not against a strawman A\*.**
-2. **Beat it on their own metric, on their own corridor, on held-out seasons.** Same Bharati↔Maitri leg, multiple ISEA seasons, evaluate **voyage time**. If our uncertainty-aware, forecast-driven router does not beat static-Dijkstra on plain voyage time, we have no story — an MoES judge will ask exactly this.
+2. **Beat it on their own metric, on their own corridor, on held-out seasons.** Same Bharati↔Maitri leg, multiple ISEA seasons, evaluate **voyage time**. If our uncertainty-aware, forecast-driven router does not beat static-Dijkstra on plain voyage time, we have no story — an MoES reviewer will ask exactly this.
 3. **Beat it on metrics it structurally cannot address**, and say why: (a) **fuel** — it optimises time only (Table 2), so a multi-objective time/fuel/risk frontier is new ground; (b) **feasibility under a moving ice field** — replay each route forward through the *actually observed* subsequent ice and count how often the static-optimal route becomes blocked or enters a higher POLARIS risk band that the moving-ice-aware route avoids. This is the single most persuasive demo available to us and it directly exercises the 28-of-32 gap.
 4. **Match its validation standard or lose the argument.** It is 1 of only 6 of 32 studies that validated at all. **Validate against real ISEA voyage tracks (AIS / expedition logs) for at least 3 seasons** — that alone puts us above 90th percentile of the published literature. And pre-empt the review's own critique of AIS validation (§8.2): report agreement with the sailed track *and* state explicitly that the sailed track is not assumed optimal.
 

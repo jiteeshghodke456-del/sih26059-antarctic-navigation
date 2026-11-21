@@ -1,4 +1,4 @@
-# Differentiation — SIH26059
+# Differentiation — Dakshin
 
 Rule for this document: **no adjectives.** Every claim below names a specific component, file,
 config field, or measured number in `ARCHITECTURE.md` / `ML_ARCHITECTURE.md`. If a claim cannot
@@ -209,9 +209,9 @@ fidelity on the real operational case is verifiable; circumpolar generality is n
   than ground truth.
 
   **Status check, 2026-09-07 — this paragraph describes the design, not yet the measurement.**
-  The trained numbers that exist today (`ISIH_RESULTS.md`, +18.5%–+30.6% vs. persistence) are
+  The trained numbers that exist today (`PROTOTYPE_RESULTS.md`, +18.5%–+30.6% vs. persistence) are
   scored against a **GLORYS12 reanalysis background**, not against CMEMS's own operational
-  forecast cycles — `ISIH_RESULTS.md` names this itself as "the sharpest question we will be
+  forecast cycles — `PROTOTYPE_RESULTS.md` names this itself as "the sharpest question we will be
   asked." The CMEMS forecast-cycle archive this comparison needs (`data/cmems_forecast_archive/`)
   only started accumulating 2026-08-31; seven days in as of this note, not enough to retrain or
   re-score against. **Quote "beats persistence and beats raw GLORYS12," not "beats CMEMS's own
@@ -220,7 +220,7 @@ fidelity on the real operational case is verifiable; circumpolar generality is n
 **Why this is differentiation and not weakness:** competitors will display confident absolute fuel
 savings and a single authoritative ice number. Every one of those figures is undefendable under
 questioning. Being the team that already knows which of its numbers are soft is the stronger
-position in front of technical judges — and StormGeo, the actual commercial incumbent, keeps human
+position in front of technical reviewers — and StormGeo, the actual commercial incumbent, keeps human
 route analysts in the loop 24/7 precisely because full automation is not trusted at the edges.
 
 ---
@@ -248,7 +248,7 @@ Reuse → adapt → extend → wrap → replace was applied in order, and the re
    set*, not a "Pareto frontier": 12 samples of a continuous trade-off surface is a set, not a
    frontier, and if the filter leaves one route we show one route and say the trade-off collapsed.
 
-**Why this beats reimplementing A\*:** a domain-literate judge will know PolarRoute exists.
+**Why this beats reimplementing A\*:** a domain-literate reviewer will know PolarRoute exists.
 Arriving with "we used BAS's tool and here are three specific things it does not do that we
 added" is a substantially stronger position than a from-scratch A\* that invites the question of
 why the field's own open-source tool was ignored.

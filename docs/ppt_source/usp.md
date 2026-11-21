@@ -7,8 +7,8 @@ a footnote. Nothing here gets to be vague about which one it is.
 
 Sources cross-checked while writing this: `docs/DIFFERENTIATION.md` (D1-D7),
 `docs/TRUE_CLAIMS.md` §1/2/3/5/6, `docs/COMPETITIVE_ANALYSIS.md`,
-`docs/WEAKNESS_ANALYSIS.md` §5/§7, `docs/ISIH_RESULTS.md`,
-`isih/protected_areas.py`, and the CMEMS harvest log (`data/cmems_harvest.log`,
+`docs/WEAKNESS_ANALYSIS.md` §5/§7, `docs/PROTOTYPE_RESULTS.md`,
+`dakshin/protected_areas.py`, and the CMEMS harvest log (`data/cmems_harvest.log`,
 `data/cmems_forecast_archive/`). Where DIFFERENTIATION.md's D1-D7 describe
 something not yet in the code, I checked the code (`grep` for `excluded_zones`,
 for a fusion/disagreement module) before writing BUILT or ROADMAP — I did not
@@ -16,7 +16,7 @@ take the architecture doc's word for its own status.
 
 **One correction that has to happen before D6 goes on a slide:** DIFFERENTIATION.md
 says "CMEMS is our base field... a bias-correction head on CMEMS itself."
-ISIH_RESULTS.md says, in its own words, the background used for the trained
+PROTOTYPE_RESULTS.md says, in its own words, the background used for the trained
 +18.5%–+30.6% numbers is **GLORYS12, a reanalysis, not CMEMS's operational
 forecast** — and says so as the sharpest question the team expects to be
 asked. The CMEMS forecast-cycle archive (`data/cmems_forecast_archive/`) only
@@ -43,11 +43,11 @@ survives a hostile expert.
 reading installed source, not inferred. The field's own open-source router
 throws uncertainty away before it ever reaches a route.
 
-**Status: ROADMAP.** `ISIH_RESULTS.md` says it in five words: "no uncertainty
+**Status: ROADMAP.** `PROTOTYPE_RESULTS.md` says it in five words: "no uncertainty
 layer yet." One model per horizon, one seed, no ensemble, no conformal bound.
 `TRUE_CLAIMS.md` §5 lists "five-model ensemble + conformal calibration" as
 priority 3 of the honest roadmap, "specified with a pre-committed pass/fail
-gate" — a plan, not a result. No fusion or disagreement code exists in `isih/`
+gate" — a plan, not a result. No fusion or disagreement code exists in `dakshin/`
 either (checked by grep).
 
 **Survives a hostile expert on two things, fails on a third if pushed today:**
@@ -56,7 +56,7 @@ code, cheap to demonstrate live by installing PolarRoute and reading the
 loader). Survives on discipline: the gate numbers (coverage in [85%, 96%] at
 lead 5, bound width <25 SIC-%, must beat inter-source disagreement as a free
 alternative) and the written demotion clause are pre-committed, which is rarer
-than the feature itself. **Fails** if a judge asks "show me the slider moving
+than the feature itself. **Fails** if a reviewer asks "show me the slider moving
 the route" — it can't, yet. Answer honestly: "not built, here is the gate it
 has to pass, here is what we do if it fails."
 
@@ -84,7 +84,7 @@ pre-empts the obvious attack instead of hiding from it.
 
 **Claim:** where ice sources disagree, the route gets more cautious by itself.
 
-**Status: ROADMAP.** No fusion or disagreement module exists in `isih/` today
+**Status: ROADMAP.** No fusion or disagreement module exists in `dakshin/` today
 (checked directly). The grounding fact — Copernicus systematically
 underestimates concentration versus regional charts in the marginal ice zone —
 is real and citable (2025 Alaska ice-chart paper), but nothing in this repo
@@ -133,7 +133,7 @@ piece is exactly the ROADMAP part above. Don't claim more than the demo does.
 the destination-window result (below) is scored against this specific ship's
 draft and this specific approach.
 
-**Status: BUILT**, as scope discipline — the demo and the ISIH results are
+**Status: BUILT**, as scope discipline — the demo and the September prototype results are
 already corridor- and vessel-scoped, not generic.
 
 **Survives well, with a size limit.** An MoES/NCPOR audience recognizes this
@@ -167,7 +167,7 @@ today's numbers beat persistence and raw GLORYS12, not CMEMS's own forecast.
 
 **Survives very well precisely because it costs something.** A team that
 prints a confident absolute fuel number and a single authoritative ice
-percentage looks more finished for about ninety seconds, until a judge asks
+percentage looks more finished for about ninety seconds, until a reviewer asks
 where the number came from. This is the one category where disclosing a
 limitation is not a tax on credibility, it *is* the credibility.
 
@@ -184,11 +184,11 @@ real satellite ice).
 **Status: reuse is BUILT. All three named extensions are ROADMAP.**
 Uncertainty-aware thresholding needs D1 (not built). The iceberg hazard layer
 via PolarRoute's `excluded_zones` hook is not wired up — grepped, no hits in
-`isih/`. The 12-run dominance-filtered sweep is a designed evaluation
+`dakshin/`. The 12-run dominance-filtered sweep is a designed evaluation
 protocol, not a routine that has run.
 
 **Survives as "we reused the field's own tool instead of reinventing A*,
-which is the right call and a judge who knows the field will recognize it."**
+which is the right call and a reviewer who knows the field will recognize it."**
 Does **not** survive as "and we already extended it three ways" — say "reused,
 running, and here are the three specific gaps we're closing next," not "and
 here are our three extensions."
@@ -201,7 +201,7 @@ here are our three extensions."
 |---|---|---|---|
 | **1 (extremely strong)** | Destination-window result — Bharati closed 23 of 31 December days | **Yes, measured** | See §3. Answers the question a captain actually asks. |
 | **2 (extremely strong)** | Protected areas modelled by legal regime, not as no-go blobs | **Yes, shipped today** | See §3. Master-prompt-mandated, regulation-correct, and gets India's own station right where the naive version gets it wrong. |
-| 3 (good) | D6 — honest quantification as a practice | Yes, as a discipline | Costs something, which is why it's credible — but it's a posture, not a feature a judge can click on. |
+| 3 (good) | D6 — honest quantification as a practice | Yes, as a discipline | Costs something, which is why it's credible — but it's a posture, not a feature a reviewer can click on. |
 | 4 (good) | D5 — corridor/vessel specificity | Yes, as scope | Verifiable and hard to fake in substance, easy to claim in words — any competing team can say the same sentence. |
 | 5 (good) | D2 — tested physics iceberg baseline | Yes (baseline only) | Real and tested, but a physics-only drift model is the *floor* the 2025 literature (IDRIFTNET) already expects a serious team to clear, not a ceiling. |
 | 6 (roadmap, don't oversell) | D1 — uncertainty reaches the routing decision | No | The single strongest **innovation** claim in the whole set if it ships — see §4 — but it is not demonstrable today, and TRUE_CLAIMS.md itself says so. |
@@ -221,7 +221,7 @@ criteria does not obviously rule D1 out, and if the room prioritizes the
 strongest *idea*, D1 belongs in the top two instead of one of these.
 
 I ranked it below both anyway, and I want the reason on the record rather
-than folded silently into the ranking: the user's own framing of what judges
+than folded silently into the ranking: the user's own framing of what reviewers
 respond to is "if they actually work... not just appear sparkly." A USP that
 is "clearly roadmapped" but has never run — no slider, no measured coverage
 number, nothing on screen — is exactly the shape of thing that framing warns
@@ -254,7 +254,7 @@ system says the cell was closed to this ship on 23 of 31 days, while the
 water 100 km further north was open every single day.
 
 **Why it's extremely strong and not just "good":**
-- **True today.** `isih/figures/destination_window.json`, cited in
+- **True today.** `dakshin/figures/destination_window.json`, cited in
   `TRUE_CLAIMS.md` §1.6–1.8.
 - **Hard to copy this season.** Getting this number required finding that the
   satellite record reports suppressed coastal pixels as 0.0% ice — open water
@@ -284,7 +284,7 @@ sits inside a managed area India itself co-proposed, and that India's own
 protected area (ASPA 163, Dakshin Gangotri) is 4.7 km from Maitri.
 
 **Why it's extremely strong and not just "good":**
-- **Shipped today.** `isih/protected_areas.py`, sourced from the Antarctic
+- **Shipped today.** `dakshin/protected_areas.py`, sourced from the Antarctic
   Treaty Secretariat's own 2024 shapefile (148 polygons, CRS read from the
   `.prj`, not assumed).
 - **Directly answers what the master prompt asked for by name** (§48A.17):
@@ -319,7 +319,7 @@ way D1 would.
 1. **D6 — we don't print numbers we can't defend**, evidenced by three
    corrections already made against ourselves (transit time, a route caption,
    the baseline itself). Credible because it cost something; not a feature a
-   judge interacts with.
+   reviewer interacts with.
 2. **D5 — the real ship, the real corridor, the real season**, evidenced by
    using the Golovnin's real dimensions and the real December resupply
    window. Verifiable and specific, but any team reading the same ISEA press
@@ -417,7 +417,7 @@ destination-window method itself — turning three years of satellite ice data
 plus a found-and-fixed data bug into a ship-specific, date-resolved answer.
 It is not a new algorithm; it is a new *question asked of old data*, answered
 honestly including the direction the correction moved the number (more
-cautious, not less). That is the innovation a judge can actually see work,
+cautious, not less). That is the innovation a reviewer can actually see work,
 today, live.
 
 ---

@@ -19,10 +19,10 @@ This document is the delta, not a re-description of the system.
 | **Evidence** | §11 builds the product on a first-class Decision object; §12 defines nine gates; §48A.1 says think from the decision backwards; §48A.13 requires route health be an evidence-based state |
 | **Current implementation** | Six read-only `GET` endpoints. Grep for *decision object*, *route version*, *approval*, *decision log* returned **zero hits**. There was no `POST` of any kind |
 | **Gap** | The product had no decision in it. It rendered environmental data and a precomputed route |
-| **Smallest change** | Two pure modules (`isih/decision.py`, `isih/gates.py`), one service that binds them to files already on disk (`isih/demo/decision_service.py`), and four endpoints |
+| **Smallest change** | Two pure modules (`dakshin/decision.py`, `dakshin/gates.py`), one service that binds them to files already on disk (`dakshin/demo/decision_service.py`), and four endpoints |
 | **Preserved** | Every existing endpoint and every existing figure. The ice raster, projection and route drawing were kept verbatim |
 | **Migration risk** | Low. The decision layer reads existing artifacts and writes nothing to disk |
-| **Tests** | `isih/test_decision.py` (14), `isih/test_gates.py` (15), `isih/test_behavioural.py` (14) |
+| **Tests** | `dakshin/test_decision.py` (14), `dakshin/test_gates.py` (15), `dakshin/test_behavioural.py` (14) |
 
 **The design choice worth defending: health is derived, never scored.** §11 says
 a black-box `route score = 0.82` is less useful than an evidence-based
@@ -70,7 +70,7 @@ not.
 
 ### 2.2 The forcing layer — designed, not built
 
-`docs/ISIH_RESULTS.md` named ERA5 wind and temperature as the top unimplemented
+`docs/PROTOTYPE_RESULTS.md` named ERA5 wind and temperature as the top unimplemented
 improvement. The adjudication found that the obvious implementation would make
 things **worse**: in ERA5 and MERRA-2 sea ice is a *prescribed* lower boundary
 taken from satellite SIC, so 2 m temperature at the target date is close to a
@@ -191,10 +191,10 @@ app has no geospatial dependency that can fail live).
 
 | Layer | File | Asserts |
 |---|---|---|
-| Domain | `isih/test_decision.py` | UNKNOWN never passes; FAIL-now vs FAIL-later; digest stability |
-| Gates | `isih/test_gates.py` | Each gate's real state; every UNKNOWN names its blocker |
-| Behaviour | `isih/test_behavioural.py` | The twelve mandatory tests |
-| Service | `isih/demo/test_app.py` | Endpoints, page structure, no external resources |
+| Domain | `dakshin/test_decision.py` | UNKNOWN never passes; FAIL-now vs FAIL-later; digest stability |
+| Gates | `dakshin/test_gates.py` | Each gate's real state; every UNKNOWN names its blocker |
+| Behaviour | `dakshin/test_behavioural.py` | The twelve mandatory tests |
+| Service | `dakshin/demo/test_app.py` | Endpoints, page structure, no external resources |
 
 **77 tests pass.** The invariants most worth protecting: a gate with no data can
 never read as a pass; a never-scored destination is UNKNOWN and not *closed*;
@@ -210,7 +210,7 @@ the page never loads an external resource.
 | Ice limit labelled an assumption everywhere | `research/VESSEL_SPECIFICATIONS.md` — no framework indexes concentration |
 | No POLARIS RIO published | `research/POLARIS_APPLICABILITY.md` |
 | Horizons stated explicitly | `research/FORECAST_HORIZONS.md` |
-| Protected areas by legal regime, not as no-go | `isih/protected_areas.py` — ASMA entry needs no permit |
+| Protected areas by legal regime, not as no-go | `dakshin/protected_areas.py` — ASMA entry needs no permit |
 | Forcing at `t`, not `t+lead` | `research/MODEL_REUSE_MATRIX.md` §2.1 |
 
 ---

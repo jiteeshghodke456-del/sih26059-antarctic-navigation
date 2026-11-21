@@ -43,7 +43,7 @@
         <mxCell id="nNsidc" value="Taken by NSIDC satellite with SSMIS sensor" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#254A20;fontSize=10;" vertex="1" parent="1">
           <mxGeometry x="46" y="524" width="298" height="32" as="geometry" />
         </mxCell>
-        <mxCell id="clean" value="Clean unreliable data/noise&lt;br&gt;in satellite image&lt;br&gt;&lt;font style='font-size:9px'&gt;isih/ice_quality.py &amp;#183; the land-spillover filter writes 0.0 = open water&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
+        <mxCell id="clean" value="Clean unreliable data/noise&lt;br&gt;in satellite image&lt;br&gt;&lt;font style='font-size:9px'&gt;dakshin/ice_quality.py &amp;#183; the land-spillover filter writes 0.0 = open water&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
           <mxGeometry x="30" y="578" width="330" height="76" as="geometry" />
         </mxCell>
         <mxCell id="weather" value="Analyze weather&lt;br&gt;forecast ahead&lt;br&gt;&lt;font style='font-size:9px'&gt;ERA5 / GFS wind + waves &amp;#8212; MOVED: an input, not a review&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
@@ -70,7 +70,7 @@
         <mxCell id="drift" value="Predict Iceberg trajectory&lt;br&gt;&lt;font style='font-size:9px'&gt;Wagner closed form &amp;#183; models/iceberg/drift.py&lt;br&gt;&lt;b&gt;PHYSICS, not machine learning&lt;/b&gt; &amp;#183; 23/23 tests&lt;br&gt;&amp;#8594; exclusion polygons, capped at 72 h&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#5A3B08;" vertex="1" parent="1">
           <mxGeometry x="760" y="578" width="330" height="94" as="geometry" />
         </mxCell>
-        <mxCell id="mesh" value="Build vessel-modelled ice mesh&lt;br&gt;&lt;font style='font-size:9px'&gt;meshiphi &amp;#8212; non-uniform, splits hardest in the marginal ice zone&lt;br&gt;calibrated to MV Vasiliy Golovnin: beam 22.4 m, 16.4 kn &amp;#183; isih/ice_meshes.py&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+        <mxCell id="mesh" value="Build vessel-modelled ice mesh&lt;br&gt;&lt;font style='font-size:9px'&gt;meshiphi &amp;#8212; non-uniform, splits hardest in the marginal ice zone&lt;br&gt;calibrated to MV Vasiliy Golovnin: beam 22.4 m, 16.4 kn &amp;#183; dakshin/ice_meshes.py&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
           <mxGeometry x="270" y="816" width="580" height="76" as="geometry" />
         </mxCell>
         <mxCell id="router" value="Compute candidate routes&lt;br&gt;&lt;font style='font-size:9px'&gt;PolarRoute &amp;#215; 12 sweep &amp;#8594; dominance filter &amp;#183; BAS engine, reused under MIT&lt;br&gt;this is where the routes come from&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">

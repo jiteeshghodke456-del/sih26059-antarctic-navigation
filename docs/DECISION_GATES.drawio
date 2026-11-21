@@ -25,7 +25,7 @@
         <mxCell id="s_alt" value="alternatives.json&lt;br&gt;PolarRoute corridors" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
           <mxGeometry x="40" y="280" width="240" height="54" as="geometry" />
         </mxCell>
-        <mxCell id="s_ves" value="vessel config&lt;br&gt;isih/ice_meshes.py" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
+        <mxCell id="s_ves" value="vessel config&lt;br&gt;dakshin/ice_meshes.py" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">
           <mxGeometry x="40" y="350" width="240" height="54" as="geometry" />
         </mxCell>
         <mxCell id="s_none" value="NO SOURCE HELD&lt;br&gt;weather · traffic · comms · live sensors" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#13385C;" vertex="1" parent="1">

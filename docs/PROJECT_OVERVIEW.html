@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>SIH26059 — Project Overview</title>
+<title>Dakshin — Project Overview</title>
 <style>
   :root{
     --ink:#16191d;
@@ -22,7 +22,7 @@
     size:A4;
     margin:19mm 17mm 17mm 17mm;
     @top-left{
-      content:"SIH26059 · Antarctic Sea-Ice, Iceberg Trajectory & Navigation Decision Support";
+      content:"Dakshin · Antarctic Sea-Ice, Iceberg Trajectory & Navigation Decision Support";
       font-family:"DejaVu Sans",sans-serif; font-size:7pt; color:#8a939b;
       letter-spacing:.03em;
     }
@@ -210,7 +210,7 @@
 <!-- ==================== COVER ==================== -->
 <section class="cover">
   <div class="cover-band">
-    <div class="cover-eyebrow">Smart India Hackathon 2026 · Problem Statement SIH26059</div>
+    <div class="cover-eyebrow">Advisory ice-navigation aid for Antarctic resupply</div>
     <h1>Antarctic Sea-Ice, Iceberg&nbsp;Trajectory and Navigation Decision Support</h1>
     <p class="ps">“Develop an AI/ML-enabled decision support platform capable of forecasting
     Antarctic sea-ice concentration, predicting iceberg trajectories, and identifying safe and
@@ -229,7 +229,7 @@
     <table class="cover-meta">
       <tr><td>Ministry</td><td>Ministry of Earth Sciences (MoES) · National Centre for Polar and Ocean Research (NCPOR), Goa</td></tr>
       <tr><td>Deliverable</td><td>Web application with a local backend, designed to run offline aboard a vessel</td></tr>
-      <tr><td>Two tracks</td><td>Internal hackathon prototype (8 Sept 2026) · SIH Grand Finale product (December 2026)</td></tr>
+      <tr><td>Two tracks</td><td>September prototype (8 Sept 2026) · production model</td></tr>
       <tr><td>Status</td><td>Prototype trained and measured on real data · production architecture designed, 27 decisions logged, production code not yet started</td></tr>
       <tr><td>Headline result</td><td>Sea-ice forecast beats every baseline at every horizon tested — up to <strong>+30.6 %</strong> over persistence at 7-day lead</td></tr>
       <tr><td>Repository</td><td>Private · <code>SIH26059-antarctic-navigation</code></td></tr>
@@ -240,7 +240,7 @@
     Generated 1 September 2026 · Sources: <code>docs/ARCHITECTURE.md</code>,
     <code>docs/ML_ARCHITECTURE.md</code>, <code>docs/DATASET.md</code>,
     <code>docs/DECISIONS.md</code>, <code>docs/DIFFERENTIATION.md</code>,
-    <code>docs/NAVIGATION_RESEARCH.md</code>, <code>docs/ISIH_RESULTS.md</code>.
+    <code>docs/NAVIGATION_RESEARCH.md</code>, <code>docs/PROTOTYPE_RESULTS.md</code>.
     Every number in this document is traceable to one of those files or to a measurement recorded there.
   </div>
 </section>
@@ -258,7 +258,7 @@
     <div><span class="tn">§7</span><span class="tt">What makes this different from the obvious build<br><span class="td">Seven differentiators, each tied to a component and a falsifiable test.</span></span></div>
     <div><span class="tn">§8</span><span class="tt">Honesty commitments and known weaknesses<br><span class="td">What we deliberately refuse to claim, and why that is a strength.</span></span></div>
     <div><span class="tn">§9</span><span class="tt">Key decisions on record<br><span class="td">The 27 architecture decision records, summarised.</span></span></div>
-    <div><span class="tn">§10</span><span class="tt">Current state, open gaps and what happens next<br><span class="td">Exactly what is done, what is not, and the phase plan to December.</span></span></div>
+    <div><span class="tn">§10</span><span class="tt">Current state, open gaps and what happens next<br><span class="td">Exactly what is done, what is not, and the phase plan to production.</span></span></div>
     <div><span class="tn">§11</span><span class="tt">Repository map and how to get started<br><span class="td">Where everything lives and what to run first.</span></span></div>
     <div><span class="tn">§12</span><span class="tt">Glossary<br><span class="td">Every acronym and domain term used in this document.</span></span></div>
   </div>
@@ -372,7 +372,7 @@
     observations. It scored RMSE 0.1051 and <strong>lost badly</strong> to the dumbest possible
     baseline ("assume tomorrow's ice looks like today's"). Giving the model access to what the
     satellite actually saw is what closed the gap. We found this by measuring it ourselves, before
-    a judge could.</p>
+    a reviewer could.</p>
   </div>
 
   <h3>1.5 What we have achieved so far</h3>
@@ -572,10 +572,10 @@
       <tr><td><strong>LLM / RAG / agent framework</strong></td><td>There is no natural-language task in this problem statement. Every component is a numerical prediction or a graph search. Deterministic and classical methods are better suited here, cheaper, verifiable against held-out data, and able to run offline on a ship. A chatbot over real data is precisely the convergent shallow build we are differentiating from.</td></tr>
       <tr><td><strong>The <code>icenet</code> library</strong></td><td><span class="pill p-done">verified</span> Its pins (<code>tensorflow&lt;2.16</code>, <code>netcdf4&lt;1.6.1</code>, plus the deprecated <code>motuclient</code>, 51 dependencies) <strong>directly conflict</strong> with meshiphi/PolarRoute, which resolve to <code>netcdf4==1.7.4</code>. The two cannot share a Python environment. Also: IceNet's published validation is Arctic, and no Southern-Hemisphere weights exist — it would need full retraining anyway.</td></tr>
       <tr><td><strong>Reimplementing grid A*</strong></td><td>The measured integration cost of PolarRoute is low, so the usual justification evaporates. Reimplementing would forfeit non-uniform meshing, physics-informed smoothing and the vessel-performance framework — and invite the question "why did you ignore the field's own open-source tool?"</td></tr>
-      <tr><td><strong>CICE / LIM2 dynamical ice model</strong></td><td>Operational infrastructure run by national centres. Not standable-up by a hackathon team — and our design now <em>consumes</em> the output of exactly such a system instead of pretending to rebuild one.</td></tr>
+      <tr><td><strong>CICE / LIM2 dynamical ice model</strong></td><td>Operational infrastructure run by national centres. Not standable-up by a small team — and our design now <em>consumes</em> the output of exactly such a system instead of pretending to rebuild one.</td></tr>
       <tr><td><strong>Quantum-annealing route optimisation</strong></td><td>Real in the current literature, but requires D-Wave access and buys optimisation speed we do not need at ~9 s per route. Complexity with no benefit at our scale.</td></tr>
       <tr><td><strong>LSTM on the ice-extent time series</strong></td><td>Predicts a scalar. The router needs a spatial field.</td></tr>
-      <tr><td><strong>A neural network for iceberg drift residual</strong></td><td>The residual problem is small-data and tabular. Gradient boosting is the correct tool for that regime; feature importances also let us demonstrate the model recovering known physics, which is worth more to a judge than a marginally better score.</td></tr>
+      <tr><td><strong>A neural network for iceberg drift residual</strong></td><td>The residual problem is small-data and tabular. Gradient boosting is the correct tool for that regime; feature importances also let us demonstrate the model recovering known physics, which is worth more to a reviewer than a marginally better score.</td></tr>
     </tbody>
   </table>
 </section>
@@ -1039,7 +1039,7 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
 <!-- ==================== 6. RESULTS ==================== -->
 <section class="sec">
   <h2><span class="num">§6</span>Results measured so far</h2>
-  <p class="sec-lead">Everything below is from the ISIH prototype, trained 31 August 2026 on a
+  <p class="sec-lead">Everything below is from the September prototype, trained 31 August 2026 on a
   Kaggle T4 GPU. These are the numbers to quote.</p>
 
   <h3>6.1 Sea-ice forecasting</h3>
@@ -1228,7 +1228,7 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
     survived. We use BAS's own tool and add three specific things it does not do: uncertainty-aware
     ice thresholding, an iceberg hazard layer through the native <code>excluded_zones</code> hook
     (no fork required — source-checked), and a dominance-filtered candidate route set. <em>A
-    domain-literate judge will know PolarRoute exists.</em> Arriving with “we used BAS's tool and
+    domain-literate reviewer will know PolarRoute exists.</em> Arriving with “we used BAS's tool and
     here are three things it does not do that we added” is far stronger than a from-scratch A* that
     invites the question of why the field's own tool was ignored.</dd>
   </dl>
@@ -1238,7 +1238,7 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
 <section class="sec">
   <h2><span class="num">§8</span>Honesty commitments and known weaknesses</h2>
   <p class="sec-lead">This section exists because the project's central discipline is attacking our
-  own solution before a judge does. Everything here is a deliberate, recorded position.</p>
+  own solution before a reviewer does. Everything here is a deliberate, recorded position.</p>
 
   <h3>8.1 Things we refuse to claim</h3>
   <table class="d">
@@ -1355,9 +1355,9 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
 
   <h3>10.1 Two tracks, kept deliberately separate</h3>
   <table class="d">
-    <thead><tr><th style="width:34mm"></th><th>ISIH prototype — 8 Sept 2026</th><th>SIH final — December 2026</th></tr></thead>
+    <thead><tr><th style="width:34mm"></th><th>September prototype — 8 Sept 2026</th><th>Production model</th></tr></thead>
     <tbody>
-      <tr><td><strong>Lives in</strong></td><td><code>isih/</code></td><td>repo root — <code>models/</code>, <code>api/</code>, <code>web/</code></td></tr>
+      <tr><td><strong>Lives in</strong></td><td><code>dakshin/</code></td><td>repo root — <code>models/</code>, <code>api/</code>, <code>web/</code></td></tr>
       <tr><td><strong>Model</strong></td><td>small, single member, short training window</td><td>5-member ensemble, 1993–2024</td></tr>
       <tr><td><strong>Input channels</strong></td><td>12</td><td>19</td></tr>
       <tr><td><strong>Base field</strong></td><td>GLORYS12 reanalysis</td><td>real CMEMS forecast archive</td></tr>
@@ -1412,7 +1412,7 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
   −10 ≤ RIO &lt; 0  elevated risk — speed capped (PC1 11 kt · PC2 8 kt · PC3–PC5 5 kt · below PC5 3 kt)
   RIO &lt; −10   avoid in voyage planning</pre>
   <ul class="tight">
-    <li>Turns an invented threshold into a number a judge can look up.</li>
+    <li>Turns an invented threshold into a number a reviewer can look up.</li>
     <li>Makes the ship's ice class a real input that <em>changes the answer</em> — exactly what the
     problem statement asks for.</li>
     <li>Makes risk <strong>continuous rather than binary</strong>, so the router can prefer safer ice
@@ -1456,11 +1456,11 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
   <h4>(d) One logistics fact that must not go on a slide wrong</h4>
   <p>Indian expeditions are <em>flagged off</em> from Goa, but personnel fly to Cape Town and the
   <em>sea leg</em> starts there. Do not present “Goa → Antarctica by sea” as current practice — an
-  MoES judge will know. The credible forward-looking framing is that <strong>GRSE signed an MoU with
+  MoES reviewer will know. The credible forward-looking framing is that <strong>GRSE signed an MoU with
   Kongsberg in June 2025 to build India's first indigenous Polar Research Vessel</strong> at Kolkata
   for NCPOR; when India has its own hull, the voyage genuinely starts from an Indian port.</p>
 
-  <h3>10.5 The phase plan to December</h3>
+  <h3>10.5 The phase plan to production</h3>
   <table class="d">
     <thead><tr><th style="width:20mm">Phase</th><th style="width:20mm">Duration</th><th>Contents and exit condition</th></tr></thead>
     <tbody>
@@ -1489,7 +1489,7 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
     <tbody>
       <tr><td>Trained weights + conformal calibration tables</td><td>Live re-planning demos, scenario walkthroughs</td></tr>
       <tr><td>Evaluation results and all figures</td><td>UI polish, presentation assembly</td></tr>
-      <tr><td>Committed demo scenario packs</td><td>Judge-requested re-runs on committed packs (real computation, ~9 s + ~84 s sweep)</td></tr>
+      <tr><td>Committed demo scenario packs</td><td>Reviewer-requested re-runs on committed packs (real computation, ~9 s + ~84 s sweep)</td></tr>
       <tr><td>Environment pinned and pre-installed</td><td>Bug fixes, integration of anything left open</td></tr>
     </tbody>
     <caption>Nothing on the left is regenerated on site. Nothing on the right needs a GPU or a
@@ -1503,7 +1503,7 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
 
   <h3>11.1 Where everything lives</h3>
   <pre>SIH26059-antarctic-navigation/
-├── isih/                        ISIH PROTOTYPE (8 Sept) — kept separate on purpose
+├── dakshin/                        SEPTEMBER PROTOTYPE (8 Sept) — kept separate on purpose
 │   ├── download_nsidc.py        fetch observed sea-ice concentration (no auth needed)
 │   ├── grid.py                  NSIDC grid definition + GLORYS12→NSIDC area-average regridder
 │   ├── build_dataset.py         pair background with truth; nothing imputed, missing days dropped
@@ -1531,8 +1531,8 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
 │   ├── VIVA_PREP.md             expected questions and answers
 │   ├── TEAM_GUIDE.md            working agreements
 │   ├── DEMO_PLAN.md             how the demo runs
-│   ├── ISIH_RESULTS.md          ← the numbers to quote, with caveats
-│   └── ISIH_README.md           how to run the ISIH prototype
+│   ├── PROTOTYPE_RESULTS.md          ← the numbers to quote, with caveats
+│   └── PROTOTYPE_README.md           how to run the September prototype
 │
 └── .github/workflows/
     └── cmems-harvest.yml        daily 12:23 + 17:23 UTC — DO NOT SWITCH OFF</pre>
@@ -1541,19 +1541,19 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
   <ol class="tight">
     <li>This document, §1 and §2.</li>
     <li><code>docs/backlog.md</code> — under two minutes, and tells you everything still open.</li>
-    <li><code>docs/ISIH_RESULTS.md</code> — the real numbers and their caveats.</li>
+    <li><code>docs/PROTOTYPE_RESULTS.md</code> — the real numbers and their caveats.</li>
     <li><code>docs/ML_ARCHITECTURE.md</code> §1 — the model, in full depth.</li>
     <li><code>docs/DIFFERENTIATION.md</code> — why this is not the obvious build.</li>
   </ol>
 
   <h3>11.3 Reproducing the results</h3>
   <ul class="tight">
-    <li><strong>Training:</strong> open <code>isih/kaggle/isih_train.ipynb</code> on Kaggle with
+    <li><strong>Training:</strong> open <code>dakshin/kaggle/isih_train.ipynb</code> on Kaggle with
     Internet <em>On</em>, Accelerator <em>GPU T4 ×2</em>, and <code>CMEMS_USERNAME</code> /
     <code>CMEMS_PASSWORD</code> in Kaggle Secrets. It downloads its own data. Roughly 1–2 hours.</li>
     <li><strong>Routing:</strong> needs Python ≤3.11 — PolarRoute will not build on 3.12+. Create the
     environment with <code>uv venv --python 3.11</code>, then run
-    <code>isih/make_route_figure.py</code> followed by <code>isih/plot_route.py</code>.</li>
+    <code>dakshin/make_route_figure.py</code> followed by <code>dakshin/plot_route.py</code>.</li>
     <li><strong>After editing</strong> <code>grid.py</code>, <code>features.py</code> or
     <code>unet.py</code>, regenerate the Kaggle notebook — it embeds those sources.</li>
   </ul>
@@ -1566,7 +1566,7 @@ SIC_upper  =  clip( μ + q̂(lead, regime) · σ , 0 , 1 )</pre>
     it, it goes into <code>docs/backlog.md</code> as a one-liner with a pointer to the evidence.</li>
     <li><strong>Never trust code because it looks right.</strong> Open the browser, run the query,
     evaluate the model on real held-out data.</li>
-    <li><strong>Attack our own solution before a judge does.</strong> Every number in this project
+    <li><strong>Attack our own solution before a reviewer does.</strong> Every number in this project
     that looked good was re-derived until it either survived or was withdrawn.</li>
   </ul>
 </section>

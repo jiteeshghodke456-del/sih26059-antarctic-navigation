@@ -1,4 +1,4 @@
-# Gap Analysis — SIH26059 Antarctic Navigation
+# Gap Analysis — Dakshin Antarctic Navigation
 
 ## Methodology landscape
 
@@ -62,7 +62,7 @@ Dense/technical — engineering input for `docs/ML_ARCHITECTURE.md`, not a lit r
   an **elastic-viscous-plastic (EVP)** rheology for ice dynamics/velocity, incremental
   remapping for horizontal advection, and a ridging parameterization across thickness
   categories ([CICE documentation/user's manual](https://csdms.colorado.edu/w/images/CICE_documentation_and_software_user's_manual.pdf)).
-  Not something a hackathon team stands up from scratch in the timeline available — it's
+  Not something a small team stands up from scratch in the timeline available — it's
   infrastructure other operational centers run, not a component to reimplement.
 
 **Statistical baselines**
@@ -81,7 +81,7 @@ Dense/technical — engineering input for `docs/ML_ARCHITECTURE.md`, not a lit r
 **Simplest defensible baseline**: persistence + a short-lead ConvLSTM/U-Net trained
 directly on the real satellite SIC time series (OSI-SAF/NSIDC, see Data Reality Check),
 predicting a few days ahead at native ~10–25 km grid resolution. This is honestly
-trainable inside an SIH timeline on real data and has literature precedent.
+trainable inside a short timeline on real data and has literature precedent.
 **What would justify going further**: only if (a) Southern-Hemisphere-adapted IceNet
 weights or an equivalent pretrained Antarctic model surface, or (b) there's time/compute
 to pretrain on CMIP6 the way IceNet did — neither is likely in-scope; going past the
@@ -160,7 +160,7 @@ correction *does* meaningfully help (real, published, large error reduction) —
 stretch goal is a physics-first drift model with a lightweight residual-correction layer
 trained on whatever real BYU/NIC/USNIC track segments are available in the Antarctic
 sector, framed explicitly as "physics baseline + learned correction," never a bare ML
-model presented as if it were adequately trained (SIH judges will and should ask about
+model presented as if it were adequately trained (reviewers will and should ask about
 training-set size for a trajectory-ML claim).
 
 ---
@@ -193,7 +193,7 @@ training-set size for a trajectory-ML claim).
   mirrored at [bas-amop/PolarRoute](https://github.com/bas-amop/PolarRoute), installable
   via `pip install polar-route` ([PyPI](https://pypi.org/project/polar-route/)), MIT
   licensed, actively maintained (1,800+ commits). This is the closest thing to an
-  existing solution to problem statement SIH26059 — built by the same institution (BAS)
+  existing solution to this problem statement — built by the same institution (BAS)
   behind IceNet, explicitly for "safe and efficient navigation in the remote reaches of
   the Southern Ocean" ([BAS Logist AI project page](https://www.bas.ac.uk/project/logist-ai-for-environmentally-aware-decision-support/),
   [Maritime Executive coverage](https://maritime-executive.com/article/british-antarctic-survey-tests-ai-weather-routing-for-ice)).
@@ -244,7 +244,7 @@ easy to demo/visualize.
 **What would justify going further**: adopting or wrapping **PolarRoute**'s non-uniform
 mesh + vessel-performance-function machinery gets closer to "real NCPOR/MoES-grade
 tool" territory and demonstrates awareness of the actual prior art from the problem
-statement's own domain (BAS runs Antarctic research vessels) — strong for judge
+statement's own domain (BAS runs Antarctic research vessels) — strong for reviewer
 credibility if time allows hands-on integration; a plain grid A* is the fallback if
 PolarRoute's mesh format proves too much integration overhead for the timeline.
 

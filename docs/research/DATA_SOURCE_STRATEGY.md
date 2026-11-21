@@ -152,7 +152,7 @@ modelled vessel) are the Indian in-situ record along this exact route.
 
 ---
 
-## 5. The headline, for a judge from MoES or NCPOR
+## 5. The headline, for a reviewer from MoES or NCPOR
 
 > Our source strategy is capability-driven, and it was checked against live
 > Indian endpoints rather than assumed. The best Antarctic sea-ice record is

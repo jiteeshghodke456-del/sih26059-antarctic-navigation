@@ -116,7 +116,7 @@ Both PDFs downloaded and text-extracted this session.
 
 ★ **Measured in this repository, 2026-09-07** — `data/cmems_forecast_archive/cmems_siconc_2026-09-06.nc`
 carries **10 daily time steps, 2026-09-06T00:00 through 2026-09-15T00:00**, over
-the harvest box **55–78 °S, 0–80 °E** (note this is *not* the ISIH training
+the harvest box **55–78 °S, 0–80 °E** (note this is *not* the September prototype training
 corridor, which is 48–80 °S / 5 °W–85 °E — the two boxes differ and should be
 reconciled), variables `siconc, sithick, usi, vsi`.
 The first step is the cycle date itself. **The real forecast lead the project
@@ -151,7 +151,7 @@ summer (also due to atmospheric forcing errors)."* The Indian resupply season
 **low on ice** in exactly the season and region it will be used, and low-on-ice
 is the dangerous direction. Any claim about the corrected product must state
 whether the correction removes that bias or inherits it — currently unmeasured
-(`docs/ISIH_RESULTS.md` reports RMSE only, not signed bias).
+(`docs/PROTOTYPE_RESULTS.md` reports RMSE only, not signed bias).
 
 ### 2.3 The Antarctic short-range benchmark that matters most
 
@@ -218,7 +218,7 @@ describes navigating MV *Xue Long* to Zhongshan Station — **69°22′24.76″ 
 76°22′14.28″ E**, which is ≈ 5 km from Bharati's grid cell at 69.4 °S, 76.2 °E.
 The decision is the timing of the open-water band between the drifting pack and
 the landfast ice, and the tool is a **sea ice convergence rate forecast at
-24, 48 and 72 h**. Independent confirmation of `docs/ISIH_RESULTS.md`'s finding
+24, 48 and 72 h**. Independent confirmation of `docs/PROTOTYPE_RESULTS.md`'s finding
 that "the last 100 km is the entire problem" — and a demonstration that the
 operational answer to it is a *three-day* forecast taken from near the ice, not
 a nine-day forecast taken from Cape Town.
@@ -252,7 +252,7 @@ not an average.
 
 ### 2.5 Where this project's own measured curve sits
 
-From `docs/ISIH_RESULTS.md` (test-set RMSE in SIC fraction, corridor
+From `docs/PROTOTYPE_RESULTS.md` (test-set RMSE in SIC fraction, corridor
 5 °W–85 °E / 48–80 °S, NOAA/NSIDC CDR reference):
 
 | Lead | This project | Persistence | Gain |
@@ -263,7 +263,7 @@ From `docs/ISIH_RESULTS.md` (test-set RMSE in SIC fraction, corridor
 | 7 days | 0.0968 | 0.1395 | +30.6 % |
 
 ★ **The season the test slice falls in is a horizon fact, not a footnote.**
-`docs/ISIH_RESULTS.md` records that the held-out slice — the last 15 % of
+`docs/PROTOTYPE_RESULTS.md` records that the held-out slice — the last 15 % of
 2019–2020 — falls in the **austral melt season**, and that full-year 2020
 persistence is substantially easier to beat than melt-season persistence
 (0.0610 at 3 days and 0.0893 at 7 days full-year, against 0.0958 and 0.1395 on
@@ -279,7 +279,7 @@ period-mismatch trap it names:
 2. **It is also the season in which the reference product is worst** — see §2.6.
    Both the model's score and its benchmark are measured through a noisier lens
    than an annual mean would be. That cuts against the project, not for it, and
-   is worth volunteering before a judge finds it.
+   is worth volunteering before a reviewer finds it.
 
 **Placing it — what is comparable and what is not.**
 
@@ -303,14 +303,14 @@ days**, AMSR2 reference, 2022 test year. Reported RMSE reductions:
 Integrated ice-edge error reduced 44 % vs TOPAZ4 and 32 % vs persistence.
 
 **This project's +18.5 % to +30.6 % over persistence sits inside Palerme's
-19–33 % band.** That is the right thing to say to a judge: the result is neither
+19–33 % band.** That is the right thing to say to a reviewer: the result is neither
 implausibly good — which would invite a leakage accusation the project already
 half-concedes — nor trivially small. It is what a competently executed
 post-processing model of this class achieves.
 
 Caveats, stated inline rather than buried: **Palerme is Arctic**; it corrects a
-genuine operational *forecast* while the ISIH prototype's background channel is
-the GLORYS12 *reanalysis* (`docs/ISIH_RESULTS.md` caveat 1, unresolved pending
+genuine operational *forecast* while the September prototype's background channel is
+the GLORYS12 *reanalysis* (`docs/PROTOTYPE_RESULTS.md` caveat 1, unresolved pending
 the no-background ablation); it uses AMSR2 as reference where we use NSIDC CDR;
 and it trains one model per lead as we do. Palerme also records, citing Röhrs et
 al. (2023), that TOPAZ4's raw forecasts *"in most cases [are] not better than
@@ -378,13 +378,13 @@ Three things follow:
 
 - The defensible headline is the **relative gain over persistence measured on
   the same reference**, where the shared observational error largely cancels.
-  `docs/ISIH_RESULTS.md` already leads with the gain. Keep it that way.
+  `docs/PROTOTYPE_RESULTS.md` already leads with the gain. Keep it that way.
 - Any future claim of the form "we reduced RMSE from 0.047 to 0.041" is not
   supportable against this reference. It would need a higher-resolution
   validation source — SAR-derived ice edge, or NCPOR ship observations.
 - The **coastal cells are the worst case in the table** (0–100 % at sharp
   gradients), which is independent confirmation of the land-spillover artefact
-  the project found and masks in `isih/ice_quality.py`. That work is not
+  the project found and masks in `dakshin/ice_quality.py`. That work is not
   defensive over-engineering; it is addressing the single largest term in the
   reference product's own published error budget, at the single location that
   decides the voyage.
@@ -552,7 +552,7 @@ Assemble what is actually established:
 
 ★ **The honest justification for the 72 h cap is (4), not (1)–(3): 72 h is where
 the evidence stops, not where the physics stops.** That is a *stronger* argument
-than a fabricated error curve, and it is the one to give a judge. Beyond 72 h the
+than a fabricated error curve, and it is the one to give a reviewer. Beyond 72 h the
 system would be drawing a circle whose radius nothing published can bound. ADR-025's
 companion rule — show last-observed USNIC positions with their date and draw no
 projection beyond 72 h — is exactly the right response to an unbounded quantity.
@@ -572,7 +572,7 @@ collect the momentum of the wind over an area much larger than the iceberg
 proper**. C-7's mean observed velocity was 0.11 m s⁻¹.
 
 **This is a hard boundary on `models/iceberg/drift.py`'s validity, and it lands
-precisely on this project's decision point.** `docs/ISIH_RESULTS.md` measures
+precisely on this project's decision point.** `docs/PROTOTYPE_RESULTS.md` measures
 Bharati's own cell as closed to MV *Vasiliy Golovnin* on **23 of 31 December 2019
 days at an 80 % concentration limit**, with the raw product reading 87–99 % on
 most closed days. **At those concentrations a berg is not drifting in water — it
@@ -857,7 +857,7 @@ This is the part that decides what the demo may claim.
 
 ### 6.1 The voyage, measured
 
-From `docs/ISIH_RESULTS.md`: Cape Town (33.9 °S, 18.4 °E) → Bharati (69.4 °S,
+From `docs/PROTOTYPE_RESULTS.md`: Cape Town (33.9 °S, 18.4 °E) → Bharati (69.4 °S,
 76.2 °E), **5,813 km**, PolarRoute 1.1.11 on real NSIDC ice. STATIC arm: 8.58 d
 planned, **8.61 d actual**. DAILY arm: 9.00 d with 9.6 h blocked.
 
@@ -888,7 +888,7 @@ destination on arrival day is climatology wearing a forecast's clothes.
 
 ### 6.3 The project's own data already demonstrates this
 
-`isih/destination_window.py`'s docstring records the case directly:
+`dakshin/destination_window.py`'s docstring records the case directly:
 
 > *"On 1 December 2019 the ice at Bharati looks passable, so a planner commits to
 > it. Nine days later the same cell is 96 % ice and closed to this vessel."*
@@ -900,7 +900,7 @@ information horizon, and naming it as such is a stronger result than pretending
 to have predicted it.
 
 This also explains the null result the project honestly reports in
-`docs/ISIH_RESULTS.md` §3, where the STATIC arm was not punished (regret 0.03
+`docs/PROTOTYPE_RESULTS.md` §3, where the STATIC arm was not punished (regret 0.03
 days) and DAILY re-planning was *slower*. Of course it was: **the tier with the
 most forecast skill covers the leg with the least to decide.** About 5,800 km of
 the 5,813 km route carries mean 6 % ice. There is nothing to optimise in the
@@ -912,7 +912,7 @@ horizon at departure.
 
 | Decision | Taken when | Tier | Evidence it can rest on |
 |---|---|---|---|
-| Sail / don't sail; departure date | weeks–months out | **strategic / long-range** | Climatology and the historical record only. `docs/ISIH_RESULTS.md`: Bharati's cell closed **74.2 %** of December 2019 days at an 80 % limit while the approach 100 km north was open **31/31**. That is a climatological statement and it is the right kind of claim at this tier. |
+| Sail / don't sail; departure date | weeks–months out | **strategic / long-range** | Climatology and the historical record only. `docs/PROTOTYPE_RESULTS.md`: Bharati's cell closed **74.2 %** of December 2019 days at an 80 % limit while the approach 100 km north was open **31/31**. That is a climatological statement and it is the right kind of claim at this tier. |
 | Great-circle vs ice-avoiding track across the Southern Ocean | at departure | **medium-range** | GFS wind to D+8–10, GFS-Wave Hs to D+5, CMEMS currents/SIC to D+9. Genuine forecast skill, but **little to decide** — 6 % mean ice. |
 | Speed / routing for weather avoidance in the Forties and Fifties | rolling, 1–5 days ahead | **short to medium** | Hs normalised RMSE < 20 % to day 5; wind ACC useful to day 8–10; both **under-predicting strong SH wind** (§4.2). |
 | **Approach or hold at the fast-ice edge** | **3–7 days before arrival, from near the ice** | **short to medium** | SOIPS-class SIC skill: RMSE 0.16 at 72 h, 0.19 at 168 h. Ice drift MAE 2.1 cm s⁻¹. This is where a forecast actually earns its keep. |
@@ -955,7 +955,7 @@ not a WMO tier and is labelled accordingly.
 
 | Tier | Bounds | Bound comes from | Sea ice | Icebergs | Weather | Ocean | **Permitted assertion** |
 |---|---|---|---|---|---|---|---|
-| **Nowcast** | **0–2 h**, extended to **now − observation latency** in practice | WMO-No. 485 App. 1.1; latencies: OSI SAF OSI-401-b **5 h**; CMEMS SEAICE L4 NRT **daily 05:00 UTC**, 62.5 km, drift vectors spanning **2 days** | Observed SIC, QA-masked (`isih/ice_quality.py`). Reference accuracy **~10 %** mid-winter, **0–100 % at coast and ice edge** (NSIDC C-ATBD Table 10) | Last-observed USNIC position, **dated**. Floor **10 NM / 18.5 km** long axis | Observed wind, pressure. **Visibility: observation only, no forecast** | Analysis fields | **"This is what was observed, at this time, with this uncertainty."** Never call it a forecast. Never call a 0.0 coastal cell open water. |
+| **Nowcast** | **0–2 h**, extended to **now − observation latency** in practice | WMO-No. 485 App. 1.1; latencies: OSI SAF OSI-401-b **5 h**; CMEMS SEAICE L4 NRT **daily 05:00 UTC**, 62.5 km, drift vectors spanning **2 days** | Observed SIC, QA-masked (`dakshin/ice_quality.py`). Reference accuracy **~10 %** mid-winter, **0–100 % at coast and ice edge** (NSIDC C-ATBD Table 10) | Last-observed USNIC position, **dated**. Floor **10 NM / 18.5 km** long axis | Observed wind, pressure. **Visibility: observation only, no forecast** | Analysis fields | **"This is what was observed, at this time, with this uncertainty."** Never call it a forecast. Never call a 0.0 coastal cell open water. |
 | **Short-range** | **12–72 h** | WMO-No. 485 App. 1.1 | SOIPS Antarctic RMSE **0.15 → 0.16**; CMEMS ACC day-3 RMSD **10 %**; project's own **0.0465 → 0.0720**, +18.5 → +24.9 % over persistence | **WDE17 projection valid here and only here.** Radius = measured p90 LOO error — **not yet measured** | Hs RMSE **0.37 m** day 1; ACC ≫ 0.6 | Currents to **≈ 40 km / 3 d** separation (inferred) | **Full operational confidence.** Go/no-go on the last 100 km. Convergence-rate timing of the open-water band. Iceberg CPA. This is the tier that changes a route. |
 | **Medium-range** | **72–240 h**, product-limited to **D+9** | WMO-No. 485 App. 1.1; **D+9 measured in this repo**, 2026-09-07 | SOIPS **0.17 (120 h) → 0.19 (168 h)**; project's own **0.0938 → 0.0968**, +22.1 → +30.6 % over persistence | **No projection.** Last-observed positions with dates | Hs normalised RMSE **< 20 % to day 5** (altimeter, global); ACC 0.6 at **day 8–9 CTRL / day 10 EM** | SST day-3 RMSD **0.6 °C**; currents unvalidated below 60 °S | **Planning confidence with stated uncertainty.** Track selection, weather avoidance, approach-versus-hold. Show the ensemble spread or the conformal band, never a single line. |
 | **Extended-range** | **10–30 days** | WMO-No. 485 App. 1.1 | **Nothing obtainable at corridor scale.** Basin-scale ice edge: ECMWF ≈ 38 d, UKMO ≈ 25 d vs climatology (Gao et al. 2024) — and Antarctic skill is **30 % below Arctic** (Zampieri et al. 2019), worse in **East** Antarctica, which is us | Nothing | Nothing deterministic | Nothing | **Climatology only, labelled climatology.** The correct display is a distribution, not a field. |
@@ -975,7 +975,7 @@ as one-liners:
    analysis day. Verified in repo.
 2. ★ **The harvest box does not match the training corridor.**
    `scripts/harvest_cmems.sh` sets `MIN_LAT=-78 MAX_LAT=-55 MIN_LON=0
-   MAX_LON=80`; `docs/ISIH_RESULTS.md` states the corridor as **48–80 °S,
+   MAX_LON=80`; `docs/PROTOTYPE_RESULTS.md` states the corridor as **48–80 °S,
    5 °W–85 °E**. The harvest is clipped on all four sides — it is missing
    48–55 °S (the northern ice-edge approach), 78–80 °S, 5 °W–0 °E and
    80–85 °E. Since this archive **cannot be back-filled**, every day the boxes

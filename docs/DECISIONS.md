@@ -1,4 +1,4 @@
-# Decision Log — SIH26059
+# Decision Log — Dakshin
 
 ADR-style. One paragraph each: what was decided, what else was considered, why this won.
 Full reasoning lives in `ML_ARCHITECTURE.md` and `ARCHITECTURE.md`; this is the index.
@@ -28,7 +28,7 @@ over the brief's suggested "cached tiles and recommendations."
 
 **ADR-003 — One codebase, two run modes (`MODE=shore|vessel`).**
 A single FastAPI application switched by config, not two separate products. *Considered:* separate
-shore service and vessel client. *Why:* roughly halves build time on an SIH schedule, guarantees
+shore service and vessel client. *Why:* roughly halves build time on a short schedule, guarantees
 the routing behaviour is identical in both places, and is architecturally truthful — the routing
 and inference code genuinely is the same on both sides. Only ingestion/training jobs and freshness
 metadata differ.
@@ -104,7 +104,7 @@ zero compilation; complete mesh → vessel → Dijkstra → smoothing pipeline i
 dataloader registry (`amsr`, `gebco`, `era5_wind`, `era5_sig_wave_height`, `duacs_currents`) that
 almost exactly matches the sources independently confirmed live in `DATASET.md`. Reimplementing
 would forfeit non-uniform meshing, physics-informed smoothing and the vessel-performance framework
-while inviting "why did you ignore BAS's own tool?" from a domain-literate judge.
+while inviting "why did you ignore BAS's own tool?" from a domain-literate reviewer.
 
 **ADR-010 — Inject iceberg hazard through PolarRoute's `excluded_zones` hook; do not fork.**
 This closes the open question flagged in `GAP_ANALYSIS.md` §3. *Checked in source:* PolarRoute has
@@ -304,7 +304,7 @@ Also committed here: the **GBM→Wagner fallback trigger** is a frozen per-featu
 (training min/max ± 10 % of range) plus a p99-of-training-residual correction cap, serialised with
 the weights and unit-tested to fire — because an unspecified trigger silently never fires.
 
-**ADR-026 — Depth margin is conditional on bathymetric provenance.** *(Corrected 2026-09-07: this ADR was written in the present tense and is DESIGNED, not built. Grep for GEBCO, bathymetry or TID across isih/ and models/ returns zero hits, every mesh cell reports null elevation, and the vessel's min_depth constraint is therefore inert — see isih/gates.py::chart_gate, which returns UNKNOWN and says so.)* The design is that GEBCO's TID grid be ingested
+**ADR-026 — Depth margin is conditional on bathymetric provenance.** *(Corrected 2026-09-07: this ADR was written in the present tense and is DESIGNED, not built. Grep for GEBCO, bathymetry or TID across dakshin/ and models/ returns zero hits, every mesh cell reports null elevation, and the vessel's min_depth constraint is therefore inert — see dakshin/gates.py::chart_gate, which returns UNKNOWN and says so.)* The design is that GEBCO's TID grid be ingested
 as a mesh layer; minimum under-keel clearance is 20 m in surveyed cells and max(50 m, 3 × draft) in
 **predicted** (unsurveyed) cells, with a "predicted bathymetry" overlay in the UI. *Considered:*
 treating GEBCO depth uniformly, as the router did. *Why:* much of the Antarctic corridor's GEBCO
@@ -319,6 +319,6 @@ pack ships the raw field labelled `uncorrected` and the declared skill horizon s
 passes, packed CMEMS becomes the routed field and the model is demoted to the §4 cross-check role.
 *Considered:* benchmarking against damped anomaly persistence alone, as revision 1 did.
 *Why:* `COMPETITIVE_ANALYSIS.md` §2 called CMEMS "the bar to beat" in our own words and revision 1
-then quietly benchmarked something weaker — a direct internal contradiction a domain-literate judge
+then quietly benchmarked something weaker — a direct internal contradiction a domain-literate reviewer
 would find. This ADR stands even if ADR-018's gate fails, because a system that can pack CMEMS must
 justify shipping anything else instead.

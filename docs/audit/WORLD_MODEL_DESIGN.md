@@ -1,8 +1,8 @@
 # Synthetic Southern Ocean world model — design v1
 
 **Status:** DESIGN. Not implemented. Written 2026-09-07 on branch `v3-compliance`.
-**Supersedes:** the untracked draft `isih/sim/noise.py` + `isih/sim/fields.py` (§13 says exactly what survives).
-**Audience:** whoever implements `isih/sim/`. Every number in this document is meant to be typed into `isih/sim/params.py` unchanged; every formula is meant to be coded as written.
+**Supersedes:** the untracked draft `dakshin/sim/noise.py` + `dakshin/sim/fields.py` (§13 says exactly what survives).
+**Audience:** whoever implements `dakshin/sim/`. Every number in this document is meant to be typed into `dakshin/sim/params.py` unchanged; every formula is meant to be coded as written.
 
 Tags used on numbers: **Measured** (computed from data in this repo, method stated) · **Sourced** (literature/textbook value the author is confident of) · **UNVERIFIED** (plausible order of magnitude; verify before the finale — all listed in §14 and in `docs/backlog.md`).
 
@@ -32,7 +32,7 @@ Master prompt §27 governs the labelling: this is **SIMULATED INPUT** — "techn
 | Time | `t` float seconds since `epoch` (UTC datetime in the scenario). `doy` and `d` (days since 1 Dec of the season) derive from `epoch + t`. The model never reads the wall clock. |
 | Vectors | `(u, v)` = eastward, northward, m/s. Wind and wave **direction FROM**, degrees true: `dir = atan2(-u, -v)` in degrees mod 360. Current direction **TOWARD** ("sets"). |
 | Pressure | Pa internally, hPa at the API. |
-| Ice | fraction 0–1 internally, integer percent at the API (matches `isih/demo/data.py:day_field`). |
+| Ice | fraction 0–1 internally, integer percent at the API (matches `dakshin/demo/data.py:day_field`). |
 | Hemisphere | `f = 2Ω sin φ < 0`. Flow is **clockwise** around a low, anticlockwise around a high. Surface wind is turned **clockwise** from geostrophic (toward low pressure). Free-drifting ice and Ekman transport go to the **left** of the wind. Buys Ballot: back to the wind, low is on your **right**. |
 | Randomness | Only at world construction, only from `hashlib.blake2b(seed, tag, index)`. Never from `numpy.random` (§3.1 says why). |
 | Land | `NaN` over land in every field; API serialises as `null`. |
@@ -40,13 +40,13 @@ Master prompt §27 governs the labelling: this is **SIMULATED INPUT** — "techn
 
 ---
 
-## 2. Module layout — `isih/sim/`
+## 2. Module layout — `dakshin/sim/`
 
 | Module | One-line purpose |
 |---|---|
 | `params.py` | Every constant in this document, nothing else. `SIM_VERSION = blake2b(file bytes)[:12]` is stamped into every API response so a screenshot names the physics that produced it. |
 | `hashing.py` | `uniform(seed, tag, index, n)` → stable `[0,1)` draws from blake2b; `normal` via Box–Muller. |
-| `geometry.py` | Metric factors, Coriolis with the guard, coast-latitude table, distance-to-coast, land mask from `isih/figures/coastline.json`, domain checks. |
+| `geometry.py` | Metric factors, Coriolis with the guard, coast-latitude table, distance-to-coast, land mask from `dakshin/figures/coastline.json`, domain checks. |
 | `spectral.py` | `PlaneWaves` (seeded Fourier modes in `(λ, φ, t)` with exact gradients) and `Blobs` (moving Gaussians with life cycles and exact gradients). The only two shape primitives in the model. |
 | `synoptic.py` | Climatological MSLP, hash-indexed cyclone/anticyclone schedules, residual field; `mslp_grad()`. |
 | `wind.py` | Geostrophic → 10 m: boundary-layer factor and turning, katabatic term, cap. |
@@ -80,7 +80,7 @@ Cost: a few thousand Python-level hash calls at world construction (< 10 ms), ze
 ### 3.2 Geometry
 
 - `coriolis(lat_deg)`: `f = 2Ω sin φ`, `Ω = 7.2921e-5 s⁻¹`. **Guard:** assert `φ ≤ -20°` (`|f| ≥ 5.0e-5`), raise `DomainError` otherwise. With that floor, `1/(ρ_a |f|) ≤ 1.6e4`, so a 1 hPa/100 km gradient can never produce more than 16 m/s geostrophic wind — nothing explodes, and nothing is clamped silently. In the 26°S–78°S domain `|f| ≥ 6.4e-5`, so the guard never fires in normal use; it exists for the day someone widens the domain.
-- `coast_lat(lon_deg)`: linear interpolation of the table below (2° knots, 9°E…87°E). **Measured** from `isih/figures/coastline.json` (Natural Earth 1:50m, simplified 0.02°): northernmost land-ring vertex per 2° bin south of 60°S; the 81°E gap is the mean of its neighbours.
+- `coast_lat(lon_deg)`: linear interpolation of the table below (2° knots, 9°E…87°E). **Measured** from `dakshin/figures/coastline.json` (Natural Earth 1:50m, simplified 0.02°): northernmost land-ring vertex per 2° bin south of 60°S; the 81°E gap is the mean of its neighbours.
 
 ```
 lon:  9     11     13     15     17     19     21     23     25     27     29     31     33     35     37     39     41     43     45     47
@@ -225,7 +225,7 @@ T_F = 0.0 + Σ_F ΔT_F · ½[1 + tanh((φ − φ_F(λ))/w_T,F)] + 0.35 · max(0,
 
 #### 4.4.1 The edge climatology — fitted to real CDR data at design time (no runtime data)
 
-**Measured.** From the NOAA/NSIDC CDR daily 25 km files already in `isih/data/nsidc_sic` (`SOURCE_ICE` in `isih/demo/data.py`), QA on, seasons 2018-19 and 2019-20 pooled, daily 1 Dec–28 Feb (≈180 days per bin), 4° longitude bins. Edge = northernmost 0.25° latitude bin whose bin-mean SIC ≥ 0.15 for three consecutive bins southward (rejects detached floes). Per bin, least-squares fit of a logistic in days-since-1-Dec `d`:
+**Measured.** From the NOAA/NSIDC CDR daily 25 km files already in `dakshin/data/nsidc_sic` (`SOURCE_ICE` in `dakshin/demo/data.py`), QA on, seasons 2018-19 and 2019-20 pooled, daily 1 Dec–28 Feb (≈180 days per bin), 4° longitude bins. Edge = northernmost 0.25° latitude bin whose bin-mean SIC ≥ 0.15 for three consecutive bins southward (rejects detached floes). Per bin, least-squares fit of a logistic in days-since-1-Dec `d`:
 
 ```
 φ_clim(λ, d) = a + (b − a) · σ((d − m)/w),      σ(z) = 1/(1 + e^{−z})
@@ -374,7 +374,7 @@ grid ──geometry──► f, cos φ, d_coast, land mask, T_F(λ,φ)          
 [9]  (u10 @ t, u10 @ t−6h, s, SIC, swell(t))                 ──► Hs, Tp, dir
 [10] (T2m, T_sfc, u10, P−P_clim, SIC, d_c)                   ──► visibility
 [11] (u_c, u10, SIC) ──Heun, memoised──► berg tracks         ──► berg_state(t), regime R
-[12] along_track(route waypoints × ETA)                      ──► gates / route health   (outside isih/sim)
+[12] along_track(route waypoints × ETA)                      ──► gates / route health   (outside dakshin/sim)
 ```
 There is no cycle: the ice uses the wind, the thermodynamics use the ice, the wind never uses either (the stability refinement in §4.2 is deferred precisely to keep it that way). `World.fields()` evaluates once in this order and shares every intermediate; per-field endpoints call the same code path with a subset flag.
 
@@ -396,12 +396,12 @@ There is no cycle: the ice uses the wind, the thermodynamics use the ice, the wi
 ## 7. Seed, scenario, API surface
 
 ### 7.1 Where the seed lives
-`isih/sim/scenarios/<id>.json` (committed):
+`dakshin/sim/scenarios/<id>.json` (committed):
 ```json
 { "id": "demo-season", "seed": 26059, "epoch": "2026-12-01T00:00:00Z", "horizon_days": 60, "bergs": 24,
   "notes": "seed chosen because berg 7 crosses leg 31 on day 9 and a 968 hPa low passes 55S 40E on day 4; nothing is scripted" }
 ```
-Resolution order: `?seed=` query (exploration) → `ISIH_SCENARIO=<path>` env → the committed default. `World` instances are cached per `(seed, epoch)` in a small LRU. Every response carries `"world": {"seed", "epoch", "t", "sim_version"}` so any screenshot is reproducible from its own caption.
+Resolution order: `?seed=` query (exploration) → `DAKSHIN_SCENARIO=<path>` env → the committed default. `World` instances are cached per `(seed, epoch)` in a small LRU. Every response carries `"world": {"seed", "epoch", "t", "sim_version"}` so any screenshot is reproducible from its own caption.
 
 ### 7.2 Endpoints (contract only)
 - `GET /api/world/fields?t=<hours|ISO>&bbox=&nx=&ny=&which=mslp,wind,waves,current,sic,sst,t2m,vis` → axes + per-field grids + world stamp.
@@ -414,7 +414,7 @@ Resolution order: `?seed=` query (exploration) → `ISIH_SCENARIO=<path>` env �
 40 000 points × 10 fields as JSON lists costs more than the physics. Serve grids as base64 `float32` (or `uint8` for SIC %) with `nx, ny, lat0, dlat, lon0, dlon`; the chart decodes to a `Float32Array`. `null` for land via a separate `uint8` mask.
 
 ### 7.4 Provenance label (required change)
-`isih/demo/static/provenance.js` currently marks `chart.ice / wind / wave / current` as **replay** ("real physics or real data, advanced to demo time"). This world has no real data in it. Add a fourth kind, `synthetic` (hollow dot), with why-text `"physics-based synthetic environment, seed N — real equations, synthetic initial state; SIMULATED INPUT, not a forecast"`. That is master prompt §27's label, verbatim in spirit, and it pre-empts the "so what else is fake" question the run-of-show warns about.
+`dakshin/demo/static/provenance.js` currently marks `chart.ice / wind / wave / current` as **replay** ("real physics or real data, advanced to demo time"). This world has no real data in it. Add a fourth kind, `synthetic` (hollow dot), with why-text `"physics-based synthetic environment, seed N — real equations, synthetic initial state; SIMULATED INPUT, not a forecast"`. That is master prompt §27's label, verbatim in spirit, and it pre-empts the "so what else is fake" question the run-of-show warns about.
 
 ---
 
@@ -455,7 +455,7 @@ Static per-grid work (`T_F`, `f`, `cos φ`, `d_c`, land mask) is cached and cost
 
 ---
 
-## 10. Test plan — `isih/sim/test_sim_properties.py`
+## 10. Test plan — `dakshin/sim/test_sim_properties.py`
 
 All tests use `World(seed=26059, epoch=2026-12-01)` and a 120×120 grid unless stated; "over a month" = 120 samples at 6 h.
 
@@ -523,11 +523,11 @@ All tests use `World(seed=26059, epoch=2026-12-01)` and a 120×120 grid unless s
 ## 12. Function signatures
 
 ```python
-# isih/sim/hashing.py
+# dakshin/sim/hashing.py
 def uniform(seed: int, tag: str, index: int, n: int = 1) -> np.ndarray          # float64 in [0, 1), shape (n,)
 def normal(seed: int, tag: str, index: int, n: int = 1) -> np.ndarray
 
-# isih/sim/geometry.py
+# dakshin/sim/geometry.py
 R_EARTH: float = 6_371_000.0
 OMEGA: float = 7.2921e-5
 class DomainError(ValueError): ...
@@ -538,7 +538,7 @@ def coast_slope(lon_deg) -> np.ndarray                                          
 def distance_to_coast_m(lat_deg, lon_deg) -> np.ndarray                           # +offshore
 def land_mask(lat2d: np.ndarray, lon2d: np.ndarray) -> np.ndarray                 # bool; cached per Grid by World
 
-# isih/sim/spectral.py
+# dakshin/sim/spectral.py
 @dataclass(frozen=True)
 class PlaneWaves:
     m: np.ndarray; l: np.ndarray; omega: np.ndarray; phase: np.ndarray; amp: np.ndarray
@@ -555,25 +555,25 @@ class Blobs:
     def alive(self, t: float, threshold: float = 0.002) -> "Blobs"
     def value_grad(self, lam, phi, t: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]
 
-# isih/sim/synoptic.py
+# dakshin/sim/synoptic.py
 def climatological_mslp(lat_deg) -> tuple[np.ndarray, np.ndarray]                # (hPa, hPa/deg)
 def storm_slots(seed: int, t: float, kind: Literal["low", "high"]) -> Blobs       # hash-indexed calendar, alive subset
 def mslp_grad(world: "World", lam, phi, t: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]   # Pa, Pa/m, Pa/m
 
-# isih/sim/wind.py
+# dakshin/sim/wind.py
 def geostrophic(dpdx, dpdy, lat_deg) -> tuple[np.ndarray, np.ndarray]
 def boundary_layer(ug, vg, lat_deg, alpha: float = 0.70, turn_deg: float = 15.0) -> tuple[np.ndarray, np.ndarray]
 def katabatic(world, lat_deg, lon_deg, t: float) -> tuple[np.ndarray, np.ndarray]
 def wind10(world, lat_deg, lon_deg, t: float, *, grad=None) -> tuple[np.ndarray, np.ndarray]
 
-# isih/sim/ocean.py
+# dakshin/sim/ocean.py
 def front_latitude(world, name: str, lon_deg) -> np.ndarray                       # with meanders, degrees
 def front_slope(world, name: str, lon_deg) -> np.ndarray                          # rad/rad
 def streamfunction_grad(world, lam, phi, t: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]   # (psi, dpsi/dx, dpsi/dy)
 def current(world, lat_deg, lon_deg, t: float) -> tuple[np.ndarray, np.ndarray]
 def sst_frontal(world, lat_deg, lon_deg) -> np.ndarray                            # °C, static
 
-# isih/sim/ice.py
+# dakshin/sim/ice.py
 class SeasonError(ValueError): ...
 def days_since_dec1(world, t: float) -> float                                      # raises SeasonError outside [-5, 100]
 def edge_climatology(lon_deg, d: float) -> np.ndarray                             # fitted table, coast floor applied
@@ -585,19 +585,19 @@ def signed_distance_m(edge: EdgeTable, lat_deg, lon_deg) -> np.ndarray          
 def miz_scale_m(edge: EdgeTable, d: float) -> np.ndarray                           # W(λ)
 def sic(world, lat_deg, lon_deg, t: float, *, edge=None, u10=None, v10=None) -> np.ndarray
 
-# isih/sim/thermo.py
+# dakshin/sim/thermo.py
 def sst(world, lat_deg, lon_deg, t: float, *, s=None, sic_=None) -> np.ndarray
 def t2m(world, lat_deg, lon_deg, t: float, *, sst_, sic_, ug, vg) -> np.ndarray
 def visibility_m(world, lat_deg, lon_deg, t: float, *, t2m_, t_sfc, u10, v10, p_anom_pa, sic_) -> np.ndarray
 
-# isih/sim/waves.py
+# dakshin/sim/waves.py
 @dataclass(frozen=True)
 class WaveState: hs: np.ndarray; tp: np.ndarray; dir_from_deg: np.ndarray; hs_windsea: np.ndarray; hs_swell: np.ndarray
 def fully_developed_hs(u10_speed) -> np.ndarray
 def fetch_limited_hs(u10_speed, fetch_m) -> np.ndarray
 def waves(world, lat_deg, lon_deg, t: float, *, u10, v10, u10_prev, v10_prev, s, sic_, c_pack) -> WaveState
 
-# isih/sim/bergs.py
+# dakshin/sim/bergs.py
 @dataclass(frozen=True)
 class BergPopulation: ids: np.ndarray; length_m: np.ndarray; width_m: np.ndarray; lat0: np.ndarray; lon0: np.ndarray
 @dataclass(frozen=True)
@@ -608,7 +608,7 @@ def seed_population(world, n: int) -> BergPopulation
 def integrate_tracks(world, pop: BergPopulation, t_end: float, dt_s: float = 3600.0) -> BergTracks
 def berg_state(world, t: float) -> BergState
 
-# isih/sim/world.py
+# dakshin/sim/world.py
 @dataclass(frozen=True)
 class Grid:
     lat0: float; lat1: float; lon0: float; lon1: float; ny: int; nx: int
@@ -628,7 +628,7 @@ class World:
 
 ---
 
-## 13. What survives from the draft `isih/sim/{noise,fields}.py`, and what is replaced
+## 13. What survives from the draft `dakshin/sim/{noise,fields}.py`, and what is replaced
 
 Keep (rewritten in place): the Fourier-with-exact-gradient idea (→ `PlaneWaves`, now hashed phases, radian `(λ, φ)` wavenumbers, physical `ω`, product-rule envelope); the sign conventions and the clockwise BL turning in `wind()`; the PM constant `0.0246 U²`; the "eddies are a streamfunction" idea (→ the whole current is one); the framing of fog as air–sea temperature difference.
 
@@ -638,4 +638,4 @@ Replace: `np.random.default_rng` streams (§3.1); the dimensionless "drift" freq
 
 ## 14. UNVERIFIED register (also one-lined in `docs/backlog.md`)
 
-Front positions ±1.5°; DJF zonal-mean MSLP ±3 hPa; katabatic mean 7 m/s; eddy drift 0.04 m/s; Prydz gyre sense; polynya sites other than Cape Darnley; fast-ice widths and mid-January break-out; `τ_E = 3 d`; summer pack surface −5.8 °C; `r = 0.6`, −1 °C air–sea offset; dew-point depression 1.5 °C; MIZ summer fog 20–40 %; swell 2.5–3.5 m; `F_eff = 600 km`; berg size decay. The **Measured** items — coast table, edge climatology, MIZ widths, interior SIC, edge wobble — are reproducible from the two scripts run for this document against `isih/data/nsidc_sic` and `isih/figures/coastline.json`; the implementer should commit those scripts under `isih/sim/fit/` so the table has provenance in code.
+Front positions ±1.5°; DJF zonal-mean MSLP ±3 hPa; katabatic mean 7 m/s; eddy drift 0.04 m/s; Prydz gyre sense; polynya sites other than Cape Darnley; fast-ice widths and mid-January break-out; `τ_E = 3 d`; summer pack surface −5.8 °C; `r = 0.6`, −1 °C air–sea offset; dew-point depression 1.5 °C; MIZ summer fog 20–40 %; swell 2.5–3.5 m; `F_eff = 600 km`; berg size decay. The **Measured** items — coast table, edge climatology, MIZ widths, interior SIC, edge wobble — are reproducible from the two scripts run for this document against `dakshin/data/nsidc_sic` and `dakshin/figures/coastline.json`; the implementer should commit those scripts under `dakshin/sim/fit/` so the table has provenance in code.

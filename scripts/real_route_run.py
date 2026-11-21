@@ -7,7 +7,7 @@ Runs the unmodified sim Router (Dijkstra, arrival-time costs, land + IBCSO
 depth blocking) with RealWorld — real GLO12 ice, real CMEMS waves, real ECMWF
 wind — for one archived cycle, on the corridor segment the data covers
 (south of 55S; there is no wave/wind harvest north of the box). Writes
-isih/figures/real_route.json with worst_hs/worst wind taken from real files
+dakshin/figures/real_route.json with worst_hs/worst wind taken from real files
 and the weather gate's state.
 """
 from __future__ import annotations
@@ -21,13 +21,13 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "isih"))
+sys.path.insert(0, str(ROOT / "dakshin"))
 
 from gates import weather_gate  # noqa: E402
 from real_world import RealWorld  # noqa: E402
 from sim.router import Router, VesselModel  # noqa: E402
 
-OUT = ROOT / "isih" / "figures" / "real_route.json"
+OUT = ROOT / "dakshin" / "figures" / "real_route.json"
 START = (-55.5, 45.0)      # corridor entry, on the Cape Town-Bharati line
 BHARATI = (-69.4, 76.2)
 

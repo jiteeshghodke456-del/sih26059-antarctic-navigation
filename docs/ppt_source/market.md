@@ -1,4 +1,4 @@
-# Market, Startup Path and Money — SIH 26059
+# Market, Startup Path and Money — Dakshin
 
 Draft for §39 / §40 of the master prompt. Written 2026-09-07.
 
@@ -37,7 +37,7 @@ The plan is:
 
 Realistic ceiling: a **sustainable specialist company of eight to twelve
 people**, not a venture outcome. That is what this market supports. Saying so is
-part of the pitch, because the alternative is a hockey stick a judge can
+part of the pitch, because the alternative is a hockey stick a reviewer can
 disprove in one question.
 
 ---
@@ -62,7 +62,7 @@ and in support of public policy," backed by ESA and the European Commission.
 
 Copernicus Marine data is free. NSIDC data is free. **The raw ice field is not a
 product anyone can sell.** Any plan that involves charging for satellite ice
-concentration is dead on arrival, and a judge who knows the field will say so.
+concentration is dead on arrival, and a reviewer who knows the field will say so.
 
 ### 1.2 The one real polar-specialist vendor — Drift+Noise / IcySea
 
@@ -288,7 +288,7 @@ Every element below is from the NCPOR charter document. **[SOURCED]**
   Environmental Protocol an ASMA needs no entry permit, but its Management Plan
   governs the activity — which here means landing, small-boat and helicopter
   operations. **[SOURCED, our own analysis of the Antarctic Treaty Secretariat
-  register]** (`isih/protected_areas.py`, `isih/figures/protected_areas.json`,
+  register]** (`dakshin/protected_areas.py`, `dakshin/figures/protected_areas.json`,
   source `apa_shape_2024.zip`)
 
 ### 3.2 What a closed window costs — measured, not asserted
@@ -302,7 +302,7 @@ against this vessel's actual capability:
 | Bharati approach, 100 km north | 31 | 0 | 0% |
 | **Maitri coast approach** | 31 | **31** | 100% |
 
-**[SOURCED — our own, reproducible]** `isih/figures/destination_window.json`
+**[SOURCED — our own, reproducible]** `dakshin/figures/destination_window.json`
 
 The first closure at Bharati was on **2 December — the second day of the month.**
 
@@ -503,7 +503,7 @@ persistence at every horizon from 1 to 7 days (+18.5% to +30.6%), a tested
 Wagner–Dell–Eisenman iceberg drift implementation, a working demo on real
 December 2019 satellite ice and real PolarRoute routes, a daily CMEMS harvest on
 GitHub Actions, and the protected-areas legal layer.
-**[SOURCED — ours]** `docs/ISIH_RESULTS.md`, `docs/TRUE_CLAIMS.md`
+**[SOURCED — ours]** `docs/PROTOTYPE_RESULTS.md`, `docs/TRUE_CLAIMS.md`
 
 **Who it is for.** NCPOR scientists and the Indian polar research community. Not
 mariners yet.
@@ -591,7 +591,7 @@ evidence. All three are attractive on a slide and dead in the field.
 
 ### 7.1 First, the ceiling of the obvious model, because it is the wrong model
 
-Take the per-vessel subscription that every hackathon deck proposes.
+Take the per-vessel subscription that every early-stage deck proposes.
 
 Ice-constrained hulls, worldwide, our estimate:
 
@@ -615,7 +615,7 @@ business.** It supports about five people. Which is, to the person, the size
 Drift+Noise reached after twelve years with *Polarstern* and *Nuyina* as
 customers.
 
-Put that number on the slide. A judge who has done this arithmetic will trust
+Put that number on the slide. A reviewer who has done this arithmetic will trust
 everything else we say afterwards.
 
 ### 7.2 So the money comes from programme contracts

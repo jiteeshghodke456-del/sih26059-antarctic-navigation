@@ -1,4 +1,4 @@
-# Master audit — PS-26059 Antarctic Navigation Decision Support System
+# Master audit — Dakshin Antarctic Navigation Decision Support System
 
 **Date:** 7 September 2026 · **Branch:** `v3-compliance` · **Method:** original
 master prompt → compressed six-stage bundle → repository, compared by reading and
@@ -149,23 +149,23 @@ incompletely, or claimed beyond what was built**.
 | Requirement | Status | Evidence |
 |---|---|---|
 | §13 ALERTING PHILOSOPHY | **Absent from code entirely.** No P1/P2/P3 model, no alert object, none of the nine mandated fields | every `p1`/`p2` match in the repo is a haversine variable or a draw.io node id |
-| §14 SENSOR / BRIDGE INTEGRATION | **Absent.** No NMEA parser, no AIS ingest, no GNSS reader. `execution_gate(live_sensors=False)` is hardcoded at its only call site | `isih/gates.py:285-293`, `isih/demo/decision_service.py:161` |
-| §9 WEATHER / OCEAN | **Absent from the router.** PolarRoute's wave-added-resistance function exists in the library and is **never called** — dead code. The weather gate returns UNKNOWN unconditionally | `isih/gates.py:266-274`, `isih/ice_meshes.py:50` |
-| §8 ICEBERG MODEL | **Half-built.** Drift *velocity* physics correct and tested (23/23); forward trajectory, uncertainty propagation, and comparison against the ship's future track — the back half of §8 — do not exist. Not wired to the route or the map | `models/iceberg/drift.py`; `isih/demo/decision_service.py:192` "held but not wired into the route" |
-| §32 UI CONTENT STRUCTURE | **Two panels have no UI at all**: weather, hazard timeline. Route health shows `top_reasons[0]` only, not the mandated top three. Decision log captures the approval "why" but never renders it | `isih/demo/static/app.js:426-441, 548-567` |
-| §45 Challengeability | **API-only.** `assumptions[]`, `constraints[]`, `hazards_considered[]`, `recommendation_answers()` are served by `/api/decision` and referenced by **zero** lines of front-end code | `isih/decision.py:234-300` vs `grep` of `static/*.js` |
-| §45 Contingency triggers | `trigger_conditions` are **three hardcoded English sentences**, not data-derived thresholds, and appear only on the simulated `/future` page | `isih/demo/decision_service.py:213-217` |
+| §14 SENSOR / BRIDGE INTEGRATION | **Absent.** No NMEA parser, no AIS ingest, no GNSS reader. `execution_gate(live_sensors=False)` is hardcoded at its only call site | `dakshin/gates.py:285-293`, `dakshin/demo/decision_service.py:161` |
+| §9 WEATHER / OCEAN | **Absent from the router.** PolarRoute's wave-added-resistance function exists in the library and is **never called** — dead code. The weather gate returns UNKNOWN unconditionally | `dakshin/gates.py:266-274`, `dakshin/ice_meshes.py:50` |
+| §8 ICEBERG MODEL | **Half-built.** Drift *velocity* physics correct and tested (23/23); forward trajectory, uncertainty propagation, and comparison against the ship's future track — the back half of §8 — do not exist. Not wired to the route or the map | `models/iceberg/drift.py`; `dakshin/demo/decision_service.py:192` "held but not wired into the route" |
+| §32 UI CONTENT STRUCTURE | **Two panels have no UI at all**: weather, hazard timeline. Route health shows `top_reasons[0]` only, not the mandated top three. Decision log captures the approval "why" but never renders it | `dakshin/demo/static/app.js:426-441, 548-567` |
+| §45 Challengeability | **API-only.** `assumptions[]`, `constraints[]`, `hazards_considered[]`, `recommendation_answers()` are served by `/api/decision` and referenced by **zero** lines of front-end code | `dakshin/decision.py:234-300` vs `grep` of `static/*.js` |
+| §45 Contingency triggers | `trigger_conditions` are **three hardcoded English sentences**, not data-derived thresholds, and appear only on the simulated `/future` page | `dakshin/demo/decision_service.py:213-217` |
 | §18 VOYAGE PHASE MODEL | **Absent.** Not to be confused with the §4 passage workflow, which is built — different concept | no matches for the nine operational voyage phases |
 | §19 MISSION STOPPAGE / SCIENCE | **Absent** | — |
 | §21 ROUTE INTELLIGENCE / HISTORY | **Doc-only.** Researched in `research/RESEARCH_MATRIX.md` row 16; no incident database, no learning component | `docs/backlog.md:189` |
 | §23 / §28 OFFLINE + PENDRIVE | **Partial.** Genuinely zero runtime network calls — but that is a property, not a feature. No pack format, no delta sync, no bandwidth-mode switching, no stale-data flag | `docs/ARCHITECTURE.md:87-89` "specified but NOT enforced" |
 | §24 SHORE / EMERGENCY COMMS | **Absent.** No SOS, no station contact, no icebreaker roster | `docs/backlog.md:145` |
 | §27 "REAL DATA ONLY" | **Held** — no synthetic data in the product today | — |
-| §28 "CAPTAIN AUTHENTICATION" | **Distorted.** The sign-in screen states it is "identity, not access control, and there is no user store behind it." Any string is accepted | `isih/demo/static/index.html:31-33` |
-| §42 MLflow | **Backfill only.** `mlflow_backfill.py` republishes numbers already in `ISIH_RESULTS.md`; no training run was ever observed by MLflow | `isih/mlflow_backfill.py:1-40` |
+| §28 "CAPTAIN AUTHENTICATION" | **Distorted.** The sign-in screen states it is "identity, not access control, and there is no user store behind it." Any string is accepted | `dakshin/demo/static/index.html:31-33` |
+| §42 MLflow | **Backfill only.** `mlflow_backfill.py` republishes numbers already in `PROTOTYPE_RESULTS.md`; no training run was ever observed by MLflow | `dakshin/mlflow_backfill.py:1-40` |
 | 48A.4 POLARIS | **Deliberately not computed, and correctly so** — but the submitted deck claims otherwise (see §D.4) | `docs/research/POLARIS_APPLICABILITY.md:546` |
 | 48A.16 SOURCE CONFLICT | **Absent.** Nothing in the codebase compares two sources and flags disagreement | — |
-| 48A.19 BATHYMETRY / UKC / CATZOC | **Honestly absent.** `chart_gate()` looks for a bathymetry loader, finds none, returns UNKNOWN rather than a false PASS. This is the correct behaviour, not a defect | `isih/gates.py:93-132` |
+| 48A.19 BATHYMETRY / UKC / CATZOC | **Honestly absent.** `chart_gate()` looks for a bathymetry loader, finds none, returns UNKNOWN rather than a false PASS. This is the correct behaviour, not a defect | `dakshin/gates.py:93-132` |
 | 48A.20 RESCUE CONSEQUENCE | **Doc-only.** SAR-remoteness research exists (COMNAP 5–6 day best-case help arrival); no code | `research/RESEARCH_MATRIX.md` row 11 |
 | 48A.21 ICEBREAKER / ESCORT | **Doc-only** | `research/POLARIS_APPLICABILITY.md:115` |
 
@@ -239,14 +239,14 @@ is what judges read first.
 
 | Deck claim (slide) | Verdict | What the repo says |
 |---|---|---|
-| "Replaced the initial 80 % ice threshold with the POLARIS risk-index framework" (6) | **CONTRADICTED** | `isih/alternatives.py:77` `"max_ice_conc": 80, # same assumption, deliberately`. `POLARIS_APPLICABILITY.md:546`: "this project cannot compute a real POLARIS RIO today." `RUN_OF_SHOW.md:194` lists "Any POLARIS number for this vessel" under **Do not say** |
+| "Replaced the initial 80 % ice threshold with the POLARIS risk-index framework" (6) | **CONTRADICTED** | `dakshin/alternatives.py:77` `"max_ice_conc": 80, # same assumption, deliberately`. `POLARIS_APPLICABILITY.md:546`: "this project cannot compute a real POLARIS RIO today." `RUN_OF_SHOW.md:194` lists "Any POLARIS number for this vessel" under **Do not say** |
 | "A proven physics model predicts the drift of **live** icebergs, including within our shipping corridor" (2) | **CONTRADICTED** | Physics is real and tested; it has never been fed real forcing, is wired to nothing, and **no trajectory error has ever been measured**. `decision_service.py:192`: "held but not wired into the route" |
 | "re-plans automatically as new data arrives" (2) | **NOT BUILT** | `RUN_OF_SHOW.md:182`: "there is no re-plan button." Worse, `route_regret.py` measured daily re-planning as **slower** than one global optimisation |
 | "1,096 daily satellite files processed with zero failures, harvested automatically every day" (3) | **CONTRADICTED** | Merges two different pipelines. 1,096 is a one-time NSIDC bulk download; the daily cron has ~7 files and **failed once** (commit `f42972a`) |
 | "Compression cuts each daily file from 42.6 MB to 5.0 MB, 8.4× smaller" (3) | **NO MATCHING RUN** | Production logs show 8.2–8.3× / 5.1–5.2 MB. The 8.5× figure is a one-off docstring measurement |
 | "A full data pack is 76 KB" (3) | **MISCHARACTERISED** | 76 KB is an 824-cell sample box. The full corridor mesh is **estimated** 0.5–1 MB and explicitly not measured |
-| "improving accuracy by 18.5 % at 1 day and 30.6 % at 7 days" (2, 3) | **MEASURED, caveat dropped** | `ISIH_RESULTS.md:88-91`: "an **upper bound on forecast skill, not a measurement of it**". The 7-day figure is the largest gain *and* the most contaminated |
-| "already compute our 8.6-day route" (3) | **MEASURED, caveat dropped** | Ideal steaming time only. `ISIH_RESULTS.md:342`: "Do not present it as a predicted voyage duration" — a real ISEA voyage is 2–3 weeks |
+| "improving accuracy by 18.5 % at 1 day and 30.6 % at 7 days" (2, 3) | **MEASURED, caveat dropped** | `PROTOTYPE_RESULTS.md:88-91`: "an **upper bound on forecast skill, not a measurement of it**". The 7-day figure is the largest gain *and* the most contaminated |
+| "already compute our 8.6-day route" (3) | **MEASURED, caveat dropped** | Ideal steaming time only. `PROTOTYPE_RESULTS.md:342`: "Do not present it as a predicted voyage duration" — a real ISEA voyage is 2–3 weeks |
 
 **The repository's own guard rails missed three of these.** `RUN_OF_SHOW.md`'s
 "Do not say" list and `RELEASE_AUDIT.md`'s "claims that must not be made" do not
@@ -263,13 +263,13 @@ register.
 
 ### E.1 The causal chain
 
-**Root cause — the delivery point is not a port.** Cargo for Bharati and Maitri is craned overboard onto fast ice or an ice-shelf edge and hauled inland `[S: NCPOR tender NCPOR/14(102)/21]`. Whether that edge is workable on a given day is set by wind-driven ice motion on a one-to-three-day timescale: Prydz Bay fast ice breaks out between mid-December and late January with passing cyclones `[S: NAVIGATION_RESEARCH.md §7.5]`, and free drift at 30 m/s is ≈52 km/day `[D]`. Measured on real NSIDC ice, December 2019, at the vessel's 80% working limit: **Bharati's own cell was closed 23 of 31 days; the approach 100 km north was open 31 of 31** `[M: isih/figures/destination_window.json]`. The 5,800 km ocean crossing carries **mean 6% ice** `[M: isih/figures/route_regret.json]`. The whole voyage's uncertainty is compressed into the last 100 km and into a day-to-day clock.
+**Root cause — the delivery point is not a port.** Cargo for Bharati and Maitri is craned overboard onto fast ice or an ice-shelf edge and hauled inland `[S: NCPOR tender NCPOR/14(102)/21]`. Whether that edge is workable on a given day is set by wind-driven ice motion on a one-to-three-day timescale: Prydz Bay fast ice breaks out between mid-December and late January with passing cyclones `[S: NAVIGATION_RESEARCH.md §7.5]`, and free drift at 30 m/s is ≈52 km/day `[D]`. Measured on real NSIDC ice, December 2019, at the vessel's 80% working limit: **Bharati's own cell was closed 23 of 31 days; the approach 100 km north was open 31 of 31** `[M: dakshin/figures/destination_window.json]`. The 5,800 km ocean crossing carries **mean 6% ice** `[M: dakshin/figures/route_regret.json]`. The whole voyage's uncertainty is compressed into the last 100 km and into a day-to-day clock.
 
 **Information gap — the state of that edge on arrival day is not knowable when the commitment is made.**
 - The only operational Antarctic-covering ice forecast reaches **D+9** `[M]`. At the ship's AIS-observed average of 8.6 kn the transit is ≈15.2 days, so at departure **41% of the route (2,372 km) — the part that matters — lies beyond any forecast** `[D]`. At the 16.4 kn service speed the forecast would just cover it; the ship does not sail at service speed `[M]`.
-- The observation is coarsest where the decision lives. The 25 km grid is finer than the 70×45 km SSMIS footprint that produces it; the passive-microwave ice edge can be 25–50 km off `[S]`. The CDR's land-spillover filter writes suppressed coastal cells as **0.0% ice on 100% of days**, ~118 cells/day, touching the 200 km Bharati box on **43.2% of days**; **four of the eight** December-2019 days on which Bharati looked reachable were that artifact `[M: isih/figures/ice_quality_audit.json]`.
+- The observation is coarsest where the decision lives. The 25 km grid is finer than the 70×45 km SSMIS footprint that produces it; the passive-microwave ice edge can be 25–50 km off `[S]`. The CDR's land-spillover filter writes suppressed coastal cells as **0.0% ice on 100% of days**, ~118 cells/day, touching the 200 km Bharati box on **43.2% of days**; **four of the eight** December-2019 days on which Bharati looked reachable were that artifact `[M: dakshin/figures/ice_quality_audit.json]`.
 - No ice type or thickness (POLARIS needs eleven stage-of-development classes; the best free Antarctic chart resolves five) `[S]`; no compression product exists anywhere for the Antarctic `[S]`; no observational Antarctic drift field in December–March (OSI-405-d runs 1 Apr–31 Oct only) `[S]`; no visibility forecast in any product in the stack `[S-absence]`; icebergs tracked weekly and only ≥18.5 km `[S]`.
-- The ship's own limit is unknown in the terms the data provide. No ice-class system anywhere indexes ice *concentration* `[S]`; the 80% limit is an assumption; and below a 45% assumed limit **no route to Bharati exists at all** `[M: isih/figures/alternatives.json]`.
+- The ship's own limit is unknown in the terms the data provide. No ice-class system anywhere indexes ice *concentration* `[S]`; the 80% limit is an assumption; and below a 45% assumed limit **no route to Bharati exists at all** `[M: dakshin/figures/alternatives.json]`.
 
 **Decision difficulty.** One master, exercising SOLAS V/34 discretion, integrates sources arriving in different projections, formats and latencies, with no forecast for the destination, against an asymmetric loss (a needless detour costs hours; besetment costs months), at commitment points that cannot be reversed. Two things make it worse than a hard forecasting problem: the honest system output on most days is "hold course", which naive daily re-planning turns into whipsaw; and the single most consequential input — must the ship reach the station, or is the approach acceptable — **is not the master's to decide**. That one field flips route health on **23 of 31 days** `[M]`.
 
@@ -316,7 +316,7 @@ Every mode below has happened in this repository or is documented in the product
 | **Temporally inconsistent** | A September-2026 iceberg catalogue over December-2019 ice; the demo refuses to draw them together `[M]` | Prevented by rule |
 | **Wrong about the ship** | `force_limit` is RRS Sir David Attenborough's; ice class single-source; concentration limit invented; draft 9.0 m found but not wired `[M/S]` | Every derated speed and the reachability cliff rest on borrowed numbers |
 
-**The governing rule, built:** a gate with no data behind it returns UNKNOWN, and UNKNOWN caps route health at DEGRADED — missing evidence is a reason to be less confident, never a reason to be silent or to pass `[M: isih/decision.py, isih/gates.py]`. The demo refuses to start if any day's satellite file is missing rather than rendering a gap as open water `[M]`.
+**The governing rule, built:** a gate with no data behind it returns UNKNOWN, and UNKNOWN caps route health at DEGRADED — missing evidence is a reason to be less confident, never a reason to be silent or to pass `[M: dakshin/decision.py, dakshin/gates.py]`. The demo refuses to start if any day's satellite file is missing rather than rendering a gap as open water `[M]`.
 
 ---
 
@@ -769,7 +769,7 @@ Two plumbing facts outrank every row: the NSIDC archive is a **symlink into a si
 
 **Training data.** NSIDC CDR 2019–2020 — about 730 days, corridor only. **The December 2019 replay window used by the demo lies inside the training slice.** Harmless today because the demo runs no model; **it becomes a leak the moment anyone shows model output on the demo dates.**
 
-**Preprocessing — a defect stated plainly.** `isih/features.py` does not read the QA flag. **The model was fitted with land-spillover zeros present** — fake open water at the coast on 43.2 % of days in the Bharati box. The product's headline data-quality finding was applied to the router and *not* to the model.
+**Preprocessing — a defect stated plainly.** `dakshin/features.py` does not read the QA flag. **The model was fitted with land-spillover zeros present** — fake open water at the coast on 43.2 % of days in the Bharati box. The product's headline data-quality finding was applied to the router and *not* to the model.
 
 **Splits and leakage.** Temporal 70/15/15, contiguous, test scored once — correct, and an earlier +27 % from epoch-selection on the test set was withdrawn. The remaining leak is structural: channel 0 is a *reanalysis* valid at the target date, which assimilated observations near that date. **The flat raw-GLORYS12 error (0.1630 → 0.1637 across leads) is the fingerprint.** The old defence ("if it leaked, its error would be near zero") was correctly withdrawn.
 
@@ -845,7 +845,7 @@ posture — "an availability failure dressed as a safety feature".
 ### Y.1 Missing data
 | Feature | Detect | Degrade | Notify | Recover |
 |---|---|---|---|---|
-| Sea-ice raster | **Built** — preflight enumerates files and names the `isih/data` symlink | **Built, as refusal.** Rendering a gap as data is the one failure it is built not to have | **Now built** (alerting) | Manual |
+| Sea-ice raster | **Built** — preflight enumerates files and names the `dakshin/data` symlink | **Built, as refusal.** Rendering a gap as data is the one failure it is built not to have | **Now built** (alerting) | Manual |
 | Destination window | **Built and hard-won** — `destination_open is None` returns UNKNOWN "never scored", after the demo once reported exactly this as *closed 31 of 31* | **Built** | Passive → alert | Built |
 | Bathymetry / chart | **Built** — inspects mesh loaders, finds none, declares `min_depth` inert | **Built** | Passive | Blocked on a free GEBCO download |
 | Iceberg layer | **Built** — a test forbids the words *none*, *clear*, *zero* | **Built** | **Now built** — CPA alerts | **Now built** — bergs are on the chart with projected tracks |

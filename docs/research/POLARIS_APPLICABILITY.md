@@ -29,7 +29,7 @@ Four independent reasons, each sourced below and each sufficient on its own:
 1. **IMO says it is not a constraint.** MSC.1/Circ.1519 §1.4: any methodology built on this
    guidance "should not be interpreted as a 'Go/No Go' tool but as a decision support tool."
    Hard-constraining a route optimiser on RIO would be a stricter use of POLARIS than the
-   regulator's own text supports, and a judge who has read the circular can say so.
+   regulator's own text supports, and a reviewer who has read the circular can say so.
 2. **We cannot index the table for this ship.** POLARIS rows are IACS Polar Classes and
    Finnish–Swedish classes only. The Golovnin carries a superseded Russian notation
    (`KM(★) ULA`) that appears in no POLARIS row, in no current RS mark set, and in no
@@ -50,7 +50,7 @@ Four independent reasons, each sourced below and each sufficient on its own:
 
 What this buys us on a slide is stronger than a RIO number would be: we can show the
 regulator's framework, show precisely which two inputs are missing, show who holds them,
-and show what the answer would swing between. Judges reward a project that knows the
+and show what the answer would swing between. Reviewers reward a project that knows the
 boundary of its own evidence. They do not reward a plausible-looking index computed from
 inputs that cannot produce it.
 
@@ -346,7 +346,7 @@ was not the intent)".
 
 **Two things follow for us.** First, the strongest possible statement about Antarctic
 validation is bounded above by the Arctic one, and the Arctic one is that no coordinated
-evaluation exists. Second — and this is the one an adversarial judge will reach for — the
+evaluation exists. Second — and this is the one an adversarial reviewer will reach for — the
 specific misuse ABS names is *exactly what a route optimiser does by default*: computing
 negative RIOs at the desk and routing through them with a mitigation attached. If we build
 POLARIS into the optimiser we walk straight into the failure mode the regulator's own experts
@@ -623,7 +623,7 @@ that looks like a RIO and is compared against POLARIS's −10/0 thresholds.
 **We should not do this, and we should say why.** It is not POLARIS. It replaces the
 eleven-column stage-of-development table with one RIV, and the `−10T` term appears nowhere in
 MSC.1/Circ.1519. Publishing its output as "POLARIS RIO" or "IMO-compliant" would be a
-misrepresentation that a domain-literate judge can catch by opening the circular. If we ever
+misrepresentation that a domain-literate reviewer can catch by opening the circular. If we ever
 compute it, it must be labelled as **a published surrogate index (Li 2020 / Xie 2023), not the
 IMO RIO**, with the substitution stated on the same screen.
 

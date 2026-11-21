@@ -9,7 +9,7 @@ with where USNIC actually put the berg — against persistence (berg did not
 move). USNIC positions are themselves only accurate to a few km, which bounds
 how small these errors can meaningfully be.
 
-Writes isih/figures/berg_hindcast.json. Scored once, reported as it comes out.
+Writes dakshin/figures/berg_hindcast.json. Scored once, reported as it comes out.
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "isih"))
+sys.path.insert(0, str(ROOT / "dakshin"))
 sys.path.insert(0, str(ROOT / "models" / "iceberg"))
 
 from berg_forecast import (STATUS_OK, CurrentField, forecast_track,  # noqa: E402
@@ -31,7 +31,7 @@ from catalogue import load_usnic  # noqa: E402
 
 CUR_DIR = ROOT / "data" / "cmems_cur_analysis"
 ARCHIVE = ROOT / "data" / "icebergs" / "archive"
-OUT = ROOT / "isih" / "figures" / "berg_hindcast.json"
+OUT = ROOT / "dakshin" / "figures" / "berg_hindcast.json"
 BOX = {"lon": (0.0, 80.0), "lat": (-78.0, -55.0)}
 
 

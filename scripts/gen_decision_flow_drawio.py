@@ -56,7 +56,7 @@ NODES = [
     ("nNsidc", "note", "Taken by NSIDC satellite with SSMIS sensor", 46, 524, 298, 32, ""),
     ("clean", "proc",
      "Clean unreliable data/noise<br>in satellite image"
-     "<br><font style='font-size:9px'>isih/ice_quality.py &#183; the land-spillover filter "
+     "<br><font style='font-size:9px'>dakshin/ice_quality.py &#183; the land-spillover filter "
      "writes 0.0 = open water</font>", 30, 578, 330, 76, ""),
     ("weather", "proc",
      "Analyze weather<br>forecast ahead"
@@ -89,7 +89,7 @@ NODES = [
      "Build vessel-modelled ice mesh"
      "<br><font style='font-size:9px'>meshiphi &#8212; non-uniform, splits hardest in the "
      "marginal ice zone<br>calibrated to MV Vasiliy Golovnin: beam 22.4 m, 16.4 kn &#183; "
-     "isih/ice_meshes.py</font>", 270, 816, 580, 76, ""),
+     "dakshin/ice_meshes.py</font>", 270, 816, 580, 76, ""),
     ("router", "new",
      "Compute candidate routes"
      "<br><font style='font-size:9px'>PolarRoute &#215; 12 sweep &#8594; dominance filter "

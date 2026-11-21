@@ -13,7 +13,7 @@ def check(label, actual, expected):
         f"{label}: claimed {expected!r}, actual {actual!r}")
 
 
-q = json.loads((R / 'isih/figures/ice_quality_audit.json').read_text())
+q = json.loads((R / 'dakshin/figures/ice_quality_audit.json').read_text())
 check("Bharati QA-affected days %",
       q['station_approaches']['Bharati']['pct_of_days_affected'], 43.2)
 check("archive file count", q['archive']['files'], 1096)
@@ -21,7 +21,7 @@ check("spillover days affected", q['land_spillover']['days_affected'], 1096)
 check("spillover mean cells/day",
       q['land_spillover']['mean_cells_per_day'], 118.2)
 
-d = json.loads((R / 'isih/figures/destination_window.json').read_text())
+d = json.loads((R / 'dakshin/figures/destination_window.json').read_text())
 check("Bharati days closed", d['summary']['Bharati']['days_closed'], 23)
 check("Bharati days observed", d['summary']['Bharati']['days_observed'], 31)
 check("approach days closed",
@@ -41,15 +41,15 @@ check("current-dominated at typical",
 check("wind-dominated at storm",
       g['regime']['storm_forcing']['n_wind_dominated_R_gt_1'], 28)
 
-rr = json.loads((R / 'isih/figures/route_regret.json').read_text())
+rr = json.loads((R / 'dakshin/figures/route_regret.json').read_text())
 static = [r for r in rr['results'] if r['planner'] == 'STATIC'][0]
 check("static regret days", static['regret_days'], 0.03)
 check("transit days (rounded)", round(static['actual_days'], 1), 8.6)
 
-res = (R / 'docs/ISIH_RESULTS.md').read_text()
+res = (R / 'docs/PROTOTYPE_RESULTS.md').read_text()
 for token in ["+18.5%", "+30.6%", "1,929,601", "43.2%", "46.8%", "54.6%",
               "23 / 31", "8.58"]:
-    (ok if token in res else bad).append(f"ISIH_RESULTS.md contains {token!r}")
+    (ok if token in res else bad).append(f"PROTOTYPE_RESULTS.md contains {token!r}")
 
 for f in ["docs/SIH_PPT.md", "docs/TRUE_CLAIMS.md",
           "models/iceberg/drift.py", "models/iceberg/catalogue.py"]:

@@ -126,7 +126,7 @@ on — not the ice-class notation itself.** Reasoning:
    input without needing any class-equivalence step at all.
 3. Golovnin has no such sentence, from any source, at any confidence level. The
    honest model input for Golovnin is not "assume a lower but plausible number" — it is
-   an explicit UNVERIFIED placeholder, exactly as `isih/ice_meshes.py`'s own comments
+   an explicit UNVERIFIED placeholder, exactly as `dakshin/ice_meshes.py`'s own comments
    already flag for `force_limit`.
 
 **Recommendation for the planned two-vessel experiment**: it is legitimate to give the
@@ -162,7 +162,7 @@ lines of evidence converge on this, none of them merely "we didn't find it":
    concentration. If a concentration limit existed and were routinely cited, this is
    exactly the kind of sentence it would appear next to.
 
-**Conclusion for the model**: `isih/ice_meshes.py`'s existing `max_ice_conc: 80` for
+**Conclusion for the model**: `dakshin/ice_meshes.py`'s existing `max_ice_conc: 80` for
 Golovnin is correctly flagged in-repo as "a working threshold, NOT derived from the ice
 class" — this session's research confirms that characterization independently and
 extends it to Agulhas II as well. **Any ice-concentration threshold used for either

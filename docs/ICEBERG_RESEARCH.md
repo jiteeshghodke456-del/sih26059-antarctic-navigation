@@ -1,6 +1,6 @@
 # Iceberg Datasets and Drift Modelling — Research Brief
 
-**Project:** SIH26059 — AI-Enabled Antarctic Sea-Ice, Iceberg Trajectory, and Navigation Decision Support System (MoES / NCPOR)
+**Project:** Dakshin — AI-Enabled Antarctic Sea-Ice, Iceberg Trajectory, and Navigation Decision Support System (MoES / NCPOR)
 **Scope:** feeds the iceberg-trajectory component of `docs/ML_ARCHITECTURE.md`. The equations in section (b) are intended to be implemented directly.
 **Date of verification:** 2026-09-02. Every URL in section (a) was hit live on that date; HTTP status recorded.
 
@@ -154,7 +154,7 @@ Free-tier quotas for a "Copernicus General User" (registered), **VERIFIED** from
 
 Access APIs: **OData**, **STAC**, **S3**, **openEO**, **Sentinel Hub**.
 
-**INFERRED, practical:** 12 TB/month and 4 concurrent connections are ample for a hackathon-scale AOI. The 0.1 TB DAD cap is the one that bites — older Sentinel-1 EW scenes may sit in the deferred archive, so **pull the SAR training tiles early, not on demo day**. Prefer the ESSD Zenodo bundle (A4) for detector training since the labels are already made.
+**INFERRED, practical:** 12 TB/month and 4 concurrent connections are ample for a prototype-scale AOI. The 0.1 TB DAD cap is the one that bites — older Sentinel-1 EW scenes may sit in the deferred archive, so **pull the SAR training tiles early, not on demo day**. Prefer the ESSD Zenodo bundle (A4) for detector training since the labels are already made.
 
 ---
 
@@ -254,7 +254,7 @@ $$ \tilde C_w \equiv \tfrac12\rho_w C_w A_w, \qquad \tilde C_a \equiv \tfrac12\r
 4. Sea-ice drag and wave radiation are small compared with air drag, water drag, Coriolis and pressure gradient.
 5. Water drag is dominated by the **surface** current; vertical shear over the iceberg draft is ignored.
 
-**VERIFIED caveats the paper itself flags** (quote these if a judge probes model validity):
+**VERIFIED caveats the paper itself flags** (quote these if a reviewer probes model validity):
 - On assumption 2: *"Bigg et al. (1997) found a large ageostrophic component of the ocean velocity in regions of strong horizontally sheared flows, where this assumption may thus introduce substantial errors."*
 - On assumption 4 (wave radiation): several prior studies found wave radiation *"typically small compared to the air and water drag terms (Bigg et al. 1997; Gladstone et al. 2001)"*; others fold it into an altered wind-drag coefficient (Smith 1993; Keghouche et al. 2009).
 
@@ -548,7 +548,7 @@ With $\rho_i/\rho_w = 0.83$ this gives $\varepsilon_c = 0.92$ (I reproduced 0.92
 
 ### b.9 Two known errata in the WDE17 preprint (summary)
 
-Both found by cross-checking the paper against its own reference implementation and against its own downstream numbers. Worth one slide if a judge asks how deeply you read the source.
+Both found by cross-checking the paper against its own reference implementation and against its own downstream numbers. Worth one slide if a reviewer asks how deeply you read the source.
 
 | # | Issue | Resolution |
 |---|---|---|
@@ -587,7 +587,7 @@ Source: arXiv:[2507.00036](https://arxiv.org/abs/2507.00036) — downloaded and 
 
 **The physics-only row is the important one for us.** Adding a learned residual to the WDE17 core cuts geodesic ADE from **147.10 → 49.06 km** on A23A (−67 %) and **127.23 → 22.87 km** on B22A (−82 %). That is direct, quotable evidence for the hybrid architecture over either pure physics or pure ML.
 
-Also **VERIFIED:** IDRIFTNET achieves this with only **0.29 M trainable parameters / 1.14 MB**, which the authors argue suits *"resource-constrained or real-time"* deployment — a useful point given SIH Grand-Finale hardware.
+Also **VERIFIED:** IDRIFTNET achieves this with only **0.29 M trainable parameters / 1.14 MB**, which the authors argue suits *"resource-constrained or real-time"* deployment — a useful point given modest deployment hardware.
 
 > ⚠️ **UNVERIFIED — the forecast horizon.** I read the paper's dataset, implementation and inference sections in full and **the number of forecast days over which ADE/FDE are computed is never stated**, nor is the train/validation/test split ratio. These figures are therefore **not** 1/3/7-day numbers and **must not be presented as such**. They are whole-rollout errors over an unspecified test horizon. If you cite them, cite them as "over the paper's full autoregressive test rollout, horizon unstated."
 
@@ -660,7 +660,7 @@ The right output is **not** "iceberg at CPA 4.2 NM." Every operational system ve
 1. Propagate each berg with the WDE17 core (b.5) plus the learned residual (c.2).
 2. Grow a **per-berg uncertainty radius** with lead time — the IIP "error circle" concept — rather than emitting a point.
 3. Union the circles into a keep-out polygon, IIP-"iceberg limit"-style, and recompute it on a fixed cycle (IIP uses **12 h**; we can do better with Sentinel-1 revisit).
-4. Expose the stand-off margin as a **user-set parameter**, defaulting to whatever the operator's PWOM says — and say on the slide that this is exactly what Polar Code 1.7.3 requires, quoting the text. **A judge who knows the Polar Code will recognise that as the correct answer, and there is no number we could have quoted instead.**
+4. Expose the stand-off margin as a **user-set parameter**, defaulting to whatever the operator's PWOM says — and say on the slide that this is exactly what Polar Code 1.7.3 requires, quoting the text. **A reviewer who knows the Polar Code will recognise that as the correct answer, and there is no number we could have quoted instead.**
 5. Compute CPA/TCPA against the *polygon*, not the point.
 
 This also converts a research gap into a differentiator: "IMO requires a stand-off distance but deliberately does not fix one, so we make it a first-class configurable input and show the keep-out zone it produces."

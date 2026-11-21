@@ -1,6 +1,6 @@
-# Weakness Analysis — SIH26059 (adversarial review, 2026-08-31)
+# Weakness Analysis — Dakshin (adversarial review, 2026-08-31)
 
-Role: skeptical technical judge, post-architecture / pre-build. Nothing below is softened.
+Role: skeptical technical reviewer, post-architecture / pre-build. Nothing below is softened.
 Every finding cites the exact claim it attacks and states what would fix it.
 Severity: **[fatal-if-unfixed]** / **[major]** / **[minor]** / **[solid]** (explicitly conceded).
 
@@ -19,7 +19,7 @@ layer `SIC_upper = mean + k·σ` plus one overridden method `extreme_ice()`; (b)
 polygon layer named in an existing config list (`excluded_zones`); (c) running an existing
 solver three times. Each "extension" in D7 is days of work, not weeks. The architecture's
 real substance is *integration discipline plus honesty engineering*, and the team should say
-that plainly — because a judge who counts lines of novel algorithm will. Specifically:
+that plainly — because a reviewer who counts lines of novel algorithm will. Specifically:
 
 - **ADR-011 / D7-3 overclaims.** Three solver runs with three preset objective strings is not
   "multi-objective routing"; it is three single-objective routes displayed together. A 3-point
@@ -46,7 +46,7 @@ numerical prediction or graph search; the FloatChat convergence evidence
 a RAG wrapper is *easier* than what they committed to. This decision stands. Two caveats:
 (a) "strictly better suited" (ML_ARCHITECTURE.md §5) is rhetoric — say "better suited, and
 here's why," with the offline-inference argument, not "strictly"; (b) prepare the one-slide
-answer for the judge who expects a GenAI checkbox, because at SIH one will.
+answer for the reviewer who expects a GenAI checkbox, because one will.
 
 **[fatal-if-unfixed] The harder thing being avoided is not an LLM — it is CMEMS.** This is the
 single most serious structural weakness in the ML design:
@@ -64,7 +64,7 @@ single most serious structural weakness in the ML design:
   distinguishes the U-Net from *live-API CMEMS*, not from *packed CMEMS* — and packed CMEMS
   is the obvious build. As written, the trained model's genuinely load-bearing roles reduce
   to (b) routing-consumable per-cell σ and (c) the disagreement second opinion — plus,
-  unstated, "SIH judges require a trained model."
+  unstated, "reviewers require a trained model."
 - GAP_ANALYSIS.md §1 identified the strongest 1–10-day approach as **"DL bias-correction on
   top of a short-range ice-ocean model (e.g. TOPAZ4)"** — i.e. learn to correct the
   operational forecast. ML_ARCHITECTURE.md §1.4's rejection table never mentions it. The
@@ -171,7 +171,7 @@ uses the same data plumbing, and turns "we lose to CMEMS" into "we improve CMEMS
   value with no training at all. What CMEMS does not provide is routing-consumable forecast
   σ and an independent cross-check. The differentiation survives **only** if the calibration
   work in §8 succeeds; if σ is decorative, the honest system description becomes "PolarRoute
-  + packed CMEMS + iceberg buffers + offline sync," and a judge can legitimately ask what the
+  + packed CMEMS + iceberg buffers + offline sync," and a reviewer can legitimately ask what the
   team's model added. D1's own falsifiability clause ("if moving the slider does not move the
   line, this differentiation has failed") is the right spirit — extend it: *if calibrated σ
   does not beat a trivial uncertainty proxy (e.g. inter-source disagreement alone), D1 has
@@ -183,7 +183,7 @@ uses the same data plumbing, and turns "we lose to CMEMS" into "we improve CMEMS
   magnitude inside the sub-50 KB budget" — 796 B is the *output polyline*, the trivial
   payload; the thing that actually has to move daily is the mesh + forecast delta, which is
   the unmeasured quantity (backlog.md flags it). Leading with the polyline number invites a
-  judge to catch the switch. *Fix:* lead with the measured worst case (full corridor mesh),
+  reviewer to catch the switch. *Fix:* lead with the measured worst case (full corridor mesh),
   not the best case.
 - **[major] The NCPOR-overlap question (backlog.md, [major][scope]) is still open and the
   architecture proceeded as if greenfield.** If NCPOR's "Research Vessel Movements" tooling
@@ -200,7 +200,7 @@ parameters, and season must demonstrably be a config file so the team can answer
 different vessel or the Ross Sea?" with a 30-second re-run, not a shrug. No document commits
 to config-driven AOI; make it an explicit requirement.
 
-Honest demo-only inventory (fine for SIH, but the team should be able to recite it):
+Honest demo-only inventory (fine for a prototype, but the team should be able to recite it):
 pack *signing* (no key-management story — theater until there is one); *resumable Iridium
 delta sync* (will only ever be tested over throttled localhost — say "tested under emulated
 link constraints," never "tested over Iridium"); Golovnin vessel model (resistance functional
@@ -335,7 +335,7 @@ a thing.
 ## Verdict
 
 The system-architecture skeleton (two-tier offline pack, PolarRoute wrap, honesty
-engineering) is sound and better-verified than typical SIH work — the [verified] discipline
+engineering) is sound and better-verified than typical prototype work — the [verified] discipline
 is real and the strongest thing about these documents. But the ML core has a structural
 justification problem (§2), a calibration mitigation that will not survive contact (§8), and
 a training-data spec that is currently impossible as written with zero bytes downloaded and

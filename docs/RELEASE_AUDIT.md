@@ -7,7 +7,7 @@ file it rests on, or computing the result again. Where a check could not be
 made, the row says UNKNOWN rather than assuming the benign answer.
 
 **Date:** 2026-09-07. **Suite:** 77 tests pass, including the twelve
-mandatory behavioural tests in `isih/test_behavioural.py`.
+mandatory behavioural tests in `dakshin/test_behavioural.py`.
 
 ---
 
@@ -15,7 +15,7 @@ mandatory behavioural tests in `isih/test_behavioural.py`.
 
 | # | Test | Result | Evidence |
 |---|---|---|---|
-| 1 | Same environment, different vessel | **PARTIAL** | Golovnin and SA Agulhas II follow an **identical 41-leg track**; ETA differs by +1.28 d and fuel by −8.9%. Vessel-awareness is load-bearing for *cost*, not for *track*. `isih/figures/vessel_comparison.json` |
+| 1 | Same environment, different vessel | **PARTIAL** | Golovnin and SA Agulhas II follow an **identical 41-leg track**; ETA differs by +1.28 d and fuel by −8.9%. Vessel-awareness is load-bearing for *cost*, not for *track*. `dakshin/figures/vessel_comparison.json` |
 | 2 | Data freshness | **PARTIAL** | Source and valid time are recorded for every environmental value. No received-time or age exists, because replay from an archive has no arrival timestamp. The test fails if anyone starts reporting one. |
 | 3 | Source disagreement surfaced | **PASS** | Real, not synthetic: the CDR's own QA flag contradicts its own concentration field. Both readings are served; at Bharati on 1 Dec, raw reads 0.0% where quality-checked reads 30.7%. |
 | 4 | Stale communications degrade gracefully | **PASS** | The page fetches nothing external — a test now fails if any `http(s)://` reference appears in the HTML. Absent optional layers report `available: false` instead of taking the service down. |
@@ -88,7 +88,7 @@ mandatory behavioural tests in `isih/test_behavioural.py`.
 ### P0 — fix before demo day
 
 **P0-1. The satellite archive is a symlink into another git worktree.**
-`isih/data` resolves to `.claude/worktrees/foamy-seeking-allen/isih/data`. Removing
+`dakshin/data` resolves to `.claude/worktrees/foamy-seeking-allen/isih/data`. Removing
 that worktree — an ordinary tidy-up — deletes 1,096 NSIDC files from this demo's
 view, and the app then refuses to start. This is a realistic pre-demo failure with
 no obvious cause at the moment it bites.
@@ -118,7 +118,7 @@ forecast archive with its `sithick` and drift fields, and the Wagner drift model
 
 ---
 
-## 4. Judge questions, and the answers
+## 4. Reviewer questions, and the answers
 
 **"Is any of this live?"**
 No, and the badge says so before you ask. December 2019 is used because it has

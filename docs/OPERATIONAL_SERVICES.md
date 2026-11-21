@@ -1,6 +1,6 @@
 # Operational Iceberg/Ice Charting Services — Do Any Forecast Trajectories?
 
-Research brief for SIH26059. Question: does any operational service forecast iceberg
+Research brief for Dakshin. Question: does any operational service forecast iceberg
 **trajectories** (future position), as opposed to charting **current** position, for
 Antarctic/Southern Ocean shipping — and specifically for the Indian Ocean sector
 (Queen Maud Land / Bharati–Maitri approach)?
@@ -185,7 +185,7 @@ dynamically adjusting the race's Antarctic Exclusion Zone from per-berg trajecto
 VERIFIED via CLS/press sources, see docs/ICEBERG_RESEARCH.md §A7 for citations. It is not a public
 product, has no downloadable feed, and is not built for merchant/research-vessel navigation, so it
 does not contradict the operational finding below for *this* project's purposes — but the
-absolute phrasing must be narrowed to be defensible in front of a judge who knows the Vendée
+absolute phrasing must be narrowed to be defensible in front of a reviewer who knows the Vendée
 Globe.
 
 **Revised conclusion:** **no public, agency-run Southern-Ocean iceberg trajectory forecast,
@@ -263,7 +263,7 @@ What is documented, generically, for polar vessel operations in this class:
   characterization is **INFERRED** from the absence of any documented dedicated service, not
   from a source that states it directly — flagged clearly as an inference, not a verified fact,
   and worth a follow-up direct query to NCPOR's own voyage-planning team (who would know the
-  actual in-house practice) before this claim appears in a judged deck.
+  actual in-house practice) before this claim appears in a published deck.
 
 ---
 
@@ -310,4 +310,4 @@ and should be confirmed directly with NCPOR voyage planners.
 - Ask NCPOR's own ISEA voyage-planning team directly what ice-information source and delivery
   channel they actually use underway — this is the single fastest way to close the §C
   uncertainty and would also be a strong "we talked to the actual stakeholder" credibility point
-  for the SIH submission.
+  for the project.

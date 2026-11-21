@@ -106,7 +106,7 @@
 <div class="wrap">
 
 <header class="top">
-  <div class="eyebrow">SIH 26059 &middot; Runtime view</div>
+  <div class="eyebrow">Dakshin &middot; Runtime view</div>
   <h1>Navigation Decision Flow</h1>
   <p class="lede">What happens, in order, from the moment the Captain marks a route to the moment
      the system answers. Your original wording is kept throughout; four steps were added because the
@@ -224,7 +224,7 @@
   <rect class="proc" x="30" y="578" width="330" height="76" rx="6"/>
   <text class="tp" x="195" y="600" font-size="11.5">Clean unreliable data/noise</text>
   <text class="tp" x="195" y="617" font-size="11.5">in satellite image</text>
-  <text class="sub sp" x="195" y="633">isih/ice_quality.py</text>
+  <text class="sub sp" x="195" y="633">dakshin/ice_quality.py</text>
   <text class="sub sp" x="195" y="646">the land-spillover filter writes 0.0 = open water</text>
   <path class="e" d="M195,654 L195,674"/>
   <rect class="proc" x="30" y="676" width="330" height="74" rx="6"/>
@@ -274,7 +274,7 @@
   <rect class="newb" x="270" y="816" width="580" height="76" rx="6"/>
   <text class="tw" x="560" y="840">Build vessel-modelled ice mesh</text>
   <text class="sub sw" x="560" y="859">meshiphi &mdash; non-uniform, splits hardest in the marginal ice zone</text>
-  <text class="sub sw" x="560" y="876">calibrated to MV Vasiliy Golovnin: beam 22.4 m, 16.4 kn &middot; isih/ice_meshes.py</text>
+  <text class="sub sw" x="560" y="876">calibrated to MV Vasiliy Golovnin: beam 22.4 m, 16.4 kn &middot; dakshin/ice_meshes.py</text>
   <path class="e" d="M560,892 L560,914"/>
 
   <!-- router -->
@@ -336,7 +336,7 @@
 
 <section>
   <h2>What I changed, and why</h2>
-  <p class="sub">Ordered by how much each one matters if a judge traces the flow with a finger.</p>
+  <p class="sub">Ordered by how much each one matters if a reviewer traces the flow with a finger.</p>
   <div class="scroll">
   <table>
     <thead><tr><th>Issue</th><th>Severity</th><th>Fix</th></tr></thead>
@@ -379,7 +379,7 @@
       </tr>
       <tr>
         <td><b>POLARIS is not what the code does today.</b>
-            <code>isih/ice_meshes.py:47</code> uses a flat 80% concentration cutoff and notes that
+            <code>dakshin/ice_meshes.py:47</code> uses a flat 80% concentration cutoff and notes that
             production replaces it with an IMO POLARIS RIO calculation.</td>
         <td><span class="sev s-md">Accuracy</span></td>
         <td>Kept your box text, tagged it <b>TODAY: FLAT 80% CUTOFF</b>. Claiming POLARIS compliance
@@ -440,8 +440,8 @@
 </section>
 
 <footer>
-  Verified against the working tree, not against intent: <code>isih/ice_quality.py</code>,
-  <code>isih/ice_meshes.py</code>, <code>isih/make_route_figure.py</code>,
+  Verified against the working tree, not against intent: <code>dakshin/ice_quality.py</code>,
+  <code>dakshin/ice_meshes.py</code>, <code>dakshin/make_route_figure.py</code>,
   <code>models/sic_correction/unet.py</code>, <code>models/iceberg/drift.py</code>. Steps marked
   NOT BUILT YET returned no matches when searched for in the codebase &mdash; they are design, and
   the diagram says so rather than implying otherwise.

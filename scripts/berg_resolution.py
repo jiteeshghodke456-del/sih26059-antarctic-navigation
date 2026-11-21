@@ -9,7 +9,7 @@ the land mask geometry is unchanged except cells averaged across). For the
 corridor's giant bergs drift is almost pure current (R << 1 in every segment),
 so the current field's resolution is the variable that matters.
 
-Writes isih/figures/berg_resolution.json and a section's numbers for
+Writes dakshin/figures/berg_resolution.json and a section's numbers for
 docs/RESOLUTION_STUDY.md.
 """
 from __future__ import annotations
@@ -23,13 +23,13 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "isih"))
+sys.path.insert(0, str(ROOT / "dakshin"))
 
 from berg_forecast import STATUS_OK, CurrentField  # noqa: E402
 from berg_hindcast import load_field, run_segments  # noqa: E402
 from realforecast_hindcast import block_coarsen  # noqa: E402
 
-OUT = ROOT / "isih" / "figures" / "berg_resolution.json"
+OUT = ROOT / "dakshin" / "figures" / "berg_resolution.json"
 FACTORS = {1: "1/12°", 3: "1/4°", 12: "1°"}
 
 

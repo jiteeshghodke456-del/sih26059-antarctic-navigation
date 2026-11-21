@@ -18,11 +18,12 @@ cd "$CKPT_DIR"
 for lead in 1 3 5 7; do
   [ -f "isih_prototype_lead${lead}.pt" ] || { echo "MISSING lead ${lead}"; exit 1; }
 done
+# "isih_" is the historical artifact id the Kaggle kernel writes; do not rename.
 sha256sum isih_prototype_lead{1,3,5,7}.pt > SHA256SUMS
 cat SHA256SUMS
 
 cd "$ROOT_DIR"
-"$PY" -m pytest isih/test_model_io.py -q          # slice 1 check, no longer skipped
+"$PY" -m pytest dakshin/test_model_io.py -q          # slice 1 check, no longer skipped
 "$PY" scripts/realforecast_hindcast.py            # slice 2 with the model
 "$PY" scripts/resolution_study.py                 # F1 with the model
 echo "DONE — now update the results docs with the numbers as they came out,"

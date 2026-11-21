@@ -6,8 +6,8 @@
 cd <repo>/.claude/worktrees/v3-compliance
 rm -rf .venv-demo                       # the sandbox one links to the wrong python
 uv venv .venv-demo --python 3.12
-uv pip install --python .venv-demo/bin/python -r isih/demo/requirements.txt
-.venv-demo/bin/python -m uvicorn isih.demo.app:app --port 8000
+uv pip install --python .venv-demo/bin/python -r dakshin/demo/requirements.txt
+.venv-demo/bin/python -m uvicorn dakshin.demo.app:app --port 8000
 ```
 
 Open <http://127.0.0.1:8000>.
@@ -63,8 +63,8 @@ the compression ratio, and the 76 KB pack.
 ## Tests
 
 ```bash
-python -m pytest isih models -q        # 156, no browser needed
-python -m pytest isih/demo/test_bridge_ui.py -q   # 7, needs playwright + a running server
+python -m pytest dakshin models -q        # 156, no browser needed
+python -m pytest dakshin/demo/test_bridge_ui.py -q   # 7, needs playwright + a running server
 ```
 
 ## Publishing the port from the sandbox

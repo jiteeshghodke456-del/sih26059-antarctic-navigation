@@ -6,7 +6,7 @@ then every resolution was scored against the same NSIDC NRT satellite truth on
 the *same* cells at leads 1, 3, 5, 7 days. Only the ocean model's information
 content varies: truth, persistence and the scoring mask are identical.
 Produced by `scripts/resolution_study.py`; numbers in
-`isih/figures/resolution_study.json`, figure in `resolution_study.png`.
+`dakshin/figures/resolution_study.json`, figure in `resolution_study.png`.
 
 ## Result
 
@@ -58,7 +58,7 @@ properly.
 
 Same coarsening applied to the analysis currents driving the slice-5 USNIC
 hindcast (`scripts/berg_resolution.py`, numbers in
-`isih/figures/berg_resolution.json`), 88 segments, 8 giants, Sep–Nov 2026:
+`dakshin/figures/berg_resolution.json`), 88 segments, 8 giants, Sep–Nov 2026:
 
 | Currents | ok / grounded-flagged | median err (all) | median err (moving bergs) |
 |---|---|---|---|

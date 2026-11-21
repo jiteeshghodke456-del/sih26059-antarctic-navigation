@@ -1,4 +1,4 @@
-# ML Architecture — SIH26059 Antarctic Navigation Decision Support
+# ML Architecture — Dakshin Antarctic Navigation Decision Support
 
 Status: **revision 2, 2026-08-31** — revised in response to the adversarial review in
 `WEAKNESS_ANALYSIS.md`. Supersedes the "recommended baseline" language in `GAP_ANALYSIS.md`
@@ -85,7 +85,7 @@ third-party product with our model demoted to a cross-check; option 2 keeps a re
 reuses the same data plumbing, targets a *documented* deficiency of the base field, and converts
 "we probably lose to CMEMS" into "we improve CMEMS and add the σ it does not expose." The
 packed-CMEMS baseline is retained regardless, because a bias-correction model that does not beat
-its own base field is worthless and must be caught by the evaluation, not by a judge.
+its own base field is worthless and must be caught by the evaluation, not by a reviewer.
 
 ### 1.1 Decision
 
@@ -203,7 +203,7 @@ transfer a demotion trigger rather than a footnote.
 **Corollary that must be acted on in Phase 0, not later:** the Stage B archive cannot be
 back-filled. **Harvesting one CMEMS corridor forecast cycle per day must start the day the repo is
 created** (~5–15 MB/day for a corridor subset via `copernicusmarine.subset()`). From 2026-09-01 to a
-December finale that is ~100 real forecast cycles × 10 leads — thin for training, ample for
+production build that is ~100 real forecast cycles × 10 leads — thin for training, ample for
 fine-tuning a residual and for the acceptance test. This is logged as a hard blocker in
 `backlog.md`.
 
@@ -243,7 +243,7 @@ bridge laptop**, no GPU. Minimum bridge spec stated: 4-core x86-64, 8 GB RAM, 20
 | **From-scratch direct-forecast U-Net ensemble** (revision 1's own design) | Superseded, not deleted — see the **contingency** row below. It concedes the CMEMS comparison (§1.0), needs ~4× the parameters and ~4× the compute for a field the base model already gets mostly right, and its "offline" justification is weaker than the corrected version's (§7.2). |
 | **Reusing the `icenet` library** | **[verified]** `icenet` 0.2.9 requires `python<3.12`, `tensorflow<2.16`, `netcdf4<1.6.1`, plus `motuclient` (a deprecated CMEMS client) across 51 dependencies. The `netcdf4<1.6.1` pin **directly conflicts** with `meshiphi`/`polar-route`, which resolve to `netcdf4==1.7.4`. The two cannot share a Python environment. Compounding this: IceNet's published validation is Arctic (`COMPETITIVE_ANALYSIS.md` §2), and no pretrained Southern-Hemisphere weights exist — it would need full retraining anyway. |
 | **Reimplementing ANTSIC-UNet at 6-month seasonal lead** | Wrong horizon. A resupply voyage is planned over days-to-weeks; a 6-month seasonal outlook cannot inform a route decision. Also requires the CMIP6 pretraining corpus. |
-| **CICE / LIM2 dynamical model** | Operational infrastructure run by national centres. Not standable-up by a hackathon team — and the pivot means we now *consume* the output of exactly such a system instead of pretending to rebuild one. |
+| **CICE / LIM2 dynamical model** | Operational infrastructure run by national centres. Not standable-up by a small team — and the pivot means we now *consume* the output of exactly such a system instead of pretending to rebuild one. |
 | **LSTM on the NSIDC extent time series** | Predicts a scalar. The router needs a spatial field. |
 | **Naive persistence as the headline baseline** | Too weak a bar; and the headline baseline is now raw CMEMS regardless (§1.5). |
 
@@ -539,7 +539,7 @@ grid A\*". The hands-on run in §0 settles it decisively in favour of integratio
 - MIT licensed, authored by BAS — the institution that operates Antarctic research vessels —
   and v1.1.11 was released 2026-07-02, i.e. actively maintained.
 
-Judge credibility follows from this too: using the domain's own open-source tool *and extending
+Reviewer credibility follows from this too: using the domain's own open-source tool *and extending
 it where it is provably weak* (§3.4) is a far stronger position than reimplementing A\* and
 hoping nobody asks about prior art.
 

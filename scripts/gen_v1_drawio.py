@@ -180,10 +180,10 @@ TIERS = [
     ("s3", "note", "USNIC iceberg positions", 590, 165, 245, 54),
     ("s4", "note", "ERA5 / GFS wind and waves", 850, 165, 245, 54),
     ("s5", "note", "ASPA / ASMA protected areas<br>"
-     f"{SM}Treaty Secretariat register &#8212; isih/protected_areas.py{E}",
+     f"{SM}Treaty Secretariat register &#8212; dakshin/protected_areas.py{E}",
      1110, 165, 245, 54),
     ("s6", "note", "IBCSO / GEBCO bathymetry<br>(static, ships once)", 1370, 165, 245, 54),
-    ("p1", "proc", "Quality control<br>isih/ice_quality.py", 70, 270, 290, 64),
+    ("p1", "proc", "Quality control<br>dakshin/ice_quality.py", 70, 270, 290, 64),
     ("p2", "proc", "Train the U-Net<br>(GPU &#8212; never at sea)", 390, 270, 290, 64),
     ("p3", "proc", "Inference + conformal<br>&#8594; SIC_upper", 710, 270, 290, 64),
     ("p4", "proc", "Build the vessel mesh<br>meshiphi", 1030, 270, 290, 64),

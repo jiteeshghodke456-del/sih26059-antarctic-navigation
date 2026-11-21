@@ -1,4 +1,4 @@
-# System Architecture — SIH26059 Antarctic Navigation Decision Support
+# System Architecture — Dakshin Antarctic Navigation Decision Support
 
 > **Read `ARCHITECTURE_DELTA.md` first.** As of 2026-09-07 this document no
 > longer describes the built system in three respects: it has no decision-engine
@@ -102,7 +102,7 @@ constraint.
 ### 2.1 Shape
 
 Two deployment *modes of the same application*, not two products. A single FastAPI service with a
-`MODE=shore|vessel` switch. This matters for an SIH timeline: it roughly halves the build, and it
+`MODE=shore|vessel` switch. This matters for a short timeline: it roughly halves the build, and it
 is architecturally honest, since the routing and inference code genuinely is identical on both
 sides.
 
@@ -166,7 +166,7 @@ and a named column"** — because that is exactly `meshiphi`'s `ScalarCSVDataLoa
 bounding box, the vessel parameter block, and the seasonal window live in one config file that
 every component reads; no corridor constant is compiled into code. This is what makes ADR-001's
 scoping a scoping decision rather than a hard-coded demo, and it must be answerable in a 30-second
-re-run when a judge asks "and for the Ross Sea, or a different ship?".
+re-run when a reviewer asks "and for the Ross Sea, or a different ship?".
 
 ### 2.3 Where each ML decision plugs in
 
@@ -355,7 +355,7 @@ Everything server-side; the browser calls a live backend which calls CMEMS/USNIC
 
 **Rejected.** This is precisely the design `COMPETITIVE_ANALYSIS.md` §3 predicts competitors will
 converge on, and it fails on the one fact that defines the operational context: **the vessel does
-not have the connectivity this assumes.** It is also demo-fragile — a live judged demo would
+not have the connectivity this assumes.** It is also demo-fragile — a live demo would
 depend on third-party API uptime and the venue's network — and it has no offline story at all.
 Building it would mean building a system that could not be deployed on the ship it is for.
 
@@ -367,7 +367,7 @@ hosting. Maximum demo reliability, near-zero runtime risk.
 **Rejected as the baseline** for the same reason as boundary (a) in §1.1: the vessel cannot
 re-plan, so it is not decision support. It also makes the AI inert at demo time — nothing is
 computed while anyone is watching, which is exactly the "UI wrapped around static logic" failure
-mode judges are said to be watching for.
+mode reviewers are said to be watching for.
 
 **But its best idea is adopted:** pre-baked **demo scenario packs**, committed to the repo, so a
 live demo never depends on a network fetch or a nightly job having succeeded. The demo runs the
@@ -455,7 +455,7 @@ training at the nodal centre" is not a thing:
 |---|---|
 | Trained weights + conformal calibration tables (§2.4b) | Live re-planning demos, scenario walkthroughs |
 | Evaluation results and all figures | UI polish, presentation assembly |
-| Committed demo scenario packs (ADR-016) | Judge-requested re-runs on committed packs (real computation, ~9 s + ~84 s sweep) |
+| Committed demo scenario packs (ADR-016) | Reviewer-requested re-runs on committed packs (real computation, ~9 s + ~84 s sweep) |
 | Environment pinned and pre-installed | Bug fixes, integration of anything left open |
 
 Nothing on the left is regenerated on site. Nothing on the right needs a GPU or a network.

@@ -20,7 +20,7 @@ Status: **DONE** (in this branch) · **OPEN** (filed, not built) · **BLOCKED**.
 | 7 | Deck states +18.5/+30.6 % without the repo's own leakage caveat | Caveat carried in the same eyeline as the number | **DONE** |
 | 8 | Deck: "8.6-day route" presented as a voyage duration | Labelled ideal steaming time | **DONE** |
 | 9 | The repo's own "Do not say" list missed corrections 3, 4, 5 and 6 | Extend the list; the guard rails had a hole, not just the deck | **DONE** — `docs/RUN_OF_SHOW.md` |
-| 10 | `isih/data` is a symlink into a sibling git worktree; an ordinary tidy-up deletes the archive | Move the archive out of any worktree | **OPEN** — P0, one command, needs the user's disk layout |
+| 10 | `dakshin/data` is a symlink into a sibling git worktree; an ordinary tidy-up deletes the archive | Move the archive out of any worktree | **OPEN** — P0, one command, needs the user's disk layout |
 
 ## P1 — honesty and correctness of the system itself
 
@@ -33,7 +33,7 @@ Status: **DONE** (in this branch) · **OPEN** (filed, not built) · **BLOCKED**.
 | 15 | World-model fields were labelled "replay"; they contain no real observation | Relabelled **synthetic** — §27's SIMULATED INPUT — with a tooltip saying so | **DONE** |
 | 16 | The bridge console had per-panel provenance but no global data-mode declaration | SYNTHETIC ENVIRONMENT badge; behavioural test 10 now covers both consoles | **DONE** |
 | 17 | `np.random.default_rng` is not guaranteed stable across NumPy versions; the demo runs on a different Python than it was built on | All draws moved to blake2b; verified identical across `PYTHONHASHSEED` | **DONE** |
-| 18 | `isih/features.py` never reads the QA flag: the model was trained **with** the land-spillover zeros that are the project's own headline finding | Retrain with `ice_quality.load_sic` | **OPEN** — needs a Kaggle run |
+| 18 | `dakshin/features.py` never reads the QA flag: the model was trained **with** the land-spillover zeros that are the project's own headline finding | Retrain with `ice_quality.load_sic` | **OPEN** — needs a Kaggle run |
 | 19 | `models/sic_correction/unet.py` defaults describe a 3.0 M-parameter model that was never trained (the trained one is 1.93 M) | Make the defaults match what was trained, or delete them | **OPEN** |
 | 20 | The December 2019 replay window lies inside the model's training slice | Harmless while the demo runs no model; **becomes a leak the moment model output is shown on those dates.** Recorded in the audit and the run-of-show | **DONE** (as a rule) |
 | 21 | Two docs disagree on in-corridor iceberg count (15 vs 11), and "in corridor" is a longitude-band test | Reconcile and define the test | **OPEN** |
@@ -42,10 +42,10 @@ Status: **DONE** (in this branch) · **OPEN** (filed, not built) · **BLOCKED**.
 
 | # | Gap | Correction | Status |
 |---|---|---|---|
-| 22 | §13 alerting had **zero code** | P1/P2/P3 with all nine mandated fields, raised by gate transitions and world events, no alert without a route consequence | **DONE** — `isih/demo/voyage.py` |
+| 22 | §13 alerting had **zero code** | P1/P2/P3 with all nine mandated fields, raised by gate transitions and world events, no alert without a route consequence | **DONE** — `dakshin/demo/voyage.py` |
 | 23 | §8 back half: forward trajectory, uncertainty growth, comparison against the ship's **future** track | Built; projection stops at 72 h; uncertainty grows 13 km/day | **DONE** |
 | 24 | §32: weather-in-corridor and hazard-timeline panels had no UI at all | Both built, 6/12/24/48 h | **DONE** |
-| 25 | The router had no time dimension, so the forecast could never reach the route | Time-aware search: each cell costed with the conditions valid at arrival | **DONE** — `isih/sim/router.py` |
+| 25 | The router had no time dimension, so the forecast could never reach the route | Time-aware search: each cell costed with the conditions valid at arrival | **DONE** — `dakshin/sim/router.py` |
 | 26 | Fuel and time were collinear, so "fuel-efficient routing" was unsubstantiated | Fuel expressed per distance with independent ice and wave resistance; measured 14 % fuel for 72 % time on different tracks | **DONE** |
 | 27 | Reachability was a boolean resting on an invented 80 % limit | `critical_ice_limit()` returns the assumed limit at which reachability flips | **DONE** |
 | 28 | §14 sensors: no NMEA, no AIS | NMEA 0183 with correct checksums derived from the real track; AIS targets on the chart | **DONE**, badged simulated |

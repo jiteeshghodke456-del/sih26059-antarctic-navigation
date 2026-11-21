@@ -6,7 +6,7 @@
 Status: design, agreed 2026-09-02. Nothing here is built yet except where a
 section says otherwise. Evidence for the physical claims is in
 `NAVIGATION_RESEARCH.md`; the measured route experiment is
-`isih/route_regret.py`.
+`dakshin/route_regret.py`.
 
 ---
 
@@ -244,7 +244,7 @@ properly instead of five things getting done badly:
 
 ## 8. The honest limit of a 25 km product
 
-Stated plainly because a judge will ask, and because a mariner already knows:
+Stated plainly because a reviewer will ask, and because a mariner already knows:
 
 - **Growlers and bergy bits are invisible** at 25 km, and they are the classic
   hull-holing hazard. This is a radar-and-lookout problem, not a satellite
@@ -255,7 +255,7 @@ Stated plainly because a judge will ask, and because a mariner already knows:
 - **Coastal cells are actively suppressed** by the CDR's land-spillover filter
   and written as 0.0. Measured: this affects the 200 km approach box to Bharati
   on **43.2% of days** in 2018–2020. We now read the QA flag and treat those
-  cells as unknown (`isih/ice_quality.py`); before that fix our own router
+  cells as unknown (`dakshin/ice_quality.py`); before that fix our own router
   planned through them as open water.
 - **Concentration is not thickness, and POLARIS needs thickness.** IMO
   MSC.1/Circ.1519 indexes risk by ice *type*. A concentration-only system cannot

@@ -4,7 +4,7 @@ Research-only. Facts verified this session by reading primary sources or install
 source code. **No design decision here is approved yet** — proposals live in
 `docs/backlog.md` until an ADR is written.
 
-Prompted by a review of `isih/figures/route_map.png`: the straight-line comparison
+Prompted by a review of `dakshin/figures/route_map.png`: the straight-line comparison
 is a strawman, and the prototype does not yet address the problem statement's
 two-phase (open-ocean → ice) structure, ice-class constraints, iceberg CPA, or
 multi-vessel effects.
@@ -90,7 +90,7 @@ sea-ice-concentration forecast alone — it requires a thickness forecast too.**
 GLORYS12 carries `sithick`; the existing U-Net extends to a second output channel
 without architectural change.
 
-Currently `isih/make_route_figure.py` uses `max_ice_conc: 80`, a threshold we chose
+Currently `dakshin/make_route_figure.py` uses `max_ice_conc: 80`, a threshold we chose
 ourselves with no external justification.
 
 ---
@@ -197,7 +197,7 @@ actually arrive."
   forward-alignment with MoES's own direction rather than a hypothetical.
 
 Implication: do **not** put "Goa → Antarctica by sea" on a slide as *current*
-practice. An MoES judge will know the charter leg starts at Cape Town.
+practice. An MoES reviewer will know the charter leg starts at Cape Town.
 
 ---
 
@@ -314,8 +314,8 @@ ice the sensor is worst at. This cuts both ways and is worth saying out loud.
 - NSIDC's AMSR2 spillover correction analyses a **7 × 7 pixel (87.5 km)**
   neighbourhood and assumes land pixels radiate like 90% SIC.
 
-**This is the mechanism behind our own measured finding** (§ `isih/ice_quality.py`,
-`ISIH_RESULTS.md §2`): the CDR's land-spillover filter zeroes coastal cells and
+**This is the mechanism behind our own measured finding** (§ `dakshin/ice_quality.py`,
+`PROTOTYPE_RESULTS.md §2`): the CDR's land-spillover filter zeroes coastal cells and
 writes `0.0`, which reads as open water. The literature describes the
 overestimate; what bites us operationally is the **overcorrection**, at exactly
 the cells nearest a station.
@@ -348,7 +348,7 @@ From the 30-algorithm round robin (Ivanova et al. 2015), standard deviation at
 Southern Hemisphere is worse (N90 35.0%). At high concentration (75%) the spread
 collapses to 2.9–9.0%.
 
-> **The line for a judge:** "There is no such thing as *the* sea-ice
+> **The line for a reviewer:** "There is no such thing as *the* sea-ice
 > concentration. At the ice edge, published algorithms disagree with each other
 > by an order of magnitude more than they do in the pack. Any system that
 > presents a single number without an error bar is hiding that."

@@ -12,7 +12,7 @@ can it only hint at, and which are structurally invisible?*
 |---|---|
 | **VERIFIED** | Read directly from a primary source this session; source URL given. |
 | **INFERRED** | Derived by reasoning/arithmetic from a VERIFIED fact. The reasoning is shown so it can be checked. |
-| **UNVERIFIED** | Believed true but **not** confirmed from a primary source this session. **Do not put an UNVERIFIED number on a judged slide.** |
+| **UNVERIFIED** | Believed true but **not** confirmed from a primary source this session. **Do not put an UNVERIFIED number on a published slide.** |
 
 **Sources that could not be reached this session** are listed in §6. They are named rather than
 silently dropped.
@@ -68,7 +68,7 @@ scale of a 25 km passive-microwave SIC field is ~100 km, not 25 km, and it is at
 in the two regimes this voyage lives in — the ice edge, and summer melt.** This is not a reason to
 abandon the product; it is the reason the routing layer must be uncertainty-aware and must tier down
 (which `ARCHITECTURE.md` §2.4a already does). It is also the single most defensible thing the team can
-say to a judge who asks "what are the limits of your system?"
+say to a reviewer who asks "what are the limits of your system?"
 
 ### a.1 Master table
 
@@ -162,7 +162,7 @@ resisted quantification even in a standard written by ice services.
 
 **Therefore: if the project produces a compression output, the honest and standards-compliant thing to
 produce is a three-class categorical flag (slight / considerable / strong), not a continuous
-"compression index" with invented units.** A judge who knows ice charts will recognise the WMO scale
+"compression index" with invented units.** A reviewer who knows ice charts will recognise the WMO scale
 and credit it. A made-up 0–100 "compression score" invites the question "where did that number come
 from?", which has no good answer.
 
@@ -388,7 +388,7 @@ besetting_flag(cell, t) = f( SIC ≥ close-pack threshold,
 compression forecast".** State that no validated Antarctic compression forecast exists, that the
 international standard for compression is itself a three-class qualitative human judgement, and that
 this flag is a screening proxy for the *preconditions* documented in the Shokalskiy and Oldendorff
-cases. **That framing is both true and stronger in front of a judge than a fake number would be** — it
+cases. **That framing is both true and stronger in front of a reviewer than a fake number would be** — it
 demonstrates that the team read the standard and found the honest boundary of what is computable.
 
 **Unresolved and worth stating as such:** the thresholds (what convergence rate, what barrier distance
@@ -703,7 +703,7 @@ and NSIDC G02202 documentation:
 | **Land spillover** | "This leads to **false ice along the coast**. Automated filters remove much of such ice, but some may remain." NSIDC further notes the spillover filter "may affect the area of some open water features within the ice pack near coasts such as polynyas." | **The correction and the artifact both live in the coastal band — which is exactly where the coastal polynyas of §c.6 are, and exactly where besetting happens.** The one place the product could offer the biggest routing prize is the one place its coastal handling is least trustworthy. |
 | **Weather false-ice** | "Thick precipitating clouds, as well as wind roughening of the surface, can lead to **false ice returns over open ocean**" | Southern Ocean storms are exactly thick-precipitating and wind-roughening. The `qc_flags` layer (`ARCHITECTURE.md` §4.1) is the right mitigation; this is the citation justifying it. |
 | **Effective scale** | "least reliable for **small-scale studies (e.g., <100 km)**" | **The effective decision scale is ~100 km, not 25 km.** A route drawn to 25 km precision implies a precision the input does not have. |
-| **Fitness for purpose** | "The low spatial resolution limits the precision of the ice edge location and **makes the products of limited use for operational support (e.g., navigation)**" | The data providers' own expert community says this product is of limited use for navigation. **Quote it first, before a judge finds it.** |
+| **Fitness for purpose** | "The low spatial resolution limits the precision of the ice edge location and **makes the products of limited use for operational support (e.g., navigation)**" | The data providers' own expert community says this product is of limited use for navigation. **Quote it first, before a reviewer finds it.** |
 
 ### d.4 The one-slide version
 

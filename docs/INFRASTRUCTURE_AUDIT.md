@@ -1,4 +1,4 @@
-# Infrastructure Audit — SIH26059
+# Infrastructure Audit — Dakshin
 
 ## Environment
 - Claude Code 2.1.251, Node v22.22.1 / npm 9.2.0, Python 3.14.4, Git 2.53.0, Docker 29.7.2 — all present.

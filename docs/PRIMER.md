@@ -1,4 +1,4 @@
-# SIH26059 Primer — What the Team Actually Needs to Understand
+# Dakshin Primer — What the Team Actually Needs to Understand
 
 This is not a link list. It teaches the ideas behind every major decision in
 `ARCHITECTURE.md` and `ML_ARCHITECTURE.md`, in plain language, so anyone on
@@ -59,7 +59,7 @@ against real satellite observations (a process called **data assimilation**
 — think of it as constantly nudging the simulation back toward reality every
 time new real data comes in, so it never drifts too far off). This CMEMS
 forecast is *already good*. Building a from-scratch model and hoping to beat
-a system like that, on a hackathon timeline, is a losing bet — and worse,
+a system like that, on a short timeline, is a losing bet — and worse,
 our own research (`COMPETITIVE_ANALYSIS.md`) explicitly says CMEMS is "the
 bar to beat." A first version of our design tried to beat it head-on and an
 adversarial review caught that it wasn't going to work (see

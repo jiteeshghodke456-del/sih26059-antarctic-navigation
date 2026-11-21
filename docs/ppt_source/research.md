@@ -1,9 +1,9 @@
-# The research slide — evidence of depth, PS-26059
+# The research slide — evidence of depth, Dakshin
 
 Purpose: this file assembles the specific, hard-won findings behind the deck's "justified
 research slide" (master prompt §39/§40, item 10 — "a justified research slide demonstrating
 hard work and depth of research into the problem statement"). Every item below cites the file
-and section where it lives, so a judge's follow-up question can be answered by opening that
+and section where it lives, so a reviewer's follow-up question can be answered by opening that
 file, not by trusting the slide. Nothing here is invented for the deck; it is pulled from
 research already on disk, dated when the primary source was actually read.
 
@@ -67,7 +67,7 @@ observation, without re-downloading it** — an operation a static packed field 
 bandwidth (`docs/ML_ARCHITECTURE.md` §7.2). That 5–15 KB figure is explicitly flagged as an
 **estimate, not measured** — `docs/backlog.md` carries it as a Phase-1 item to actually measure.
 
-This is the finding behind the measured result: **the RMSE numbers in `docs/ISIH_RESULTS.md`
+This is the finding behind the measured result: **the RMSE numbers in `docs/PROTOTYPE_RESULTS.md`
 are the model beating CMEMS on CMEMS's own output**, not beating a strawman.
 
 ---
@@ -102,7 +102,7 @@ disclosed here rather than implied as built.
 
 ### 3.3 Antarctic Treaty protected areas, modelled by legal regime — not as no-go blobs
 
-`isih/protected_areas.py` (module docstring), added today. The master prompt (§48A.17) requires
+`dakshin/protected_areas.py` (module docstring), added today. The master prompt (§48A.17) requires
 determining whether a protected-area regime imposes a prohibition, a permit requirement, or an
 operational condition — not treating every polygon the same. The research distinguishes the two
 actual instruments under Annex V of the Antarctic Treaty's Environmental Protocol:
@@ -185,7 +185,7 @@ either not know or would state as an unsupported slogan ("existing tools are ina
   ships is a precision estimate, not a total error budget.
 - **This connects directly to our own measured coastal-data finding**, not just literature: the
   coastal-contamination correction that fixes false coastal ice can overshoot and remove true
-  ice, and our own audit (`isih/ice_quality.py`, `docs/ISIH_RESULTS.md` §2) found the NOAA/NSIDC
+  ice, and our own audit (`dakshin/ice_quality.py`, `docs/PROTOTYPE_RESULTS.md` §2) found the NOAA/NSIDC
   CDR's land-spillover filter zeroing coastal cells to a value that reads as open water — on
   **100% of days**, ~118 cells/day, affecting 43.2% of days in the 200 km approach to Bharati
   specifically. Masking those cells moves the true coastal-ice picture **up** (46.8% → 54.6%
@@ -195,7 +195,7 @@ either not know or would state as an unsupported slogan ("existing tools are ina
   (Massonnet et al. 2023), 22 contributors, >3,000 forecasts: only 51% beat a plain climatological
   forecast on CRPS. The authors state they did **not** implement a persistence benchmark at all,
   calling it "not always straightforward" — which is the exact benchmark our own result is
-  measured against (`docs/ISIH_RESULTS.md`). That is a genuine methodological edge over the
+  measured against (`docs/PROTOTYPE_RESULTS.md`). That is a genuine methodological edge over the
   published state of the art, not a marketing line.
 - **Manual ice charting is not ground truth either.** Cheng et al. 2020: trained analysts
   reading the same RADARSAT-2 imagery matched automated segmentation exactly only 39% of the
@@ -348,11 +348,11 @@ input it should expect to find pre-made.
 
 ---
 
-## 9. A question the team asked itself before a judge could
+## 9. A question the team asked itself before a reviewer could
 
-`docs/ISIH_RESULTS.md` §"Known caveats." The headline result (the model beats persistence by
+`docs/PROTOTYPE_RESULTS.md` §"Known caveats." The headline result (the model beats persistence by
 18.5%–30.6% across 1–7 day leads) is trained against a **reanalysis** background (GLORYS12), not
-a live operational forecast. The team wrote out the exact question a technically literate judge
+a live operational forecast. The team wrote out the exact question a technically literate reviewer
 would ask — *"your background already saw the observations you are predicting; isn't that
 leakage?"* — before being asked it, and gave the honest partial answer available today: GLORYS12's
 own RMSE (0.163) is far from zero and worse than persistence at every horizon, so it is not simply
@@ -366,12 +366,12 @@ question cannot arise at all.
 
 ## Sources worth naming on the slide itself
 
-A judge can verify any of the above by asking to see, in order of how quickly they resolve a
+A reviewer can verify any of the above by asking to see, in order of how quickly they resolve a
 challenge: `docs/ML_ARCHITECTURE.md` (the pivot and the calibration rebuild), `docs/
 WEAKNESS_ANALYSIS.md` (the self-review that forced it), `docs/NAVIGATION_RESEARCH.md`
 (POLARIS, PolarRoute source-reading, the data-quality and hazard literature),
 `docs/COMPETITIVE_ANALYSIS.md` (the field survey), `docs/DATASET.md` (the source-by-source
-audit), `isih/protected_areas.py` (the ASPA/ASMA legal-regime module), and `docs/ISIH_RESULTS.md`
+audit), `dakshin/protected_areas.py` (the ASPA/ASMA legal-regime module), and `docs/PROTOTYPE_RESULTS.md`
 (the trained model's actual numbers and its own leakage question).
 
 ---

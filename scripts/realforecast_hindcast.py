@@ -8,9 +8,9 @@ For each clean archived cycle t and lead L in {1,3,5,7}:
     raw CMEMS    = cycle t, step L (regridded to the NSIDC 25 km grid)
     persistence  = NSIDC NRT observation at t, carried forward
     U-Net        = clip(raw + model correction, 0, 1), inputs built by
-                   isih.features.build_channels_operational — only data
+                   dakshin.features.build_channels_operational — only data
                    knowable on day t
-    truth        = NSIDC NRT G10016 v4 at t+L, QA-masked (isih.ice_quality)
+    truth        = NSIDC NRT G10016 v4 at t+L, QA-masked (dakshin.ice_quality)
 
 Scored only on valid cells inside the Copernicus box (0–80E, 55–78S), RMSE
 pooled over cycles (training convention: zero-filled fields over the
@@ -44,7 +44,7 @@ import numpy as np
 import xarray as xr
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "isih"))
+sys.path.insert(0, str(ROOT / "dakshin"))
 sys.path.insert(0, str(ROOT))
 
 from features import N_HISTORY, build_channels_operational, iiee_km2  # noqa: E402
@@ -53,7 +53,7 @@ from ice_quality import load_sic  # noqa: E402
 
 ARCHIVE = ROOT / "data" / "cmems_forecast_archive"
 NRT_DIR = ROOT / "data" / "nsidc_nrt"
-OUT = ROOT / "isih" / "figures" / "realforecast_hindcast.json"
+OUT = ROOT / "dakshin" / "figures" / "realforecast_hindcast.json"
 LEADS = (1, 3, 5, 7)
 BOX = {"lon": (0.0, 80.0), "lat": (-78.0, -55.0)}
 

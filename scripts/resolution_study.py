@@ -16,7 +16,7 @@ A true resolution experiment needs the same model run at several resolutions,
 e.g. the ANHA configurations; the NEMO reader (F2) is what would let those
 runs drop into this exact pipeline.
 
-Writes isih/figures/resolution_study.json and resolution_study.png.
+Writes dakshin/figures/resolution_study.json and resolution_study.png.
 """
 from __future__ import annotations
 
@@ -31,8 +31,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from realforecast_hindcast import CAVEATS, LEADS, run  # noqa: E402
 
-OUT_JSON = ROOT / "isih" / "figures" / "resolution_study.json"
-OUT_PNG = ROOT / "isih" / "figures" / "resolution_study.png"
+OUT_JSON = ROOT / "dakshin" / "figures" / "resolution_study.json"
+OUT_PNG = ROOT / "dakshin" / "figures" / "resolution_study.png"
 FACTORS = {1: "1/12°", 3: "1/4°", 12: "1°"}
 
 

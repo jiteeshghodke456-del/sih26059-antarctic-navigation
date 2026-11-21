@@ -64,19 +64,19 @@ mlruns/
   .trash/
 ```
 
-Tracking URI: `file://<repo_root>/mlruns`. This is what `isih/mlflow_backfill.py`
+Tracking URI: `file://<repo_root>/mlruns`. This is what `dakshin/mlflow_backfill.py`
 points at, and what `mlflow ui` should be pointed at too (command below).
 It is added to `.gitignore` — it is regenerable (by re-running the backfill
 script, or by future training runs logging into it), and the project's
 existing convention is to not commit regenerable binary data (see the
-`isih/data/` and `isih/checkpoints/` entries already in `.gitignore`).
+`dakshin/data/` and `dakshin/checkpoints/` entries already in `.gitignore`).
 
 **Consequence worth being explicit about:** because `mlruns/` is gitignored,
 the four runs created in this sandbox do **not** travel with the branch.
 Pulling this branch on your WSL machine will not show them in your MLflow
 UI — you get the script, not its output. Re-running the script (step 4
 below) regenerates the identical runs, since it reads the same fixed
-numbers from `docs/ISIH_RESULTS.md` every time. This is intentional, not an
+numbers from `docs/PROTOTYPE_RESULTS.md` every time. This is intentional, not an
 oversight: the alternative was committing binary run data to git.
 
 ### A version-specific wrinkle you will hit too
@@ -90,7 +90,7 @@ instead. This is real, current MLflow behavior (confirmed by reading
 We opted back into the file store on purpose — it needs no running server
 to log to and is a plain directory, which is what "pendrive-friendly,
 offline-deployment-friendly" means in practice — rather than switching to a
-database file. `isih/mlflow_backfill.py` sets
+database file. `dakshin/mlflow_backfill.py` sets
 `os.environ.setdefault("MLFLOW_ALLOW_FILE_STORE", "true")` itself, so you do
 not need to set it by hand to run the script. You **do** need it set when
 you start `mlflow ui` by hand (command below includes it).
@@ -100,10 +100,10 @@ If a future MLflow major version removes the filesystem backend outright
 --backend-store-uri sqlite:///mlflow.db` — still a single local file, still
 no external service, just not a bare directory.
 
-## 3. `isih/mlflow_backfill.py` — what it logs, and why backfill at all
+## 3. `dakshin/mlflow_backfill.py` — what it logs, and why backfill at all
 
 The model in this project was trained on a **Kaggle T4 GPU notebook**
-(`isih/kaggle/isih_train.ipynb`), not locally — that is where the GPU, the
+(`dakshin/kaggle/isih_train.ipynb`), not locally — that is where the GPU, the
 CMEMS credentials, and the ~1-2 hour compute budget actually are. Neither
 this sandbox nor your WSL laptop ran that training loop, so there is no
 local run history for MLflow to have been "missing a connection to." MLflow
@@ -112,7 +112,7 @@ cannot retroactively observe a run that already finished elsewhere.
 What the script does instead: log the real, already-recorded results as
 MLflow runs, one per forecast horizon, so they are queryable and comparable
 in the same store that future local runs will also write to. Every number
-is copied verbatim from `docs/ISIH_RESULTS.md` — nothing is computed,
+is copied verbatim from `docs/PROTOTYPE_RESULTS.md` — nothing is computed,
 estimated, or invented by the script.
 
 Per horizon, it logs:
@@ -134,7 +134,7 @@ It is idempotent: re-running it skips any horizon that already has a
 ## 4. What was actually run, and what it logged (verified, not assumed)
 
 ```bash
-MLFLOW_DISABLE_AGENT_HINT=1 /home/agent/.venvs/isih-demo/bin/python isih/mlflow_backfill.py
+MLFLOW_DISABLE_AGENT_HINT=1 /home/agent/.venvs/isih-demo/bin/python dakshin/mlflow_backfill.py
 ```
 
 Logged 4 runs into experiment `isih-sic-forecast`. Immediately queried back
@@ -150,7 +150,7 @@ this same store — both confirm the same four rows:
 | 5 | 0.0938 | 0.1204 | 12 | 1,929,601 | kaggle-backfill |
 | 7 | 0.0968 | 0.1395 | 12 | 1,929,601 | kaggle-backfill |
 
-Every value matches `docs/ISIH_RESULTS.md`'s headline table exactly — no
+Every value matches `docs/PROTOTYPE_RESULTS.md`'s headline table exactly — no
 discrepancy was found between that document and the numbers logged.
 Re-running the script a second time correctly reported all four horizons as
 "already backfilled, skipping" rather than duplicating them.
@@ -175,7 +175,7 @@ pip install mlflow==3.16.0
 see the gitignore note in §2):
 
 ```bash
-python isih/mlflow_backfill.py
+python dakshin/mlflow_backfill.py
 ```
 
 **Start the local MLflow server**, pointed at this repo's store:
@@ -192,7 +192,7 @@ local training runs you log afterward, side by side.
 
 **Going forward**: any script that actually trains locally should call
 `mlflow.log_param(...)` / `mlflow.log_metric(...)` directly against this
-same store (same pattern as `isih/mlflow_backfill.py`), so local runs and
+same store (same pattern as `dakshin/mlflow_backfill.py`), so local runs and
 the Kaggle backfill land in the same experiment and are directly comparable.
 
 ## 6. MCP connection — investigated, not invented
@@ -274,6 +274,6 @@ findable via PyPI/GitHub search from this sandbox.
   verify your specific client-to-server MCP handshake, since that handshake
   can only happen between processes on your machine.
 - **Regenerating `mlruns/` locally** — gitignored by design (§2); run
-  `python isih/mlflow_backfill.py` there to get the same four runs.
+  `python dakshin/mlflow_backfill.py` there to get the same four runs.
 - **No W&B was added** — §42 says not to unless there's a concrete reason;
   none arose during this task.

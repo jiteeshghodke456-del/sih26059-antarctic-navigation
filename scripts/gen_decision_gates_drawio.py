@@ -7,7 +7,7 @@ describes the *mechanism* — which evidence feeds which gate, how nine gate
 states collapse into one route-health state, and where a human sits.
 
 The gate names, their questions and their blockers are IMPORTED from
-isih/decision.py and isih/gates.py rather than retyped. A diagram that
+dakshin/decision.py and dakshin/gates.py rather than retyped. A diagram that
 restates the code in prose drifts from it within a week; this one cannot name
 a gate the code does not have, because the generator would fail first.
 
@@ -21,7 +21,7 @@ from xml.sax.saxutils import escape
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "isih"))
+sys.path.insert(0, str(ROOT / "dakshin"))
 
 from decision import GATES, GATE_QUESTION      # noqa: E402
 from gates import BLOCKED_ON                   # noqa: E402
@@ -49,7 +49,7 @@ S = {
                "verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#0F1720;",
 }
 
-# Which gates we can actually evaluate today. Mirrors isih/gates.py: anything
+# Which gates we can actually evaluate today. Mirrors dakshin/gates.py: anything
 # in BLOCKED_ON returns UNKNOWN, everything else is evaluated from real data.
 STATE_NOW = {g: ("unk" if g in BLOCKED_ON else "ok") for g in GATES}
 STATE_NOW["ice"] = "mar"          # 79% against an assumed 80% limit
@@ -61,7 +61,7 @@ SOURCES = [
     ("s_mesh", "meshiphi mesh<br>SIC · thickness · density", ["chart"]),
     ("s_win",  "destination window<br>vessel-performance mesh", ["logistics"]),
     ("s_alt",  "alternatives.json<br>PolarRoute corridors", ["contingency"]),
-    ("s_ves",  "vessel config<br>isih/ice_meshes.py", ["capability"]),
+    ("s_ves",  "vessel config<br>dakshin/ice_meshes.py", ["capability"]),
     ("s_none", "NO SOURCE HELD<br>weather · traffic · comms · live sensors",
      ["weather", "traffic", "communications", "execution"]),
 ]
@@ -176,4 +176,4 @@ Path(OUT).write_text(xml, encoding="utf-8")
 evaluable = sum(1 for g in GATES if STATE_NOW[g] != "unk")
 print(f"wrote {OUT}")
 print(f"  {len(NODES)} shapes, {len(EDGES)} connectors, {len(xml)} bytes")
-print(f"  {evaluable} of {len(GATES)} gates evaluable — imported from isih/gates.py")
+print(f"  {evaluable} of {len(GATES)} gates evaluable — imported from dakshin/gates.py")

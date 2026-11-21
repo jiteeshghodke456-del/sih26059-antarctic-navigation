@@ -100,7 +100,7 @@
 <div class="wrap">
 
 <header class="top">
-  <div class="eyebrow">SIH 26059 &middot; MoES / NCPOR</div>
+  <div class="eyebrow">Dakshin &middot; MoES / NCPOR</div>
   <h1>Antarctic Navigation Architecture</h1>
   <p class="lede">AI-enabled sea-ice forecasting, iceberg trajectory prediction, and navigation
      decision support for the Cape&nbsp;Town &rarr; Bharati resupply corridor. This is what the
@@ -132,7 +132,7 @@
   <div class="legend">
     <span class="lg"><i class="i-built"></i><b>Built &amp; verified</b>&nbsp;&mdash; evidence in repo</span>
     <span class="lg"><i class="i-partial"></i><b>Partly built</b>&nbsp;&mdash; works, not at full scale</span>
-    <span class="lg"><i class="i-designed"></i><b>Designed</b>&nbsp;&mdash; specified, December build</span>
+    <span class="lg"><i class="i-designed"></i><b>Designed</b>&nbsp;&mdash; specified, production build</span>
     <span class="lg"><i class="i-open"></i><b>Open white space</b>&nbsp;&mdash; nobody does this yet</span>
     <span class="lg"><i class="i-ext"></i><b>External</b>&nbsp;&mdash; reused, not ours</span>
   </div>
@@ -402,25 +402,25 @@
     <thead><tr><th>Result</th><th>Number</th><th>Produced by</th></tr></thead>
     <tbody>
       <tr><td>Beats persistence &mdash; the baseline that actually matters &mdash; at every horizon 1&ndash;7 days</td>
-          <td class="n">+18.5% to +30.6%</td><td><code>docs/ISIH_RESULTS.md</code></td></tr>
+          <td class="n">+18.5% to +30.6%</td><td><code>docs/PROTOTYPE_RESULTS.md</code></td></tr>
       <tr><td>The advantage <em>grows</em> with lead time (our error rises 2.1&times;, persistence 2.5&times;)</td>
-          <td class="n">2.1&times; vs 2.5&times;</td><td><code>docs/ISIH_RESULTS.md</code></td></tr>
+          <td class="n">2.1&times; vs 2.5&times;</td><td><code>docs/PROTOTYPE_RESULTS.md</code></td></tr>
       <tr><td>Satellite record reports suppressed coastal pixels as open water &mdash; a defect we found</td>
-          <td class="n">100% of days</td><td><code>isih/ice_quality.py</code></td></tr>
+          <td class="n">100% of days</td><td><code>dakshin/ice_quality.py</code></td></tr>
       <tr><td>&hellip; affecting the 200 km approach to Bharati</td>
-          <td class="n">43.2% of days</td><td><code>isih/audit_ice_quality.py</code></td></tr>
+          <td class="n">43.2% of days</td><td><code>dakshin/audit_ice_quality.py</code></td></tr>
       <tr><td>Fixing it moves coastal ice <em>up</em>, i.e. the router becomes more cautious, not less</td>
-          <td class="n">46.8% &rarr; 54.6%</td><td><code>docs/ISIH_RESULTS.md</code></td></tr>
+          <td class="n">46.8% &rarr; 54.6%</td><td><code>docs/PROTOTYPE_RESULTS.md</code></td></tr>
       <tr><td>Bharati's own cell closed to this vessel in Dec 2019; the approach 100 km north open</td>
-          <td class="n">23/31 vs 31/31</td><td><code>isih/destination_window.py</code></td></tr>
+          <td class="n">23/31 vs 31/31</td><td><code>dakshin/destination_window.py</code></td></tr>
       <tr><td>Iceberg drift reproduces the published coefficients and the 765 m critical length</td>
           <td class="n">23/23 tests</td><td><code>models/iceberg/test_drift.py</code></td></tr>
       <tr><td>Live icebergs tracked, of which inside our corridor (incl. D15A at 3,037 km&sup2;)</td>
           <td class="n">33 &middot; 15 inside</td><td><code>models/iceberg/catalogue.py</code></td></tr>
       <tr><td>Route computed on real satellite ice with a real open-source router, Cape Town &rarr; Bharati</td>
-          <td class="n">8.6 days</td><td><code>isih/route_regret.py</code></td></tr>
+          <td class="n">8.6 days</td><td><code>dakshin/route_regret.py</code></td></tr>
       <tr><td>Real daily satellite files processed, zero failures, zero synthetic data</td>
-          <td class="n">1,096 files</td><td><code>isih/build_dataset.py</code></td></tr>
+          <td class="n">1,096 files</td><td><code>dakshin/build_dataset.py</code></td></tr>
     </tbody>
   </table>
   </div>
@@ -451,7 +451,7 @@
 <footer>
   Generated from the working tree: <code>docs/ARCHITECTURE.md</code> rev 2,
   <code>docs/TRUE_CLAIMS.md</code>, and the code itself &mdash; 3,508 lines of Python across
-  <code>isih/</code>, <code>models/</code> and <code>scripts/</code>. Border style in both figures
+  <code>dakshin/</code>, <code>models/</code> and <code>scripts/</code>. Border style in both figures
   reflects build status verified against the repository, not intended scope. No synthetic data
   appears anywhere in the product; the only fixtures are inside unit tests that check plumbing.
 </footer>
