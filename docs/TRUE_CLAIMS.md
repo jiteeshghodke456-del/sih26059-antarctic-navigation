@@ -25,7 +25,7 @@ Each of these has a file in this repository that produces the number.
 | 1.8 | Masking those cells moves coastal ice **up** — 46.8% → 54.6% mean — i.e. the fix makes the router *more* cautious | `docs/PROTOTYPE_RESULTS.md` §2 |
 | 1.9 | Our iceberg drift model reproduces the published coefficient table and the paper's own 765 m critical length — **23/23 tests pass** | `models/iceberg/test_drift.py` |
 | 1.10 | **33 icebergs** as of 27 Aug 2026 (USNIC weekly product); **15 of them inside our routing corridor**, including D15A at 3,037 km² beside Bharati's approach | `models/iceberg/regime_report.json` |
-| 1.11 | ~~Route computed on real satellite ice: 8.6 days steaming, Cape Town → Bharati~~ **WITHDRAWN 2026-11-21**: the route behind this number ends ON LAND — IBCSO v2 places its final point 91 m above sea level — and the chart gate now fails it. The number must be re-derived from a regenerated route before it is quoted again (see backlog) | `data/bathymetry/ibcso_v2_corridor_0p05.nc`, chart-gate test in `dakshin/test_gates.py` |
+| 1.11 | Route computed on real satellite ice (1 Dec 2019) with a real open-source router on a mesh carrying **real IBCSO v2 / GEBCO_2020 depth**: **8.7 days steaming** (8.66), Cape Town → 16 km off Bharati, never over water shallower than 89 m. Re-derived 2026-11-21 after the 8.6-day route was found to end on land (Bharati station, above sea level). Steaming time only — a lower bound | `dakshin/figures/routes.json`, `dakshin/figures/route_map.png`, `test_gate_states_match_the_real_repo_mesh` in `dakshin/test_gates.py` |
 | 1.12 | Built on **1,096 real daily satellite files, zero failures**. No synthetic observations anywhere — the router's ice thickness and density are literature lookup tables, disclosed in ADR-013 | `docs/PROTOTYPE_RESULTS.md` |
 | 1.13 | On **real operational forecasts** (76 archived GLO12 cycles, 2026 spring) scored against real satellite truth in the corridor, raw CMEMS beats persistence at every lead: RMSE 0.102 vs 0.120 (1 d) to 0.115 vs 0.164 (7 d) | `dakshin/figures/realforecast_hindcast.json` |
 | 1.14 | Point-wise RMSE **cannot detect model resolution** (1/4° coarsening scores slightly *better* — the double-penalty effect); the ice-edge metric IIEE can: 1° degrades the edge by up to 34,000 km² at day 7, while 1/12° ≈ 1/4° | `dakshin/figures/resolution_study.json`, `docs/RESOLUTION_STUDY.md` |
@@ -141,7 +141,8 @@ disclose its own failures stops hunting for them.
   time only*. **Then we withdrew the correction too (2026-11-21):** real IBCSO
   bathymetry showed that route's final point is on land, so 8.6 days is not
   quotable until the route is regenerated with the depth-aware router. Twice
-  withdrawn beats once wrong.
+  withdrawn beats once wrong. Regenerated the same day on the same ice with
+  depth in the mesh: **8.7 days**, arriving 16 km off the station (claim 1.11).
 
 - **We withdrew a figure caption.** An earlier route figure claimed it "bends
   around the thickest ice". Measurement showed the route crosses **more** average

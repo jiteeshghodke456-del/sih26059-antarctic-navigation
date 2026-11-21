@@ -323,6 +323,14 @@ We are reporting a null result on the arm we expected to win. That matters:
 
 ## 4. Transit time — and why 8.6 days is a lower bound
 
+> **Update 2026-11-21.** The 8.58-day route ended on land: its final point is
+> Bharati station itself, which IBCSO v2 puts above sea level. Regenerated on
+> the same 1 Dec 2019 ice with real IBCSO v2 / GEBCO_2020 depth in the mesh,
+> the published route (`dakshin/figures/routes.json`) is **8.66 days**,
+> arriving 16 km off the station. The route-regret table in §3 was computed
+> on meshes without depth and has not been re-run. Everything below about
+> why steaming time is a lower bound still applies.
+
 `8.58 days` is **ideal steaming time only**. It is optimistic, for reasons we
 can name precisely:
 

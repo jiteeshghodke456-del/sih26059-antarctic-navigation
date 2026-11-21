@@ -37,13 +37,15 @@ def test_spillover_signature_on_day_one():
 # --- route: exactly what PolarRoute wrote ---------------------------------
 
 def test_route_geometry_and_traveltime():
+    # Regenerated 2026-11-21 on a mesh carrying IBCSO v2 / GEBCO depth: the
+    # old 41-point, 8.58-day track ended on land at Bharati station.
     r = data.route()
-    assert len(r["coords"]) == 41
+    assert len(r["coords"]) == 63
     lon0, lat0 = r["coords"][0]
     lon1, lat1 = r["coords"][-1]
     assert abs(lat0 - -33.9) < 0.6 and abs(lon0 - 18.4) < 0.6     # Cape Town
     assert abs(lat1 - -69.4) < 0.6 and abs(lon1 - 76.2) < 0.6     # Bharati
-    assert abs(r["total_traveltime_days"] - 8.58) < 0.01
+    assert abs(r["total_traveltime_days"] - 8.66) < 0.01
 
 
 def test_route_ice_numbers_match_the_figure():
@@ -65,7 +67,7 @@ def test_raster_on_screen_is_the_raster_in_the_figure():
 
 def test_cells_parse():
     c = data.cells()
-    assert len(c) == 236
+    assert len(c) == 1811          # depth splitting refines the coastal cells
     assert all(len(cell["ring"]) >= 4 for cell in c)
     vals = [cell["sic"] for cell in c if cell["sic"] is not None]
     assert vals and min(vals) >= 0.0 and max(vals) <= 100.0

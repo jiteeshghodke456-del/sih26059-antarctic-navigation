@@ -71,7 +71,7 @@ def _depths_along(lonlat):
 
 def test_chart_gate_is_marginal_on_a_deep_route():
     """A real route from the depth-aware router, checked against the real
-    IBCSO subset: deep all the way, so MARGINAL with the ENC caveat."""
+    IBCSO v2 / GEBCO grid: deep all the way, so MARGINAL with the ENC caveat."""
     from sim.router import Router, VesselModel
     from sim.world import BHARATI, CAPE_TOWN, World
 
@@ -83,19 +83,23 @@ def test_chart_gate_is_marginal_on_a_deep_route():
         "IBCSO is a scientific compilation, not an official electronic "
         "navigational chart (ENC); passage planning still needs official charts."
     )
-    # Cape Town to 55 S is outside the subset, and the gate says so.
-    assert "were not depth-checked" in g.reason
+    # The grid now reaches Cape Town, so every point was depth-checked.
+    assert "not depth-checked" not in g.reason
 
 
-def test_chart_gate_fails_the_published_route_that_ends_ashore():
-    """dakshin/figures/routes.json was solved before depth existed. Its last
-    point is Bharati station itself, which IBCSO puts above sea level."""
-    cfg = json.loads((DAKSHIN / "figures" / "routes.json").read_text())
-    coords = cfg["paths"]["features"][0]["geometry"]["coordinates"]
-    depths = _depths_along(coords)
+def test_chart_gate_fails_a_route_that_ignores_depth():
+    """The same router with the depth limit switched off ends on the lattice
+    node nearest Bharati - on the ice sheet, above sea level. That is the
+    route the published figure used to show; the gate must refuse it."""
+    from sim.router import Router, VesselModel
+    from sim.world import BHARATI, CAPE_TOWN, World
+
+    blind = VesselModel(min_depth_m=float("-inf"))
+    res = Router(World(20261207), blind).solve(CAPE_TOWN, BHARATI, 4.0)
+    depths = _depths_along([(l["lon"], l["lat"]) for l in res["legs"]])
     g = G.chart_gate(MESH_NO_BATHY, VESSEL, depths)
     assert g.state is GateState.FAIL
-    assert g.at_leg == len(coords) - 1
+    assert depths[-1] < 0                    # ends ashore
     assert "shallower than the vessel's 20 m minimum depth" in g.reason
 
 
@@ -229,13 +233,13 @@ def test_todays_honest_answer_is_that_the_route_cannot_be_certified():
 
 
 def test_gate_states_match_the_real_repo_mesh():
-    """Guard against the mesh silently gaining or losing a data source."""
-    routes = DAKSHIN / "figures" / "routes.json"
-    if not routes.exists():
-        return
-    cfg = json.loads(routes.read_text())
+    """The published route (dakshin/figures/routes.json) is now solved on a
+    mesh that carries the bathymetry, and every point of it is deep enough:
+    MARGINAL, never PASS. Guards against the mesh silently losing depth."""
+    cfg = json.loads((DAKSHIN / "figures" / "routes.json").read_text())
     loaders = [s.get("loader") for s in cfg["config"]["mesh_info"]["data_sources"]]
-    assert "scalar_csv" in loaders
-    assert not any(l in ("bathymetry", "gebco", "depth") for l in loaders), (
-        "mesh gained bathymetry — the chart gate can now be evaluated, update it"
-    )
+    assert "scalar_csv" in loaders and "gebco" in loaders
+    coords = cfg["paths"]["features"][0]["geometry"]["coordinates"]
+    g = G.chart_gate(cfg["config"], VESSEL, _depths_along(coords))
+    assert g.state is GateState.MARGINAL
+    assert g.reason == G.CHART_NOT_ENC

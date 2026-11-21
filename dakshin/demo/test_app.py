@@ -50,14 +50,14 @@ def test_summary_carries_the_published_window(client):
 
 def test_route_endpoint(client):
     r = client.get("/api/route").json()
-    assert len(r["coords"]) == 41
-    assert abs(r["total_traveltime_days"] - 8.58) < 0.01
+    assert len(r["coords"]) == 63
+    assert abs(r["total_traveltime_days"] - 8.66) < 0.01
     assert r["max_sic_pct_along_route"] < 80
 
 
 def test_cells_endpoint(client):
     c = client.get("/api/cells").json()
-    assert len(c["cells"]) == 236
+    assert len(c["cells"]) == 1811
 
 
 def test_day_on_and_off_differ_in_the_documented_way(client):
@@ -215,7 +215,7 @@ def test_importing_a_passage_plan_is_refused_with_its_reason(client):
 def test_the_waypoint_list_is_the_real_route(client):
     _reset(client)
     w = client.get("/api/waypoints").json()
-    assert w["count"] == 41
+    assert w["count"] == 63
     assert w["waypoints"][0]["elapsed_days"] == 0.0
     assert w["waypoints"][-1]["elapsed_days"] > 8.0
     assert "Steaming time only" in w["note"]
