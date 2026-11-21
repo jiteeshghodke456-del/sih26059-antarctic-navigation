@@ -335,7 +335,7 @@ We are reporting a null result on the arm we expected to win. That matters:
 > the same depth-aware meshes. Everything below about why steaming time is a
 > lower bound still applies.
 
-`8.58 days` is **ideal steaming time only**. It is optimistic, for reasons we
+`8.66 days` is **ideal steaming time only**. It is optimistic, for reasons we
 can name precisely:
 
 1. **No sea-state penalty anywhere.** PolarRoute defines `wave_resistance()` in

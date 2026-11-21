@@ -52,7 +52,7 @@ check("transit days (rounded)", round(static['actual_days'], 1), 8.7)
 
 res = (R / 'docs/PROTOTYPE_RESULTS.md').read_text()
 for token in ["+18.5%", "+30.6%", "1,929,601", "43.2%", "46.8%", "54.6%",
-              "23 / 31", "8.58"]:
+              "23 / 31", "8.66"]:
     (ok if token in res else bad).append(f"PROTOTYPE_RESULTS.md contains {token!r}")
 
 for f in ["docs/archive-hackathon/SIH_PPT.md", "docs/TRUE_CLAIMS.md",
