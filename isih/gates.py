@@ -1,8 +1,9 @@
 """Evaluate the nine decision gates of §12 against evidence we actually hold.
 
 The uncomfortable part of this module is the honest part. Of the nine gates,
-we can evaluate three from real data. The other six return UNKNOWN, each
-naming the specific dataset that would settle it.
+we can evaluate four from real data, and one of those (chart) can never PASS
+because our bathymetry is not an official chart. The other five return
+UNKNOWN, each naming the specific dataset that would settle it.
 
 That is deliberate, and it is worth defending rather than papering over. A
 system that lit nine gates green would be claiming to have checked the chart,
@@ -90,26 +91,85 @@ def capability_gate(vessel: dict[str, Any]) -> GateResult:
     )
 
 
-def chart_gate(mesh_config: dict[str, Any], vessel: dict[str, Any]) -> GateResult:
-    """§12 chart gate — and the sharpest finding in this module.
+# Why the chart gate can never PASS on our data. Stated once, so the gate and
+# its tests cannot drift apart on the wording.
+CHART_NOT_ENC = (
+    "IBCSO is a scientific compilation, not an official electronic navigational "
+    "chart (ENC); passage planning still needs official charts."
+)
 
-    The vessel config carries `min_depth: 20`, but the routing mesh's data
-    sources are SIC, thickness and density only. There is no bathymetry in
-    the mesh, so the minimum-depth constraint can never fire. A configured
-    constraint with no data behind it is worse than an absent one, because it
-    reads as protection that is not there. §48A.19 requires bathymetry and
-    under-keel clearance be treated as uncertain; here it is simply absent.
+
+def chart_gate(
+    mesh_config: dict[str, Any],
+    vessel: dict[str, Any],
+    leg_depths_m: list[float | None] | None = None,
+    *,
+    provenance: str = "data/bathymetry/ibcso_v2_corridor_0p05.nc",
+) -> GateResult:
+    """§12 chart gate: is there water under the keel along the whole route?
+
+    `leg_depths_m` is the IBCSO v2 depth at each route point (m, positive
+    down; the shallowest value in its 0.05 degree box), None where the point
+    lies outside the bathymetry coverage. Any point shallower than the
+    vessel's `min_depth` is a FAIL.
+
+    Otherwise the answer is MARGINAL, never PASS. IBCSO is the best seafloor
+    compilation south of 50 S, but it is a research grid with ~24% of the
+    seafloor actually surveyed, not a chart a master may plan a passage on.
+    §48A.19 asks that bathymetry and under-keel clearance be treated as
+    uncertain; this is that, in the gate state.
+
+    Without leg depths the gate falls back to asking whether the mesh holds
+    bathymetry at all. A configured `min_depth` with no data behind it is worse
+    than an absent one, because it reads as protection that is not there, so
+    that case stays UNKNOWN.
     """
+    min_depth = vessel.get("min_depth")
     loaders = [
         s.get("loader") for s in mesh_config.get("mesh_info", {}).get("data_sources", [])
     ]
-    has_bathy = any(l in ("bathymetry", "gebco", "depth") for l in loaders)
-    min_depth = vessel.get("min_depth")
-    if has_bathy:
+
+    if leg_depths_m is not None:
+        known = [(k, d) for k, d in enumerate(leg_depths_m) if d is not None]
+        shallow = [(k, d) for k, d in known if d < min_depth]
+        n, n_unknown = len(leg_depths_m), len(leg_depths_m) - len(known)
+        ev = [Evidence(
+            "IBCSO v2 (Dorschel et al. 2022, CC-BY-4.0)",
+            f"{len(known)} of {n} route points inside coverage; shallowest "
+            + (f"{min(d for _, d in known):.0f} m" if known else "n/a")
+            + f" against a {min_depth} m minimum depth",
+            provenance,
+        )]
+        if shallow:
+            k, d = min(shallow, key=lambda kd: kd[1])
+            return GateResult(
+                gate="chart",
+                state=GateState.FAIL,
+                reason=(
+                    f"{len(shallow)} route point(s) shallower than the vessel's "
+                    f"{min_depth} m minimum depth; shallowest {d:.0f} m at leg {k}"
+                ),
+                evidence=ev,
+                at_leg=k,
+            )
+        if not known:
+            return GateResult(
+                gate="chart",
+                state=GateState.UNKNOWN,
+                reason="No point of the route lies inside the bathymetry coverage",
+                evidence=ev,
+            )
+        reason = CHART_NOT_ENC
+        if n_unknown:
+            reason += (f" {n_unknown} of {n} route points lie outside the IBCSO "
+                       f"subset and were not depth-checked.")
+        return GateResult("chart", GateState.MARGINAL, reason, ev)
+
+    if any(l in ("bathymetry", "gebco", "depth") for l in loaders):
         return GateResult(
             gate="chart",
-            state=GateState.PASS,
-            reason="bathymetry present in the mesh",
+            state=GateState.MARGINAL,
+            reason=CHART_NOT_ENC,
             evidence=[
                 Evidence("meshiphi", f"loaders: {loaders}", "isih/figures/routes.json")
             ],
@@ -305,11 +365,12 @@ def evaluate_all(
     days_closed: int | None = None,
     days_total: int | None = None,
     live_sensors: bool = False,
+    leg_depths_m: list[float | None] | None = None,
 ) -> list[GateResult]:
     """Evaluate all nine gates. Order follows §12."""
     return [
         capability_gate(vessel),
-        chart_gate(mesh_config, vessel),
+        chart_gate(mesh_config, vessel, leg_depths_m),
         ice_gate(worst_ice_pct, ice_limit_pct),
         weather_gate(),
         traffic_gate(),

@@ -28,7 +28,7 @@ from datetime import date as Date
 from datetime import timedelta
 from pathlib import Path
 
-from make_route_figure import build_mesh, nsidc_to_dataframe
+from make_route_figure import BATHYMETRY, build_mesh, nsidc_to_dataframe
 
 NSIDC_DIR = Path(__file__).parent / "data" / "nsidc_sic"
 CACHE_DIR = Path(__file__).parent / "data" / "vessel_meshes"
@@ -103,8 +103,11 @@ def vessel_mesh_for(day: Date, vessel: dict | None = None,
     # The whole vessel config goes into the key. Caching on date alone -- or on
     # the ice limit alone -- would silently serve a mesh built for a different
     # ship, because speed, beam and force limit all change the derated speeds.
+    # The bathymetry digest is in the key too, so meshes cached before depth
+    # was wired in (or against an older subset) are never served as depth-checked.
+    bathy = hashlib.sha1(BATHYMETRY.read_bytes()).hexdigest()[:10]
     fingerprint = hashlib.sha1(
-        json.dumps({**vessel, "qa": apply_qa}, sort_keys=True).encode()
+        json.dumps({**vessel, "qa": apply_qa, "bathy": bathy}, sort_keys=True).encode()
     ).hexdigest()[:10]
     cache = cache_dir / f"vmesh_{day:%Y%m%d}_{fingerprint}.json"
     if cache.exists():

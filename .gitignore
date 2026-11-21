@@ -43,3 +43,7 @@ mlartifacts/
 .agents/
 .claude/skills/
 data/nsidc_nrt/
+
+# Raw IBCSO v2 download (~240 MB) — regenerate with scripts/subset_bathymetry.py.
+# Only the corridor subset data/bathymetry/ibcso_v2_corridor_0p05.nc is committed.
+data/bathymetry/raw/

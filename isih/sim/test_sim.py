@@ -371,3 +371,54 @@ def test_ice_free_column_is_three_for_every_class():
     from isih import polaris
     for cls in polaris.CLASSES:
         assert polaris.RIV[cls]["Ice-free"] == 3
+
+
+# --- depth: real IBCSO v2 bathymetry (data/bathymetry/) --------------------
+
+def test_router_minimum_depth_matches_the_vessel_config():
+    """The sim router mirrors GOLOVNIN["min_depth"] rather than importing it."""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from ice_meshes import GOLOVNIN
+    from isih.sim.router import VesselModel
+    assert VesselModel().min_depth_m == GOLOVNIN["min_depth"] == 20
+
+
+def test_ibcso_subset_knows_deep_water_from_the_shelf():
+    from isih.sim.bathymetry import depth_m
+    assert depth_m(40.0, -60.0)[0] > 4000, "Enderby abyssal plain"
+    assert depth_m(76.19, -69.4044)[0] < 0, "Bharati station is ashore"
+    assert np.isnan(depth_m(30.0, -45.0)[0]), "north of the subset is no data, not deep"
+
+
+def test_route_forced_onto_a_known_shoal_is_blocked():
+    """IBCSO puts 5 m of water under the lattice node at 66.75 S 57.1 E.
+    Asked to go there, the router must stop short in water at least 20 m
+    deep; with the depth limit switched off it drives straight onto it."""
+    from isih.sim.router import Router, VesselModel
+    from isih.sim.world import CAPE_TOWN
+    shoal = (-66.75, 57.1)
+    w = World(20261207)
+
+    free = Router(w, VesselModel(min_depth_m=float("-inf"))).solve(CAPE_TOWN, shoal, 4.0)
+    assert free is not None
+    assert (free["legs"][-1]["lat"], free["legs"][-1]["lon"]) == shoal
+    assert free["legs"][-1]["depth_m"] < 20
+
+    res = Router(w, VesselModel()).solve(CAPE_TOWN, shoal, 4.0)
+    assert res is not None
+    assert (res["legs"][-1]["lat"], res["legs"][-1]["lon"]) != shoal
+    assert res["arrival_offset_km"] > 0
+    known = [l["depth_m"] for l in res["legs"] if l["depth_m"] is not None]
+    assert known and min(known) >= 20
+
+
+def test_bharati_route_never_enters_water_under_minimum_depth():
+    """The node nearest Bharati is on the ice sheet; the old route ended there."""
+    from isih.sim.router import Router, VesselModel
+    from isih.sim.world import BHARATI, CAPE_TOWN
+    res = Router(World(20261207), VesselModel()).solve(CAPE_TOWN, BHARATI, 4.0)
+    assert res is not None
+    known = [l["depth_m"] for l in res["legs"] if l["depth_m"] is not None]
+    assert known and min(known) >= 20

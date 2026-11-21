@@ -35,6 +35,7 @@ import math
 
 import numpy as np
 
+from .bathymetry import depth_m
 from .geo_mask import on_land
 
 R_EARTH_KM = 6371.0
@@ -43,12 +44,15 @@ R_EARTH_KM = 6371.0
 class VesselModel:
     """Speed and fuel as functions of ice and sea state."""
 
+    # min_depth_m mirrors GOLOVNIN["min_depth"] in isih/ice_meshes.py; the
+    # sim package does not import that module, so a test pins the two together.
     def __init__(self, max_speed_kn=16.4, ice_limit=0.80, min_speed_kn=2.0,
-                 name="MV Vasiliy Golovnin"):
+                 name="MV Vasiliy Golovnin", min_depth_m=20.0):
         self.name = name
         self.max_speed_kn = max_speed_kn
         self.ice_limit = ice_limit
         self.min_speed_kn = min_speed_kn
+        self.min_depth_m = min_depth_m
 
     def speed_kn(self, sic, hs):
         """Speed made good. Ice derates by an exponent slightly above linear,
@@ -125,6 +129,9 @@ class Router:
         # demo.
         LO, LA = np.meshgrid(self.lons, self.lats)
         self.land = on_land(LO, LA)
+        # Real IBCSO v2 depth at each node (shallowest in its 0.05 deg box);
+        # NaN north of 55 S, where the committed subset has no coverage.
+        self.depth = depth_m(LO, LA)
 
     def _conditions(self, t_slot):
         """Fields on the router lattice at a quantised time. Quantising to
@@ -136,20 +143,31 @@ class Router:
             self._cache[t_slot] = (s["sic"], s["hs"])
         return self._cache[t_slot]
 
-    def _nearest(self, lat, lon):
-        j = int(np.clip(np.argmin(np.abs(self.lats - lat)), 0, self.ny - 1))
-        i = int(np.clip(np.argmin(np.abs(self.lons - lon)), 0, self.nx - 1))
-        return j, i
+    def _nearest(self, lat, lon, blocked):
+        """Nearest node the ship may occupy. Stations sit ashore - IBCSO puts
+        the node nearest Bharati on the ice sheet, 221 m above sea level - so
+        an endpoint snaps to the closest navigable node, as PolarRoute's
+        adjust_waypoints does. Where the nearest node is open this is the
+        same node as before."""
+        d2 = ((self.lats[:, None] - lat) ** 2
+              + ((self.lons[None, :] - lon) * math.cos(math.radians(lat))) ** 2)
+        d2 = np.where(blocked, np.inf, d2)
+        j, i = np.unravel_index(int(np.argmin(d2)), d2.shape)
+        return int(j), int(i)
 
     def solve(self, start, goal, depart_t=0.0, objective="time", ice_limit=None):
         """start/goal are (lat, lon). Returns a dict, or None if no route."""
         vessel = self.vessel
         if ice_limit is not None:
             vessel = VesselModel(vessel.max_speed_kn, ice_limit,
-                                 vessel.min_speed_kn, vessel.name)
+                                 vessel.min_speed_kn, vessel.name,
+                                 vessel.min_depth_m)
+        # NaN < x is False: no data is not shallow, it is unknown (chart gate).
+        shallow = self.depth < vessel.min_depth_m
 
-        sj, si = self._nearest(*start)
-        gj, gi = self._nearest(*goal)
+        blocked = self.land | shallow
+        sj, si = self._nearest(*start, blocked)
+        gj, gi = self._nearest(*goal, blocked)
 
         INF = float("inf")
         best = np.full((self.ny, self.nx), INF)
@@ -177,8 +195,8 @@ class Router:
                 nj, ni = j + dj, i + di
                 if not (0 <= nj < self.ny and 0 <= ni < self.nx) or seen[nj, ni]:
                     continue
-                if self.land[nj, ni]:
-                    continue                      # ships do not cross land
+                if blocked[nj, ni]:
+                    continue                      # no land, no water under min_depth
                 s_n = float(sic[nj, ni])
                 if s_n > vessel.ice_limit:
                     continue                      # hard constraint, never priced
@@ -221,6 +239,8 @@ class Router:
                 "hours": round(t_h, 2),
                 "sic": round(float(sic[j, i]), 3),
                 "hs": round(float(hs[j, i]), 2),
+                "depth_m": (None if np.isnan(self.depth[j, i])
+                            else round(float(self.depth[j, i]), 1)),
             })
         total_km = sum(_haversine_km(legs[k]["lat"], legs[k]["lon"],
                                      legs[k + 1]["lat"], legs[k + 1]["lon"])
@@ -238,6 +258,11 @@ class Router:
             "worst_hs": round(max(l["hs"] for l in legs), 2),
             "vessel": vessel.name,
             "ice_limit_is_assumed": True,
+            "min_depth_m": vessel.min_depth_m,
+            # How far short of the requested goal the ship stops, because the
+            # goal itself is ashore or too shallow.
+            "arrival_offset_km": round(_haversine_km(goal[0], goal[1],
+                                                     legs[-1]["lat"], legs[-1]["lon"]), 1),
         }
 
     def critical_ice_limit(self, start, goal, depart_t=0.0,

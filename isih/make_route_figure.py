@@ -35,6 +35,12 @@ BHARATI = {"name": "Bharati", "lat": -69.4, "long": 76.2}
 # Bounds must divide evenly by cell size (meshiphi asserts this), and must
 # still contain both ports: Cape Town -33.9, Bharati -69.4.
 # lat span 40 / 5 = 8 cells; long span 65 / 5 = 13 cells.
+# IBCSO v2 corridor subset (scripts/subset_bathymetry.py). Its `elevation` is
+# the shallowest value in each 0.05 deg box, so the MAX aggregate below keeps
+# the shoal: PolarRoute's ship model marks a cell inaccessible when its
+# elevation is above -min_depth, which is the only place min_depth is read.
+BATHYMETRY = Path(__file__).resolve().parents[1] / "data" / "bathymetry" / "ibcso_v2_corridor_0p05.nc"
+
 MESH_BOUNDS = {"lat_min": -70.0, "lat_max": -30.0, "long_min": 15.0, "long_max": 80.0}
 
 
@@ -98,12 +104,28 @@ def build_mesh(csv_path: Path, date: str, split_depth: int = 4):
             # literature lookup tables are wired in deliberately.
             {"loader": "thickness", "params": {"data_name": "thickness"}},
             {"loader": "density", "params": {"data_name": "density"}},
+            # Split cells that straddle the 20 m line so a coastal cell is not
+            # blocked whole for one shoal in its corner. Coverage ends at 55 S;
+            # cells north of that carry no elevation and are not depth-checked.
+            {"loader": "gebco",
+             "params": {"files": [str(BATHYMETRY)], "data_name": "elevation",
+                        "aggregate_type": "MAX", "value_fill_types": "parent",
+                        "splitting_conditions": [
+                            {"elevation": {"threshold": -20.0, "upper_bound": 0.99,
+                                           "lower_bound": 0.01}}]}},
         ],
         "splitting": {"split_depth": split_depth, "minimum_datapoints": 5},
     }
 
     mesh = MeshBuilder(config).build_environmental_mesh()
-    return mesh.to_json()
+    mesh_json = mesh.to_json()
+    # Cells north of the IBCSO subset (55 S) serialise with elevation None,
+    # which PolarRoute's land test cannot compare. Dropping the key takes its
+    # documented no-data branch: warn, and treat the cell as not land.
+    for cell in mesh_json["cellboxes"]:
+        if cell.get("elevation") is None:
+            cell.pop("elevation", None)
+    return mesh_json
 
 
 def route(mesh_json: dict, out_dir: Path) -> dict:

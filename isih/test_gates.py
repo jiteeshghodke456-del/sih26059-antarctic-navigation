@@ -55,9 +55,53 @@ def test_chart_gate_catches_the_inert_minimum_depth_constraint():
     assert "20 m minimum-depth constraint has no data to act on" in g.reason
 
 
-def test_chart_gate_passes_once_bathymetry_is_loaded():
-    mesh = {"mesh_info": {"data_sources": [{"loader": "bathymetry"}]}}
-    assert G.chart_gate(mesh, VESSEL).state is GateState.PASS
+def test_chart_gate_never_passes_even_with_bathymetry_loaded():
+    """Bathymetry in the mesh lets min_depth act, but IBCSO is not an ENC."""
+    mesh = {"mesh_info": {"data_sources": [{"loader": "gebco"}]}}
+    g = G.chart_gate(mesh, VESSEL)
+    assert g.state is GateState.MARGINAL
+    assert g.reason == G.CHART_NOT_ENC
+
+
+def _depths_along(lonlat):
+    from sim.bathymetry import depth_m
+    d = depth_m([p[0] for p in lonlat], [p[1] for p in lonlat])
+    return [None if x != x else float(x) for x in d]
+
+
+def test_chart_gate_is_marginal_on_a_deep_route():
+    """A real route from the depth-aware router, checked against the real
+    IBCSO subset: deep all the way, so MARGINAL with the ENC caveat."""
+    from sim.router import Router, VesselModel
+    from sim.world import BHARATI, CAPE_TOWN, World
+
+    res = Router(World(20261207), VesselModel()).solve(CAPE_TOWN, BHARATI, 4.0)
+    depths = _depths_along([(l["lon"], l["lat"]) for l in res["legs"]])
+    g = G.chart_gate(MESH_NO_BATHY, VESSEL, depths)
+    assert g.state is GateState.MARGINAL
+    assert g.reason.startswith(
+        "IBCSO is a scientific compilation, not an official electronic "
+        "navigational chart (ENC); passage planning still needs official charts."
+    )
+    # Cape Town to 55 S is outside the subset, and the gate says so.
+    assert "were not depth-checked" in g.reason
+
+
+def test_chart_gate_fails_the_published_route_that_ends_ashore():
+    """isih/figures/routes.json was solved before depth existed. Its last
+    point is Bharati station itself, which IBCSO puts above sea level."""
+    cfg = json.loads((ISIH / "figures" / "routes.json").read_text())
+    coords = cfg["paths"]["features"][0]["geometry"]["coordinates"]
+    depths = _depths_along(coords)
+    g = G.chart_gate(MESH_NO_BATHY, VESSEL, depths)
+    assert g.state is GateState.FAIL
+    assert g.at_leg == len(coords) - 1
+    assert "shallower than the vessel's 20 m minimum depth" in g.reason
+
+
+def test_chart_gate_is_unknown_when_no_point_has_depth_data():
+    g = G.chart_gate(MESH_NO_BATHY, VESSEL, [None, None])
+    assert g.state is GateState.UNKNOWN
 
 
 def test_ice_gate_boundaries():
