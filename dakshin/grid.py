@@ -60,7 +60,12 @@ class GlorysToNsidcRegridder:
         self._dx = float(x[1] - x[0])
         self._dy = float(y[1] - y[0])
 
-        src_lon_grid, src_lat_grid = np.meshgrid(source_lon, source_lat)
+        # 1-D axes (regular lat/lon grids like GLORYS) are meshed; 2-D arrays
+        # (curvilinear grids like NEMO's nav_lon/nav_lat) are used as-is.
+        if source_lat.ndim == 2:
+            src_lon_grid, src_lat_grid = source_lon, source_lat
+        else:
+            src_lon_grid, src_lat_grid = np.meshgrid(source_lon, source_lat)
         transformer = Transformer.from_crs(LATLON_CRS, NSIDC_CRS, always_xy=True)
         src_x, src_y = transformer.transform(src_lon_grid, src_lat_grid)
 
