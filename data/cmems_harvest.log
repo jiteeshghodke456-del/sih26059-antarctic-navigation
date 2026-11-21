@@ -1195,3 +1195,35 @@ cmems_siconc_2026-11-18.nc: 42.62 MB -> 4.54 MB (9.4x smaller, int16 packed)
 2026-11-18T23:25:50+00:00 already have cmems_siconc_2026-11-18.nc, skipping
 2026-11-19T02:38:03+00:00 already have cmems_siconc_2026-11-18.nc, skipping
 2026-11-19T02:39:01+00:00 already have cmems_siconc_2026-11-18.nc, skipping
+2026-11-19T20:45:32+00:00 harvesting cycle 2026-11-19
+INFO - 2026-11-19T20:45:35Z - Selected dataset version: "202406"
+INFO - 2026-11-19T20:45:35Z - Selected dataset part: "default"
+WARNING - 2026-11-19T20:45:35Z - Some of your subset selection [2026-11-19 00:00:00+00:00, 2026-11-29 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-11-28 00:00:00+00:00]
+INFO - 2026-11-19T20:45:40Z - Total size of the download: 40.66 MB.
+{
+  "file_size": "40.66 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-19T20:45:40+00:00 saved cmems_siconc_2026-11-19.nc (10 daily steps)
+cmems_siconc_2026-11-19.nc: 42.62 MB -> 4.44 MB (9.6x smaller, int16 packed)
+2026-11-19T20:45:41+00:00 compressed cmems_siconc_2026-11-19.nc
+2026-11-19T23:37:22+00:00 already have cmems_siconc_2026-11-19.nc, skipping
+2026-11-20T02:22:50+00:00 already have cmems_siconc_2026-11-19.nc, skipping
+2026-11-20T20:29:44+00:00 harvesting cycle 2026-11-20
+INFO - 2026-11-20T20:29:48Z - Selected dataset version: "202406"
+INFO - 2026-11-20T20:29:48Z - Selected dataset part: "default"
+WARNING - 2026-11-20T20:29:48Z - Some of your subset selection [2026-11-20 00:00:00+00:00, 2026-11-30 00:00:00+00:00] for the time dimension exceed the dataset coordinates [2022-06-01 00:00:00+00:00, 2026-11-29 00:00:00+00:00]
+INFO - 2026-11-20T20:29:55Z - Total size of the download: 40.66 MB.
+{
+  "file_size": "40.66 MB",
+  "data_transfer_size": "160.09 MB",
+  "status": "000",
+  "message": "The request was successful."
+}
+2026-11-20T20:29:55+00:00 saved cmems_siconc_2026-11-20.nc (10 daily steps)
+cmems_siconc_2026-11-20.nc: 42.62 MB -> 4.43 MB (9.6x smaller, int16 packed)
+2026-11-20T20:29:56+00:00 compressed cmems_siconc_2026-11-20.nc
+2026-11-20T23:09:25+00:00 already have cmems_siconc_2026-11-20.nc, skipping
+2026-11-21T02:23:52+00:00 already have cmems_siconc_2026-11-20.nc, skipping
