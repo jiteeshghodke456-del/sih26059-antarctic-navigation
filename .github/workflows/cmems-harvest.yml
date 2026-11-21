@@ -105,6 +105,21 @@ jobs:
           CYCLE_DATE: ${{ inputs.cycle_date }}
         run: bash scripts/harvest_cmems.sh
 
+
+      # Wind and the weekly iceberg list ride along. Both must never fail the
+      # ice harvest: wind has its own rolling 2-3 day archive at ECMWF, the
+      # USNIC list is weekly, and a red step here would cost the day's cycle.
+      - name: Harvest ECMWF wind
+        continue-on-error: true
+        run: |
+          pip install ecmwf-opendata cfgrib xarray netCDF4 numpy
+          python scripts/harvest_ecmwf_wind.py --out data/ecmwf_wind
+
+      - name: Weekly USNIC iceberg list (Fridays)
+        continue-on-error: true
+        run: |
+          if [ "$(date -u +%u)" = "5" ]; then bash scripts/harvest_usnic.sh; else echo "not Friday, skipping"; fi
+
       # A green tick must mean data arrived. Before this step existed the
       # harvest wrote everything to a log file and printed nothing, so a
       # silent no-op looked identical to a good run.
@@ -146,7 +161,7 @@ jobs:
           set -euo pipefail
           git config user.name "cmems-harvest-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/cmems_forecast_archive data/cmems_harvest.log
+          git add data/cmems_forecast_archive data/cmems_harvest.log data/ecmwf_wind data/icebergs/archive
           if git diff --cached --quiet; then
             echo "nothing new to commit — the cycle was already archived"
             exit 0

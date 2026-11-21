@@ -182,6 +182,42 @@ run_waves() {
   harvest_waves || say "WARNING waves harvest failed for ${CYCLE_DATE}; the ice cycle is unaffected"
 }
 
+# Surface temperature for the melt estimate (F4): same product family,
+# thetao at the top level, same never-fail contract as the currents.
+SST_DATASET_ID="cmems_mod_glo_phy-thetao_anfc_0.083deg_P1D-m"
+SST_OUT_FILE="cmems_sst_${CYCLE_DATE}.nc"
+
+harvest_sst() {
+  if [ -f "$ARCHIVE_DIR/$SST_OUT_FILE" ]; then
+    say "already have ${SST_OUT_FILE}, skipping"
+    return 0
+  fi
+  copernicusmarine subset \
+    --dataset-id "$SST_DATASET_ID" \
+    --variable thetao \
+    --minimum-depth 0 --maximum-depth 1 \
+    --start-datetime "${CYCLE_DATE}T00:00:00" \
+    --end-datetime "$(date -u -d "${CYCLE_DATE} +10 days" +%Y-%m-%dT00:00:00)" \
+    --minimum-longitude "$MIN_LON" --maximum-longitude "$MAX_LON" \
+    --minimum-latitude "$MIN_LAT" --maximum-latitude "$MAX_LAT" \
+    --output-directory "$ARCHIVE_DIR" \
+    --output-filename "$SST_OUT_FILE" \
+    2>&1 | tee -a "$LOG_FILE" || return 1
+  [ -f "$ARCHIVE_DIR/$SST_OUT_FILE" ] || return 1
+  say "saved ${SST_OUT_FILE}"
+  if python3 "$ROOT_DIR/scripts/compress_netcdf.py" \
+       "$ARCHIVE_DIR/$SST_OUT_FILE" >> "$LOG_FILE" 2>&1; then
+    echo "$(date -u -Iseconds) compressed ${SST_OUT_FILE}" >> "$LOG_FILE"
+  else
+    echo "$(date -u -Iseconds) WARNING compression failed for ${SST_OUT_FILE}, " \
+         "keeping the uncompressed file" >> "$LOG_FILE"
+  fi
+}
+
+run_sst() {
+  harvest_sst || say "WARNING SST harvest failed for ${CYCLE_DATE}; the ice cycle is unaffected"
+}
+
 if [ -f "$ARCHIVE_DIR/$OUT_FILE" ]; then
   say "already have ${OUT_FILE}, skipping"
   report already_have
@@ -189,6 +225,7 @@ if [ -f "$ARCHIVE_DIR/$OUT_FILE" ]; then
   # have failed on the run that saved it, so still try those files.
   run_currents
   run_waves
+  run_sst
   exit 0
 fi
 
@@ -252,6 +289,7 @@ fi
 
 # Not reached when the ice cycle was REJECTED above: the currents and waves
 # come from the same daily bulletin, so they would be stale too and a later
-# run fetches all three.
+# run fetches all of them.
 run_currents
 run_waves
+run_sst
