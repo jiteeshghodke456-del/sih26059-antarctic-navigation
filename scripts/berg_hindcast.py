@@ -111,8 +111,9 @@ def main() -> int:
     payload = {
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "currents": f"CMEMS GLO12 analysis surface currents, {t_min}..{t_max}",
-        "wind": "zero (slice 6 pending); wind_forcing_R per segment shows the "
-                "neglected term's share, computed with an assumed 10 m/s wind",
+        "wind": "zero — a stated limitation, not an approximation: measured R "
+                "(assumed 10 m/s wind) has median 0.25, max 1.73 across segments; "
+                "coupling the harvested ECMWF wind into the drift is open work",
         "caveats": [
             "USNIC positions are accurate to only a few km",
             "weekly fixes: errors mix drift-model error with fix-timing error",
