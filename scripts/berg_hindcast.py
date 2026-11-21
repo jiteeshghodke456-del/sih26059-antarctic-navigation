@@ -49,16 +49,19 @@ def fix_series() -> dict[str, list[tuple[dt.date, float, float, float, float]]]:
     }
 
 
-def main() -> int:
+def load_field() -> CurrentField:
     cur_files = sorted(CUR_DIR.glob("*.nc"))
     if not cur_files:
-        print(f"no analysis currents in {CUR_DIR} — run the slice 4 backfill first")
-        return 1
+        raise FileNotFoundError(
+            f"no analysis currents in {CUR_DIR} — run the slice 4 backfill first")
     field_ = CurrentField.from_files(cur_files)
+    print(f"currents: {len(cur_files)} days")
+    return field_
+
+
+def run_segments(field_: CurrentField) -> list[dict]:
     t_min = dt.date.fromtimestamp(field_.t[0] * 86400.0)
     t_max = dt.date.fromtimestamp(field_.t[-1] * 86400.0)
-    print(f"currents: {len(cur_files)} days, {t_min}..{t_max}")
-
     segments = []
     for name, series in sorted(fix_series().items()):
         for (d0, lat0, lon0, L, W), (d1, lat1, lon1, _, _) in zip(series, series[1:]):
@@ -85,7 +88,14 @@ def main() -> int:
             })
             print(f"{name:6s} {d0}→{d1} ({days:2d} d) model {err:6.1f} km "
                   f"persist {pers:6.1f} km  {tr.status}")
+    return segments
 
+
+def main() -> int:
+    field_ = load_field()
+    t_min = dt.date.fromtimestamp(field_.t[0] * 86400.0)
+    t_max = dt.date.fromtimestamp(field_.t[-1] * 86400.0)
+    segments = run_segments(field_)
     if not segments:
         print("no scorable segments — check archive coverage vs currents dates")
         return 1

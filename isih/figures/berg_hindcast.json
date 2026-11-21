@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-21T17:36:35+00:00",
+  "generated": "2026-11-21T17:38:05+00:00",
   "currents": "CMEMS GLO12 analysis surface currents, 2026-08-31..2026-11-20",
   "wind": "zero (slice 6 pending); wind_forcing_R per segment shows the neglected term's share, computed with an assumed 10 m/s wind",
   "caveats": [

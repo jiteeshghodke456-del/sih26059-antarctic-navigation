@@ -1,0 +1,32 @@
+{
+  "generated": "2026-11-21T17:38:21+00:00",
+  "question": "does eddy-resolving current resolution matter for giant-berg drift in this corridor?",
+  "method": "slice-5 USNIC hindcast repeated with currents block-averaged to each resolution; same segments, same physics",
+  "caveats": [
+    "coarsening one model's currents is not running a coarser model",
+    "persistence (berg did not move) already beats every variant on this mostly-grounded sample \u2014 see berg_hindcast.json"
+  ],
+  "resolutions": {
+    "1/12\u00b0": {
+      "n_segments": 88,
+      "n_ok": 81,
+      "n_grounded_or_unknown": 7,
+      "median_error_km_per_day": 4.35,
+      "moving_median_error_km_per_day": 6.01
+    },
+    "1/4\u00b0": {
+      "n_segments": 88,
+      "n_ok": 86,
+      "n_grounded_or_unknown": 2,
+      "median_error_km_per_day": 4.07,
+      "moving_median_error_km_per_day": 5.93
+    },
+    "1\u00b0": {
+      "n_segments": 88,
+      "n_ok": 88,
+      "n_grounded_or_unknown": 0,
+      "median_error_km_per_day": 3.49,
+      "moving_median_error_km_per_day": 5.06
+    }
+  }
+}

@@ -54,10 +54,37 @@ family of regional NEMO configurations). The NEMO-native reader (F2) is what
 would let such runs drop into this exact pipeline and answer the question
 properly.
 
+## F3: do eddies change iceberg tracks?
+
+Same coarsening applied to the analysis currents driving the slice-5 USNIC
+hindcast (`scripts/berg_resolution.py`, numbers in
+`isih/figures/berg_resolution.json`), 88 segments, 8 giants, Sep–Nov 2026:
+
+| Currents | ok / grounded-flagged | median err (all) | median err (moving bergs) |
+|---|---|---|---|
+| 1/12° | 81 / 7 | 4.35 km/day | 6.01 km/day |
+| 1/4° | 86 / 2 | 4.07 km/day | 5.93 km/day |
+| 1° | 88 / 0 | 3.49 km/day | 5.06 km/day |
+
+Coarser currents *reduce* the error — the opposite of the naive expectation —
+and the reason is the finding, not an artifact: **most corridor giants are
+grounded** (persistence error ≈ 0 km), so any resolved eddy velocity at the
+berg's position advects ice that is actually anchored. Blurring the currents
+suppresses those velocities and the forecast degrades toward "doesn't move",
+which happens to be right for this sample. On the genuinely moving bergs
+(13 segments, mostly C39) the gap narrows but coarse still wins slightly —
+at weekly fix cadence and few-km USNIC accuracy this sub-sample is too small
+to resolve an eddy effect either way.
+
+What a drift system actually needs first, on this evidence, is **grounding
+detection** (bathymetry + keel draught, slice 7's IBCSO data makes that
+possible) — resolution of the current field is second-order until anchored
+bergs stop being advected. For free-drifting bergs the eddy question stays
+open and needs either more moving bergs (wider region) or daily positions
+(e.g. the BYU/NIC scatterometer database).
+
 ## Pending
 
 - U-Net column at each resolution (checkpoints regenerating on Kaggle; rerun
   `scripts/resolution_study.py` without `--no-model` once
   `models/sic_correction/checkpoints/` is populated).
-- F3: the same coarsening question for iceberg-drift currents
-  (`scripts/berg_hindcast.py` machinery, eddy-resolving vs smoothed).
