@@ -72,9 +72,68 @@ report() {
 # console, which is most of why a merely-late job read as a broken one.
 say() { echo "$(date -u -Iseconds) $*" | tee -a "$LOG_FILE"; }
 
+# Surface ocean currents for the same cycle, box and 10-day window, from the
+# same product's currents dataset. Dataset id and variable names (uo, vo in
+# m s-1) confirmed live via `copernicusmarine.describe()` on 2026-11-21.
+# Depth 0..1 m selects only the top model level (0.494 m).
+CUR_DATASET_ID="cmems_mod_glo_phy-cur_anfc_0.083deg_P1D-m"
+CUR_OUT_FILE="cmems_cur_${CYCLE_DATE}.nc"
+
+# Runs after the ice cycle and must never fail the script: the workflow only
+# commits when this script exits 0, and the runner is thrown away afterwards,
+# so a currents error turning red would also lose the ice cycle saved above.
+# Errors are therefore logged and returned, not raised (`set -e` does not
+# apply inside a function called from an `if`, hence the explicit checks).
+harvest_currents() {
+  if [ -f "$ARCHIVE_DIR/$CUR_OUT_FILE" ]; then
+    say "already have ${CUR_OUT_FILE}, skipping"
+    return 0
+  fi
+  copernicusmarine subset \
+    --dataset-id "$CUR_DATASET_ID" \
+    --variable uo --variable vo \
+    --minimum-depth 0 --maximum-depth 1 \
+    --start-datetime "${CYCLE_DATE}T00:00:00" \
+    --end-datetime "$(date -u -d "${CYCLE_DATE} +10 days" +%Y-%m-%dT00:00:00)" \
+    --minimum-longitude "$MIN_LON" --maximum-longitude "$MAX_LON" \
+    --minimum-latitude "$MIN_LAT" --maximum-latitude "$MAX_LAT" \
+    --output-directory "$ARCHIVE_DIR" \
+    --output-filename "$CUR_OUT_FILE" \
+    2>&1 | tee -a "$LOG_FILE" || return 1
+  [ -f "$ARCHIVE_DIR/$CUR_OUT_FILE" ] || return 1
+
+  # Same stale-cycle rule as the ice file below.
+  local n_days
+  n_days="$(python3 -c 'import sys, netCDF4; print(len(netCDF4.Dataset(sys.argv[1]).dimensions["time"]))' \
+            "$ARCHIVE_DIR/$CUR_OUT_FILE" 2>/dev/null || echo unknown)"
+  if [ "$DATE_FROM_CLOCK" = 1 ] && [ "$n_days" != unknown ] && [ "$n_days" -ne "$EXPECTED_DAYS" ]; then
+    rm -f "$ARCHIVE_DIR/$CUR_OUT_FILE"
+    say "REJECTED ${CUR_OUT_FILE}: ${n_days} daily steps, expected ${EXPECTED_DAYS}. Nothing saved."
+    return 0
+  fi
+  say "saved ${CUR_OUT_FILE} (${n_days} daily steps)"
+
+  # uo/vo are not in compress_netcdf.py's int16 table, so they get its
+  # lossless float32 deflate. Never fails the harvest, as for the ice file.
+  if python3 "$ROOT_DIR/scripts/compress_netcdf.py" \
+       "$ARCHIVE_DIR/$CUR_OUT_FILE" >> "$LOG_FILE" 2>&1; then
+    echo "$(date -u -Iseconds) compressed ${CUR_OUT_FILE}" >> "$LOG_FILE"
+  else
+    echo "$(date -u -Iseconds) WARNING compression failed for ${CUR_OUT_FILE}, " \
+         "keeping the uncompressed file" >> "$LOG_FILE"
+  fi
+}
+
+run_currents() {
+  harvest_currents || say "WARNING currents harvest failed for ${CYCLE_DATE}; the ice cycle is unaffected"
+}
+
 if [ -f "$ARCHIVE_DIR/$OUT_FILE" ]; then
   say "already have ${OUT_FILE}, skipping"
   report already_have
+  # The ice cycle may predate the currents harvest, or a currents fetch may
+  # have failed on the run that saved it, so still try the currents file.
+  run_currents
   exit 0
 fi
 
@@ -135,3 +194,7 @@ else
   echo "$(date -u -Iseconds) WARNING compression failed for ${OUT_FILE}, " \
        "keeping the uncompressed file" >> "$LOG_FILE"
 fi
+
+# Not reached when the ice cycle was REJECTED above: the currents come from the
+# same daily bulletin, so they would be stale too and a later run fetches both.
+run_currents
