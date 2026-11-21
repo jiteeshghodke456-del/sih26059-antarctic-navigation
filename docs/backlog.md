@@ -331,3 +331,26 @@ what was filed rather than fixed.
 ## Open — repo hygiene (raised 2026-10-05)
 
 - [minor][git] **The main checkout was not checked for uncommitted edits during the 5 Oct push.** The permission classifier blocked listing it from a worktree session, and its docs folder changed on 29 Sep. Run `git status --short` in ~/sih/SIH26059-antarctic-navigation and commit anything real on a branch.
+
+## Open: inconsistencies found while writing the study pack (2026-11-21)
+
+- [major][docs] `docs/RESOLUTION_STUDY.md` persistence IIEE column is wrong: prints 211.7 at lead 3 and says it "decays with lead"; `dakshin/figures/resolution_study.json` has 187,706 / 277,167 / 319,189 / 353,255 km2, growing — `docs/study/PHYSICS_AND_PAPERS.md` section 4.1.
+- [minor][docs] "Raw CMEMS beats persistence at all leads" (`docs/CURRENT_STATE.md`) holds for RMSE only; at lead 1 persistence IIEE is lower (187,706 vs 195,058 km2) — `dakshin/figures/realforecast_hindcast.json`.
+- [major][physics] `dakshin/berg_forecast.py` and `scripts/berg_resolution.py` docstrings say wind is ~1% of drift / "R << 1 in every segment"; per-segment R in `dakshin/figures/berg_hindcast.json` has median 0.25, max 1.73, 81 of 88 above 0.1 (assumed 10 m/s wind). `models/iceberg/regime_report.json` shows R above 1 for 9 to 28 bergs at 20 to 30 m/s over 0.05 m/s current.
+- [major][physics] `scripts/berg_melt.py` passes the absolute current speed as `rel_speed` where `models/iceberg/melt.py` documents |v_w - v_i|; and `wave_erosion_m_per_day` has a non-zero floor at Hs=0 (0.0126 m/day at -1.77 C), so the freshwater estimates are dominated by those two choices — `docs/study/PHYSICS_AND_PAPERS.md` section 3.2.
+- [minor][docs] Keghouche et al. is cited as "2010, JGR 114, C06012" (`models/iceberg/melt.py`) and as 2009 (`docs/ICEBERG_RESEARCH.md`); volume and year disagree; verify the reference. `ATTRIBUTION.md` still calls the melt terms "future work" although F4 implemented them.
+- [minor][docs] `dakshin/features.py` header says channels 1-7 are t-1..t-7 and innovation uses observed(t-1); code uses observed[t]..observed[t-6] and background[t] - observed[t].
+- [minor][docs] `dakshin/grid.py`, ADR-024 and `docs/ML_ARCHITECTURE.md` 4.2 say area-weighted/conservative; the code is an unweighted mean of source cell centres per target cell (bincount).
+- [minor][docs] `dakshin/gates.py` header ("four of the nine gates evaluable") predates the weather, traffic and chart upgrades; an orphan comment sits above `MARGINAL_BAND_PCT`.
+- [minor][data] Committed `realforecast_hindcast.json` and `resolution_study.json` have n=76 at lead 1; a rerun today gives n=77 (cycle 2026-11-19 now scorable): RMSE 0.10219 vs persistence 0.11914. Leads 3, 5, 7 reproduce exactly. Regenerate and commit with the U-Net columns.
+- [minor][data] `data/cmems_forecast_archive/cmems_sst_2026-11-21.nc` is committed and read by `scripts/berg_melt.py`, but no script in the repository produces it.
+- [major][ops] Only `cmems-harvest.yml` is scheduled. `scripts/harvest_ecmwf_wind.py` (needs daily, 2 to 3 day window) and `scripts/harvest_usnic.sh` are not scheduled anywhere in the repository; `docs/CURRENT_STATE.md` calls the wind harvest daily. One wind file exists.
+- [minor][docs] `dakshin/figures/destination_window.json` still lists Maitri as closed 31/31 with null SIC; `dakshin/destination_window.py` says Maitri is deliberately excluded and `dakshin/gates.py` cites that exact bug.
+- [minor][docs] Stale backlog line: "NSIDC grid ~332x316 asserted from memory" (Open — ML / evaluation); verified 332 rows x 316 columns, `docs/PROTOTYPE_README.md`.
+- [minor][docs] `docs/ML_ARCHITECTURE.md` 1.3 names G02202 v4; code, `docs/DATASET.md` and `ATTRIBUTION.md` use v6. `dakshin/model_io.py` cites `dakshin/config.py`, which does not exist. `dakshin/kaggle/make_notebook.py` has two "## 11" headings and a "Sept 8 ISIH" intro.
+- [minor][docs] `models/iceberg/drift.py` says the deflection is 45 degrees at Lambda = 1; it is 51.83 degrees (the asymptotes cross at Lambda = 1).
+- [minor][ml] Training notebook does not QA-mask truth or history (spillover zeros in targets); the hindcast does. Train/serve mismatch at the coast, unquantified. No embargo between the 70/15/15 blocks. The no-background ablation cell exists in the notebook; no result recorded.
+- [minor][ml] ADR-027 gates on IIEE and CRPS; `scripts/realforecast_hindcast.py` computes RMSE and IIEE only, so the gate cannot be evaluated whatever the U-Net returns.
+- [minor][ops] No top-level requirements file or `pyproject.toml`; only `dakshin/demo/requirements.txt`. A clean `git archive` checkout lacks the gitignored `data/nsidc_nrt/` and `dakshin/data/`, so tests reading them error until fetched.
+- [minor][docs] No confidence intervals or significance tests in any result JSON; 76 strongly autocorrelated cycles from one season.
+- [minor][docs] `dakshin/sim/` is a synthetic world (labelled "SYNTHETIC ENVIRONMENT" in the bridge console) inside a repository whose rule is real data only; reported results do not use it, but the boundary is documented only in the console and `dakshin/sim/__init__.py`.
