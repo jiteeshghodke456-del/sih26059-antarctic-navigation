@@ -25,6 +25,7 @@ if str(DAKSHIN) not in sys.path:
     sys.path.insert(0, str(DAKSHIN))
 
 import gates as G                                   # noqa: E402
+from sim.bathymetry import depth_m                  # noqa: E402
 from decision import (                              # noqa: E402
     Alternative,
     Approval,
@@ -148,6 +149,14 @@ def build(day: str | None = None, accepts_approach: bool = False) -> Decision:
 
     open_today, dest, closed, total = _destination_state(day, accepts_approach)
 
+    # Real depth under every point of the published route (IBCSO v2 / GEBCO),
+    # so the chart gate judges the route the screen shows, not just the mesh.
+    feats = (routes_cfg.get("paths") or {}).get("features") or []
+    coords = feats[0]["geometry"]["coordinates"] if feats else []
+    leg_depths = ([None if d != d else float(d)
+                   for d in depth_m([c[0] for c in coords], [c[1] for c in coords])]
+                  if coords else None)
+
     gate_list = G.evaluate_all(
         vessel=VESSEL,
         mesh_config=routes_cfg.get("config", {}),
@@ -159,6 +168,7 @@ def build(day: str | None = None, accepts_approach: bool = False) -> Decision:
         days_closed=closed,
         days_total=total,
         live_sensors=False,
+        leg_depths_m=leg_depths,
     )
 
     health, binding = health_from_gates(gate_list)
@@ -203,8 +213,8 @@ def build(day: str | None = None, accepts_approach: bool = False) -> Decision:
         ],
         constraints=[
             f"ice limit {VESSEL['max_ice_conc']}% (assumed)",
-            f"minimum depth {VESSEL['min_depth']} m (configured, but no bathymetry "
-            f"exists in the mesh to apply it)",
+            f"minimum depth {VESSEL['min_depth']} m, enforced on IBCSO v2 / GEBCO "
+            f"bathymetry (scientific compilations, not an official ENC)",
         ],
         gates=gate_list,
         alternatives=alts,
@@ -213,7 +223,8 @@ def build(day: str | None = None, accepts_approach: bool = False) -> Decision:
         trigger_conditions=[
             "the destination cell's concentration crosses the assumed working limit",
             "a newer satellite observation changes the worst ice on the route",
-            "bathymetry becomes available, which would let the chart gate be evaluated",
+            "an official ENC for the corridor, the only evidence that could let the "
+            "chart gate PASS",
         ],
         evidence=[
             Evidence(data.SOURCE_ICE, f"observation for {day}",

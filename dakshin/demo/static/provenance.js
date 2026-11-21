@@ -51,7 +51,7 @@ export const PROVENANCE = {
   // --- simulated: demonstrated, not built ----------------------------------
   'chart.traffic':    ['simulated', 'AIS: no receiver is connected'],
   'chart.warnings':   ['simulated', 'NAVAREA VII warnings: no live feed'],
-  'chart.depth':      ['simulated', 'depth contours: GEBCO is not ingested'],
+  'chart.depth':      ['simulated', 'depth contours are not drawn; depth under the ship is real IBCSO v2 / GEBCO_2020'],
   'panel.sensors':    ['simulated', 'NMEA 0183 from the planned track; no instruments attached'],
   'panel.comms':      ['simulated', 'Iridium link state and shore contact'],
   'panel.escort':     ['simulated', 'icebreaker availability and escort tasking'],

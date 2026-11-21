@@ -192,9 +192,11 @@ def state(t: float = 0.0):
     cond = None
     if ship:
         s = VOY.world.sample(ship["lat"], ship["lon"], t)
-        cond = {k: round(float(np.asarray(s[k])), 2) for k in
-                ("sic", "wind_kn", "wind_dir", "hs", "tp", "vis_nm", "sst",
-                 "air", "mslp", "cur_kn", "depth_m", "ukc_m")}
+        # Depth is real now and is NaN outside the bathymetry grid; JSON has
+        # no NaN, so no-data goes out as null and the chart light reads UNKNOWN.
+        cond = {k: (round(v, 2) if np.isfinite(v := float(np.asarray(s[k]))) else None)
+                for k in ("sic", "wind_kn", "wind_dir", "hs", "tp", "vis_nm", "sst",
+                          "air", "mslp", "cur_kn", "depth_m", "ukc_m")}
     return {
         "t": t,
         "mode": "monitoring" if (plan and plan.approved_by) else "planning",

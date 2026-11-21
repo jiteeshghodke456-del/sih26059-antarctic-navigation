@@ -633,12 +633,12 @@ function gateList() {
       ? { n: 'weather', s: 'MARGINAL', w: `sea ${fmt(c.hs)} m, visibility ${fmt(c.vis_nm)} nm` }
       : { n: 'weather', s: 'PASS', w: `sea ${fmt(c.hs)} m, wind ${Math.round(c.wind_kn)} kn` });
 
-  // 5 CHART - under-keel clearance, now that the seabed exists
-  g.push(!c || c.ukc_m === undefined
+  // 5 CHART - under-keel clearance on real IBCSO v2 / GEBCO depth. Never
+  // PASS: neither is an official ENC (same rule as dakshin/gates.py).
+  g.push(!c || c.ukc_m === undefined || c.ukc_m === null
     ? { n: 'chart', s: 'UNKNOWN', w: 'no depth under the ship' }
     : c.ukc_m < 20 ? { n: 'chart', s: 'FAIL', w: `UKC ${Math.round(c.ukc_m)} m below the 20 m margin` }
-    : c.ukc_m < 80 ? { n: 'chart', s: 'MARGINAL', w: `UKC ${Math.round(c.ukc_m)} m on the shelf` }
-    : { n: 'chart', s: 'PASS', w: `UKC ${Math.round(c.ukc_m)} m` });
+    : { n: 'chart', s: 'MARGINAL', w: `UKC ${Math.round(c.ukc_m)} m; IBCSO/GEBCO, not an official ENC` });
 
   // 6 TRAFFIC
   g.push(S.traffic.length
