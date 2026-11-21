@@ -6,8 +6,9 @@ arrows (owner request 2026-11-22).
 
 For each USNIC giant in the box: integrate 0-9 days on the cycle's forecast
 currents (slice 5 machinery, grounding-aware v2), and emit daily positions
-plus the net drift vector. Bergs the model holds as grounded get a zero
-vector and say so — the chart must show "held", not invent motion.
+plus the net drift vector. A berg grounded at its start keeps a zero vector;
+one that grounds mid-track carries the drift UP TO the grounding point, and
+`status` says so — the chart must show "held", never invent further motion.
 
 Writes dakshin/figures/berg_tracks.json.
 """
