@@ -129,8 +129,8 @@ class Router:
         # demo.
         LO, LA = np.meshgrid(self.lons, self.lats)
         self.land = on_land(LO, LA)
-        # Real IBCSO v2 depth at each node (shallowest in its 0.05 deg box);
-        # NaN north of 55 S, where the committed subset has no coverage.
+        # Real depth at each node (IBCSO v2 / GEBCO_2020, shallowest within
+        # ~5 km); NaN only outside the committed grid.
         self.depth = depth_m(LO, LA)
 
     def _conditions(self, t_slot):
@@ -145,7 +145,7 @@ class Router:
 
     def _nearest(self, lat, lon, blocked):
         """Nearest node the ship may occupy. Stations sit ashore - IBCSO puts
-        the node nearest Bharati on the ice sheet, 221 m above sea level - so
+        the node nearest Bharati on the ice sheet, over 200 m above sea level - so
         an endpoint snaps to the closest navigable node, as PolarRoute's
         adjust_waypoints does. Where the nearest node is open this is the
         same node as before."""
@@ -154,6 +154,33 @@ class Router:
         d2 = np.where(blocked, np.inf, d2)
         j, i = np.unravel_index(int(np.argmin(d2)), d2.shape)
         return int(j), int(i)
+
+    def _goal_nodes(self, lat, lon, blocked):
+        """Every node at which the voyage counts as arrived.
+
+        If the node nearest the goal is navigable it is the only goal, exactly
+        as before. Stations sit ashore, though, and at 0.55 x 0.9 degree spacing
+        the lattice cannot resolve the coast: the node nearest Bharati is on
+        the ice sheet, and the nearest navigable nodes lie 44 and 51 km off in
+        different directions. Picking one of them by distance alone made the
+        answer hinge on a 7 km difference and on that one node's ice. So when
+        the nearest node is blocked, any navigable node within one lattice
+        diagonal of the goal is an arrival, and the search ends at whichever
+        it reaches first. `arrival_offset_km` in the result says how far out.
+        """
+        cos = math.cos(math.radians(lat))
+        d_deg = np.hypot(self.lats[:, None] - lat, (self.lons[None, :] - lon) * cos)
+        j0, i0 = np.unravel_index(int(np.argmin(d_deg)), d_deg.shape)
+        goal = np.zeros_like(blocked)
+        if not blocked[j0, i0]:
+            goal[j0, i0] = True
+            return goal
+        dlat = abs(self.lats[1] - self.lats[0])
+        dlon = abs(self.lons[1] - self.lons[0])
+        goal = ~blocked & (d_deg <= math.hypot(dlat, dlon * cos))
+        if not goal.any():
+            goal[self._nearest(lat, lon, blocked)] = True
+        return goal
 
     def solve(self, start, goal, depart_t=0.0, objective="time", ice_limit=None):
         """start/goal are (lat, lon). Returns a dict, or None if no route."""
@@ -167,7 +194,8 @@ class Router:
 
         blocked = self.land | shallow
         sj, si = self._nearest(*start, blocked)
-        gj, gi = self._nearest(*goal, blocked)
+        goal_nodes = self._goal_nodes(*goal, blocked)
+        gj = gi = None
 
         INF = float("inf")
         best = np.full((self.ny, self.nx), INF)
@@ -185,7 +213,8 @@ class Router:
             if seen[j, i]:
                 continue
             seen[j, i] = True
-            if (j, i) == (gj, gi):
+            if goal_nodes[j, i]:
+                gj, gi = j, i
                 break
             t_here = elapsed[j, i]
             slot = int((depart_t * 24.0 + t_here) // 6.0)
@@ -217,7 +246,7 @@ class Router:
                     prev[(nj, ni)] = (j, i)
                     heapq.heappush(pq, (nc, nj, ni))
 
-        if not seen[gj, gi]:
+        if gj is None:
             return None
 
         path = []
