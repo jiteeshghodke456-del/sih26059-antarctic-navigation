@@ -1,0 +1,68 @@
+{
+  "generated": "2026-11-21T17:25:17+00:00",
+  "truth": "NOAA/NSIDC G10016 v4 NRT (AMSR2), QA-masked",
+  "forecast": "CMEMS GLO12 cmems_mod_glo_phy_anfc, archived at issue time",
+  "model": null,
+  "scoring": "corridor box 0-80E 55-78S, pooled RMSE on zero-filled fields over isfinite(forecast)&isfinite(truth) cells (training convention), IIEE at 15% threshold",
+  "caveats": [
+    "sensor change: truth is AMSR2 since 2025-01-01, training truth was F17 SSMIS",
+    "corridor only, not the training hemisphere",
+    "one spring season, ~76 cycles",
+    "assumes day-t satellite file available on day t (training's assumption too)",
+    "4 stale cycles excluded per KNOWN_STALE.md"
+  ],
+  "leads": {
+    "lead_1": {
+      "n_cycles": 76,
+      "first_cycle": "2026-08-31",
+      "last_cycle": "2026-11-18",
+      "rmse": {
+        "cmems": 0.10199,
+        "persistence": 0.11977
+      },
+      "iiee_km2_mean": {
+        "cmems": 195058.0,
+        "persistence": 187706.0
+      }
+    },
+    "lead_3": {
+      "n_cycles": 75,
+      "first_cycle": "2026-08-31",
+      "last_cycle": "2026-11-16",
+      "rmse": {
+        "cmems": 0.10479,
+        "persistence": 0.14391
+      },
+      "iiee_km2_mean": {
+        "cmems": 194575.0,
+        "persistence": 277167.0
+      }
+    },
+    "lead_5": {
+      "n_cycles": 74,
+      "first_cycle": "2026-08-31",
+      "last_cycle": "2026-11-15",
+      "rmse": {
+        "cmems": 0.10981,
+        "persistence": 0.15508
+      },
+      "iiee_km2_mean": {
+        "cmems": 200203.0,
+        "persistence": 319189.0
+      }
+    },
+    "lead_7": {
+      "n_cycles": 72,
+      "first_cycle": "2026-08-31",
+      "last_cycle": "2026-11-13",
+      "rmse": {
+        "cmems": 0.1153,
+        "persistence": 0.16414
+      },
+      "iiee_km2_mean": {
+        "cmems": 210200.0,
+        "persistence": 353255.0
+      }
+    }
+  }
+}

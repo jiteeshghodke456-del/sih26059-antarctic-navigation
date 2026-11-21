@@ -94,6 +94,67 @@ def build_channels(
     return x, observed[tgt], valid[tgt], dates[tgt]
 
 
+def build_channels_operational(
+    forecast_at_target: np.ndarray,
+    analysis_t: np.ndarray,
+    observed_history: np.ndarray,
+    target_date: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Assemble one inference sample in the *real operational setting*
+    (HANDOFF_TONIGHT slice 2). Differences from `build_channels`, deliberate:
+
+    - channel 0 is the **forecast issued on day t, valid at t+lead** — the
+      field a ship would actually have — not a reanalysis valid at the target.
+    - channel 8 (innovation) uses the forecast cycle's own day-0 field as the
+      analysis at t, minus the newest satellite observation at t.
+
+    Everything the function receives is knowable on day t: the forecast issued
+    that day, its day-0 analysis, and satellite observations up to t. Nothing
+    after t can enter, by construction.
+
+    Args (all on the NSIDC grid, NaN = no data):
+        forecast_at_target: (ny, nx) regridded forecast step valid at t+lead
+        analysis_t:         (ny, nx) regridded day-0 field of the cycle
+        observed_history:   (N_HISTORY, ny, nx) QA-masked obs, newest first
+                            (index 0 = day t, index 6 = day t-6)
+        target_date:        YYYYMMDD int of t+lead (seasonality channels)
+
+    Returns (x, valid_t): x shaped (1, N_CHANNELS, ny, nx) with the same NaN→0
+    fill the training pipeline used, and valid_t the bool mask
+    isfinite(analysis) & isfinite(obs at t), i.e. training's `valid[t]`.
+    """
+    if observed_history.shape[0] != N_HISTORY:
+        raise ValueError(f"need {N_HISTORY} history days, got {observed_history.shape[0]}")
+    ny, nx = analysis_t.shape
+    valid_t = np.isfinite(analysis_t) & np.isfinite(observed_history[0])
+
+    fc = np.nan_to_num(forecast_at_target, nan=0.0).astype(np.float32)
+    an = np.nan_to_num(analysis_t, nan=0.0).astype(np.float32)
+    obs = np.nan_to_num(observed_history, nan=0.0).astype(np.float32)
+
+    x = np.zeros((1, N_CHANNELS, ny, nx), dtype=np.float32)
+    x[0, 0] = fc
+    x[0, 1:N_HISTORY + 1] = obs
+    x[0, N_HISTORY + 1] = an - obs[0]
+    doy = _day_of_year(target_date)
+    x[0, N_HISTORY + 2] = np.sin(2 * np.pi * doy / 365.25)
+    x[0, N_HISTORY + 3] = np.cos(2 * np.pi * doy / 365.25)
+    x[0, N_HISTORY + 4] = valid_t.astype(np.float32)
+    return x, valid_t
+
+
+def iiee_km2(pred: np.ndarray, truth: np.ndarray, mask: np.ndarray,
+             threshold: float = 0.15, cell_km2: float = 625.0) -> float:
+    """Integrated Ice-Edge Error: area where the 15% ice-extent masks disagree.
+
+    NSIDC cells are 25 km × 25 km = 625 km². Standard IIEE (Goessling et al.
+    2016) is overestimated + underestimated extent area.
+    """
+    p = pred >= threshold
+    t = truth >= threshold
+    return float(np.sum((p != t) & mask) * cell_km2)
+
+
 def _to_ordinal(dates: np.ndarray) -> np.ndarray:
     from datetime import date
     return np.array(
