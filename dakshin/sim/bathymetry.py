@@ -1,14 +1,15 @@
-"""Real seabed depth for the routers: IBCSO v2, cut to the corridor.
+"""Real seabed depth for the routers and the bridge panels.
 
 The vessel config has carried `min_depth: 20` since the start, and nothing
 ever read it, because there was no bathymetry anywhere a router could see.
 This is that bathymetry: the committed 0.05 degree subset written by
-scripts/subset_bathymetry.py from IBCSO v2 (Dorschel et al. 2022, Scientific
-Data 9, 275; CC-BY-4.0).
+scripts/subset_bathymetry.py - IBCSO v2 south of 50 S (Dorschel et al. 2022,
+Scientific Data 9, 275; CC-BY-4.0) and GEBCO_2020 north of it (public domain).
 
-Each box holds the SHALLOWEST source value inside it, so a lookup errs toward
-"too shallow", never toward "deep enough". Coverage is lon 0..80 E,
-lat 78..55 S; outside that the answer is NaN (no data), which callers must
+Each 0.05 degree box holds the SHALLOWEST source value within it and its
+eight neighbours (~5 km), so a lookup errs toward "too shallow", never toward
+"deep enough"; scripts/subset_bathymetry.py says why the buffer exists. Coverage is lon 0..90 E,
+lat 78..30 S; outside that the answer is NaN (no data), which callers must
 treat as unknown rather than as deep water.
 """
 
@@ -34,14 +35,14 @@ def _grid() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
 
 
 def depth_m(lon, lat) -> np.ndarray:
-    """Shallowest water depth (m, positive down) in the box holding each point.
+    """Shallowest water depth (m, positive down) within ~5 km of each point.
 
     Negative or zero means land or ice shelf. NaN means outside the subset.
-    Accepts scalars or arrays, like geo_mask.on_land.
+    Returns the broadcast shape of the inputs (0-d for scalars).
     """
     lats, lons, elev = _grid()
-    lon = np.atleast_1d(np.asarray(lon, dtype=float))
-    lat = np.atleast_1d(np.asarray(lat, dtype=float))
+    lon, lat = np.broadcast_arrays(np.asarray(lon, dtype=float),
+                                   np.asarray(lat, dtype=float))
     half = 0.5 * abs(lats[1] - lats[0])
     j = np.clip(np.searchsorted(lats, lat - half), 0, len(lats) - 1)
     i = np.clip(np.searchsorted(lons, lon - half), 0, len(lons) - 1)

@@ -17,6 +17,7 @@ core packages.
 | NOAA/NSIDC Near-Real-Time CDR v4 (G10016) | 2026 satellite truth for the real-forecast hindcast | NOAA open data; citation required | Meier, W. N. et al. NOAA/NSIDC Near-Real-Time CDR of Passive Microwave Sea Ice Concentration, Version 4. NSIDC. DOI 10.7265/tgam-yv28 |
 | ECMWF open data (IFS 10 m wind) | daily wind forecasts | **CC BY 4.0** — required wording: "Contains modified ECMWF open data (CC BY 4.0), https://www.ecmwf.int/en/forecasts/datasets/open-data" | ECMWF Open Data, accessed daily from 2026-11-21 |
 | IBCSO v2 (ice-surface grid) | bathymetry south of 50°S, min-depth routing, chart gate | CC-BY-4.0 | Dorschel, B. et al. (2022). The International Bathymetric Chart of the Southern Ocean Version 2. Scientific Data 9, 275. Dataset DOI 10.1594/PANGAEA.937574 |
+| GEBCO_2020 Grid (15 arc-second) | bathymetry north of 50°S (to Cape Town), min-depth routing, chart gate; subset via NOAA CoastWatch ERDDAP | Public domain; attribution requested; not for navigation | GEBCO Compilation Group (2020). GEBCO 2020 Grid. doi:10.5285/a29c5465-b138-234d-e053-6c86abc040b9 |
 | USNIC Antarctic iceberg list | weekly giant-berg positions, drift validation | US Government work, public | U.S. National Ice Center, Antarctic Icebergs, https://usicecenter.gov/Products/AntarcIcebergs |
 | Natural Earth | coastline/land mask | public domain | naturalearthdata.com |
 | Antarctic Treaty ASPA register | protected-area avoidance | public treaty data | Antarctic Treaty Secretariat, ats.aq |

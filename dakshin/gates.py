@@ -108,8 +108,8 @@ def chart_gate(
 ) -> GateResult:
     """§12 chart gate: is there water under the keel along the whole route?
 
-    `leg_depths_m` is the IBCSO v2 depth at each route point (m, positive
-    down; the shallowest value in its 0.05 degree box), None where the point
+    `leg_depths_m` is the depth at each route point (m, positive down; IBCSO
+    v2 / GEBCO_2020, the shallowest value within ~5 km), None where the point
     lies outside the bathymetry coverage. Any point shallower than the
     vessel's `min_depth` is a FAIL.
 
