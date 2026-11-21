@@ -59,7 +59,7 @@ def load_field() -> CurrentField:
     return field_
 
 
-def run_segments(field_: CurrentField) -> list[dict]:
+def run_segments(field_: CurrentField, bathymetry=None) -> list[dict]:
     t_min = dt.date.fromtimestamp(field_.t[0] * 86400.0)
     t_max = dt.date.fromtimestamp(field_.t[-1] * 86400.0)
     segments = []
@@ -74,7 +74,8 @@ def run_segments(field_: CurrentField) -> list[dict]:
             if d0 < t_min or d1 > t_max:
                 continue
             start = dt.datetime(d0.year, d0.month, d0.day, 12)
-            tr = forecast_track(name, lat0, lon0, L, W, field_, start, days)
+            tr = forecast_track(name, lat0, lon0, L, W, field_, start, days,
+                                bathymetry=bathymetry)
             err = great_circle_km(tr.lats[-1], tr.lons[-1], lat1, lon1)
             pers = great_circle_km(lat0, lon0, lat1, lon1)
             segments.append({
@@ -146,6 +147,34 @@ def main() -> int:
         # unverified 12 km/day figure from the older docs.
         "uncertainty_radius_km_per_day": round(float(np.median(model_kmd)), 2) if ok else None,
         "segments": segments,
+    }
+
+    # v2: the grounding-aware variant the v1 finding motivated. A berg whose
+    # assumed keel (0.83 x 250 m) reaches the IBCSO seabed is held, not
+    # advected. Scored beside v1, never replacing it.
+    from berg_forecast import ASSUMED_DRAUGHT_M, BathymetryGrid
+    v2_segments = run_segments(field_, bathymetry=BathymetryGrid())
+    v2_ok = [s for s in v2_segments if s["status"] == STATUS_OK]
+    v2_grounded = [s for s in v2_segments if s["status"] != STATUS_OK]
+    v2_all_kmd = [s["error_km_per_day"] for s in v2_segments]
+    v2_moving = [s for s in v2_ok if s["persistence_km"] > 3.0]
+    payload["v2_grounding"] = {
+        "assumption": f"keel draught {ASSUMED_DRAUGHT_M:.0f} m "
+                      "(0.83 x assumed 250 m thickness; USNIC publishes none)",
+        "n_held_as_grounded": len(v2_grounded),
+        "n_free_drifting": len(v2_ok),
+        # grounded segments predict 'no motion', so their error IS scoreable:
+        # it equals the persistence error. Include everything.
+        "median_error_km_per_day_all": round(float(np.median(v2_all_kmd)), 2),
+        "free_drift_median_km_per_day": {
+            "model": round(float(np.median([s["error_km_per_day"] for s in v2_ok])), 2) if v2_ok else None,
+            "persistence": round(float(np.median([s["persistence_km_per_day"] for s in v2_ok])), 2) if v2_ok else None,
+        },
+        "moving_free_median_km_per_day": {
+            "model": round(float(np.median([s["error_km_per_day"] for s in v2_moving])), 2) if v2_moving else None,
+            "persistence": round(float(np.median([s["persistence_km_per_day"] for s in v2_moving])), 2) if v2_moving else None,
+        },
+        "segments": v2_segments,
     }
     OUT.write_text(json.dumps(payload, indent=2) + "\n")
     print(f"\nwrote {OUT}: {len(ok)}/{len(segments)} ok segments, "

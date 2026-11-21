@@ -6,10 +6,10 @@
   "summary": {
     "Bharati": {
       "days_observed": 31,
-      "days_closed": 23,
-      "first_closed_day": 1,
-      "first_closed_date": "2019-12-02",
-      "pct_days_closed": 74.2
+      "days_closed": 31,
+      "first_closed_day": 0,
+      "first_closed_date": "2019-12-01",
+      "pct_days_closed": 100.0
     },
     "Bharati approach (100 km N)": {
       "days_observed": 31,
@@ -17,13 +17,6 @@
       "first_closed_day": null,
       "first_closed_date": null,
       "pct_days_closed": 0.0
-    },
-    "Maitri (Leningradskaya coast)": {
-      "days_observed": 31,
-      "days_closed": 31,
-      "first_closed_day": 0,
-      "first_closed_date": "2019-12-01",
-      "pct_days_closed": 100.0
     }
   },
   "daily": [
@@ -33,17 +26,12 @@
       "Bharati": {
         "sic_qa_on": 30.7,
         "sic_qa_off": 0.0,
-        "passable": true
+        "passable": false
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 39.3,
         "sic_qa_off": 39.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -58,11 +46,6 @@
         "sic_qa_on": 44.0,
         "sic_qa_off": 44.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -77,11 +60,6 @@
         "sic_qa_on": 43.0,
         "sic_qa_off": 43.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -96,11 +74,6 @@
         "sic_qa_on": 42.0,
         "sic_qa_off": 42.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -115,11 +88,6 @@
         "sic_qa_on": 44.3,
         "sic_qa_off": 44.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -134,11 +102,6 @@
         "sic_qa_on": 42.3,
         "sic_qa_off": 42.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -147,17 +110,12 @@
       "Bharati": {
         "sic_qa_on": 33.7,
         "sic_qa_off": 0.0,
-        "passable": true
+        "passable": false
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 40.7,
         "sic_qa_off": 40.7,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -166,17 +124,12 @@
       "Bharati": {
         "sic_qa_on": 35.2,
         "sic_qa_off": 0.0,
-        "passable": true
+        "passable": false
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 43.3,
         "sic_qa_off": 43.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -185,17 +138,12 @@
       "Bharati": {
         "sic_qa_on": 36.3,
         "sic_qa_off": 0.0,
-        "passable": true
+        "passable": false
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 47.3,
         "sic_qa_off": 47.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -210,11 +158,6 @@
         "sic_qa_on": 51.7,
         "sic_qa_off": 51.7,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -229,11 +172,6 @@
         "sic_qa_on": 52.3,
         "sic_qa_off": 52.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -248,11 +186,6 @@
         "sic_qa_on": 50.7,
         "sic_qa_off": 50.7,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -267,11 +200,6 @@
         "sic_qa_on": 48.7,
         "sic_qa_off": 48.7,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -286,11 +214,6 @@
         "sic_qa_on": 48.0,
         "sic_qa_off": 48.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -305,11 +228,6 @@
         "sic_qa_on": 47.7,
         "sic_qa_off": 47.7,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -324,11 +242,6 @@
         "sic_qa_on": 44.3,
         "sic_qa_off": 44.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -343,11 +256,6 @@
         "sic_qa_on": 48.7,
         "sic_qa_off": 48.7,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -362,11 +270,6 @@
         "sic_qa_on": 47.3,
         "sic_qa_off": 47.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -381,11 +284,6 @@
         "sic_qa_on": 46.3,
         "sic_qa_off": 46.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -400,11 +298,6 @@
         "sic_qa_on": 48.0,
         "sic_qa_off": 48.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -413,17 +306,12 @@
       "Bharati": {
         "sic_qa_on": 80.0,
         "sic_qa_off": 80.0,
-        "passable": true
+        "passable": false
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 48.0,
         "sic_qa_off": 48.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -438,11 +326,6 @@
         "sic_qa_on": 51.0,
         "sic_qa_off": 51.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -457,11 +340,6 @@
         "sic_qa_on": 54.3,
         "sic_qa_off": 54.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -476,11 +354,6 @@
         "sic_qa_on": 56.7,
         "sic_qa_off": 56.7,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -495,11 +368,6 @@
         "sic_qa_on": 54.3,
         "sic_qa_off": 54.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -514,11 +382,6 @@
         "sic_qa_on": 55.0,
         "sic_qa_off": 55.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -533,11 +396,6 @@
         "sic_qa_on": 58.0,
         "sic_qa_off": 58.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -552,11 +410,6 @@
         "sic_qa_on": 55.3,
         "sic_qa_off": 55.3,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -565,17 +418,12 @@
       "Bharati": {
         "sic_qa_on": 77.0,
         "sic_qa_off": 77.0,
-        "passable": true
+        "passable": false
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 54.7,
         "sic_qa_off": 54.7,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -584,17 +432,12 @@
       "Bharati": {
         "sic_qa_on": 79.0,
         "sic_qa_off": 79.0,
-        "passable": true
+        "passable": false
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 51.0,
         "sic_qa_off": 51.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     },
     {
@@ -603,17 +446,12 @@
       "Bharati": {
         "sic_qa_on": 75.0,
         "sic_qa_off": 75.0,
-        "passable": true
+        "passable": false
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 45.0,
         "sic_qa_off": 45.0,
         "passable": true
-      },
-      "Maitri (Leningradskaya coast)": {
-        "sic_qa_on": null,
-        "sic_qa_off": null,
-        "passable": false
       }
     }
   ]

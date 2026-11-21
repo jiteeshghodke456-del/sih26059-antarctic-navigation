@@ -24,11 +24,15 @@ Mean IIEE at the 15% threshold (10³ km²):
 | Lead | 1/12° | 1/4° | 1° | persistence |
 |---|---|---|---|---|
 | 1 d | 195.1 | 189.7 | 203.3 | 187.7 |
-| 3 d | 194.6 | 190.3 | 209.3 | 211.7* |
-| 5 d | 200.2 | 197.7 | 222.7 | — |
-| 7 d | 210.2 | 208.3 | 244.2 | — |
+| 3 d | 194.6 | 190.3 | 209.3 | 277.2 |
+| 5 d | 200.2 | 197.7 | 222.7 | 319.2 |
+| 7 d | 210.2 | 208.3 | 244.2 | 353.3 |
 
-*persistence IIEE decays with lead; full values in the JSON.
+Persistence IIEE grows steeply with lead (the edge moves), and note the
+lead-1 nuance honestly: at one day ahead, *persistence has the best IIEE of
+all* (187.7 vs 195.1) — a fresh satellite edge beats every model variant for
+"right now plus a day", exactly as the prototype's training docs predicted.
+The model forecasts earn their place from lead 3 onward.
 
 ## What it says, plainly
 

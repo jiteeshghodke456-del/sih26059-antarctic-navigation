@@ -80,7 +80,8 @@ def lambda_param(wind_speed_ms, lat_deg, length_m, width_m):
 
     Lambda is the single dimensionless number that decides the drift regime.
     Lambda >> 1 -> wind pushes the berg along-wind; Lambda << 1 -> across-wind.
-    The two asymptotes cross at Lambda = 1, where the deflection is 45 degrees.
+    The two asymptotes cross at Lambda = 1, where the deflection is 51.8 degrees
+    (arctan(beta/alpha) there, not the 45 the symmetry might suggest).
     """
     s = harmonic_length(length_m, width_m)
     return GAMMA * C_W * np.asarray(wind_speed_ms, dtype=float) / (

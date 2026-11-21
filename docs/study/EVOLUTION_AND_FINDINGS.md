@@ -1,7 +1,7 @@
 # Dakshin: evolution, findings, and what is still open
 
 Scope: the project from the first commit (2026-08-31, `0020fba`) to the
-night build of 2026-11-21. 332 commits on `main` in that window. Every
+night build of 2026-11-21. 332 commits on `main` in that window (as of 17:56 UTC on 2026-11-21). Every
 number below comes from a file in this repository; the path is cited next to
 it. Three labels are used throughout:
 
@@ -16,6 +16,8 @@ Appendix A rather than resolved here. Read Appendix A before quoting any
 figure from the docs.
 
 ---
+
+**Snapshot.** The repository was read between about 17:56 and 18:21 UTC on 2026-11-21. "In this pass" means the study pass that wrote this file. Commits and uncommitted edits by other agents that landed or appeared later are listed in Appendix C.
 
 ## 1. Stage timeline
 
@@ -140,9 +142,11 @@ persistence at every lead. On IIEE, it does not beat persistence at lead 1: the
 edge error of the operational forecast is 3.9% higher than persistence's. The
 claim "raw CMEMS beats persistence at every lead" is therefore true for RMSE
 only. ADR-027 (`docs/DECISIONS.md`) requires the corrected forecast to beat raw
-CMEMS on both IIEE and CRPS at each lead before it is claimed. On the
-baseline's own numbers, lead 1 would fail the IIEE half of that test. CRPS is
-not computed in any file in `dakshin/figures/`.
+CMEMS on both IIEE and CRPS at each lead before it is claimed. This table does
+not test that rule, because it has no corrected forecast. It does show that raw
+CMEMS is itself 3.9% worse than persistence on IIEE at lead 1, so any statement
+about lead 1 has to rest on RMSE alone. CRPS is not computed in any file in
+`dakshin/figures/`.
 
 **Caveats.** One spring season, about 75 cycles, so the leads are strongly
 autocorrelated and no confidence interval has been computed. The truth changes
@@ -256,6 +260,11 @@ module docstring). Neither test uses IBCSO. The claim "most corridor giants are
 grounded" is therefore a behavioural statement that has not been checked
 against the seabed at each berg position.
 
+Uncommitted edits in `dakshin/berg_forecast.py` at the snapshot add a `BathymetryGrid`
+and an assumed keel draught (0.83 × 250 m, about 207 m) for grounding detection. They are not
+part of any committed figure. The same diff changes how `wind_forcing_R` is computed. It does
+not change the zero-wind default, as far as the diff shows.
+
 **Resolution of the currents.** `scripts/berg_resolution.py` runs the same
 segments on currents block-averaged to 1/4° and 1°
 (`dakshin/figures/berg_resolution.json`):
@@ -345,10 +354,11 @@ this corridor. That quotation was not re-checked against the paper in this pass.
 - `dakshin/gates.py` `chart_gate` returns UNKNOWN or MARGINAL and never PASS
   without an official ENC. A leg shallower than 20 m is refused in both routers
   (`docs/TRUE_CLAIMS.md` §1.17, slice 7 in `docs/CURRENT_STATE.md`).
-- The day-0 Cape Town to Bharati route no longer solves. IBCSO puts the goal's
-  lattice point in 85% simulated ice on day 0. Days 2 to 14 solve, at 7.8 to
-  8.4 days (`docs/backlog.md`, `[major][demo]`). The backlog flags the decision
-  of whether to move the headline to day 2 as open.
+- The day-0 Cape Town to Bharati route did not solve at the time of the earlier reads: IBCSO put the
+  goal's lattice point in 85% simulated ice on day 0, and days 2 to 14 solved at 7.8 to 8.4 days
+  (`docs/backlog.md`, `[major][demo]`, before `13861d9` removed that line). `478ecd2` changed the
+  snapping rule that made day 0 hinge on one ice-locked node, and its commit message says the tests
+  cover every departure day. Whether day 0 solves now was not re-run in this pass.
 - `dakshin/figures/routes.json` was regenerated with depth in `13861d9` (item 4 above).
   The backlog line that asked for this regeneration was removed in the same commit.
 
@@ -668,7 +678,7 @@ item. Items the backlog marks as resolved are listed in Appendix B, not here.
 ### Iceberg behaviour
 
 14. **Grounding detection.** `[major][bergs]`. IBCSO depth against draught. This is
-    the binding constraint according to 2d. Not built.
+    the binding constraint according to 2d. Partly in progress: uncommitted code in `dakshin/berg_forecast.py` at the snapshot (2d). Not wired into any committed figure.
 15. **Lock-in above 90% concentration.** `[major][model]` (Lichey and Hellmer 2001).
     The drift model has no term for it. The cheap fix (switch to the drift field
     above about 90%) is unbuilt (`docs/research/FORECAST_HORIZONS.md` §3.4, as cited
@@ -690,8 +700,9 @@ item. Items the backlog marks as resolved are listed in Appendix B, not here.
 21. **Re-run the route-regret, destination-window and alternatives experiments on depth meshes.**
     The route is regenerated (`13861d9`, 8.66 days), but the experiments behind claims 1.6, 1.7 and the
     regret result were computed without depth (`docs/backlog.md`, `[major][eval]`).
-22. **Decide the headline for the day-0 route.** `478ecd2` changed the snapping rule that made day 0 hinge on
-    one ice-locked node. Whether day 0 now solves was not checked in this pass. `[major][demo]`.
+22. **Confirm the day-0 route.** `478ecd2` changed the snapping rule that made day 0 hinge on one
+    ice-locked node. Its commit message says the tests cover every departure day. The backlog line that
+    reported day 0 as not solving was removed in `13861d9`. Not re-run in this pass.
 23. **Maitri's offload point.** `[major][data]`. Unknown, so Maitri is excluded from
     the destination window.
 24. **Vessel calibration.** `force_limit` is borrowed from another hull (`[major][vessel]`);
@@ -706,7 +717,7 @@ item. Items the backlog marks as resolved are listed in Appendix B, not here.
 
 26. **Correct the claims listed in Appendix A.** Several are in the ledger itself.
 27. **README rewrite for a physical oceanographer.** Queued in `docs/CURRENT_STATE.md`
-    as the owner's second end-of-build ask. Not done.
+    as the owner's second end-of-build ask. Not done in committed form. `README.md` was modified and uncommitted at the snapshot, so it is in progress elsewhere.
 
 ---
 
@@ -809,7 +820,7 @@ written before they landed.
 
 | Commit | Message (abridged) | Effect on the findings |
 |---|---|---|
-| `478ecd2` | Router: arrive anywhere navigable within one lattice cell of a station ashore | Changes how the router snaps the destination. The commit message says routes whose nearest node is navigable are unchanged. The day-0 hinge is addressed. Affects §2e, §2f and §4 item 22. |
+| `478ecd2` | Router: arrive anywhere navigable within one lattice cell of a station ashore | Changes how the router snaps the destination. The commit message says routes whose nearest node is navigable are unchanged. The commit message says the day-0 hinge is addressed; not re-run here. Affects §2e, §2f and §4 item 22. |
 | `24317da` | Bathymetry to Cape Town: GEBCO_2020 north of 50 S, exact 0.05° grid over the whole sim box, 5 km shallowest buffer | Rewrites `scripts/subset_bathymetry.py` (243 lines). The subset grows from 1.36 MB to 3.50 MB. Adds the GEBCO attribution to `ATTRIBUTION.md`. Affects §2e and the runbook's data inventory. |
 | `f67493b` | Demo: real seabed under the ship, chart light never PASS, decision chart gate on real route depths | Changes the demo's seabed and chart panels. Affects the synthetic-world row in §3. |
 | `13861d9` | Regenerate the published route with depth in the mesh: 8.66 days, 16 km off Bharati; claim 1.11 re-derived | Replaces the 8.6-day route with 8.66 days and an endpoint 16 km off the station. Updates `docs/TRUE_CLAIMS.md` §1.11 and `docs/PROTOTYPE_RESULTS.md` (an update note at the top of its routing section). Removes the backlog line that asked for regeneration, and removes the line "GEBCO still not downloaded". Adds backlog items: re-run the three depth-free experiments; GEBCO north of 50 S from ERDDAP; `RealWorld` does not return depth. |
@@ -817,3 +828,5 @@ written before they landed.
 The `raw/` IBCSO file was absent at 18:21, the same minute that `24317da`
 landed. That commit's script downloads its inputs to `data/bathymetry/raw/`. This document
 does not establish whether the removal and the commit are related.
+
+Uncommitted at the snapshot, and not in any commit: `dakshin/berg_forecast.py` (`BathymetryGrid`, assumed draught), `README.md`, and a new study file `docs/study/PHYSICS_AND_PAPERS.md` written by another agent. Later commit by another agent, on top of this document's commit: `aaddb78` (backlog inconsistencies).

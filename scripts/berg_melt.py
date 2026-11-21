@@ -77,8 +77,15 @@ def main() -> int:
             if not all(np.isfinite([t_w, u, v])):
                 continue
             h_s = h_s if np.isfinite(h_s) else 0.0  # ice-covered: waves damped
-            fw = freshwater_m3_per_day(b.length_m, b.width_m,
-                                       float(np.hypot(u, v)), t_w, h_s)
+            # Basal melt wants the WATER-RELATIVE speed, not the current
+            # speed. With zero wind, WDE17 moves the berg exactly with the
+            # water, so the relative speed — and the basal term — is ~0, and
+            # the estimate is carried by convection + wave erosion.
+            from models.iceberg.drift import iceberg_velocity
+            ub, vb = iceberg_velocity(u, v, 0.0, 0.0, la,
+                                      b.length_m, b.width_m)
+            rel = float(np.hypot(u - ub, v - vb))
+            fw = freshwater_m3_per_day(b.length_m, b.width_m, rel, t_w, h_s)
             daily.append({"date": str(t.date()), "sst_c": round(t_w, 2),
                           "hs_m": round(h_s, 2),
                           "freshwater_m3_per_day": round(fw, 0)})

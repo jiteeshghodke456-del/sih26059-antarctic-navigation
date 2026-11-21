@@ -22,6 +22,8 @@ Times marked **not recorded** have no measurement in the repository.
 
 ---
 
+**Snapshot.** Repository read between about 17:56 and 18:21 UTC on 2026-11-21. "In this pass" means the study pass that wrote this file.
+
 ## 1. Environment
 
 There is no root `pyproject.toml` or lockfile. The only requirements file is
@@ -604,5 +606,20 @@ usual one in the field.
 | **Beaufort** | Wind-force scale; the weather gate uses Beaufort 7 and 8 thresholds | `dakshin/gates.py` (`WIND_FAIL_MS`, `WIND_MARGINAL_MS`) |
 | **USNIC catalogue, "Last Update"** | Weekly list of giant bergs; the newest date in the file names the archive copy | `scripts/harvest_usnic.sh` |
 | **Stage A, Stage B** | Stage A is training on the reanalysis; Stage B is fine-tuning and acceptance on the real forecast archive | `docs/DECISIONS.md` ADR-019 |
+| **NMEA** | National Marine Electronics Association sentence format for ship instruments and AIS | Standard usage; `dakshin/ais_feed.py` |
+| **AIVDM** | The AIS message sentence type used for ship position reports | Standard usage; `dakshin/ais_feed.py` |
+| **PC1 to PC7** | IACS Polar Class notations; `dakshin/polaris.py` has the PC table (`CLASSES`) used for the POLARIS speed caps | `dakshin/polaris.py` line 45 |
+| **OOW** | Officer of the watch | Standard usage; used in `dakshin/test_workflow.py` and `dakshin/demo/test_app.py` |
+| **NM** | Nautical mile; the traffic gate uses 2 and 5 NM bands | `dakshin/gates.py` (`TRAFFIC_FAIL_NM`, `TRAFFIC_MARGINAL_NM`) |
+| **ETA** | Estimated time of arrival, in days from departure in the real-route output | `dakshin/figures/real_route.json` (`eta_days`); `dakshin/alternatives.py` |
+| **ACC** | Antarctic Circumpolar Current | Standard usage |
+| **UKC** | Under-keel clearance, the depth margin above the draught | `docs/DECISIONS.md` ADR-026 |
+| **GBM** | Gradient-boosted machine, the planned iceberg residual model (stretch goal) | `docs/DECISIONS.md` ADR-008 |
+| **LUT** | Lookup table (the literature thickness and density table) | `docs/DECISIONS.md` ADR-013 |
+| **AOI** | Area of interest (the corridor box as a configuration input) | `docs/backlog.md`, configuration requirement |
+| **GAMMA, C_A, C_W** | WDE17 drift coefficients: gamma from the air and water drag coefficients (`C_A` = 1.3, `C_W` = 0.9) | `models/iceberg/drift.py` |
+| **MATLAB reference code** | The author's reference implementation of WDE17, used to settle the drag-coefficient swap | `docs/backlog.md` (`[resolved][ml]`) |
+| **REPLAY, SIMULATED** | Provenance labels on the demo's fields. The backlog records that the synthetic fields still say REPLAY | `dakshin/demo/static/provenance.js`; `docs/backlog.md` |
+| **CMIP-style names** | Variable and coordinate naming conventions that the NEMO reader accepts | `dakshin/readers/nemo.py` (F2) |
 | **ADR** | Architecture decision record in `docs/DECISIONS.md` | — |
 | **Claims ledger** | `docs/TRUE_CLAIMS.md`, each claim with its evidence file | — |

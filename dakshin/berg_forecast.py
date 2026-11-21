@@ -9,10 +9,12 @@ outside the first and last centre use the nearest day).
 Honesty rules, from the handoff:
 - a step that lands on NaN current (land, or outside the data) marks the berg
   "grounded or unknown" and STOPS it — motion is never invented;
-- wind defaults to zero (the ECMWF wind harvest is slice 6); for the giant
-  bergs USNIC tracks the wind term is ~1% of drift (WDE17 R << 1), and each
-  track records its R value — computed with an assumed 10 m/s wind, labelled
-  as an assumption — so the simplification is visible, not hidden.
+- wind defaults to zero, and each track records WDE17's R (relative wind
+  forcing) computed with an assumed 10 m/s wind so the neglected term is
+  visible. Measured on the 2026 corridor hindcast the median R is 0.25 with
+  a maximum of 1.73 — the corridor's currents are slow enough that wind is
+  NOT negligible for every berg, so zero-wind is a stated limitation here,
+  not a safe approximation (see dakshin/figures/berg_hindcast.json).
 """
 from __future__ import annotations
 
@@ -31,6 +33,33 @@ from models.iceberg.drift import iceberg_velocity, relative_wind_forcing  # noqa
 M_PER_DEG = 111_195.0  # mean metres per degree of latitude
 STATUS_OK = "ok"
 STATUS_GROUNDED = "grounded or unknown"
+
+# Keel draught for grounding detection: USNIC publishes no thickness, so the
+# assumed 250 m tabular thickness (models/iceberg/melt.py) at the ice/water
+# density ratio gives ~207 m. An ASSUMPTION, carried into every output.
+ASSUMED_DRAUGHT_M = 0.83 * 250.0
+
+
+class BathymetryGrid:
+    """Shallowest depth per 0.05° cell, from the committed IBCSO/GEBCO subset."""
+
+    def __init__(self, path: Path | None = None):
+        path = path or (Path(__file__).resolve().parent.parent
+                        / "data" / "bathymetry" / "ibcso_v2_corridor_0p05.nc")
+        with xr.open_dataset(path) as ds:
+            self.lat = ds["lat"].values
+            self.lon = ds["lon"].values
+            # elevation: negative below sea level; shallowest point per cell
+            self.elev = ds["elevation"].values
+
+    def depth_m(self, lon: float, lat: float) -> float:
+        """Water depth (positive down); NaN outside coverage, <=0 on land."""
+        if not (self.lat[0] <= lat <= self.lat[-1]
+                and self.lon[0] <= lon <= self.lon[-1]):
+            return float("nan")
+        i = int(np.clip(np.searchsorted(self.lat, lat), 0, len(self.lat) - 1))
+        j = int(np.clip(np.searchsorted(self.lon, lon), 0, len(self.lon) - 1))
+        return float(-self.elev[i, j])
 
 
 class CurrentField:
@@ -130,8 +159,17 @@ def forecast_track(name: str, lat0: float, lon0: float,
                    length_m: float, width_m: float,
                    field_: CurrentField,
                    start: dt.datetime, days: float,
-                   dt_hours: float = 1.0) -> Track:
-    """Midpoint (RK2) integration of one berg. Record hourly positions."""
+                   dt_hours: float = 1.0,
+                   bathymetry: "BathymetryGrid | None" = None,
+                   draught_m: float = ASSUMED_DRAUGHT_M) -> Track:
+    """Midpoint (RK2) integration of one berg. Record hourly positions.
+
+    With `bathymetry`, a berg whose assumed keel reaches the seabed
+    (depth < draught_m) is marked grounded at its start or wherever the track
+    first touches such a cell, and is not advected further — the v2 behaviour
+    motivated by the v1 hindcast finding that most corridor giants are
+    anchored. Without it, behaviour is exactly the original v1.
+    """
     track = Track(name=name)
     lat, lon = float(lat0), float(lon0)
     t = start
@@ -143,6 +181,16 @@ def forecast_track(name: str, lat0: float, lon0: float,
     if first is not None:
         track.wind_forcing_R = float(relative_wind_forcing(
             10.0, max(first[2], 1e-6), lat, length_m, width_m))
+
+    def aground(lo, la):
+        if bathymetry is None:
+            return False
+        d = bathymetry.depth_m(lo, la)
+        return math.isfinite(d) and d < draught_m
+
+    if aground(lon, lat):
+        track.status = STATUS_GROUNDED
+        return track
 
     while t < end:
         k1 = _step_velocity(field_, lon, lat, t, length_m, width_m)
@@ -156,8 +204,12 @@ def forecast_track(name: str, lat0: float, lon0: float,
         if k2 is None:
             track.status = STATUS_GROUNDED
             break
-        lat = lat + k2[1] * h / M_PER_DEG
-        lon = lon + k2[0] * h / (M_PER_DEG * math.cos(math.radians(lat)))
+        new_lat = lat + k2[1] * h / M_PER_DEG
+        new_lon = lon + k2[0] * h / (M_PER_DEG * math.cos(math.radians(lat)))
+        if aground(new_lon, new_lat):
+            track.status = STATUS_GROUNDED
+            break
+        lat, lon = new_lat, new_lon
         t = t + dt.timedelta(seconds=h)
         track.times.append(t); track.lats.append(lat); track.lons.append(lon)
     return track

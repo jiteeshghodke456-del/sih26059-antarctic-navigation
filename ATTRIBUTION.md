@@ -54,4 +54,6 @@ core packages.
 
 The drift model implements Wagner, T. J. W., Dell, R. W., Eisenman, I. (2017),
 "An Analytical Model of Iceberg Drift", Journal of Physical Oceanography 47(7)
-(WDE17), with the melt terms of Keghouche et al. (2010) noted as future work.
+(WDE17). The melt terms assembled by Keghouche, Bertino & Lisaeter (2010,
+JGR Oceans 114, C06012) are implemented in models/iceberg/melt.py as a
+labelled estimate.

@@ -51,6 +51,33 @@ def test_coastal_berg_stops_with_grounded_flag():
     assert len(tr.times) > 1            # it did move before stopping
 
 
+def test_grounding_holds_berg_on_shallow_bank():
+    # v2 behaviour: a keel-deep bank under the berg means it must not advect,
+    # however strong the current. Uses the real committed bathymetry.
+    import numpy as np
+    from berg_forecast import ASSUMED_DRAUGHT_M, BathymetryGrid
+
+    bathy = BathymetryGrid()
+    # find a real cell in the test field's area shallower than the keel
+    lat_sel = (bathy.lat >= -70) & (bathy.lat <= -60)
+    lon_sel = (bathy.lon >= 0) & (bathy.lon <= 40)
+    depth = -bathy.elev[np.ix_(lat_sel, lon_sel)]
+    cand = np.argwhere((depth > 0) & (depth < ASSUMED_DRAUGHT_M))
+    assert len(cand), "no keel-deep bank in the test window — adjust window"
+    i, j = cand[0]
+    la = bathy.lat[lat_sel][i]
+    lo = bathy.lon[lon_sel][j]
+    tr = forecast_track("T", float(la), float(lo), field_=uniform_field(u=0.5),
+                        start=START, days=5, bathymetry=bathy, **GIANT)
+    assert tr.status == STATUS_GROUNDED
+    assert len(tr.lats) == 1          # never moved
+
+    # same berg, no bathymetry: v1 behaviour unchanged
+    tr1 = forecast_track("T", float(la), float(lo), field_=uniform_field(u=0.5),
+                         start=START, days=1, **GIANT)
+    assert len(tr1.lats) > 1
+
+
 def test_wind_forcing_R_is_small_for_giants():
     tr = forecast_track("T", -65.0, 20.0, field_=uniform_field(u=0.1),
                         start=START, days=1, **GIANT)

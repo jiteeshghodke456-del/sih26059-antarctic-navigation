@@ -5,9 +5,9 @@
 
 Reruns the slice-5 USNIC hindcast with the analysis currents at native 1/12°,
 then block-averaged to ~1/4° and ~1° (same coarsen-and-repeat trick as F1, so
-the land mask geometry is unchanged except cells averaged across). For the
-corridor's giant bergs drift is almost pure current (R << 1 in every segment),
-so the current field's resolution is the variable that matters.
+the land mask geometry is unchanged except cells averaged across). The current
+field is the dominant forcing being varied (wind is held at zero in both
+variants, a stated limitation — measured R medians 0.25).
 
 Writes dakshin/figures/berg_resolution.json and a section's numbers for
 docs/RESOLUTION_STUDY.md.

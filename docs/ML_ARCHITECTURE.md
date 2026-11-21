@@ -163,7 +163,7 @@ Jul 2012 gap, and OISST starts Sep 1981. Resolved as follows.
 
 **Observation product (the truth field and the obs input channels): the NOAA/NSIDC Sea Ice
 Concentration CDR, SSM/I–SSMIS passive-microwave family, 25 km south polar stereographic
-(`G02202` v4 for the 1979–recent record, extended by the `G10016` NRT product, same algorithm
+(`G02202` v6 for the 1979–recent record, extended by the `G10016` NRT product, same algorithm
 family).** Reasons, in order:
 
 - **It removes the train/serve mismatch entirely rather than documenting it.** The review offered

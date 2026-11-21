@@ -6,9 +6,10 @@ round — resampling the field you score against would create ice-edge artifacts
 indistinguishable from real model error, and IIEE is measured on that field.
 
 GLORYS12 (~0.083°, ~9 km) is finer than NSIDC (25 km), so the correct
-operation is **area-averaging** many GLORYS12 cells into each NSIDC cell, not
-bilinear sampling. Bilinear would throw away most source cells and fail to
-preserve ice area. Here that is done with a precomputed cell-index map plus a
+operation is averaging the many GLORYS12 cells that fall inside each NSIDC
+cell (an unweighted mean of source cell centres — a close approximation of
+the area average at this 9-vs-25 km ratio), not bilinear sampling, which
+would throw away most source cells and fail to preserve ice area. Here that is done with a precomputed cell-index map plus a
 bincount, so the expensive geometry runs once rather than per day.
 
 CRS verified from a real NSIDC file (2026-08-31):

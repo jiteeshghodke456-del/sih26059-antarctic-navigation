@@ -1,9 +1,11 @@
 """Evaluate the nine decision gates of §12 against evidence we actually hold.
 
 The uncomfortable part of this module is the honest part. Of the nine gates,
-we can evaluate four from real data, and one of those (chart) can never PASS
-because our bathymetry is not an official chart. The other five return
-UNKNOWN, each naming the specific dataset that would settle it.
+six can now be evaluated from real data (ice, chart, logistics, contingency,
+weather from real waves/wind, traffic when a live AIS feed exists), and one
+of those (chart) can never PASS because our bathymetry is not an official
+chart. The rest return UNKNOWN, each naming the specific dataset that would
+settle it — and weather always lists visibility as unassessed.
 
 That is deliberate, and it is worth defending rather than papering over. A
 system that lit nine gates green would be claiming to have checked the chart,

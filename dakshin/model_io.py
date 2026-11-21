@@ -6,7 +6,7 @@ were pulled from the Kaggle training run. Loading verifies the checksum first,
 so a silently corrupted or swapped file can never reach the router.
 
 The prototype config is in_channels=12, base_filters=32, depth=3
-(dakshin/config.py / make_notebook.py) — NOT the unet.py defaults, which are the
+(set in dakshin/kaggle/make_notebook.py) — NOT the unet.py defaults, which are the
 production model's.
 """
 from __future__ import annotations

@@ -7,9 +7,9 @@ which is what makes this upgrade cheap.
 Channel layout (12), mirroring ML_ARCHITECTURE.md §1.2 as closely as free data
 allows:
 
-    0       background SIC (GLORYS12, regridded)
-    1-7     observed SIC at t-1 … t-7   (what the satellite last saw)
-    8       innovation: background(t) - observed(t-1)
+    0       background SIC (GLORYS12, regridded), valid at the TARGET day
+    1-7     observed SIC at t, t-1, … t-6  (newest first)
+    8       innovation: background(t) - observed(t)
     9,10    day-of-year sin, cos        (seasonality)
     11      valid/land mask
 
