@@ -128,12 +128,67 @@ run_currents() {
   harvest_currents || say "WARNING currents harvest failed for ${CYCLE_DATE}; the ice cycle is unaffected"
 }
 
+# Waves for the weather gate (slice 6): 3-hourly VHM0/VMDR from the wave
+# forecast product, reduced to daily max before saving (reduce_wav_daily.py),
+# same box and window. Same never-fail contract as the currents.
+WAV_DATASET_ID="cmems_mod_glo_wav_anfc_0.083deg_PT3H-i"
+WAV_OUT_FILE="cmems_wav_${CYCLE_DATE}.nc"
+
+harvest_waves() {
+  if [ -f "$ARCHIVE_DIR/$WAV_OUT_FILE" ]; then
+    say "already have ${WAV_OUT_FILE}, skipping"
+    return 0
+  fi
+  copernicusmarine subset \
+    --dataset-id "$WAV_DATASET_ID" \
+    --variable VHM0 --variable VMDR \
+    --start-datetime "${CYCLE_DATE}T00:00:00" \
+    --end-datetime "$(date -u -d "${CYCLE_DATE} +9 days" +%Y-%m-%dT21:00:00)" \
+    --minimum-longitude "$MIN_LON" --maximum-longitude "$MAX_LON" \
+    --minimum-latitude "$MIN_LAT" --maximum-latitude "$MAX_LAT" \
+    --output-directory "$ARCHIVE_DIR" \
+    --output-filename "$WAV_OUT_FILE" \
+    2>&1 | tee -a "$LOG_FILE" || return 1
+  [ -f "$ARCHIVE_DIR/$WAV_OUT_FILE" ] || return 1
+
+  python3 "$ROOT_DIR/scripts/reduce_wav_daily.py" \
+    "$ARCHIVE_DIR/$WAV_OUT_FILE" >> "$LOG_FILE" 2>&1 || {
+      rm -f "$ARCHIVE_DIR/$WAV_OUT_FILE"
+      say "REJECTED ${WAV_OUT_FILE}: daily reduction failed. Nothing saved."
+      return 1
+    }
+
+  # Same stale-cycle rule as the ice file (10 daily steps after reduction).
+  local n_days
+  n_days="$(python3 -c 'import sys, netCDF4; print(len(netCDF4.Dataset(sys.argv[1]).dimensions["time"]))' \
+            "$ARCHIVE_DIR/$WAV_OUT_FILE" 2>/dev/null || echo unknown)"
+  if [ "$DATE_FROM_CLOCK" = 1 ] && [ "$n_days" != unknown ] && [ "$n_days" -ne "$EXPECTED_DAYS" ]; then
+    rm -f "$ARCHIVE_DIR/$WAV_OUT_FILE"
+    say "REJECTED ${WAV_OUT_FILE}: ${n_days} daily steps, expected ${EXPECTED_DAYS}. Nothing saved."
+    return 0
+  fi
+  say "saved ${WAV_OUT_FILE} (${n_days} daily steps)"
+
+  if python3 "$ROOT_DIR/scripts/compress_netcdf.py" \
+       "$ARCHIVE_DIR/$WAV_OUT_FILE" >> "$LOG_FILE" 2>&1; then
+    echo "$(date -u -Iseconds) compressed ${WAV_OUT_FILE}" >> "$LOG_FILE"
+  else
+    echo "$(date -u -Iseconds) WARNING compression failed for ${WAV_OUT_FILE}, " \
+         "keeping the uncompressed file" >> "$LOG_FILE"
+  fi
+}
+
+run_waves() {
+  harvest_waves || say "WARNING waves harvest failed for ${CYCLE_DATE}; the ice cycle is unaffected"
+}
+
 if [ -f "$ARCHIVE_DIR/$OUT_FILE" ]; then
   say "already have ${OUT_FILE}, skipping"
   report already_have
-  # The ice cycle may predate the currents harvest, or a currents fetch may
-  # have failed on the run that saved it, so still try the currents file.
+  # The ice cycle may predate the currents/waves harvest, or a fetch may
+  # have failed on the run that saved it, so still try those files.
   run_currents
+  run_waves
   exit 0
 fi
 
@@ -195,6 +250,8 @@ else
        "keeping the uncompressed file" >> "$LOG_FILE"
 fi
 
-# Not reached when the ice cycle was REJECTED above: the currents come from the
-# same daily bulletin, so they would be stale too and a later run fetches both.
+# Not reached when the ice cycle was REJECTED above: the currents and waves
+# come from the same daily bulletin, so they would be stale too and a later
+# run fetches all three.
 run_currents
+run_waves
