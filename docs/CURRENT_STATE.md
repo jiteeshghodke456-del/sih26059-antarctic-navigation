@@ -39,18 +39,26 @@ skips are model_io + pre-existing, they un-skip when checkpoints land).
 - **If it ERRORs again:** `kaggle kernels logs jiteeshghodke/notebookd39fdf7959`,
   fix only what the log names, push v7 unchanged otherwise.
 
-## Owner's end-of-build asks (do after the model work, in this order)
+## Progress since this file was written
 
-1. **De-hackathon rename**: strip every SIH/ISIH mention — package dir,
-   doc filenames (ISIH_*.md), README, text references. Keep the Kaggle
-   checkpoint artifact names (`isih_prototype_lead*.pt`) for checksum
-   integrity; note the mapping. GitHub repo rename = owner's call, flag only.
-2. **Study doc** written by Haiku and Sonnet subagents: exhaustive — project
+- Rename DONE (package `dakshin`, hackathon docs under docs/archive-hackathon/).
+- Slice 11 DONE: LICENSE (MIT), ATTRIBUTION.md, portable verify_claims
+  (29/29 pass), TRUE_CLAIMS updated — the 8.6-day route claim is WITHDRAWN
+  (route ends on land per IBCSO).
+- F2 DONE: dakshin/readers/nemo.py (classic+CMIP names, curvilinear coords;
+  untested on real NEMO output, says so). F4 DONE: models/iceberg/melt.py +
+  scripts/berg_melt.py (labelled estimates; dakshin/figures/berg_melt.json).
+- Site repo agent running: slice 10 layers + professional UI overhaul.
+- Suite: 194 passed, 7 skipped.
+
+## Owner's remaining end-of-build asks
+
+1. **Study doc** written by Haiku and Sonnet subagents: exhaustive — project
    evolution stage by stage, research findings, innovations, architecture,
    file-by-file map, data flow, how to run every data operation, physics
    (WDE17 drift, double penalty, IIEE, POLARIS), papers used. The owner will
    feed it to another AI to study from, so density beats polish.
-3. **README.md rewrite** for a physical-oceanography professor (NEMO/ANHA
+2. **README.md rewrite** for a physical-oceanography professor (NEMO/ANHA
    background): what this is, the honest results, data sources + licences,
    how to reproduce every number.
 
