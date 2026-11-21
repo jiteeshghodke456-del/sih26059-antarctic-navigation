@@ -2,8 +2,10 @@
 import json
 from pathlib import Path
 
-R = Path('/home/jiteesh/sih/SIH26059-antarctic-navigation/.claude/worktrees/'
-         'foamy-seeking-allen')
+# Repo root by default; point DAKSHIN_ROOT elsewhere to verify another
+# checkout (the original numbers were produced in a worktree).
+import os
+R = Path(os.environ.get("DAKSHIN_ROOT", Path(__file__).resolve().parent.parent))
 
 ok, bad = [], []
 
