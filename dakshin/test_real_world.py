@@ -33,6 +33,14 @@ def test_horizon_clamp_is_reported():
     assert s["beyond_horizon"] and s["day_index"] == w.n_days - 1
 
 
+def test_depth_comes_from_real_bathymetry():
+    w = RealWorld(CYCLE)
+    s = w.sample(-66.0, 40.0, 0.0)          # open Southern Ocean: deep
+    assert np.isfinite(s["depth_m"]) and s["depth_m"] > 200
+    s2 = w.sample(-69.407, 76.19, 0.0)      # Bharati station: ashore
+    assert s2["depth_m"] <= 0
+
+
 def test_outside_box_is_nan_not_invented():
     w = RealWorld(CYCLE)
     s = w.sample(-40.0, 100.0, 1.0)   # far outside the harvest box

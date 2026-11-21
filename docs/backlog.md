@@ -96,7 +96,6 @@ One line per item: `[severity][area] what's wrong — pointer to full evidence`.
 
 - [major][model] U-Net columns in realforecast_hindcast.json / resolution_study.json / PROTOTYPE_RESULTS pending — Kaggle re-run of the training notebook is queued (kernel notebookd39fdf7959 v6; the original's checkpoints were never in Kaggle's output store, and its training cell was saved as markdown, which is why batch runs produced nothing). When COMPLETE: `kaggle kernels output` the 4 .pt files into models/sic_correction/checkpoints/, write SHA256SUMS, rerun both scorers without --no-model.
 - [major][bergs] Drift model advects grounded bergs — add grounding detection (IBCSO depth vs keel draught estimate) before trusting any berg forecast; evidence dakshin/figures/berg_hindcast.json (persistence 0 km on 75/88 segments).
-- [minor][data] compress_netcdf.py has no int16 PACK_RANGE for uo/vo, so daily currents commit ~10 MB instead of ~4 — add `"uo": 3.0, "vo": 3.0`.
 - [minor][gates] Weather/chart/traffic gates wiring: weather gate (3.0 m VHM0 / Beaufort 8 thresholds, visibility unassessed) and traffic gate (UNKNOWN without feed; 2 nm FAIL / 5 nm MARGINAL) still to wire into dakshin/gates.py once the bathymetry work lands there.
 - [minor][ais] aisstream.io optional adapter unwritten (key saved outside repo); it is terrestrial-only (~40 nm from shore) and empty in the Southern Ocean — ship's receiver path (dakshin/ais_feed.py) is done.
 - [minor][features] F2 NEMO-native reader and F4 melt/freshwater estimate not started — see HANDOFF_TONIGHT §9.

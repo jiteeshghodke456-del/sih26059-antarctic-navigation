@@ -62,6 +62,15 @@ class RealWorld:
             # steps are hours since cycle 00z
             self._wind_hours = (w["step"].values / np.timedelta64(1, "h")).astype(float)
 
+        # Real seabed depth (IBCSO/GEBCO subset) so a RealWorld-driven bridge
+        # can evaluate the chart gate instead of showing UNKNOWN.
+        self._bathy = None
+        bathy_path = ROOT / "data" / "bathymetry" / "ibcso_v2_corridor_0p05.nc"
+        if bathy_path.exists():
+            b = xr.open_dataset(bathy_path)
+            self._bathy = (b["lat"].values, b["lon"].values,
+                           b["elevation"].values)
+
     def _interp(self, grid, lat_ax, lon_ax, lat, lon):
         """Vectorized bilinear; NaN outside the box or next to NaN cells."""
         lat = np.asarray(lat, float)
@@ -117,6 +126,18 @@ class RealWorld:
             out["hs"] = hs
             out["hs_filled_ice"] = int(fill.sum())
             out["hs_filled_coastal_worstcase"] = int(coastal.sum())
+        if self._bathy is not None:
+            blat, blon, elev = self._bathy
+            la = np.clip(np.asarray(lat, float), blat[0], blat[-1])
+            lo = np.clip(np.asarray(lon, float), blon[0], blon[-1])
+            i = np.clip(np.searchsorted(blat, la), 0, len(blat) - 1)
+            j = np.clip(np.searchsorted(blon, lo), 0, len(blon) - 1)
+            depth = -elev[i, j]                   # positive down; <=0 is land
+            bathy_inside = ((np.asarray(lat, float) >= blat[0])
+                            & (np.asarray(lat, float) <= blat[-1])
+                            & (np.asarray(lon, float) >= blon[0])
+                            & (np.asarray(lon, float) <= blon[-1]))
+            out["depth_m"] = np.where(bathy_inside, depth, np.nan)
         if self._wind is not None:
             h = float(np.clip(day * 24.0 + 12.0, self._wind_hours[0],
                               self._wind_hours[-1]))
