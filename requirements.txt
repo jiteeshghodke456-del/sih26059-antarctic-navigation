@@ -1,0 +1,23 @@
+# Dakshin runtime + analysis dependencies (Python 3.12 verified).
+#   uv venv .venv --python 3.12 && uv pip install -r requirements.txt
+# torch is CPU-sufficient for inference; training runs on Kaggle GPUs.
+numpy
+scipy
+pandas
+xarray
+netCDF4
+h5netcdf
+h5py
+pyproj
+torch
+matplotlib
+fastapi
+uvicorn
+pydantic
+httpx
+pyshp
+pytest
+copernicusmarine
+ecmwf-opendata
+cfgrib
+pyais
