@@ -830,3 +830,5 @@ landed. That commit's script downloads its inputs to `data/bathymetry/raw/`. Thi
 does not establish whether the removal and the commit are related.
 
 Uncommitted at the snapshot, and not in any commit: `dakshin/berg_forecast.py` (`BathymetryGrid`, assumed draught), `README.md`, and a new study file `docs/study/PHYSICS_AND_PAPERS.md` written by another agent. Later commit by another agent, on top of this document's commit: `aaddb78` (backlog inconsistencies).
+
+**Working tree at the final commit (about 18:35 UTC).** The numbers in this document are the committed values at the snapshot. The checks above confirmed them against HEAD for `berg_hindcast.json`, `destination_window.json`, `realforecast_hindcast.json` and `real_route.json`. The working tree has since changed. `dakshin/figures/destination_window.json` reports Bharati closed on 31 of 31 days, against 23 of 31 committed (the earlier figure was ice-only). `berg_hindcast.json`, `route_regret.json`, `alternatives.json` and `vessel_comparison.json` are modified and uncommitted. A later regeneration will not match this document. Re-read the committed files before quoting.
