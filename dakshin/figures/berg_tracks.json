@@ -1,0 +1,466 @@
+{
+  "generated": "2026-11-21T19:00:08+00:00",
+  "cycle": "2026-11-21",
+  "model": "WDE17 drift on GLO12 forecast currents, RK2 1 h, zero wind (stated limitation, see berg_hindcast.json), grounding-aware (assumed 207 m keel vs IBCSO)",
+  "validation": "see berg_hindcast.json \u2014 persistence beats this model on the 2026 sample; arrows are advisory, the circles grow at the measured 4.35 km/day error rate",
+  "tracks": [
+    {
+      "berg": "D37",
+      "area_km2": 477.77,
+      "status": "grounded or unknown",
+      "wind_forcing_R": 0.583,
+      "daily_positions": [
+        {
+          "day": 0,
+          "lat": -69.21,
+          "lon": 36.36
+        },
+        {
+          "day": 1,
+          "lat": -69.2059,
+          "lon": 36.3418
+        },
+        {
+          "day": 2,
+          "lat": -69.2024,
+          "lon": 36.3309
+        },
+        {
+          "day": 3,
+          "lat": -69.1967,
+          "lon": 36.3217
+        },
+        {
+          "day": 4,
+          "lat": -69.1914,
+          "lon": 36.3015
+        },
+        {
+          "day": 5,
+          "lat": -69.1861,
+          "lon": 36.2809
+        },
+        {
+          "day": 6,
+          "lat": -69.1802,
+          "lon": 36.2724
+        },
+        {
+          "day": 7,
+          "lat": -69.1674,
+          "lon": 36.2635
+        },
+        {
+          "day": 8,
+          "lat": -69.1482,
+          "lon": 36.1599
+        }
+      ],
+      "net_drift_km": 15.5,
+      "net_drift_km_per_day": 1.77,
+      "bearing_deg": 302.0
+    },
+    {
+      "berg": "B09G",
+      "area_km2": 160.06,
+      "status": "ok",
+      "wind_forcing_R": 0.386,
+      "daily_positions": [
+        {
+          "day": 0,
+          "lat": -68.18,
+          "lon": 41.5
+        },
+        {
+          "day": 1,
+          "lat": -68.1758,
+          "lon": 41.5436
+        },
+        {
+          "day": 2,
+          "lat": -68.1684,
+          "lon": 41.5895
+        },
+        {
+          "day": 3,
+          "lat": -68.1528,
+          "lon": 41.6219
+        },
+        {
+          "day": 4,
+          "lat": -68.1429,
+          "lon": 41.6248
+        },
+        {
+          "day": 5,
+          "lat": -68.1324,
+          "lon": 41.6293
+        },
+        {
+          "day": 6,
+          "lat": -68.1027,
+          "lon": 41.6395
+        },
+        {
+          "day": 7,
+          "lat": -68.0221,
+          "lon": 41.6617
+        },
+        {
+          "day": 8,
+          "lat": -67.9895,
+          "lon": 41.5873
+        },
+        {
+          "day": 9,
+          "lat": -68.0497,
+          "lon": 41.4212
+        }
+      ],
+      "net_drift_km": 14.9,
+      "net_drift_km_per_day": 1.65,
+      "bearing_deg": 347.0
+    },
+    {
+      "berg": "D15C",
+      "area_km2": 115.03,
+      "status": "grounded or unknown",
+      "wind_forcing_R": 0.06,
+      "daily_positions": [
+        {
+          "day": 0,
+          "lat": -67.22,
+          "lon": 79.42
+        },
+        {
+          "day": 1,
+          "lat": -67.352,
+          "lon": 79.3267
+        },
+        {
+          "day": 2,
+          "lat": -67.4851,
+          "lon": 79.1905
+        },
+        {
+          "day": 3,
+          "lat": -67.5669,
+          "lon": 79.1199
+        },
+        {
+          "day": 4,
+          "lat": -67.6211,
+          "lon": 79.0566
+        },
+        {
+          "day": 5,
+          "lat": -67.677,
+          "lon": 78.9883
+        },
+        {
+          "day": 6,
+          "lat": -67.7353,
+          "lon": 78.8942
+        },
+        {
+          "day": 7,
+          "lat": -67.8016,
+          "lon": 78.7668
+        }
+      ],
+      "net_drift_km": 79.6,
+      "net_drift_km_per_day": 10.27,
+      "bearing_deg": 204.0
+    },
+    {
+      "berg": "C18B",
+      "area_km2": 110.4,
+      "status": "ok",
+      "wind_forcing_R": 0.436,
+      "daily_positions": [
+        {
+          "day": 0,
+          "lat": -66.93,
+          "lon": 47.49
+        },
+        {
+          "day": 1,
+          "lat": -66.9357,
+          "lon": 47.4465
+        },
+        {
+          "day": 2,
+          "lat": -66.9246,
+          "lon": 47.4269
+        },
+        {
+          "day": 3,
+          "lat": -66.9147,
+          "lon": 47.379
+        },
+        {
+          "day": 4,
+          "lat": -66.9583,
+          "lon": 47.2712
+        },
+        {
+          "day": 5,
+          "lat": -66.9998,
+          "lon": 47.1741
+        },
+        {
+          "day": 6,
+          "lat": -66.998,
+          "lon": 47.1172
+        },
+        {
+          "day": 7,
+          "lat": -66.9622,
+          "lon": 47.0878
+        },
+        {
+          "day": 8,
+          "lat": -66.9684,
+          "lon": 47.06
+        },
+        {
+          "day": 9,
+          "lat": -67.072,
+          "lon": 46.9586
+        }
+      ],
+      "net_drift_km": 28.0,
+      "net_drift_km_per_day": 3.11,
+      "bearing_deg": 236.0
+    },
+    {
+      "berg": "D23",
+      "area_km2": 105.6,
+      "status": "grounded or unknown",
+      "wind_forcing_R": 0.217,
+      "daily_positions": [
+        {
+          "day": 0,
+          "lat": -69.44,
+          "lon": 74.71
+        },
+        {
+          "day": 1,
+          "lat": -69.4281,
+          "lon": 74.603
+        },
+        {
+          "day": 2,
+          "lat": -69.4061,
+          "lon": 74.5061
+        },
+        {
+          "day": 3,
+          "lat": -69.382,
+          "lon": 74.4379
+        },
+        {
+          "day": 4,
+          "lat": -69.3396,
+          "lon": 74.4092
+        },
+        {
+          "day": 5,
+          "lat": -69.2942,
+          "lon": 74.3767
+        },
+        {
+          "day": 6,
+          "lat": -69.254,
+          "lon": 74.3343
+        },
+        {
+          "day": 7,
+          "lat": -69.2216,
+          "lon": 74.2772
+        },
+        {
+          "day": 8,
+          "lat": -69.2059,
+          "lon": 74.1691
+        }
+      ],
+      "net_drift_km": 35.2,
+      "net_drift_km_per_day": 4.22,
+      "bearing_deg": 319.0
+    },
+    {
+      "berg": "D15D",
+      "area_km2": 55.89,
+      "status": "grounded or unknown",
+      "wind_forcing_R": 0.073,
+      "daily_positions": [
+        {
+          "day": 0,
+          "lat": -67.29,
+          "lon": 79.29
+        },
+        {
+          "day": 1,
+          "lat": -67.4342,
+          "lon": 79.1843
+        },
+        {
+          "day": 2,
+          "lat": -67.562,
+          "lon": 79.0683
+        },
+        {
+          "day": 3,
+          "lat": -67.6332,
+          "lon": 78.9545
+        },
+        {
+          "day": 4,
+          "lat": -67.6863,
+          "lon": 78.8664
+        },
+        {
+          "day": 5,
+          "lat": -67.7486,
+          "lon": 78.7781
+        },
+        {
+          "day": 6,
+          "lat": -67.8306,
+          "lon": 78.6219
+        },
+        {
+          "day": 7,
+          "lat": -67.9381,
+          "lon": 78.4316
+        }
+      ],
+      "net_drift_km": 90.8,
+      "net_drift_km_per_day": 11.59,
+      "bearing_deg": 206.0
+    },
+    {
+      "berg": "C18C",
+      "area_km2": 53.07,
+      "status": "ok",
+      "wind_forcing_R": 0.94,
+      "daily_positions": [
+        {
+          "day": 0,
+          "lat": -68.47,
+          "lon": 39.07
+        },
+        {
+          "day": 1,
+          "lat": -68.4585,
+          "lon": 39.0259
+        },
+        {
+          "day": 2,
+          "lat": -68.4451,
+          "lon": 38.9823
+        },
+        {
+          "day": 3,
+          "lat": -68.4282,
+          "lon": 38.937
+        },
+        {
+          "day": 4,
+          "lat": -68.4096,
+          "lon": 38.8883
+        },
+        {
+          "day": 5,
+          "lat": -68.3901,
+          "lon": 38.8456
+        },
+        {
+          "day": 6,
+          "lat": -68.3645,
+          "lon": 38.8136
+        },
+        {
+          "day": 7,
+          "lat": -68.3151,
+          "lon": 38.8041
+        },
+        {
+          "day": 8,
+          "lat": -68.2716,
+          "lon": 38.7311
+        },
+        {
+          "day": 9,
+          "lat": -68.282,
+          "lon": 38.5364
+        }
+      ],
+      "net_drift_km": 30.3,
+      "net_drift_km_per_day": 3.36,
+      "bearing_deg": 314.0
+    },
+    {
+      "berg": "C39",
+      "area_km2": 45.36,
+      "status": "ok",
+      "wind_forcing_R": 0.217,
+      "daily_positions": [
+        {
+          "day": 0,
+          "lat": -65.32,
+          "lon": 54.0
+        },
+        {
+          "day": 1,
+          "lat": -65.2703,
+          "lon": 54.0502
+        },
+        {
+          "day": 2,
+          "lat": -65.1883,
+          "lon": 54.064
+        },
+        {
+          "day": 3,
+          "lat": -65.1006,
+          "lon": 54.0517
+        },
+        {
+          "day": 4,
+          "lat": -65.0632,
+          "lon": 53.9886
+        },
+        {
+          "day": 5,
+          "lat": -65.0444,
+          "lon": 53.8943
+        },
+        {
+          "day": 6,
+          "lat": -65.0074,
+          "lon": 53.8551
+        },
+        {
+          "day": 7,
+          "lat": -64.8914,
+          "lon": 53.9063
+        },
+        {
+          "day": 8,
+          "lat": -64.7439,
+          "lon": 53.8696
+        },
+        {
+          "day": 9,
+          "lat": -64.6838,
+          "lon": 53.8697
+        }
+      ],
+      "net_drift_km": 71.0,
+      "net_drift_km_per_day": 7.89,
+      "bearing_deg": 355.0
+    }
+  ]
+}
