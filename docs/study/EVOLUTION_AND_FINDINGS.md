@@ -95,6 +95,11 @@ on 10 December (`docs/PROTOTYPE_RESULTS.md` §2).
 
 **What changed.**
 
+- **Committed update (`1a9ff0b`, after the snapshot).** With depth in the mesh, the committed
+  `dakshin/figures/destination_window.json` reports Bharati's station cell closed on **31 of 31** days,
+  because the station is ashore in the depth mesh. The 23-of-31 and four-artifact-day results above are
+  ice-only and are superseded in HEAD. The 43.2% spillover figure is unchanged, because
+  `ice_quality_audit.json` was not part of that commit.
 - `dakshin/ice_quality.py` reads the QA flag and sets spillover and no-input
   cells to NaN. The mesh builder drops them, so an unknown coastal cell takes
   its parent cell's value rather than asserting open water.
@@ -259,6 +264,8 @@ NaN current, which is land or outside the data (`dakshin/berg_forecast.py`,
 module docstring). Neither test uses IBCSO. The claim "most corridor giants are
 grounded" is therefore a behavioural statement that has not been checked
 against the seabed at each berg position.
+
+Committed in `1a9ff0b` after the snapshot: `berg_hindcast.json` was regenerated. Its medians and split quoted above (4.35 and 6.01 km/day, 2.45 km/day persistence, 68 and 13 segments) are unchanged in HEAD.
 
 Uncommitted edits in `dakshin/berg_forecast.py` at the snapshot add a `BathymetryGrid`
 and an assumed keel draught (0.83 × 250 m, about 207 m) for grounding detection. They are not
@@ -595,6 +602,8 @@ The one SST file in the archive (2026-11-21) therefore came from a command that 
 not recorded in the repository. The melt number cannot be regenerated from the
 repository until that is fixed.
 
+**Committed update (`df7f39e`, after the snapshot).** The melt was re-run with a berg-relative speed term. The committed `dakshin/figures/berg_melt.json` gives per-berg means of 10⁶ m³/day: D37 0.448, B09G 0.222, D15C 0.372, C18B 0.154, D23 0.186, D15D 0.251, C18C 0.097, C39 0.155, total 1.885. The table above is the snapshot value and is superseded. The spread across similar-area bergs is smaller now (C18C and D15D differ by about 2.6 times, not 7).
+
 **What changed.** F4 (`7307f12`) is recorded as done. The output is labelled as
 an estimate in the JSON and in the module, and is not used in any decision in
 the routing code.
@@ -725,10 +734,10 @@ item. Items the backlog marks as resolved are listed in Appendix B, not here.
 
 Listed, not fixed. Each entry names the files on both sides.
 
-1. **Persistence IIEE at lead 3.** `docs/RESOLUTION_STUDY.md` gives 211.7 (10³ km²);
+1. **Persistence IIEE at lead 3 (resolved in `1a9ff0b`).** `docs/RESOLUTION_STUDY.md` gives 211.7 (10³ km²);
    `dakshin/figures/resolution_study.json` and `realforecast_hindcast.json` give
    277.2.
-2. **Persistence IIEE "decays with lead".** `docs/RESOLUTION_STUDY.md` says so.
+2. **Persistence IIEE "decays with lead" (resolved in `1a9ff0b`; the word is gone from `RESOLUTION_STUDY.md`).** `docs/RESOLUTION_STUDY.md` says so.
    The JSON rises with lead: 187.7, 277.2, 319.2, 353.3.
 3. **"Raw CMEMS beats persistence at every lead."** `docs/TRUE_CLAIMS.md` §1.13.
    True for RMSE. Not true for IIEE at lead 1 (2b).
@@ -743,7 +752,7 @@ Listed, not fixed. Each entry names the files on both sides.
    (`docs/backlog.md`, `[minor][pitch]`).
 7. **Wind in the berg hindcast.** `dakshin/figures/berg_hindcast.json` says
    "zero (slice 6 pending)". `docs/CURRENT_STATE.md` says slice 6 is done.
-8. **"R << 1 in every segment."** Docstring in `scripts/berg_resolution.py` and
+8. **"R << 1 in every segment." (the phrase is absent from `scripts/berg_resolution.py` at HEAD; `1a9ff0b` corrected the claim).** Docstring in `scripts/berg_resolution.py` and
    `dakshin/berg_forecast.py`. `berg_hindcast.json` segments give R from 0.037 to 1.73.
 9. **Stationary count.** `docs/backlog.md` says "persistence 0 km on 75/88 segments".
    The segments give 75 of 88 at 3 km or less, including the 7 unknown. Exactly
@@ -795,6 +804,8 @@ Listed, not fixed. Each entry names the files on both sides.
     `transit days (rounded)` = 8.6 against `dakshin/figures/route_regret.json`. That file was computed without
     depth, and `docs/TRUE_CLAIMS.md` §1.11 now uses 8.66 days. The "PASSED 29" result therefore includes a
     check on the superseded figure.
+28. **Destination-window figure.** Section 2a quotes 23 of 31 days closed at Bharati (ice-only). The committed
+    file now says 31 of 31 (`1a9ff0b`, depth in the mesh). The text in §2a is the snapshot value.
 
 ---
 
@@ -832,3 +843,5 @@ does not establish whether the removal and the commit are related.
 Uncommitted at the snapshot, and not in any commit: `dakshin/berg_forecast.py` (`BathymetryGrid`, assumed draught), `README.md`, and a new study file `docs/study/PHYSICS_AND_PAPERS.md` written by another agent. Later commit by another agent, on top of this document's commit: `aaddb78` (backlog inconsistencies).
 
 **Working tree at the final commit (about 18:35 UTC).** The numbers in this document are the committed values at the snapshot. The checks above confirmed them against HEAD for `berg_hindcast.json`, `destination_window.json`, `realforecast_hindcast.json` and `real_route.json`. The working tree has since changed. `dakshin/figures/destination_window.json` reports Bharati closed on 31 of 31 days, against 23 of 31 committed (the earlier figure was ice-only). `berg_hindcast.json`, `route_regret.json`, `alternatives.json` and `vessel_comparison.json` are modified and uncommitted. A later regeneration will not match this document. Re-read the committed files before quoting.
+
+**Later commits by other agents, on `main` after the snapshot.** `1a9ff0b` (truth pass: melt uses berg-relative speed; `RESOLUTION_STUDY.md` persistence IIEE corrected to 277.2 with the lead-1 nuance; the R << 1 phrase removed; docstrings aligned with code; regenerated `berg_hindcast.json`, `destination_window.json`, `route_regret.json`, `alternatives.json` and `vessel_comparison.json`). `1a9ff0b` also swept this document's uncommitted glossary and snapshot edits into its commit. `df7f39e` (melt rerun with berg-relative speed; top-level `requirements.txt`). The committed route-regret results changed too: the first three result rows now give 8.65, 8.63 and 9.00 days, against 8.61, 8.58 and 9.00 at the snapshot. Earlier, `09f6ad0` added the architecture and physics study docs and a README. The 0.03-day regret in §2a is therefore a snapshot number.
