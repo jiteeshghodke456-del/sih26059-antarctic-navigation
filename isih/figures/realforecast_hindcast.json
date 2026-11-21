@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-21T17:25:17+00:00",
+  "generated": "2026-11-21T17:31:24+00:00",
   "truth": "NOAA/NSIDC G10016 v4 NRT (AMSR2), QA-masked",
   "forecast": "CMEMS GLO12 cmems_mod_glo_phy_anfc, archived at issue time",
   "model": null,

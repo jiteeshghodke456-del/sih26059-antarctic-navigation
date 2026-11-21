@@ -1,0 +1,177 @@
+{
+  "generated": "2026-11-21T17:32:04+00:00",
+  "question": "does a 1/12\u00b0 ocean model tell the captain something a coarser model would miss?",
+  "method": "same forecasts block-averaged to each resolution, repeated back to the native grid, scored on identical cells; truth and persistence unchanged",
+  "caveat": "coarsening one model is not running a coarser model \u2014 a true test needs e.g. ANHA runs at several resolutions (see F2, the NEMO-native reader)",
+  "hindcast_caveats": [
+    "sensor change: truth is AMSR2 since 2025-01-01, training truth was F17 SSMIS",
+    "corridor only, not the training hemisphere",
+    "one spring season, ~76 cycles",
+    "assumes day-t satellite file available on day t (training's assumption too)",
+    "4 stale cycles excluded per KNOWN_STALE.md"
+  ],
+  "resolutions": {
+    "1/12\u00b0": {
+      "lead_1": {
+        "n_cycles": 76,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-18",
+        "rmse": {
+          "cmems": 0.10199,
+          "persistence": 0.11977
+        },
+        "iiee_km2_mean": {
+          "cmems": 195058.0,
+          "persistence": 187706.0
+        }
+      },
+      "lead_3": {
+        "n_cycles": 75,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-16",
+        "rmse": {
+          "cmems": 0.10479,
+          "persistence": 0.14391
+        },
+        "iiee_km2_mean": {
+          "cmems": 194575.0,
+          "persistence": 277167.0
+        }
+      },
+      "lead_5": {
+        "n_cycles": 74,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-15",
+        "rmse": {
+          "cmems": 0.10981,
+          "persistence": 0.15508
+        },
+        "iiee_km2_mean": {
+          "cmems": 200203.0,
+          "persistence": 319189.0
+        }
+      },
+      "lead_7": {
+        "n_cycles": 72,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-13",
+        "rmse": {
+          "cmems": 0.1153,
+          "persistence": 0.16414
+        },
+        "iiee_km2_mean": {
+          "cmems": 210200.0,
+          "persistence": 353255.0
+        }
+      }
+    },
+    "1/4\u00b0": {
+      "lead_1": {
+        "n_cycles": 76,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-18",
+        "rmse": {
+          "cmems": 0.10035,
+          "persistence": 0.11977
+        },
+        "iiee_km2_mean": {
+          "cmems": 189688.0,
+          "persistence": 187706.0
+        }
+      },
+      "lead_3": {
+        "n_cycles": 75,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-16",
+        "rmse": {
+          "cmems": 0.10314,
+          "persistence": 0.14391
+        },
+        "iiee_km2_mean": {
+          "cmems": 190342.0,
+          "persistence": 277167.0
+        }
+      },
+      "lead_5": {
+        "n_cycles": 74,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-15",
+        "rmse": {
+          "cmems": 0.10816,
+          "persistence": 0.15508
+        },
+        "iiee_km2_mean": {
+          "cmems": 197652.0,
+          "persistence": 319189.0
+        }
+      },
+      "lead_7": {
+        "n_cycles": 72,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-13",
+        "rmse": {
+          "cmems": 0.11365,
+          "persistence": 0.16414
+        },
+        "iiee_km2_mean": {
+          "cmems": 208333.0,
+          "persistence": 353255.0
+        }
+      }
+    },
+    "1\u00b0": {
+      "lead_1": {
+        "n_cycles": 76,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-18",
+        "rmse": {
+          "cmems": 0.10402,
+          "persistence": 0.11977
+        },
+        "iiee_km2_mean": {
+          "cmems": 203298.0,
+          "persistence": 187706.0
+        }
+      },
+      "lead_3": {
+        "n_cycles": 75,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-16",
+        "rmse": {
+          "cmems": 0.10598,
+          "persistence": 0.14391
+        },
+        "iiee_km2_mean": {
+          "cmems": 209325.0,
+          "persistence": 277167.0
+        }
+      },
+      "lead_5": {
+        "n_cycles": 74,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-15",
+        "rmse": {
+          "cmems": 0.10988,
+          "persistence": 0.15508
+        },
+        "iiee_km2_mean": {
+          "cmems": 222652.0,
+          "persistence": 319189.0
+        }
+      },
+      "lead_7": {
+        "n_cycles": 72,
+        "first_cycle": "2026-08-31",
+        "last_cycle": "2026-11-13",
+        "rmse": {
+          "cmems": 0.11417,
+          "persistence": 0.16414
+        },
+        "iiee_km2_mean": {
+          "cmems": 244175.0,
+          "persistence": 353255.0
+        }
+      }
+    }
+  }
+}
