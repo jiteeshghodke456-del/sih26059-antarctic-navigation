@@ -1,0 +1,565 @@
+{
+  "generated": "2026-11-21T18:07:57+00:00",
+  "cycle": "2026-11-21",
+  "label": "ESTIMATE \u2014 Arctic-calibrated melt coefficients (Keghouche et al. 2010 set) extrapolated to tabular giants; assumed thickness 250 m (USNIC publishes none)",
+  "inputs": {
+    "currents": "cmems_cur_2026-11-21.nc",
+    "sst": "cmems_sst_2026-11-21.nc",
+    "waves": "cmems_wav_2026-11-21.nc (daily max)",
+    "bergs": "AntarcticIcebergs_20261120.csv"
+  },
+  "bergs": [
+    {
+      "berg": "D37",
+      "area_km2": 477.77,
+      "track_status": "ok",
+      "n_days_estimated": 10,
+      "mean_freshwater_m3_per_day": 1001936.0,
+      "daily": [
+        {
+          "date": "2026-11-21",
+          "sst_c": -1.77,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 565002.0
+        },
+        {
+          "date": "2026-11-22",
+          "sst_c": -1.75,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 549034.0
+        },
+        {
+          "date": "2026-11-23",
+          "sst_c": -1.73,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 592210.0
+        },
+        {
+          "date": "2026-11-24",
+          "sst_c": -1.74,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 632956.0
+        },
+        {
+          "date": "2026-11-25",
+          "sst_c": -1.73,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 710770.0
+        },
+        {
+          "date": "2026-11-26",
+          "sst_c": -1.73,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 664168.0
+        },
+        {
+          "date": "2026-11-27",
+          "sst_c": -1.7,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 665511.0
+        },
+        {
+          "date": "2026-11-28",
+          "sst_c": -1.67,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1167888.0
+        },
+        {
+          "date": "2026-11-29",
+          "sst_c": -1.63,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 2548633.0
+        },
+        {
+          "date": "2026-11-30",
+          "sst_c": -1.68,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1923193.0
+        }
+      ]
+    },
+    {
+      "berg": "B09G",
+      "area_km2": 160.06,
+      "track_status": "ok",
+      "n_days_estimated": 10,
+      "mean_freshwater_m3_per_day": 773793.0,
+      "daily": [
+        {
+          "date": "2026-11-21",
+          "sst_c": -1.84,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 225427.0
+        },
+        {
+          "date": "2026-11-22",
+          "sst_c": -1.83,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 227846.0
+        },
+        {
+          "date": "2026-11-23",
+          "sst_c": -1.82,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 287936.0
+        },
+        {
+          "date": "2026-11-24",
+          "sst_c": -1.8,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 286446.0
+        },
+        {
+          "date": "2026-11-25",
+          "sst_c": -1.78,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 216710.0
+        },
+        {
+          "date": "2026-11-26",
+          "sst_c": -1.72,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 458676.0
+        },
+        {
+          "date": "2026-11-27",
+          "sst_c": -1.64,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 901882.0
+        },
+        {
+          "date": "2026-11-28",
+          "sst_c": -1.6,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1951428.0
+        },
+        {
+          "date": "2026-11-29",
+          "sst_c": -1.58,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1620024.0
+        },
+        {
+          "date": "2026-11-30",
+          "sst_c": -1.61,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1561554.0
+        }
+      ]
+    },
+    {
+      "berg": "D15C",
+      "area_km2": 115.03,
+      "track_status": "ok",
+      "n_days_estimated": 10,
+      "mean_freshwater_m3_per_day": 1913104.0,
+      "daily": [
+        {
+          "date": "2026-11-21",
+          "sst_c": -1.65,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1787435.0
+        },
+        {
+          "date": "2026-11-22",
+          "sst_c": -1.79,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1174715.0
+        },
+        {
+          "date": "2026-11-23",
+          "sst_c": -1.81,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 786405.0
+        },
+        {
+          "date": "2026-11-24",
+          "sst_c": -1.77,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 666586.0
+        },
+        {
+          "date": "2026-11-25",
+          "sst_c": -1.64,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1246240.0
+        },
+        {
+          "date": "2026-11-26",
+          "sst_c": -1.53,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1744797.0
+        },
+        {
+          "date": "2026-11-27",
+          "sst_c": -1.44,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 2413252.0
+        },
+        {
+          "date": "2026-11-28",
+          "sst_c": -1.35,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 3280431.0
+        },
+        {
+          "date": "2026-11-29",
+          "sst_c": -1.47,
+          "hs_m": 0.37,
+          "freshwater_m3_per_day": 3297552.0
+        },
+        {
+          "date": "2026-11-30",
+          "sst_c": -1.45,
+          "hs_m": 0.41,
+          "freshwater_m3_per_day": 2733627.0
+        }
+      ]
+    },
+    {
+      "berg": "C18B",
+      "area_km2": 110.4,
+      "track_status": "ok",
+      "n_days_estimated": 10,
+      "mean_freshwater_m3_per_day": 394047.0,
+      "daily": [
+        {
+          "date": "2026-11-21",
+          "sst_c": -1.81,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 194741.0
+        },
+        {
+          "date": "2026-11-22",
+          "sst_c": -1.79,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 174243.0
+        },
+        {
+          "date": "2026-11-23",
+          "sst_c": -1.75,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 286476.0
+        },
+        {
+          "date": "2026-11-24",
+          "sst_c": -1.78,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 250901.0
+        },
+        {
+          "date": "2026-11-25",
+          "sst_c": -1.72,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 586518.0
+        },
+        {
+          "date": "2026-11-26",
+          "sst_c": -1.74,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 289147.0
+        },
+        {
+          "date": "2026-11-27",
+          "sst_c": -1.71,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 300239.0
+        },
+        {
+          "date": "2026-11-28",
+          "sst_c": -1.67,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 559131.0
+        },
+        {
+          "date": "2026-11-29",
+          "sst_c": -1.7,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 547247.0
+        },
+        {
+          "date": "2026-11-30",
+          "sst_c": -1.72,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 751824.0
+        }
+      ]
+    },
+    {
+      "berg": "D23",
+      "area_km2": 105.6,
+      "track_status": "ok",
+      "n_days_estimated": 10,
+      "mean_freshwater_m3_per_day": 508453.0,
+      "daily": [
+        {
+          "date": "2026-11-21",
+          "sst_c": -1.71,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 427998.0
+        },
+        {
+          "date": "2026-11-22",
+          "sst_c": -1.73,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 384971.0
+        },
+        {
+          "date": "2026-11-23",
+          "sst_c": -1.78,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 287584.0
+        },
+        {
+          "date": "2026-11-24",
+          "sst_c": -1.71,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 391890.0
+        },
+        {
+          "date": "2026-11-25",
+          "sst_c": -1.59,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 694509.0
+        },
+        {
+          "date": "2026-11-26",
+          "sst_c": -1.68,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 463913.0
+        },
+        {
+          "date": "2026-11-27",
+          "sst_c": -1.66,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 519557.0
+        },
+        {
+          "date": "2026-11-28",
+          "sst_c": -1.62,
+          "hs_m": 0.3,
+          "freshwater_m3_per_day": 526660.0
+        },
+        {
+          "date": "2026-11-29",
+          "sst_c": -1.63,
+          "hs_m": 0.31,
+          "freshwater_m3_per_day": 645266.0
+        },
+        {
+          "date": "2026-11-30",
+          "sst_c": -1.59,
+          "hs_m": 0.24,
+          "freshwater_m3_per_day": 742182.0
+        }
+      ]
+    },
+    {
+      "berg": "D15D",
+      "area_km2": 55.89,
+      "track_status": "ok",
+      "n_days_estimated": 10,
+      "mean_freshwater_m3_per_day": 1172255.0,
+      "daily": [
+        {
+          "date": "2026-11-21",
+          "sst_c": -1.65,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1083459.0
+        },
+        {
+          "date": "2026-11-22",
+          "sst_c": -1.78,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 709146.0
+        },
+        {
+          "date": "2026-11-23",
+          "sst_c": -1.8,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 454861.0
+        },
+        {
+          "date": "2026-11-24",
+          "sst_c": -1.76,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 433767.0
+        },
+        {
+          "date": "2026-11-25",
+          "sst_c": -1.64,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 766148.0
+        },
+        {
+          "date": "2026-11-26",
+          "sst_c": -1.56,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1052721.0
+        },
+        {
+          "date": "2026-11-27",
+          "sst_c": -1.47,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 1839577.0
+        },
+        {
+          "date": "2026-11-28",
+          "sst_c": -1.32,
+          "hs_m": 0.64,
+          "freshwater_m3_per_day": 2326270.0
+        },
+        {
+          "date": "2026-11-29",
+          "sst_c": -1.46,
+          "hs_m": 0.29,
+          "freshwater_m3_per_day": 1696247.0
+        },
+        {
+          "date": "2026-11-30",
+          "sst_c": -1.5,
+          "hs_m": 0.27,
+          "freshwater_m3_per_day": 1360357.0
+        }
+      ]
+    },
+    {
+      "berg": "C18C",
+      "area_km2": 53.07,
+      "track_status": "ok",
+      "n_days_estimated": 10,
+      "mean_freshwater_m3_per_day": 157451.0,
+      "daily": [
+        {
+          "date": "2026-11-21",
+          "sst_c": -1.84,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 104840.0
+        },
+        {
+          "date": "2026-11-22",
+          "sst_c": -1.84,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 108503.0
+        },
+        {
+          "date": "2026-11-23",
+          "sst_c": -1.83,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 115091.0
+        },
+        {
+          "date": "2026-11-24",
+          "sst_c": -1.82,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 126392.0
+        },
+        {
+          "date": "2026-11-25",
+          "sst_c": -1.82,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 122744.0
+        },
+        {
+          "date": "2026-11-26",
+          "sst_c": -1.81,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 135142.0
+        },
+        {
+          "date": "2026-11-27",
+          "sst_c": -1.79,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 154381.0
+        },
+        {
+          "date": "2026-11-28",
+          "sst_c": -1.79,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 221794.0
+        },
+        {
+          "date": "2026-11-29",
+          "sst_c": -1.77,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 218534.0
+        },
+        {
+          "date": "2026-11-30",
+          "sst_c": -1.77,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 267091.0
+        }
+      ]
+    },
+    {
+      "berg": "C39",
+      "area_km2": 45.36,
+      "track_status": "ok",
+      "n_days_estimated": 10,
+      "mean_freshwater_m3_per_day": 426640.0,
+      "daily": [
+        {
+          "date": "2026-11-21",
+          "sst_c": -1.78,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 241664.0
+        },
+        {
+          "date": "2026-11-22",
+          "sst_c": -1.76,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 245050.0
+        },
+        {
+          "date": "2026-11-23",
+          "sst_c": -1.73,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 417294.0
+        },
+        {
+          "date": "2026-11-24",
+          "sst_c": -1.69,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 372848.0
+        },
+        {
+          "date": "2026-11-25",
+          "sst_c": -1.64,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 323496.0
+        },
+        {
+          "date": "2026-11-26",
+          "sst_c": -1.64,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 403717.0
+        },
+        {
+          "date": "2026-11-27",
+          "sst_c": -1.6,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 456929.0
+        },
+        {
+          "date": "2026-11-28",
+          "sst_c": -1.61,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 888628.0
+        },
+        {
+          "date": "2026-11-29",
+          "sst_c": -1.62,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 613356.0
+        },
+        {
+          "date": "2026-11-30",
+          "sst_c": -1.61,
+          "hs_m": 0.0,
+          "freshwater_m3_per_day": 303423.0
+        }
+      ]
+    }
+  ]
+}
