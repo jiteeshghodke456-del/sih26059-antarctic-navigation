@@ -53,6 +53,14 @@ PACK_RANGE = {
     "sithick": 20.0,   # metres; observed max in a real file was 4.1
     "usi": 3.0,        # m/s; observed |max| was 0.69
     "vsi": 3.0,
+    # ocean surface currents; backfill max was 0.83 m/s, so ±3 gives
+    # 0.1 mm/s quantisation — far below the data's own accuracy
+    "uo": 3.0,
+    "vo": 3.0,
+    # daily-max significant wave height; Southern Ocean extremes ~20 m
+    "VHM0_dmax": 25.0,
+    # surface temperature, °C; polar range is tiny but keep margin
+    "thetao": 50.0,
 }
 INT16_SPAN = 30000.0
 FILL = -32767
