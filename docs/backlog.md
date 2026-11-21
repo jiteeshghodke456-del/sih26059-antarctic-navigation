@@ -102,7 +102,7 @@ One line per item: `[severity][area] what's wrong — pointer to full evidence`.
 - [minor][ais] aisstream.io optional adapter unwritten (key saved outside repo); it is terrestrial-only (~40 nm from shore) and empty in the Southern Ocean — ship's receiver path (dakshin/ais_feed.py) is done.
 - [minor][features] F2 NEMO-native reader and F4 melt/freshwater estimate not started — see HANDOFF_TONIGHT §9.
 - [minor][site] antarticaprojectMoes not yet updated with AI ice toggle, berg tracks + uncertainty cones (use measured 4.35 km/day), waves, wind, depth (slices 3 and 10).
-- [minor][repo] De-hackathon rename requested 2026-11-21: strip SIH/ISIH branding from package name, docs and README; GitHub repo rename is the owner's call.
+- [minor][repo] Rename done in-repo (package dakshin, hackathon docs archived). Still open: renaming the GitHub repo + local folder `SIH26059-antarctic-navigation` (owner's call; breaks remotes/Pages), and `mv isih/data dakshin/data` in other clones (gitignored, git won't move it).
 - [minor][docs] Professor study doc + README rewrite (Haiku/Sonnet task) queued for end of build.
 - [major][demo] Day-0 Cape Town→Bharati route no longer solves: IBCSO puts the goal's snapped lattice point in 85% sim ice on day 0 (days 2–14 solve, 7.8–8.4 d). Demo shows "no route exists"; decide whether to move the headline to day 2 — see slice-7 notes.
 - [major][claims] dakshin/figures/routes.json route ends ON LAND per IBCSO (Bharati +91 m); chart gate now FAILs it and TRUE_CLAIMS' "8.6 days" rests on it — regenerate routes.json and re-derive the claim.
