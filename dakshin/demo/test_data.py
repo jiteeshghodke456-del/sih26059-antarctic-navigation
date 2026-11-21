@@ -106,21 +106,37 @@ def test_other_days_load(d):
     assert f["date"] == d and f["n_known"] > 1000
 
 
-def test_unscored_targets_are_not_reported_as_closed():
+def test_unscored_targets_are_not_reported_as_closed(tmp_path, monkeypatch):
     """A target with no mesh cell must read UNAVAILABLE, never "100 % closed".
 
-    destination_window.json still carries a stale "Maitri (Leningradskaya
-    coast)" row whose 31 days are all null. Read naively it says the coast was
-    closed every day of December 2019, which is a claim nobody measured.
+    destination_window.json used to carry a stale "Maitri (Leningradskaya
+    coast)" row whose 31 days were all null; the 2026-11-21 depth-aware
+    regeneration no longer writes it. The separation still matters for any
+    future target that is never scored, so it is checked on a minimal
+    plumbing fixture rather than on that stale row.
     """
+    import json as _json
+
     from dakshin.demo import data
 
+    # The real, regenerated file: no stale row, real targets scored.
     w = data.window()
     assert "Maitri (Leningradskaya coast)" not in w["summary"]
-    un = w["unavailable"]["Maitri (Leningradskaya coast)"]
-    assert un["days_with_data"] == 0
-    assert un["days_in_window"] == 31
-
-    # the two real targets are unaffected
+    assert not w["unavailable"]
     assert w["summary"]["Bharati"]["days_closed"] == 23
     assert w["summary"]["Bharati approach (100 km N)"]["days_closed"] == 0
+
+    # The mechanism: an all-null target goes to `unavailable`, not `summary`.
+    doc = {"summary": {"Scored": {"days_closed": 1}, "Never": {"days_closed": 2}},
+           "daily": [{"date": "d0", "Scored": {"sic_qa_on": 50.0},
+                      "Never": {"sic_qa_on": None}}]}
+    (tmp_path / "destination_window.json").write_text(_json.dumps(doc))
+    monkeypatch.setattr(data, "FIG", tmp_path)
+    data.window.cache_clear()
+    try:
+        w = data.window()
+        assert list(w["summary"]) == ["Scored"]
+        assert w["unavailable"]["Never"]["days_with_data"] == 0
+    finally:
+        data.window.cache_clear()
+

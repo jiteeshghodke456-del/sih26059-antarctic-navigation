@@ -61,10 +61,10 @@ def window() -> dict:
     a speed greater than zero". When a target lies OUTSIDE the routing mesh
     there is no cell at all, so `sic_qa_on` is null and `passable` comes back
     False — and a target that was never scored then reads as closed on every
-    single day. The file still carries one such row, "Maitri (Leningradskaya
-    coast)", left behind when Maitri was deliberately dropped as a target
-    (dakshin/destination_window.py:27 — it is ~100 km inland and its maritime
-    offload point is not sourced). All 31 of its days are null.
+    single day. The file carried one such row, "Maitri (Leningradskaya
+    coast)", left behind when Maitri was deliberately dropped as a target (it
+    is ~100 km inland and its maritime offload point is not sourced), until
+    the 2026-11-21 depth-aware regeneration stopped writing it.
 
     "100 % closed" and "never measured" are the same three characters on a
     slide and opposite claims in a viva, so they are separated here rather

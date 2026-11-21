@@ -292,22 +292,26 @@ The previous figure compared our route to a great-circle line. That is a
 strawman and has been retired: no master sails a straight line into pack ice.
 The honest baseline is **the same router given older ice**.
 
-Departure 1 Dec 2019, Cape Town → Bharati, identical vessel and engine:
+Departure 1 Dec 2019, Cape Town → Bharati, identical vessel and engine, on
+meshes carrying real IBCSO v2 / GEBCO_2020 depth (re-run 2026-11-21; the
+pre-depth run gave 8.58 / 8.61 / 8.58 / 9.00 d and its route ended on land at
+the station):
 
 | Arm | What it represents | Planned | Actual | Blocked | Arrived |
 |---|---|---|---|---|---|
-| **STATIC** | plan once on departure ice, sail blind (today's practice) | 8.58 d | **8.61 d** | 0 h | yes |
-| **STATIC-noQA** | same, trusting spillover cells as open water | 8.58 d | 8.58 d | 0 h | yes |
-| **DAILY** | fresh observed chart every morning, no forecast | — | **9.00 d** | 9.6 h | yes (9 re-plans) |
+| **STATIC** | plan once on departure ice, sail blind (today's practice) | 8.66 d | **8.65 d** | 0 h | yes |
+| **STATIC-noQA** | same, trusting spillover cells as open water | 8.66 d | 8.63 d | 0 h | yes |
+| **DAILY** | fresh observed chart every morning, no forecast | — | **9.00 d** | 9.5 h | yes (9 re-plans) |
 
 **Read this result honestly: on this departure date, the static plan was not
-punished.** Regret was 0.03 days. Daily re-planning was *slower*, not faster,
+punished.** Regret was −0.01 days — zero within the replay's 25 km step
+(0.03 days before depth was in the mesh). Daily re-planning was *slower*, not faster,
 because re-planning from the ship's live position takes locally-optimal turns
 that a single global optimisation avoids.
 
 We are reporting a null result on the arm we expected to win. That matters:
 
-- The open-ocean leg — about 5,800 km of the 5,813 km route — carries **mean
+- The open-ocean leg — most of the 5,877 km route — carries **mean
   6% ice**. There is nothing to optimise there, so a stale chart costs nothing.
 - The whole decision is compressed into the final approach, where §1 shows the
   station is shut 74% of the time.
@@ -327,9 +331,9 @@ We are reporting a null result on the arm we expected to win. That matters:
 > Bharati station itself, which IBCSO v2 puts above sea level. Regenerated on
 > the same 1 Dec 2019 ice with real IBCSO v2 / GEBCO_2020 depth in the mesh,
 > the published route (`dakshin/figures/routes.json`) is **8.66 days**,
-> arriving 16 km off the station. The route-regret table in §3 was computed
-> on meshes without depth and has not been re-run. Everything below about
-> why steaming time is a lower bound still applies.
+> arriving 16 km off the station. The route-regret table in §3 was re-run on
+> the same depth-aware meshes. Everything below about why steaming time is a
+> lower bound still applies.
 
 `8.58 days` is **ideal steaming time only**. It is optimistic, for reasons we
 can name precisely:

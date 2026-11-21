@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-21T18:33:30Z",
+ "generated": "2026-11-21T18:38:06Z",
  "date": "2019-12-01",
  "vessel": "MV Vasiliy Golovnin (IMO 8723426)",
  "ice_source": "NOAA/NSIDC Sea Ice Concentration CDR G02202 v6, 25 km",
@@ -672,7 +672,7 @@
    "worst_ice_pct": 91.0,
    "label": "B",
    "name": "Conservative",
-   "rationale": "Same ship and ice, limit tightened to 55%. Costs 0.08 days and ten extra legs \u2014 and raises the worst ice actually sampled along the line from 74% to 91%, because the router optimises on 5\u00b0 cell means while this figure comes from 25 km pixels.",
+   "rationale": "Same ship and ice, limit tightened to 55%. Costs 0.05 days and 34 extra legs - and the worst ice actually sampled along the line goes from 74% to 91%, because the router optimises on cell means while this figure comes from 25 km pixels.",
    "ice_limit_pct": 55,
    "eta_delta_days": 0.048,
    "fuel_delta": 5.68
@@ -689,20 +689,20 @@
  ],
  "findings": [
   {
-   "id": "objectives-collinear",
-   "finding": "Solving for fuel instead of traveltime returns a byte-identical path at every ice limit tested.",
-   "why": "zero_currents is True and PolarRoute's wave-added-resistance function is dead code in 1.1.11, so fuel is a monotone function of time and there is no trade-off surface.",
-   "consequence": "Do not present fuel and time as two objectives until a current or wave field makes them diverge. ADR-021's unrun sweep would have found this."
+   "id": "objectives-nearly-collinear",
+   "finding": "Solving for fuel instead of traveltime saves at most 1.6% fuel for at most 0.083 extra days at the limits tested (80%, 55%): the paths differ, but the objectives barely diverge.",
+   "why": "zero_currents is True and PolarRoute's wave-added-resistance function is dead code in 1.1.11, so fuel differs from time only through the ice term of the fuel rate - not enough to give a real trade-off surface.",
+   "consequence": "Do not present fuel and time as two objectives until a current or wave field makes them diverge materially."
   },
   {
    "id": "resolution-mismatch",
-   "finding": "Tightening the ice limit from 60% to 55% raises the worst ice sampled along the route from 74% to 91%.",
-   "why": "The router plans on 5\u00b0 cellbox means; the published figure is sampled from 25 km pixels. A cell whose mean is under the limit can still contain pixels far above it.",
+   "finding": "Tightening the ice limit from 60% to 55% raises the worst ice sampled along the route (74% to 91%).",
+   "why": "The router plans on cellbox means; the published figure is sampled from 25 km pixels. A cell whose mean is under the limit can still contain pixels far above it.",
    "consequence": "The 'heaviest ice on the route' number is not a quantity the router ever optimised against, and must not be presented as though it were."
   },
   {
    "id": "reachability-cliff",
-   "finding": "Bharati is reachable at assumed limits of 50% and above, and unreachable at 45% and below.",
+   "finding": "Bharati is reachable at every assumed limit tested from 80% down to 50%, and unreachable at 45%.",
    "why": "Dijkstra cannot connect the waypoints once too many cells close.",
    "consequence": "Reachability of the destination rests on an assumed threshold with a cliff edge, not on a certificated limit."
   }

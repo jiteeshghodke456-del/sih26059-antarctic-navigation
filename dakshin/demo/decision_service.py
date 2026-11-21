@@ -108,7 +108,7 @@ def _destination_state(day: str, accepts_approach: bool = False
     """Is the mission's destination reachable on `day`?
 
     `accepts_approach` is what makes §4's mission-definition screen matter.
-    Bharati's own cell was closed 23 of 31 days in this window while the water
+    Bharati's arrival water was closed 23 of 31 days in this window while the water
     100 km north was open on all 31, so a mission that accepts discharge at
     the approach succeeds on days a station-required mission does not. The
     same ice, the same ship, a different definition of success — and the

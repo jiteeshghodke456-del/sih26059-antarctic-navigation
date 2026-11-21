@@ -103,7 +103,6 @@ One line per item: `[severity][area] what's wrong — pointer to full evidence`.
 - [minor][site] antarticaprojectMoes not yet updated with AI ice toggle, berg tracks + uncertainty cones (use measured 4.35 km/day), waves, wind, depth (slices 3 and 10).
 - [minor][repo] Rename done in-repo (package dakshin, hackathon docs archived). Still open: renaming the GitHub repo + local folder `SIH26059-antarctic-navigation` (owner's call; breaks remotes/Pages), and `mv isih/data dakshin/data` in other clones (gitignored, git won't move it).
 - [minor][docs] Professor study doc + README rewrite (Haiku/Sonnet task) queued for end of build.
-- [major][eval] route_regret.json, destination_window.json and alternatives.json were computed on meshes WITHOUT depth; Bharati's own cell is now always closed (station is ashore), so claims 1.6/1.7 and verify_claims' route-regret checks rest on pre-depth meshes — re-run the three experiments on depth meshes (cache key already forces rebuild) — see dakshin/ice_meshes.py fingerprint.
 - [minor][data] North of 50°S uses GEBCO_2020 (only GEBCO with a subsetting service, NOAA ERDDAP); swap in GEBCO_2025/2026 if a subset route appears — see scripts/subset_bathymetry.py.
 - [minor][demo] RealWorld (dakshin/real_world.py) returns no depth_m/ukc_m, so a bridge driven by it would show the chart light UNKNOWN — add the two keys from dakshin/sim/bathymetry.py if RealWorld ever feeds the bridge.
 

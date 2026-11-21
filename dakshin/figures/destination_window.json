@@ -2,14 +2,29 @@
   "vessel": "MV Vasiliy Golovnin",
   "ice_limit_pct": 80,
   "start": "2019-12-01",
+  "targets": {
+    "Bharati": {
+      "lat": -69.2863,
+      "lon": 75.9373
+    },
+    "Bharati approach (100 km N)": {
+      "lat": -68.5,
+      "lon": 76.2
+    },
+    "Bharati station cell (ashore)": {
+      "lat": -69.4,
+      "lon": 76.2
+    }
+  },
+  "target_note": "'Bharati' is scored at the arrival point of dakshin/figures/routes.json (the nearest water a ship can enter); the station's own cell is ashore and closed every day.",
   "note": "sic_qa_off is what an unguarded reader sees; where it is 0.0 and sic_qa_on is not, the CDR land-spillover filter had suppressed that cell and written it as open water.",
   "summary": {
     "Bharati": {
       "days_observed": 31,
-      "days_closed": 31,
-      "first_closed_day": 0,
-      "first_closed_date": "2019-12-01",
-      "pct_days_closed": 100.0
+      "days_closed": 23,
+      "first_closed_day": 1,
+      "first_closed_date": "2019-12-02",
+      "pct_days_closed": 74.2
     },
     "Bharati approach (100 km N)": {
       "days_observed": 31,
@@ -17,6 +32,13 @@
       "first_closed_day": null,
       "first_closed_date": null,
       "pct_days_closed": 0.0
+    },
+    "Bharati station cell (ashore)": {
+      "days_observed": 31,
+      "days_closed": 31,
+      "first_closed_day": 0,
+      "first_closed_date": "2019-12-01",
+      "pct_days_closed": 100.0
     }
   },
   "daily": [
@@ -26,12 +48,17 @@
       "Bharati": {
         "sic_qa_on": 30.7,
         "sic_qa_off": 0.0,
-        "passable": false
+        "passable": true
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 39.3,
         "sic_qa_off": 39.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 30.7,
+        "sic_qa_off": 0.0,
+        "passable": false
       }
     },
     {
@@ -46,6 +73,11 @@
         "sic_qa_on": 44.0,
         "sic_qa_off": 44.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 83.0,
+        "sic_qa_off": 83.0,
+        "passable": false
       }
     },
     {
@@ -60,6 +92,11 @@
         "sic_qa_on": 43.0,
         "sic_qa_off": 43.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 81.0,
+        "sic_qa_off": 81.0,
+        "passable": false
       }
     },
     {
@@ -74,6 +111,11 @@
         "sic_qa_on": 42.0,
         "sic_qa_off": 42.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 88.0,
+        "sic_qa_off": 88.0,
+        "passable": false
       }
     },
     {
@@ -88,6 +130,11 @@
         "sic_qa_on": 44.3,
         "sic_qa_off": 44.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 83.0,
+        "sic_qa_off": 83.0,
+        "passable": false
       }
     },
     {
@@ -102,6 +149,11 @@
         "sic_qa_on": 42.3,
         "sic_qa_off": 42.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 88.0,
+        "sic_qa_off": 88.0,
+        "passable": false
       }
     },
     {
@@ -110,12 +162,17 @@
       "Bharati": {
         "sic_qa_on": 33.7,
         "sic_qa_off": 0.0,
-        "passable": false
+        "passable": true
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 40.7,
         "sic_qa_off": 40.7,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 33.7,
+        "sic_qa_off": 0.0,
+        "passable": false
       }
     },
     {
@@ -124,12 +181,17 @@
       "Bharati": {
         "sic_qa_on": 35.2,
         "sic_qa_off": 0.0,
-        "passable": false
+        "passable": true
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 43.3,
         "sic_qa_off": 43.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 35.2,
+        "sic_qa_off": 0.0,
+        "passable": false
       }
     },
     {
@@ -138,12 +200,17 @@
       "Bharati": {
         "sic_qa_on": 36.3,
         "sic_qa_off": 0.0,
-        "passable": false
+        "passable": true
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 47.3,
         "sic_qa_off": 47.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 36.3,
+        "sic_qa_off": 0.0,
+        "passable": false
       }
     },
     {
@@ -158,6 +225,11 @@
         "sic_qa_on": 51.7,
         "sic_qa_off": 51.7,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 96.0,
+        "sic_qa_off": 96.0,
+        "passable": false
       }
     },
     {
@@ -172,6 +244,11 @@
         "sic_qa_on": 52.3,
         "sic_qa_off": 52.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 99.0,
+        "sic_qa_off": 99.0,
+        "passable": false
       }
     },
     {
@@ -186,6 +263,11 @@
         "sic_qa_on": 50.7,
         "sic_qa_off": 50.7,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 98.0,
+        "sic_qa_off": 98.0,
+        "passable": false
       }
     },
     {
@@ -200,6 +282,11 @@
         "sic_qa_on": 48.7,
         "sic_qa_off": 48.7,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 94.0,
+        "sic_qa_off": 94.0,
+        "passable": false
       }
     },
     {
@@ -214,6 +301,11 @@
         "sic_qa_on": 48.0,
         "sic_qa_off": 48.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 94.0,
+        "sic_qa_off": 94.0,
+        "passable": false
       }
     },
     {
@@ -228,6 +320,11 @@
         "sic_qa_on": 47.7,
         "sic_qa_off": 47.7,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 89.0,
+        "sic_qa_off": 89.0,
+        "passable": false
       }
     },
     {
@@ -242,6 +339,11 @@
         "sic_qa_on": 44.3,
         "sic_qa_off": 44.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 91.0,
+        "sic_qa_off": 91.0,
+        "passable": false
       }
     },
     {
@@ -256,6 +358,11 @@
         "sic_qa_on": 48.7,
         "sic_qa_off": 48.7,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 90.0,
+        "sic_qa_off": 90.0,
+        "passable": false
       }
     },
     {
@@ -270,6 +377,11 @@
         "sic_qa_on": 47.3,
         "sic_qa_off": 47.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 87.0,
+        "sic_qa_off": 87.0,
+        "passable": false
       }
     },
     {
@@ -284,6 +396,11 @@
         "sic_qa_on": 46.3,
         "sic_qa_off": 46.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 90.0,
+        "sic_qa_off": 90.0,
+        "passable": false
       }
     },
     {
@@ -298,6 +415,11 @@
         "sic_qa_on": 48.0,
         "sic_qa_off": 48.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 87.0,
+        "sic_qa_off": 87.0,
+        "passable": false
       }
     },
     {
@@ -306,12 +428,17 @@
       "Bharati": {
         "sic_qa_on": 80.0,
         "sic_qa_off": 80.0,
-        "passable": false
+        "passable": true
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 48.0,
         "sic_qa_off": 48.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 80.0,
+        "sic_qa_off": 80.0,
+        "passable": false
       }
     },
     {
@@ -326,6 +453,11 @@
         "sic_qa_on": 51.0,
         "sic_qa_off": 51.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 84.0,
+        "sic_qa_off": 84.0,
+        "passable": false
       }
     },
     {
@@ -340,6 +472,11 @@
         "sic_qa_on": 54.3,
         "sic_qa_off": 54.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 85.0,
+        "sic_qa_off": 85.0,
+        "passable": false
       }
     },
     {
@@ -354,6 +491,11 @@
         "sic_qa_on": 56.7,
         "sic_qa_off": 56.7,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 88.0,
+        "sic_qa_off": 88.0,
+        "passable": false
       }
     },
     {
@@ -368,6 +510,11 @@
         "sic_qa_on": 54.3,
         "sic_qa_off": 54.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 85.0,
+        "sic_qa_off": 85.0,
+        "passable": false
       }
     },
     {
@@ -382,6 +529,11 @@
         "sic_qa_on": 55.0,
         "sic_qa_off": 55.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 84.0,
+        "sic_qa_off": 84.0,
+        "passable": false
       }
     },
     {
@@ -396,6 +548,11 @@
         "sic_qa_on": 58.0,
         "sic_qa_off": 58.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 90.0,
+        "sic_qa_off": 90.0,
+        "passable": false
       }
     },
     {
@@ -410,6 +567,11 @@
         "sic_qa_on": 55.3,
         "sic_qa_off": 55.3,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 82.0,
+        "sic_qa_off": 82.0,
+        "passable": false
       }
     },
     {
@@ -418,12 +580,17 @@
       "Bharati": {
         "sic_qa_on": 77.0,
         "sic_qa_off": 77.0,
-        "passable": false
+        "passable": true
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 54.7,
         "sic_qa_off": 54.7,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 77.0,
+        "sic_qa_off": 77.0,
+        "passable": false
       }
     },
     {
@@ -432,12 +599,17 @@
       "Bharati": {
         "sic_qa_on": 79.0,
         "sic_qa_off": 79.0,
-        "passable": false
+        "passable": true
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 51.0,
         "sic_qa_off": 51.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 79.0,
+        "sic_qa_off": 79.0,
+        "passable": false
       }
     },
     {
@@ -446,12 +618,17 @@
       "Bharati": {
         "sic_qa_on": 75.0,
         "sic_qa_off": 75.0,
-        "passable": false
+        "passable": true
       },
       "Bharati approach (100 km N)": {
         "sic_qa_on": 45.0,
         "sic_qa_off": 45.0,
         "passable": true
+      },
+      "Bharati station cell (ashore)": {
+        "sic_qa_on": 75.0,
+        "sic_qa_off": 75.0,
+        "passable": false
       }
     }
   ]

@@ -45,8 +45,10 @@ check("wind-dominated at storm",
 
 rr = json.loads((R / 'dakshin/figures/route_regret.json').read_text())
 static = [r for r in rr['results'] if r['planner'] == 'STATIC'][0]
-check("static regret days", static['regret_days'], 0.03)
-check("transit days (rounded)", round(static['actual_days'], 1), 8.6)
+# Re-run 2026-11-21 on depth-aware meshes (IBCSO v2 / GEBCO): was 0.03 / 8.6
+# on meshes without bathymetry, whose route ended on land at the station.
+check("static regret days", static['regret_days'], -0.01)
+check("transit days (rounded)", round(static['actual_days'], 1), 8.7)
 
 res = (R / 'docs/PROTOTYPE_RESULTS.md').read_text()
 for token in ["+18.5%", "+30.6%", "1,929,601", "43.2%", "46.8%", "54.6%",

@@ -185,7 +185,7 @@ def test_the_view_reports_progress_through_the_ordered_path():
 def test_mission_policy_changes_what_success_means():
     """The field that decides whether the logistics gate can pass.
 
-    Bharati's own cell was closed 23 of 31 days while the approach was open on
+    Bharati's arrival water was closed 23 of 31 days while the approach was open on
     all 31, so these two policies genuinely disagree on most days of the
     window. This is a mission decision with a measurable consequence.
     """

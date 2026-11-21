@@ -23,14 +23,23 @@ from pathlib import Path
 
 from ice_meshes import GOLOVNIN, CellLookup, vessel_mesh_for
 
-# Bharati sits on the Larsemann Hills coast, so its own cell is a real
-# ship-accessible target. Maitri is deliberately NOT here: it lies inland in
-# the Schirmacher Oasis and is resupplied across the ice shelf from an offload
-# point we have not yet sourced, so scoring "is Maitri's cell passable" would
-# be measuring nothing. Add it once the real offload position is confirmed.
+# Bharati sits ashore on the Larsemann Hills: IBCSO v2 puts the station 77 m
+# above sea level, so once depth is in the mesh its own cell is closed to any
+# ship on every day and "is the station cell passable" measures nothing. The
+# destination a ship can actually reach is the water it arrives in, so
+# "Bharati" is scored at the published route's arrival point - where
+# PolarRoute's waypoint adjustment put the end of dakshin/figures/routes.json,
+# 16 km off the station - and the station cell is kept as its own row so the
+# 31-of-31 closure stays visible. Maitri is deliberately NOT here: it lies
+# inland in the Schirmacher Oasis and is resupplied across the ice shelf from
+# an offload point we have not yet sourced. Add it once that is confirmed.
+STATION = (-69.4, 76.2)
+_lon, _lat = json.loads((Path(__file__).resolve().parent / "figures" / "routes.json")
+                        .read_text())["paths"]["features"][0]["geometry"]["coordinates"][-1]
 TARGETS = {
-    "Bharati": (-69.4, 76.2),
+    "Bharati": (_lat, _lon),
     "Bharati approach (100 km N)": (-68.5, 76.2),
+    "Bharati station cell (ashore)": STATION,
 }
 
 
@@ -87,6 +96,10 @@ def main() -> int:
         "vessel": "MV Vasiliy Golovnin",
         "ice_limit_pct": GOLOVNIN["max_ice_conc"],
         "start": args.start,
+        "targets": {n: {"lat": round(la, 4), "lon": round(lo, 4)} for n, (la, lo) in TARGETS.items()},
+        "target_note": ("'Bharati' is scored at the arrival point of "
+                        "dakshin/figures/routes.json (the nearest water a ship can "
+                        "enter); the station's own cell is ashore and closed every day."),
         "note": ("sic_qa_off is what an unguarded reader sees; where it is 0.0 "
                  "and sic_qa_on is not, the CDR land-spillover filter had "
                  "suppressed that cell and written it as open water."),

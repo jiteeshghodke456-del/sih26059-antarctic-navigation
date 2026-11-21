@@ -541,10 +541,12 @@
   }
  },
  "track_identical": false,
+ "same_corridor": true,
+ "max_track_offset_km": 0.29,
  "eta_delta_days": 1.296,
  "fuel_delta": -27.9,
  "fuel_delta_pct": -8.9,
- "verdict": "PARTIAL. Changing the ship changes the cost of the plan but not, on this day's ice, the corridor itself: both ships follow an identical 41-leg track, while the ETA moves by 1.28 days and fuel by roughly 9%. So the vessel model is load-bearing for ETA and fuel, and NOT yet demonstrated to be load-bearing for the track. The corridor does change when the ice constraint changes (41 legs at 80%, 51 at 55%), so the mechanism works \u2014 it is this pair of ships on this day that does not separate it.",
- "do_not_claim": "Do not say 'different ships get different routes' on this evidence. Say 'the same route costs this ship 1.28 days more and 9% less fuel'.",
+ "verdict": "PARTIAL. Changing the ship changes the cost of the plan but not, on this day's ice, the corridor itself: both ships follow the same 63-point track (largest point offset 0.3 km, a smoothing artefact; mesh cells are at least 35 km across), while the ETA moves by 1.30 days and fuel by 9%. So the vessel model is load-bearing for ETA and fuel, and NOT yet demonstrated to be load-bearing for the corridor. The corridor does change when the ice constraint changes (alternatives.json, corridors A and B), so the mechanism works - it is this pair of ships on this day that does not separate it.",
+ "do_not_claim": "Do not say 'different ships get different routes' on this evidence. Say 'the same route costs this ship 1.30 days more and 9% less fuel'.",
  "note": "Both configs carry the same assumed 80% ice limit on purpose. No ice class indexes concentration, so giving the two ships different limits would manufacture the result the test exists to check. Only verified beam, service speed and draft differ \u2014 see docs/research/VESSEL_SPECIFICATIONS.md."
 }

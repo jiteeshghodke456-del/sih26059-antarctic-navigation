@@ -20,8 +20,8 @@ Each of these has a file in this repository that produces the number.
 | 1.3 | The test set was scored **exactly once**, split by time, never randomly | `docs/PROTOTYPE_RESULTS.md` |
 | 1.4 | The satellite record reports suppressed coastal pixels as **0.0% ice — open water**. It fires on **100% of days**, ~118 cells/day | `dakshin/figures/ice_quality_audit.json` |
 | 1.5 | In the **200 km approach to Bharati** this affects **43.2% of days** across 2018–2020 | same |
-| 1.6 | Bharati's own cell was **closed to this vessel on 23 of 31** December 2019 days; the approach 100 km north was open **31 of 31** | `dakshin/figures/destination_window.json` |
-| 1.7 | **Four of the eight** days Bharati appeared reachable were data artifacts reading exactly 0.0% | same |
+| 1.6 | The water a ship can actually reach at Bharati — the published route's arrival point, 16 km off, because the station itself is ashore (IBCSO v2: +77 m, so its own cell is closed every day once depth is in the mesh) — was **closed to this vessel on 23 of 31** December 2019 days; the approach 100 km north was open **31 of 31**. Re-run 2026-11-21 on depth-aware meshes; same 25 km satellite pixel as before, same days | `dakshin/figures/destination_window.json` (`targets` records both points) |
+| 1.7 | **Four of the eight** days that arrival water appeared reachable were data artifacts reading exactly 0.0% | same |
 | 1.8 | Masking those cells moves coastal ice **up** — 46.8% → 54.6% mean — i.e. the fix makes the router *more* cautious | `docs/PROTOTYPE_RESULTS.md` §2 |
 | 1.9 | Our iceberg drift model reproduces the published coefficient table and the paper's own 765 m critical length — **23/23 tests pass** | `models/iceberg/test_drift.py` |
 | 1.10 | **33 icebergs** as of 27 Aug 2026 (USNIC weekly product); **15 of them inside our routing corridor**, including D15A at 3,037 km² beside Bharati's approach | `models/iceberg/regime_report.json` |

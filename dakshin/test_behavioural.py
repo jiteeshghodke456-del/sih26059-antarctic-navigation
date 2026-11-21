@@ -56,8 +56,11 @@ def test_01_same_environment_different_vessel():
     """"Same environment, different vessel -> verify route/risk behaviour
     actually differs where it should."
 
-    Result is PARTIAL and the artifact must say so. Both ships follow an
-    identical track on this day's ice; what differs is ETA and fuel. Claiming
+    Result is PARTIAL and the artifact must say so. Both ships follow the same
+    corridor on this day's ice; what differs is ETA and fuel. Since depth
+    entered the mesh the tracks are no longer byte-identical - one point of
+    63 moves 0.3 km under path smoothing - so the test is "same corridor":
+    every point within half the smallest mesh cell. Claiming
     "different ships get different routes" on this evidence would be false,
     so the comparison carries an explicit do-not-claim line.
     """
@@ -69,7 +72,8 @@ def test_01_same_environment_different_vessel():
     assert abs(v["fuel_delta_pct"]) > 1.0, v["fuel_delta_pct"]
 
     # And the honest verdict must be recorded, not the flattering one.
-    assert v["track_identical"] is True
+    assert v["same_corridor"] is True
+    assert v["max_track_offset_km"] < 1.0, v["max_track_offset_km"]
     assert v["verdict"].startswith("PARTIAL")
     assert "do_not_claim" in v and "different ships get different routes" in v["do_not_claim"]
 
@@ -264,14 +268,17 @@ def test_07_alternatives_differ_measurably():
 
 
 def test_07b_the_objective_collinearity_finding_is_recorded():
-    """Solving for fuel returns the same path as solving for time. That is a
-    limitation of this configuration and must be stated, not hidden behind
-    the phrase 'multi-objective'."""
+    """Solving for fuel barely changes the answer (on the depth-aware meshes:
+    at most ~1.6% fuel). That is a limitation of this configuration and must
+    be stated, not hidden behind the phrase 'multi-objective'. The finding is
+    measured in the run, so either wording is allowed, but it must be there."""
     doc = _load("alternatives.json")
-    ids = {f["id"] for f in doc["findings"]}
-    assert "objectives-collinear" in ids
-    finding = next(f for f in doc["findings"] if f["id"] == "objectives-collinear")
-    assert "identical" in finding["finding"]
+    finding = next(f for f in doc["findings"] if f["id"].startswith("objectives-"))
+    if finding["id"] == "objectives-collinear":
+        assert "identical" in finding["finding"]
+    else:
+        assert finding["id"] == "objectives-nearly-collinear"
+        assert "% fuel" in finding["finding"] and "barely diverge" in finding["finding"]
 
 
 # ---------------------------------------------------------------- 8 & 9

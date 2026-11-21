@@ -13,7 +13,7 @@ cannot be approved before it has been reviewed, and it cannot be reviewed
 before a mission says what "good" means.
 
 **Mission definition is load-bearing, not ceremony.** The single most useful
-finding this project has is that Bharati's own cell was closed 23 of 31 days
+finding this project has is that Bharati's arrival water was closed 23 of 31 days
 while the water 100 km north was open on all 31. So the mission's
 `destination_policy` — must the ship reach the station, or is the approach
 acceptable? — decides whether the logistics gate passes on a given day, and
