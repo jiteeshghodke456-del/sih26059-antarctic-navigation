@@ -46,14 +46,22 @@ class AISFeed:
         raw = raw.strip()
         if not raw or not raw.startswith((b"!", b"$")):
             return None
-        # NMEA field 2 is the fragment count: buffer only genuine multi-part
-        # sentences, so garbage can never poison the fragment buffer.
+        # NMEA field 2 is the fragment count, field 3 the fragment number.
+        # Buffer only well-formed, in-order fragments of one multi-part
+        # message (AIS allows at most 9), so hostile or corrupt radio input
+        # can neither poison nor grow the buffer.
         fields = raw.split(b",")
-        n_frag = fields[1] if len(fields) > 2 else b"1"
+        n_frag = fields[1] if len(fields) > 3 else b"1"
         try:
             if n_frag != b"1":
+                count = int(n_frag)
+                num = int(fields[2])
+                if not (2 <= count <= 9 and 1 <= num <= count
+                        and num == len(self._fragments) + 1):
+                    self._fragments = []
+                    return None
                 self._fragments.append(raw)
-                if fields[2] != n_frag:        # not the last fragment yet
+                if num != count:               # not the last fragment yet
                     return None
                 msg = decode(*self._fragments)
                 self._fragments = []
@@ -64,13 +72,18 @@ class AISFeed:
             return None
         lat = getattr(msg, "lat", None)
         lon = getattr(msg, "lon", None)
-        if lat is None or lon is None:
+        # AIS unavailable-sentinels (91 / 181 / 102.3 kn / 360 deg) must never
+        # become a believed position or vector — this feed gates ship traffic.
+        if lat is None or lon is None or not (-90 <= lat <= 90) \
+                or not (-180 <= lon <= 180):
             return None
+        sog = getattr(msg, "speed", None)
+        cog = getattr(msg, "course", None)
         t = Target(
             mmsi=int(msg.mmsi),
             lat=float(lat), lon=float(lon),
-            sog_kn=float(msg.speed) if getattr(msg, "speed", None) is not None else None,
-            cog_deg=float(msg.course) if getattr(msg, "course", None) is not None else None,
+            sog_kn=float(sog) if sog is not None and 0 <= sog < 102.2 else None,
+            cog_deg=float(cog) if cog is not None and 0 <= cog < 360 else None,
             seen=dt.datetime.now(dt.timezone.utc),
         )
         self.targets[t.mmsi] = t
@@ -84,9 +97,16 @@ class AISFeed:
                 n += 1
         return n
 
-    def listen_udp(self, port: int, host: str = "0.0.0.0",
+    def listen_udp(self, port: int, host: str = "127.0.0.1",
+                   source_ip: str | None = None,
                    duration_s: float = 10.0) -> int:
-        """Collect from a UDP NMEA stream (the common receiver output)."""
+        """Collect from a UDP NMEA stream (the common receiver output).
+
+        AIS over UDP is unauthenticated, so the defaults are conservative:
+        bind loopback; to listen on the ship's LAN pass the bridge-network
+        interface address as `host` AND the receiver's address as
+        `source_ip` — datagrams from any other source are dropped.
+        """
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(1.0)
         sock.bind((host, port))
@@ -95,8 +115,10 @@ class AISFeed:
         try:
             while dt.datetime.now() < end:
                 try:
-                    data, _ = sock.recvfrom(4096)
+                    data, addr = sock.recvfrom(4096)
                 except socket.timeout:
+                    continue
+                if source_ip is not None and addr[0] != source_ip:
                     continue
                 for line in data.splitlines():
                     if self.feed_sentence(line) is not None:

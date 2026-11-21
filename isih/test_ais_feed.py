@@ -33,3 +33,13 @@ def test_garbage_is_rejected():
     assert feed.feed_sentence(b"not nmea at all") is None
     assert feed.feed_sentence(b"") is None
     assert feed.feed_sentence(SINGLE) is not None  # still works afterwards
+
+
+def test_hostile_fragments_cannot_grow_the_buffer():
+    feed = AISFeed()
+    # absurd fragment count, out-of-order numbers, non-numeric fields
+    assert feed.feed_sentence(b"!AIVDM,99,1,4,A,xxxx,0*00") is None
+    assert feed.feed_sentence(b"!AIVDM,2,2,4,A,yyyy,2*20") is None  # no first part
+    assert feed.feed_sentence(b"!AIVDM,abc,def,4,A,zzzz,0*00") is None
+    assert feed._fragments == []
+    assert feed.feed_sentence(SINGLE) is not None
