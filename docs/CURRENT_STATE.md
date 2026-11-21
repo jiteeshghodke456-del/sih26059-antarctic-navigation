@@ -1,5 +1,23 @@
 # Current state — night build 2026-11-21/22
 
+## Overnight run update (written ~01:55 IST 22 Nov)
+
+- Site: full-screen GIS viewer (Polar TEP shell), zoom/pan 1-8x with locked
+  raster/vector sync, research-grade layers (full-res ice/thickness/drift,
+  current streamlines, SST, wave direction, wind barbs, satellite-vs-model
+  edges + innovation with QA hatching, 7-level bathymetry, day animation),
+  IcySea-style berg day-dot chains, progressive disclosure, 16px type scale,
+  roundel mark + first-visit intro, stale cycles badged, pipeline figures
+  single-sourced. All pushed; Pages live.
+- Source repo: grounding-aware berg v2 (26/88 held, 4.13 km/day), melt fixed
+  to berg-relative speed, RealWorld serves real depth, currents/waves/SST
+  int16-packed, NRT truth committed (rolls off NSIDC from 24 Nov), suite 197.
+- Kaggle: GPU re-run still QUEUED since ~18:50 UTC; CPU clone
+  (dakshin-prototype-train-cpu, same code/seed/split, enable_gpu false)
+  RUNNING since ~19:25 UTC — expect checkpoints in the morning; then run
+  `KAGGLE_API_TOKEN=<token> bash scripts/pull_checkpoints.sh`.
+
+
 If this session was cleared, read this file plus `docs/backlog.md` and
 continue from "Next actions". Full task spec: the HANDOFF_TONIGHT text the
 owner pasted (slices 1–11 + F1–F4); its hard rules still apply (real data
