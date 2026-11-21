@@ -42,3 +42,4 @@ mlartifacts/
 # agent skills installed by `npx skills` — bodies are reproducible from skills-lock.json
 .agents/
 .claude/skills/
+data/nsidc_nrt/
