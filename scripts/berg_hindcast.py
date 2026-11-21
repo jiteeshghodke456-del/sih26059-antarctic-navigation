@@ -93,6 +93,10 @@ def main() -> int:
     ok = [s for s in segments if s["status"] == STATUS_OK]
     model_kmd = [s["error_km_per_day"] for s in ok]
     pers_kmd = [s["persistence_km_per_day"] for s in ok]
+    # USNIC gives positions to ~0.01 deg; >3 km between fixes is real motion,
+    # less is indistinguishable from a stationary (grounded) berg.
+    moving = [s for s in ok if s["persistence_km"] > 3.0]
+    still = [s for s in ok if s["persistence_km"] <= 3.0]
     payload = {
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "currents": f"CMEMS GLO12 analysis surface currents, {t_min}..{t_max}",
@@ -114,6 +118,23 @@ def main() -> int:
             "model": round(float(np.mean(model_kmd)), 2) if ok else None,
             "persistence": round(float(np.mean(pers_kmd)), 2) if ok else None,
         },
+        "split": {
+            "stationary_segments": len(still),
+            "moving_segments": len(moving),
+            "finding": "most corridor giants are grounded (persistence 0 km); "
+                       "a current-advection model without grounding detection "
+                       "drifts anchored bergs, and persistence also wins on "
+                       "the moving sample at weekly fix cadence",
+            "moving_median_km_per_day": {
+                "model": round(float(np.median([s["error_km_per_day"] for s in moving])), 2) if moving else None,
+                "persistence": round(float(np.median([s["persistence_km_per_day"] for s in moving])), 2) if moving else None,
+            },
+            "stationary_model_median_km_per_day": round(float(np.median(
+                [s["error_km_per_day"] for s in still])), 2) if still else None,
+        },
+        # The site's forecast cone grows at the MEASURED rate, not the
+        # unverified 12 km/day figure from the older docs.
+        "uncertainty_radius_km_per_day": round(float(np.median(model_kmd)), 2) if ok else None,
         "segments": segments,
     }
     OUT.write_text(json.dumps(payload, indent=2) + "\n")
